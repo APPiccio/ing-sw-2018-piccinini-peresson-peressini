@@ -14,10 +14,10 @@ public class App
 
         ArrayList<Dice> dices = diceBag.getDiceBag();
 
-        System.out.println(dices.get(0).toString());
-
+        int i = 1;
         for(Dice dice : dices){
-            System.out.println(dice.toString());
+            System.out.println(i + " - " + dice.toString());
+            i++;
         }
 
 
