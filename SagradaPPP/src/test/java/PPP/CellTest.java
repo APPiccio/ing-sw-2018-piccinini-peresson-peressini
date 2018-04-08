@@ -1,0 +1,33 @@
+package PPP;
+
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
+public class CellTest {
+    @Test
+    public void cellValueTest() throws IllegalDiceValueException {
+        Dice dice = new Dice();
+        Cell blankCell = new Cell();
+        Cell numberedCell = new Cell(dice.getValue());
+        Cell coloredCell = new Cell(dice.getColor());
+
+        numberedCell.setDiceOn(dice);
+        coloredCell.setDiceOn(dice);
+
+        assertEquals(Boolean.FALSE, blankCell.hasColorRestriction());
+        assertEquals(Boolean.FALSE, blankCell.hasValueRestriction());
+        assertEquals(Boolean.FALSE, blankCell.hasDiceon());
+
+        assertEquals(Boolean.FALSE, numberedCell.hasColorRestriction());
+        assertEquals(Boolean.TRUE, numberedCell.hasValueRestriction());
+        assertEquals(Boolean.TRUE, numberedCell.hasDiceon());
+
+        assertEquals(Boolean.TRUE, coloredCell.hasColorRestriction());
+        assertEquals(Boolean.FALSE, coloredCell.hasValueRestriction());
+        assertEquals(Boolean.TRUE, coloredCell.hasDiceon());
+
+
+    }
+
+}
