@@ -106,6 +106,3 @@ buildNumber.properties
 
 
 # End of https://www.gitignore.io/api/java,maven,intellij
-
-# Additional extension to ignore
-*.DS_Store

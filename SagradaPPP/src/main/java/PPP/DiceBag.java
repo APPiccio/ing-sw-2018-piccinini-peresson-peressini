@@ -8,7 +8,6 @@ public class DiceBag {
     private ArrayList<Dice> diceBag;
 
 
-
     public DiceBag() throws IllegalDiceValueException {
         diceBag = new ArrayList<Dice>();
         for (Color color: Color.values())
@@ -29,5 +28,18 @@ public class DiceBag {
 
         return new ArrayList<Dice>(diceBag);
     }
+
+    public int numberOfValue (final int n){
+        return (int) diceBag.stream().filter(x -> x.getValue() == n).count();
+    }
+
+    public int numberOfColor (Color color){
+        return (int) diceBag.stream().filter(x -> x.getColor() == color).count();
+    }
+
+    public int numberOf (int n, Color color){
+        return (int) diceBag.stream().filter(x -> x.getValue() == n && x.getColor() == color).count();
+    }
+
 
 }
