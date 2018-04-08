@@ -14,4 +14,6 @@ public enum Color {
         return values()[new Random().nextInt(values().length)];
     }
 
+
+
 }
