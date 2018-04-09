@@ -20,6 +20,10 @@ public class DiceBag {
 
     }
 
+    public int size(){
+        return diceBag.size();
+    }
+
     public Dice getDice(int i){
         return diceBag.get(i);
     }

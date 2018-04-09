@@ -34,6 +34,7 @@ public class AppTest
     public void testApp() throws IllegalDiceValueException {
         CellTest.cellValueTest();
         DiceTest.DiceValueTest();
+        DiceBagTest.diceBagGenTest();
         assertTrue( true);
     }
 }
