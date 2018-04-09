@@ -1,7 +1,7 @@
 package PPP.Cards;
 
-public abstract class PublicObjectiveCard {
+public interface PublicObjectiveCard {
 
-    public abstract void publicCardBehavior();
+   void publicCardBehavior();
 
 }

@@ -1,7 +1,7 @@
 package PPP.Cards;
 
-public abstract class ToolCard {
+public interface ToolCard {
 
-    public abstract void toolCardBehavior();
+    void toolCardBehavior();
 
 }
