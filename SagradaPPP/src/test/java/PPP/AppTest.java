@@ -31,8 +31,9 @@ public class AppTest
     /**
      * Rigourous Test :-)
      */
-    public void testApp()
-    {
-        assertTrue( true );
+    public void testApp() throws IllegalDiceValueException {
+        CellTest.cellValueTest();
+        DiceTest.DiceValueTest();
+        assertTrue( true);
     }
 }
