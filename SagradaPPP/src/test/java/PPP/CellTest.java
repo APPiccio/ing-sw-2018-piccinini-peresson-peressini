@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class CellTest {
     @Test
     public static void cellValueTest() throws IllegalDiceValueException {
+
         Dice dice = new Dice();
         Cell blankCell = new Cell();
         Cell numberedCell = new Cell(dice.getValue());
