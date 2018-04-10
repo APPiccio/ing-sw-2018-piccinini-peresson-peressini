@@ -13,6 +13,7 @@ import java.util.Iterator;
 public class WindowPanel {
     public static void main(String[] args) throws FileNotFoundException {
         new WindowPanel(1,StaticValues.FRONT_SIDE);
+
     }
 
     private ArrayList<Cell> windowPanel;
