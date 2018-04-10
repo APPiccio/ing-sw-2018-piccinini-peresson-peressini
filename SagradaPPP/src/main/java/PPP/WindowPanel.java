@@ -24,19 +24,19 @@ public class WindowPanel {
         JSONTokener tokener = new JSONTokener(new FileReader("templates/panel"+ fileIndex + ".json"));
         JSONObject jsonObject = new JSONObject(tokener);
         JSONArray jsonArrayCells = jsonObject.getJSONArray("cells");
-        windowPanel = new ArrayList<Cell>();
+        windowPanel = new ArrayList<>();
 
 
-        for (Iterator<Object> it = jsonArrayCells.iterator(); it.hasNext(); ) {
-            JSONObject jsonCell = (JSONObject) it.next();
-            if(jsonCell.get("color").toString() != StaticValues.NULL_JSON_VALUE) {
+        for (Object jsonArrayCell : jsonArrayCells) {
+            JSONObject jsonCell = (JSONObject) jsonArrayCell;
+            if (jsonCell.get("color").toString().equals(StaticValues.NULL_JSON_VALUE)) {
                 //color cell
                 windowPanel.add(new Cell(Color.getColor(jsonCell.get("color").toString())));
 
-            }else if(jsonCell.get("value").toString() != StaticValues.NULL_JSON_VALUE){
+            } else if (jsonCell.get("value").toString().equals(StaticValues.NULL_JSON_VALUE)) {
                 //value cell
                 windowPanel.add(new Cell(jsonCell.getInt("value")));
-            }else {
+            } else {
                 //white cell
                 windowPanel.add(new Cell());
             }
