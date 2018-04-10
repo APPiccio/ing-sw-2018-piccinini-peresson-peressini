@@ -9,6 +9,9 @@
         <module name="SagradaPPP" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="SagradaPPP" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="RmicSettings">
     <option name="IS_EANABLED" value="true" />
