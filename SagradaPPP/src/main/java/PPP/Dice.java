@@ -26,7 +26,7 @@ public class Dice {
         this(Color.getRandomColor(),value);
     }
 
-    //completly random dice
+    //completely random dice
     public Dice() throws IllegalDiceValueException {
         this(Color.getRandomColor(),new Random().nextInt(6) + 1);
     }
