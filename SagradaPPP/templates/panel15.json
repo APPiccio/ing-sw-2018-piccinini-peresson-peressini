@@ -1,32 +1,32 @@
 {
   "cells": [
     {"color": null , "value" : null },
-    {"color": "blue" , "value" : null },
-    {"color": null , "value" : 2 },
-    {"color": null , "value" : null },
-    {"color": "yellow" , "value" : null },
-
-    {"color": null , "value" : null },
     {"color": null , "value" : 4 },
     {"color": null , "value" : null },
+    {"color": "yellow" , "value" : null },
+    {"color": null , "value" : 6 },
+
     {"color": "red" , "value" : null },
     {"color": null , "value" : null },
+    {"color": null , "value" : 2 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
 
     {"color": null , "value" : null },
     {"color": null , "value" : null },
-    {"color": null , "value" : 5 },
+    {"color": "red" , "value" : null },
+    {"color": "purple" , "value" : null },
+    {"color": null , "value" : 1 },
+
+    {"color": "blue" , "value" : null },
     {"color": "yellow" , "value" : null },
     {"color": null , "value" : null },
-
-    {"color": "green" , "value" : null },
-    {"color": null , "value" : 3 },
     {"color": null , "value" : null },
-    {"color": null , "value" : null },
-    {"color": "purple" , "value" : null }
+    {"color": null , "value" : null }
 
 
   ],
-  "cardID": 5,
+  "cardID": 8,
   "favorTokens": 3,
-  "name": "Sun Catcher"
+  "name": "Fractal Drops"
 }

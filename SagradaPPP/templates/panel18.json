@@ -1,0 +1,32 @@
+{
+  "cells": [
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 1 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": null , "value" : 1 },
+    {"color": "green" , "value" : null },
+    {"color": null , "value" : 3 },
+    {"color": "blue" , "value" : null },
+    {"color": null , "value" : 2 },
+
+    {"color": "blue" , "value" : null },
+    {"color": null , "value" : 5 },
+    {"color": null , "value" : 4 },
+    {"color": null , "value" : 6 },
+    {"color": "green" , "value" : null },
+
+    {"color": null , "value" : null },
+    {"color": "blue" , "value" : null },
+    {"color": null , "value" : 5 },
+    {"color": "green" , "value" : null },
+    {"color": null , "value" : null }
+
+
+  ],
+  "cardID": 9,
+  "favorTokens": 6,
+  "name": "Lux Mundi"
+}
