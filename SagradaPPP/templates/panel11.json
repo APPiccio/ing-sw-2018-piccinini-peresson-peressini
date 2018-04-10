@@ -1,0 +1,32 @@
+{
+  "cells": [
+    {"color": "blue", "value" : null },
+    {"color": null , "value" : 6 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+    {"color": "yellow" , "value" : null },
+
+    {"color": null , "value" : null },
+    {"color": null , "value" : 3 },
+    {"color": "blue" , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": null , "value" : null },
+    {"color": null , "value" : 5 },
+    {"color": null , "value" : 6 },
+    {"color": null , "value" : 2 },
+    {"color": null , "value" : null },
+
+    {"color": null , "value" : null },
+    {"color": null , "value" : 4 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 1 },
+    {"color": "green" , "value" : null }
+
+
+  ],
+  "cardID": 6,
+  "favorTokens": 3,
+  "name": "Bellesguard"
+}
