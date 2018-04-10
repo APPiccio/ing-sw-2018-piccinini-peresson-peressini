@@ -36,10 +36,6 @@ public class Dice {
         return color;
     }
 
-    public void setColor(Color color) throws IllegalDiceValueException {
-        this.color = color;
-    }
-
     public int getValue() {
         return value;
     }
