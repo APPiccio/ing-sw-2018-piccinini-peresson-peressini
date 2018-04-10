@@ -1,0 +1,32 @@
+{
+  "cells": [
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+    {"color": "green" , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": null , "value" : 2 },
+    {"color": "yellow" , "value" : null },
+    {"color": null , "value" : 5 },
+    {"color": "blue" , "value" : null },
+    {"color": null , "value" : 1 },
+
+    {"color": null , "value" : null },
+    {"color": "red" , "value" : null },
+    {"color": null , "value" : 3 },
+    {"color": "purple" , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": null , "value" : 1 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 6 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 4 }
+
+
+  ],
+  "cardID": 10,
+  "favorTokens": 4,
+  "name": "Chromatic Splendor"
+}
