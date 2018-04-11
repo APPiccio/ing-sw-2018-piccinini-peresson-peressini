@@ -17,7 +17,16 @@ public class WindowPanel {
     private int cardID;
     private ArrayList<Cell> cells;
 
+
+    public WindowPanel(WindowPanel windowPanel){
+        this.panelName = windowPanel.getPanelName();
+        this.favorTokens = windowPanel.getFavorTokens();
+        this.cardID = windowPanel.getCardID();
+        this.cells = windowPanel.getCells();
+    }
+
     //cardNumber from 1 to 12
+    //side 1 for the front
     public WindowPanel(int cardNumber, int side) throws FileNotFoundException {
 
         int fileIndex = cardNumber * 2 - side;
@@ -90,6 +99,10 @@ public class WindowPanel {
 
     public void setCardID(int cardID) {
         this.cardID = cardID;
+    }
+
+    public ArrayList<Cell> getCells(){
+        return new ArrayList<Cell>(cells);
     }
 }
 
