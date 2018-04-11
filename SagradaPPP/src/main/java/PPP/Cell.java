@@ -63,7 +63,7 @@ public class Cell {
         return diceOn != null;
     }
 
-    public boolean equals(Cell cell) {
+    public Object equals(Cell cell) {
         if(this.hasDiceon()){
             if(cell.hasDiceon()){
                 return this.diceOn.equals(cell.getDiceOn()) && this.value == cell.getValue() && this.color == cell.getColor();
