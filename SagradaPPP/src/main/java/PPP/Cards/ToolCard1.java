@@ -12,7 +12,7 @@ public class ToolCard1 extends ToolCard implements  ToolCardAction{
     }
 
     @Override
-    public Object activate(Game game) throws IllegalDiceValueException {
+    public Object activate(Game game)  {
         //TODO: Ask what dice needs to be modified and if it needs to be increased or decreased
 
         Dice dice = new Dice();
