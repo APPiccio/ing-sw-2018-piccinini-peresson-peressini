@@ -1,7 +1,9 @@
 package PPP.Cards;
 
+import PPP.WindowPanel;
+
 public interface PublicObjectiveCard {
 
-   void publicCardBehavior();
+   int getScore(WindowPanel playerWindowPanel);
 
 }

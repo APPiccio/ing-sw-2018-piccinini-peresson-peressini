@@ -8,5 +8,6 @@ public class StaticValues {
     public static final String NULL_JSON_VALUE = "null";
     public static final int PATTERN_ROW = 4;
     public static final int PATTERN_COL = 5;
+    public static final int NUMBER_OF_CELLS = 20;
 
 }
