@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 public class DiceBagTest{
 
     @Test
-    public static void diceBagGenTest() throws IllegalDiceValueException {
+    public static void diceBagGenTest() {
 
         DiceBag diceBag = new DiceBag();
 

@@ -8,7 +8,7 @@ public class DiceBag {
     private ArrayList<Dice> diceBag;
 
 
-    public DiceBag() throws IllegalDiceValueException {
+    public DiceBag() {
         diceBag = new ArrayList<Dice>();
         for (Color color: Color.values())
         {

@@ -33,6 +33,7 @@ public class AppTest
     /**
      * Rigourous Test :-)
      */
+
     public void testApp() throws IllegalDiceValueException, FileNotFoundException {
         CellTest.cellValueTest();
         DiceTest.DiceValueTest();
