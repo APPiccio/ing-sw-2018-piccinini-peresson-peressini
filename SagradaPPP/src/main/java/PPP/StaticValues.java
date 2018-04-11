@@ -6,5 +6,7 @@ public class StaticValues {
     public static final int FRONT_SIDE = 1;
     public static final int BACK_SIDE = 0;
     public static final String NULL_JSON_VALUE = "null";
+    public static final int PATTERN_ROW = 4;
+    public static final int PATTERN_COL = 5;
 
 }
