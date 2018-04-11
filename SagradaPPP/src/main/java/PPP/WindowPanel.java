@@ -12,7 +12,9 @@ import java.util.ArrayList;
 
 public class WindowPanel{
 
-
+    private String panelName;
+    private int favorTokens;
+    private int cardID;
     private ArrayList<Cell> cells;
 
     //cardNumber from 1 to 12
@@ -23,6 +25,12 @@ public class WindowPanel{
         JSONObject jsonObject = new JSONObject(tokener);
         JSONArray jsonArrayCells = jsonObject.getJSONArray("cells");
         cells = new ArrayList<>();
+
+        //getting card name and favor token from JSON
+        cardID = jsonObject.getInt("cardID");
+        favorTokens = jsonObject.getInt("favorTokens");
+        panelName = jsonObject.getString("name");
+
 
 
         for (Object jsonArrayCell : jsonArrayCells) {
@@ -44,4 +52,19 @@ public class WindowPanel{
 
 
     }
+
+
+    public Cell getCellWithPosition(int row, int col){
+        if ((row < 0 || row > StaticValues.PATTERN_ROW) || (col < 0 || col > StaticValues.PATTERN_COL)) {
+            //access denied to wrong cells
+            return null;
+        }
+        return cells.get(row*StaticValues.PATTERN_ROW + col);
+    }
+
+    public Cell getCellWithIndex(int i){
+        if (i < 0 || i > cells.size()) return null;
+        return cells.get(i);
+    }
+
 }
