@@ -12,8 +12,9 @@ public class RoundTrackTest {
     public static void testRoundTrack(){
         RoundTrack roundTrack = new RoundTrack();
         ArrayList<Dice> dices = new ArrayList<>();
+        Dice dice;
         for (int i = 1; i <= 10 ; i++) {
-            Dice dice = new Dice();
+            dice = new Dice();
             dices.add(dice);
             roundTrack.putDice(i,dice);
             roundTrack.putDice(i,dice);

@@ -30,6 +30,9 @@ public class WindowPanelTest {
                     for(int l = 0; l < StaticValues.PATTERN_COL; l++){
                         currentCell = panel.getCellWithIndex(absIndex);
 
+                        //System.out.println("currentCell =" + currentCell.getValue() + currentCell.getColor() + currentCell.hasDiceon());
+                        //System.out.println("panelCell =" + panel.getCellWithPosition(k,l).getValue() + panel.getCellWithPosition(k,l).getColor() + panel.getCellWithPosition(k,l).hasDiceon());
+
                         assertEquals(TRUE, currentCell.equals(panel.getCellWithPosition(k,l)));
 
                         if(currentCell.hasColorRestriction()){
