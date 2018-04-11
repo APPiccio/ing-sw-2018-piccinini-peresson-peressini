@@ -9,7 +9,7 @@ import static junit.framework.Assert.assertEquals;
 public class RoundTrackTest {
 
     @Test
-    public  void TestRoundTrack(){
+    public static void testRoundTrack(){
         RoundTrack roundTrack = new RoundTrack();
         ArrayList<Dice> dices = new ArrayList<>();
         for (int i = 1; i <= 10 ; i++) {

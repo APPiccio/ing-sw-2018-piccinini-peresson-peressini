@@ -39,6 +39,7 @@ public class AppTest
         DiceTest.diceValueTest();
         DiceBagTest.diceBagGenTest();
         WindowPanelTest.testPanelComposition();
+        RoundTrackTest.testRoundTrack();
 
         assertTrue( true);
     }
