@@ -9,4 +9,8 @@ public class StaticValues {
     public static final int PATTERN_ROW = 4;
     public static final int PATTERN_COL = 5;
 
+    public static final int COST_USED_TOOLCARD = 2;
+    public static final int COST_UNUSED_TOOLCARD = 1;
+    public static final String TOOLCARD1_NAME = "Pinza Sgrossatrice";
+    public static final String TOOLCARD2_NAME = "";
 }
