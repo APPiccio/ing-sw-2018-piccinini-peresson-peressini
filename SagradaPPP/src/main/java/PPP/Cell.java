@@ -5,6 +5,12 @@ public class Cell {
     private Integer value;
     private Dice diceOn;
 
+    public Cell(Cell cell){
+        this.color = cell.getColor();
+        this.value = cell.getValue();
+        this.diceOn = cell.getDiceOn();
+    }
+
     public Cell(Color color){
         this.color = color;
         value = null;
@@ -45,14 +51,25 @@ public class Cell {
     }
 
     public Dice getDiceOn() {
-        return diceOn;
+        if(this.hasDiceon()) return new Dice(diceOn);
+        return null;
     }
 
     public void setDiceOn(Dice diceOn) {
         this.diceOn = diceOn;
-    }
+    }//TODO implement color and value constraints
 
     public Boolean hasDiceon(){
         return diceOn != null;
+    }
+
+    public boolean equals(Cell cell) {
+        if(this.hasDiceon()){
+            if(cell.hasDiceon()){
+                return this.diceOn.equals(cell.getDiceOn()) && this.value == cell.getValue() && this.color == cell.getColor();
+            }
+            else return false;
+        }
+        return this.value == cell.getValue() && this.color == cell.getColor();
     }
 }
