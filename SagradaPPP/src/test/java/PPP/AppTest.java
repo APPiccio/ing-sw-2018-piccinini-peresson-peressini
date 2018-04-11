@@ -36,9 +36,10 @@ public class AppTest
 
     public void testApp() throws IllegalDiceValueException, FileNotFoundException {
         CellTest.cellValueTest();
-        DiceTest.DiceValueTest();
+        DiceTest.diceValueTest();
         DiceBagTest.diceBagGenTest();
         WindowPanelTest.testPanelComposition();
+
         assertTrue( true);
     }
 }
