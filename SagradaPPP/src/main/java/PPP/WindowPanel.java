@@ -10,7 +10,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 
-public class WindowPanel{
+public class WindowPanel {
 
     private String panelName;
     private int favorTokens;
@@ -21,7 +21,7 @@ public class WindowPanel{
     public WindowPanel(int cardNumber, int side) throws FileNotFoundException {
 
         int fileIndex = cardNumber * 2 - side;
-        JSONTokener tokener = new JSONTokener(new FileReader("templates/panel"+ fileIndex + ".json"));
+        JSONTokener tokener = new JSONTokener(new FileReader("templates/panel" + fileIndex + ".json"));
         JSONObject jsonObject = new JSONObject(tokener);
         JSONArray jsonArrayCells = jsonObject.getJSONArray("cells");
         cells = new ArrayList<>();
@@ -32,39 +32,65 @@ public class WindowPanel{
         panelName = jsonObject.getString("name");
 
 
+        String color;
+        String value;
 
         for (Object jsonArrayCell : jsonArrayCells) {
             JSONObject jsonCell = (JSONObject) jsonArrayCell;
-            if (jsonCell.get("color").toString().equals(StaticValues.NULL_JSON_VALUE)) {
-                //color cell
-                cells.add(new Cell(Color.getColor(jsonCell.get("color").toString())));
 
-            } else if (jsonCell.get("value").toString().equals(StaticValues.NULL_JSON_VALUE)) {
+            color = jsonCell.get("color").toString();
+            value = jsonCell.get("value").toString();
+
+            if (!color.equals(StaticValues.NULL_JSON_VALUE)) {
+                //colored cell
+                cells.add(new Cell(Color.getColor(color)));
+
+            } else if (!value.equals(StaticValues.NULL_JSON_VALUE)) {
                 //value cell
-                cells.add(new Cell(jsonCell.getInt("value")));
+                cells.add(new Cell(Integer.parseInt(value)));
             } else {
-                //white cell
+                //blank cell
                 cells.add(new Cell());
             }
-
-
         }
-
-
     }
 
-
-    public Cell getCellWithPosition(int row, int col){
+    public Cell getCellWithPosition(int row, int col) {
         if ((row < 0 || row > StaticValues.PATTERN_ROW) || (col < 0 || col > StaticValues.PATTERN_COL)) {
             //access denied to wrong cells
             return null;
         }
-        return cells.get(row*StaticValues.PATTERN_ROW + col);
+        return new Cell(cells.get(row * StaticValues.PATTERN_COL + col));
     }
 
-    public Cell getCellWithIndex(int i){
+    public Cell getCellWithIndex(int i) {
         if (i < 0 || i > cells.size()) return null;
-        return cells.get(i);
+        return new Cell(cells.get(i));
     }
 
+    public String getPanelName() {
+        return panelName;
+    }
+
+    public void setPanelName(String panelName) {
+        this.panelName = panelName;
+    }
+
+    public int getFavorTokens() {
+        return favorTokens;
+    }
+
+    public void setFavorTokens(int favorTokens) {
+        this.favorTokens = favorTokens;
+    }
+
+    public int getCardID() {
+        return cardID;
+    }
+
+    public void setCardID(int cardID) {
+        this.cardID = cardID;
+    }
 }
+
+

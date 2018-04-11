@@ -7,6 +7,12 @@ public class Dice {
     private Color color;
     private int value;
 
+    public Dice(Dice dice){
+        this.color = dice.getColor();
+        this.value = dice.getValue();
+    }
+
+
     public Dice(Color color, int value)  {
         if (value < 1 || value > 6) {
             try {
@@ -57,5 +63,10 @@ public class Dice {
     @Override
     public String toString() {
         return "Color: " + color.name() + ", Value: " + value;
+    }
+
+
+    public boolean equals(Dice dice) {
+        return this.color == dice.getColor() && this.value == dice.getValue();
     }
 }

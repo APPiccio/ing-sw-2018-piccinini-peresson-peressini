@@ -4,6 +4,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import java.io.FileNotFoundException;
+
 /**
  * Unit test for simple App.
  */
@@ -31,10 +33,12 @@ public class AppTest
     /**
      * Rigourous Test :-)
      */
-    public void testApp() {
+
+    public void testApp() throws IllegalDiceValueException, FileNotFoundException {
         CellTest.cellValueTest();
         DiceTest.DiceValueTest();
         DiceBagTest.diceBagGenTest();
+        WindowPanelTest.testPanelComposition();
         assertTrue( true);
     }
 }
