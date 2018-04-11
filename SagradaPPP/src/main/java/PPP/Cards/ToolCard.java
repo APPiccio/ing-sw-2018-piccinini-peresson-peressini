@@ -15,9 +15,9 @@ public abstract class ToolCard{
         used = false;
     }
 
-    protected ToolCard(String name,int ID,Color color){
+    protected ToolCard(String name,int id,Color color){
         this.name = name;
-        this.ID = ID;
+        this.ID = id;
         this.color = color;
         this.used = false;
 

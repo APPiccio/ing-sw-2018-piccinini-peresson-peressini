@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class RoundTrack {
 
-    ArrayList<ArrayList<Dice>> diceOnTrack;
+    private ArrayList<ArrayList<Dice>> diceOnTrack;
 
     public RoundTrack() {
         diceOnTrack = new ArrayList<>();
