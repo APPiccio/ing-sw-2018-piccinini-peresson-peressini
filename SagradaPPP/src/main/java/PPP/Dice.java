@@ -7,9 +7,13 @@ public class Dice {
     private Color color;
     private int value;
 
-    public Dice(Color color, int value) throws IllegalDiceValueException {
+    public Dice(Color color, int value)  {
         if (value < 1 || value > 6) {
-            throw new IllegalDiceValueException();
+            try {
+                throw new IllegalDiceValueException();
+            } catch (IllegalDiceValueException e) {
+                e.printStackTrace();
+            }
         } else {
             this.value = value;
             this.color = color;
@@ -17,17 +21,17 @@ public class Dice {
     }
 
     //in case we need a random value
-    public Dice(Color color) throws IllegalDiceValueException {
+    public Dice(Color color)  {
         this(color,new Random().nextInt(6) + 1);
     }
 
     //in case we need a random color
-    public Dice(int value) throws IllegalDiceValueException {
+    public Dice(int value){
         this(Color.getRandomColor(),value);
     }
 
     //completly random dice
-    public Dice() throws IllegalDiceValueException {
+    public Dice() {
         this(Color.getRandomColor(),new Random().nextInt(6) + 1);
     }
 
@@ -41,7 +45,13 @@ public class Dice {
     }
 
     public void setValue(int value) {
-        this.value = value;
+        if (value < 1 || value > 6) {
+            try {
+                throw new IllegalDiceValueException();
+            } catch (IllegalDiceValueException e) {
+                e.printStackTrace();
+            }
+        } else this.value = value;
     }
 
     @Override

@@ -31,7 +31,7 @@ public class AppTest
     /**
      * Rigourous Test :-)
      */
-    public void testApp() throws IllegalDiceValueException {
+    public void testApp() {
         CellTest.cellValueTest();
         DiceTest.DiceValueTest();
         DiceBagTest.diceBagGenTest();
