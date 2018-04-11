@@ -50,7 +50,7 @@ public class Cell {
 
     public void setDiceOn(Dice diceOn) {
         this.diceOn = diceOn;
-    }
+    }//TODO implement color and value constraints
 
     public Boolean hasDiceon(){
         return diceOn != null;
