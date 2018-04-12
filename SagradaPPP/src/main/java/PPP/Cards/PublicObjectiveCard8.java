@@ -6,9 +6,13 @@ import java.util.Arrays;
 
 //Shade Variety: Sets of one of each value anywhere
 
-public class PublicObjective_8 extends PublicObjective implements PublicObjectiveCard {
+public class PublicObjectiveCard8 extends PublicObjectiveCard implements PublicObjectiveCardAction {
 
     int [] occurrences = {0, 0, 0, 0, 0, 0};
+
+    public PublicObjectiveCard8() {
+        super(StaticValues.PUBLICOBJECTIVECARD8_NAME, 8);
+    }
 
     public int getScore(WindowPanel playerWindowPanel) {
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {

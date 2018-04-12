@@ -5,10 +5,14 @@ import PPP.WindowPanel;
 
 //Light Shades: set of 1 & 2 values anywhere
 
-public class PublicObjective_5 extends PublicObjective implements PublicObjectiveCard {
+public class PublicObjectiveCard5 extends PublicObjectiveCard implements PublicObjectiveCardAction {
 
     private int numberOfOne = 0;
     private int numberOfTwo = 0;
+
+    public PublicObjectiveCard5() {
+        super(StaticValues.PUBLICOBJECTIVECARD5_NAME, 5);
+    }
 
     public int getScore(WindowPanel playerWindowPanel) {
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {

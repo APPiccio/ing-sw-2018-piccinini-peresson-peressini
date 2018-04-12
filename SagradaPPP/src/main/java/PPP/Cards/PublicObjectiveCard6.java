@@ -5,10 +5,14 @@ import PPP.WindowPanel;
 
 //Medium Shades: set of 3 & 4 values anywhere
 
-public class PublicObjective_6 extends PublicObjective implements PublicObjectiveCard {
+public class PublicObjectiveCard6 extends PublicObjectiveCard implements PublicObjectiveCardAction {
 
     private int numberOfThree = 0;
     private int numberOfFour = 0;
+
+    public PublicObjectiveCard6() {
+        super(StaticValues.PUBLICOBJECTIVECARD6_NAME, 6);
+    }
 
     public int getScore(WindowPanel playerWindowPanel) {
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
