@@ -6,6 +6,15 @@ public class Game {
     private ArrayList<Player> players;
     private Integer turn;
     private Player activePlayer;
+    private DiceBag diceBag;
+    private ArrayList<WindowPanel> panels;
+
+
+
+    public Game(){
+        diceBag = new DiceBag();
+        
+    }
 
 
     public DiceBag getCurrentDiceBag(){
