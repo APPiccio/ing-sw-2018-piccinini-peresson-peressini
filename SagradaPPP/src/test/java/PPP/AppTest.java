@@ -38,8 +38,10 @@ public class AppTest
         CellTest.cellValueTest();
         DiceTest.diceValueTest();
         DiceBagTest.diceBagGenTest();
-        WindowPanelTest.testPanelComposition();
+        //WindowPanelTest.testPanelComposition();
         RoundTrackTest.testRoundTrack();
+
+        GameTest.joiningTest();
 
         assertTrue( true);
     }
