@@ -23,7 +23,7 @@ public class StaticValues {
     public static final String PUBLICOBJECTIVECARD6_NAME = "Medium Shades";
     public static final String PUBLICOBJECTIVECARD7_NAME = "Deep Shades";
     public static final String PUBLICOBJECTIVECARD8_NAME = "Shade Variety";
-    public static final String PUBLICOBJECTIVECARD9_NAME = "Color diagonals";
+    public static final String PUBLICOBJECTIVECARD9_NAME = "Color Diagonals";
     public static final String PUBLICOBJECTIVECARD10_NAME = "Color Variety";
 
 }

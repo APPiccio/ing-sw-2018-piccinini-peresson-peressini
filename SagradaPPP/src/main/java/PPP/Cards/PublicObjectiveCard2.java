@@ -21,7 +21,7 @@ public class PublicObjectiveCard2 extends PublicObjectiveCard implements PublicO
     public int getScore(WindowPanel playerWindowPanel) {
         for (int i = 0; i < StaticValues.PATTERN_COL; i++) {
             for (int j = 0; j < StaticValues.PATTERN_ROW; j++) {
-                Dice tempDice = playerWindowPanel.getCellWithPosition(i, j).getDiceOn();
+                Dice tempDice = playerWindowPanel.getCellWithPosition(j, i).getDiceOn();
                 if(tempDice == null || colors.contains(tempDice.getColor())) {
                     break;
                 }
