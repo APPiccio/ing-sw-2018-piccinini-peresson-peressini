@@ -4,7 +4,7 @@ import PPP.StaticValues;
 import PPP.WindowPanel;
 import java.util.Arrays;
 
-//Shade Variety: Sets of one of each value anywhere
+//Shade Variety: sets of one of each value anywhere
 
 public class PublicObjectiveCard8 extends PublicObjectiveCard implements PublicObjectiveCardAction {
 
@@ -14,6 +14,7 @@ public class PublicObjectiveCard8 extends PublicObjectiveCard implements PublicO
         super(StaticValues.PUBLICOBJECTIVECARD8_NAME, 8);
     }
 
+    @Override
     public int getScore(WindowPanel playerWindowPanel) {
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
             if ((playerWindowPanel.getCellWithIndex(i)).getValue() == 1) {

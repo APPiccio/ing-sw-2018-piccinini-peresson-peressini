@@ -3,7 +3,7 @@ package PPP.Cards;
 import PPP.StaticValues;
 import PPP.WindowPanel;
 
-//Light Shades: set of 1 & 2 values anywhere
+//Light Shades: sets of 1 & 2 values anywhere
 
 public class PublicObjectiveCard5 extends PublicObjectiveCard implements PublicObjectiveCardAction {
 
@@ -14,6 +14,7 @@ public class PublicObjectiveCard5 extends PublicObjectiveCard implements PublicO
         super(StaticValues.PUBLICOBJECTIVECARD5_NAME, 5);
     }
 
+    @Override
     public int getScore(WindowPanel playerWindowPanel) {
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
             if ((playerWindowPanel.getCellWithIndex(i)).getValue() == 1) {

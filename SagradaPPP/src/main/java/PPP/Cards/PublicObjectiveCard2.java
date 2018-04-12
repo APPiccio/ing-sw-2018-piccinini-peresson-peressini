@@ -6,21 +6,21 @@ import PPP.StaticValues;
 import PPP.WindowPanel;
 import java.util.ArrayList;
 
-//Row Color Variety: rows with no repeated colors
+//Column Color Variety: columns with no repeated colors
 
-public class PublicObjectiveCard1 extends PublicObjectiveCard implements PublicObjectiveCardAction {
+public class PublicObjectiveCard2 extends PublicObjectiveCard implements PublicObjectiveCardAction {
 
     private ArrayList<Color> colors = new ArrayList<>();
-    private int coloredRows = 0;
+    private int coloredColumns = 0;
 
-    public PublicObjectiveCard1() {
-        super(StaticValues.PUBLICOBJECTIVECARD1_NAME, 1);
+    public PublicObjectiveCard2() {
+        super(StaticValues.PUBLICOBJECTIVECARD2_NAME, 2);
     }
 
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
-        for (int i = 0; i < StaticValues.PATTERN_ROW; i++) {
-            for (int j = 0; j < StaticValues.PATTERN_COL; j++) {
+        for (int i = 0; i < StaticValues.PATTERN_COL; i++) {
+            for (int j = 0; j < StaticValues.PATTERN_ROW; j++) {
                 Dice tempDice = playerWindowPanel.getCellWithPosition(i, j).getDiceOn();
                 if(tempDice == null || colors.contains(tempDice.getColor())) {
                     break;
@@ -29,12 +29,12 @@ public class PublicObjectiveCard1 extends PublicObjectiveCard implements PublicO
                     colors.add(tempDice.getColor());
                 }
             }
-            if(colors.size() == 5) {
-                coloredRows++;
+            if(colors.size() == 4) {
+                coloredColumns++;
             }
             colors.clear();
         }
-        return coloredRows * 6;
+        return coloredColumns * 5;
     }
 
 }
