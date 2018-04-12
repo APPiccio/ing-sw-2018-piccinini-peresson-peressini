@@ -14,4 +14,16 @@ public class StaticValues {
     public static final int COST_UNUSED_TOOLCARD = 1;
     public static final String TOOLCARD1_NAME = "Pinza Sgrossatrice";
     public static final String TOOLCARD2_NAME = "";
+
+    public static final String PUBLICOBJECTIVECARD1_NAME = "Row Color Variety";
+    public static final String PUBLICOBJECTIVECARD2_NAME = "Column Color Variety";
+    public static final String PUBLICOBJECTIVECARD3_NAME = "Row Shade Variety";
+    public static final String PUBLICOBJECTIVECARD4_NAME = "Colum Shade Variety";
+    public static final String PUBLICOBJECTIVECARD5_NAME = "Light Shades";
+    public static final String PUBLICOBJECTIVECARD6_NAME = "Medium Shades";
+    public static final String PUBLICOBJECTIVECARD7_NAME = "Deep Shades";
+    public static final String PUBLICOBJECTIVECARD8_NAME = "Shade Variety";
+    public static final String PUBLICOBJECTIVECARD9_NAME = "Color Diagonals";
+    public static final String PUBLICOBJECTIVECARD10_NAME = "Color Variety";
+
 }

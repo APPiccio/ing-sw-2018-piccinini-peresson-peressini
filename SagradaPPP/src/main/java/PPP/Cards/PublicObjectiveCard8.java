@@ -4,12 +4,17 @@ import PPP.StaticValues;
 import PPP.WindowPanel;
 import java.util.Arrays;
 
-//Shade Variety: Sets of one of each value anywhere
+//Shade Variety: sets of one of each value anywhere
 
-public class PublicObjective_8 extends PublicObjective implements PublicObjectiveCard {
+public class PublicObjectiveCard8 extends PublicObjectiveCard implements PublicObjectiveCardAction {
 
     int [] occurrences = {0, 0, 0, 0, 0, 0};
 
+    public PublicObjectiveCard8() {
+        super(StaticValues.PUBLICOBJECTIVECARD8_NAME, 8);
+    }
+
+    @Override
     public int getScore(WindowPanel playerWindowPanel) {
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
             if ((playerWindowPanel.getCellWithIndex(i)).getValue() == 1) {
