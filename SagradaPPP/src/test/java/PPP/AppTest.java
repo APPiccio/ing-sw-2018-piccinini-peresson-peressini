@@ -36,13 +36,13 @@ public class AppTest
      */
 
     public void testApp() throws IllegalDiceValueException, FileNotFoundException {
-        CellTest.cellValueTest();
-        DiceTest.diceValueTest();
-        DiceBagTest.diceBagGenTest();
+        //CellTest.cellValueTest();
+        //DiceTest.diceValueTest();
+        //DiceBagTest.diceBagGenTest();
         //WindowPanelTest.testPanelComposition();
-        RoundTrackTest.testRoundTrack();
-        WindowPanelTest.testDiceOn();
-        GameTest.joiningTest();
+        //RoundTrackTest.testRoundTrack();
+        //WindowPanelTest.testDiceOn();
+        //GameTest.joiningTest();
         PublicObjectiveCardTest.card1();
 
 
