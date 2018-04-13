@@ -105,6 +105,36 @@ public class WindowPanel {
     public ArrayList<Cell> getCells(){
         return new ArrayList<Cell>(cells);
     }
+
+    public boolean addDiceOnCellWithIndex(int i, Dice dice){
+        Cell currentCell = cells.get(i);
+        if (currentCell == null) return false;
+        if(diceOk(currentCell,dice)){
+            currentCell.setDiceOn(dice);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean diceOk(Cell cell, Dice dice){
+        if(cell.hasDiceon()) return false;
+        if(!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
+        if (cell.hasValueRestriction() && dice.getValue() == cell.getValue()) return true;
+        if (cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
+        return false;
+    }
+
+    public boolean addDiceOnCellWithPosition(int row, int col, Dice dice){
+        Cell currentCell = cells.get(row * StaticValues.PATTERN_COL + col);
+        if (currentCell == null) return false;
+        if(diceOk(currentCell,dice)){
+            currentCell.setDiceOn(dice);
+            return true;
+        }
+        return false;
+    }
+
+
 }
 
 
