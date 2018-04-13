@@ -35,9 +35,6 @@ public class GameTest {
 
         assertEquals(rightName,players.get(0).getUsername());
 
-
-
-
     }
 
 }
