@@ -118,7 +118,14 @@ public class WindowPanel {
 
     private boolean diceOk(Cell cell, Dice dice, int i){
         if(cell.hasDiceon()) return false;
-        if(!atLeastOneNear(i)) return false;
+
+        if (windowIsEmpty()){
+            if(!borderPosition(i)) return false;
+        }
+        else {
+            if (!atLeastOneNear(i) && hasSimilarDiceAttached(dice,i)) return false;
+        }
+
         if(!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
         if (cell.hasValueRestriction() && dice.getValue() == cell.getValue()) return true;
         if (cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
@@ -144,6 +151,14 @@ public class WindowPanel {
 
     private boolean validPosition(int row, int col){
         if(row >= 0 && row <= StaticValues.PATTERN_ROW && col >= 0 && col <= StaticValues.PATTERN_COL) return true;
+        return false;
+    }
+
+    private boolean borderPosition(int i){
+        int row = i / StaticValues.PATTERN_COL;
+        int col = i - row*StaticValues.PATTERN_COL;
+
+        if(row == 0 || row == StaticValues.PATTERN_ROW || col == 0 || col == StaticValues.PATTERN_COL) return true;
         return false;
     }
 
@@ -211,6 +226,12 @@ public class WindowPanel {
         return false;
     }
 
+    private boolean windowIsEmpty(){
+        for(Cell cell : cells){
+            if (cell.hasDiceon()) return false;
+        }
+        return true;
+    }
 
 }
 
