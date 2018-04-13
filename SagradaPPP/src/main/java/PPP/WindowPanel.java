@@ -109,25 +109,102 @@ public class WindowPanel {
     public boolean addDiceOnCellWithIndex(int i, Dice dice){
         Cell currentCell = cells.get(i);
         if (currentCell == null) return false;
-        if(diceOk(currentCell,dice)){
+        if(diceOk(currentCell,dice,i)){
             currentCell.setDiceOn(dice);
             return true;
         }
         return false;
     }
 
-    public boolean diceOk(Cell cell, Dice dice){
+    private boolean diceOk(Cell cell, Dice dice, int i){
         if(cell.hasDiceon()) return false;
+        if(!atLeastOneNear(i)) return false;
         if(!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
         if (cell.hasValueRestriction() && dice.getValue() == cell.getValue()) return true;
         if (cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
         return false;
     }
 
+    private boolean atLeastOneNear(int i){
+        int row = i / StaticValues.PATTERN_ROW;
+        int col = i - row*StaticValues.PATTERN_ROW;
+
+        row--;
+        col--;
+
+        for(int j = 0; j < 3; j++){
+            for(int k = 0; k < 3; k++){
+                if(validPosition(row,col) && getCellWithPosition(row,col).hasDiceon()){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean validPosition(int row, int col){
+        if(row >= 0 && row <= StaticValues.PATTERN_ROW && col >= 0 && col <= StaticValues.PATTERN_COL) return true;
+        return false;
+    }
+
+    private boolean hasSimilarDiceAttached(Dice dice, int i){
+        int row = i / StaticValues.PATTERN_ROW;
+        int col = i - row*StaticValues.PATTERN_ROW;
+
+        int j = row;
+        int k = col;
+        Cell cell;
+        Dice attachedDice;
+
+        //testing cell above
+        j--;
+        if (j >= 0) {
+            cell = cells.get(j*StaticValues.PATTERN_COL + k);
+            if( cell.hasDiceon()){
+                attachedDice = cell.getDiceOn();
+                if(attachedDice.getValue() == dice.getValue() || attachedDice.getColor().equals(dice.getColor())) return false;
+            }
+        }
+
+        //testing cell under
+        j = j + 2;
+        if(j <= StaticValues.PATTERN_ROW){
+            cell = cells.get(j*StaticValues.PATTERN_COL + k);
+            if( cell.hasDiceon()){
+                attachedDice = cell.getDiceOn();
+                if(attachedDice.getValue() == dice.getValue() || attachedDice.getColor().equals(dice.getColor())) return false;
+            }
+        }
+
+        //testing right cell
+        j--;
+        k++;
+        if(k <= StaticValues.PATTERN_COL){
+            cell = cells.get(j*StaticValues.PATTERN_COL + k);
+            if( cell.hasDiceon()){
+                attachedDice = cell.getDiceOn();
+                if(attachedDice.getValue() == dice.getValue() || attachedDice.getColor().equals(dice.getColor())) return false;
+            }
+        }
+
+        //testing left cell
+        k = k - 2;
+        if(k >= 0){
+            cell = cells.get(j*StaticValues.PATTERN_COL + k);
+            if( cell.hasDiceon()){
+                attachedDice = cell.getDiceOn();
+                if(attachedDice.getValue() == dice.getValue() || attachedDice.getColor().equals(dice.getColor())) return false;
+            }
+        }
+        return true;
+
+    }
+
     public boolean addDiceOnCellWithPosition(int row, int col, Dice dice){
-        Cell currentCell = cells.get(row * StaticValues.PATTERN_COL + col);
+        int i = row * StaticValues.PATTERN_COL + col;
+        Cell currentCell = cells.get(i);
         if (currentCell == null) return false;
-        if(diceOk(currentCell,dice)){
+        if(diceOk(currentCell,dice, i)){
             currentCell.setDiceOn(dice);
             return true;
         }
