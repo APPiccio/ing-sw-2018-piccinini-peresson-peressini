@@ -1,7 +1,10 @@
 package PPP.Cards;
 
+import PPP.Color;
 import PPP.StaticValues;
 import PPP.WindowPanel;
+
+import java.util.HashMap;
 
 //Color Variety: sets of one of each color anywhere
 
@@ -13,7 +16,10 @@ public class PublicObjectiveCard10 extends PublicObjectiveCard implements Public
 
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
-        return 0;
+
+        HashMap<Color, Integer> colorVariety = new HashMap<>();
+
+
     }
 
 }

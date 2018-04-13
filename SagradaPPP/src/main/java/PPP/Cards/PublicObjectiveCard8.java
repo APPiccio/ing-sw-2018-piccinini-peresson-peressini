@@ -1,5 +1,6 @@
 package PPP.Cards;
 
+import PPP.Dice;
 import PPP.StaticValues;
 import PPP.WindowPanel;
 import java.util.Arrays;
@@ -18,19 +19,25 @@ public class PublicObjectiveCard8 extends PublicObjectiveCard implements PublicO
         int[] occurrences = {0, 0, 0, 0, 0, 0};
 
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
-            if ((playerWindowPanel.getCellWithIndex(i)).getValue() == 1) {
+
+            Dice tempDice = playerWindowPanel.getCellWithIndex(i).getDiceOn();
+
+            if (tempDice == null) {
+                continue;
+            }
+            else if ((tempDice.getValue() == 1)) {
                 occurrences[0]++;
             }
-            else if ((playerWindowPanel.getCellWithIndex(i)).getValue() == 2) {
+            else if ((tempDice.getValue() == 2)) {
                 occurrences[1]++;
             }
-            else if ((playerWindowPanel.getCellWithIndex(i)).getValue() == 3) {
+            else if ((tempDice.getValue() == 3)) {
                 occurrences[2]++;
             }
-            else if ((playerWindowPanel.getCellWithIndex(i)).getValue() == 4) {
+            else if ((tempDice.getValue() == 4)) {
                 occurrences[3]++;
             }
-            else if ((playerWindowPanel.getCellWithIndex(i)).getValue() == 5) {
+            else if ((tempDice.getValue() == 5)) {
                 occurrences[4]++;
             }
             else {
