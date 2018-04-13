@@ -11,8 +11,6 @@ public class Game {
     private int numOfPlayer = 1;
 
 
-
-
     public Game(){
         diceBag = new DiceBag();
         players = new ArrayList<Player>();
@@ -27,7 +25,6 @@ public class Game {
         }
         players.add(new Player(user));
     }
-
 
     public boolean isInMatch(String username){
         for(Player player : players){
@@ -44,5 +41,20 @@ public class Game {
         return playersCopy;
     }
 
+    public int getPrivateScore(Player activePlayer) {
+        int score = 0;
+        for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
+            Dice tempDice = activePlayer.getMyPanel().getCellWithIndex(i).getDiceOn();
+            if (tempDice == null) {
+                continue;
+            }
+            else {
+                if (tempDice.getColor() == activePlayer.getPrivateColor()) {
+                    score += tempDice.getValue();
+                }
+            }
+        }
+        return score;
+    }
 
 }

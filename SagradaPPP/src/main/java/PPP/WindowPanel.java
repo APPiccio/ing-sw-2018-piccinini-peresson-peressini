@@ -28,6 +28,8 @@ public class WindowPanel {
 
     //cardNumber from 1 to 12
     //side 1 for the front
+
+
     public WindowPanel(int cardNumber, int side) throws FileNotFoundException {
 
         int fileIndex = cardNumber * 2 - side;

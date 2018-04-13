@@ -1,5 +1,6 @@
 package PPP;
 
+import PPP.Cards.PublicObjectiveCard;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -42,6 +43,8 @@ public class AppTest
         RoundTrackTest.testRoundTrack();
         WindowPanelTest.testDiceOn();
         GameTest.joiningTest();
+        PublicObjectiveCardTest.card1();
+
 
         assertTrue( true);
     }
