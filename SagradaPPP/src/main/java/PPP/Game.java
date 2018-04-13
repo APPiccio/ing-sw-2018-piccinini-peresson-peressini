@@ -6,32 +6,43 @@ public class Game {
     private ArrayList<Player> players;
     private Integer turn;
     private Player activePlayer;
+    private DiceBag diceBag;
+    private ArrayList<WindowPanel> panels;
+    private int numOfPlayer = 1;
 
 
-    public DiceBag getCurrentDiceBag(){
-        return null;
+
+
+    public Game(){
+        diceBag = new DiceBag();
+        players = new ArrayList<Player>();
     }
 
-    public ArrayList<Cell> getLegalMoves(Dice dice){
-        return null;
-    } //Mette null dove non si possa inserire il dado, torna il riferimento diretto alle celle della plancia legali
+    public void joinGame(String username) {
+        int i = 1;
+        String user = username;
+        while(isInMatch(user)){
+            user = username + "(" + i + ")";
+            i++;
+        }
+        players.add(new Player(user));
+    }
+
+
+    public boolean isInMatch(String username){
+        for(Player player : players){
+            if (player.getUsername().equals(username)) return true;
+        }
+        return false;
+    }
+
     public ArrayList<Player> getPlayers(){
-        return null;
-    }
-    public Player getActivePlayer(){
-        return null;
+        ArrayList<Player> playersCopy = new ArrayList<>();
+        for(Player player : players){
+            playersCopy.add(new Player(player));
+        }
+        return playersCopy;
     }
 
-    public Player getPlayer(String username){
-        return null;
-    }
-    public ArrayList<Dice> getCurrentDraftArea(){
-        return null;
-    }
-    public RoundTrack getCurrentRoundTrack(){
-        return null;
-    }
-    int getCurrentTurn(){
-        return 0;
-    }
+
 }

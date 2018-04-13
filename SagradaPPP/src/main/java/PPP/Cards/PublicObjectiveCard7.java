@@ -1,5 +1,6 @@
 package PPP.Cards;
 
+import PPP.Dice;
 import PPP.StaticValues;
 import PPP.WindowPanel;
 
@@ -7,24 +8,29 @@ import PPP.WindowPanel;
 
 public class PublicObjectiveCard7 extends PublicObjectiveCard implements PublicObjectiveCardAction {
 
-    private int numberOfFive = 0;
-    private int numberOfSix = 0;
-
     public PublicObjectiveCard7() {
         super(StaticValues.PUBLICOBJECTIVECARD7_NAME, 7);
     }
 
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
+
+        int numberOfFive = 0;
+        int numberOfSix = 0;
+
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
-            if ((playerWindowPanel.getCellWithIndex(i)).getValue() == 1) {
+
+            Dice tempDice = playerWindowPanel.getCellWithIndex(i).getDiceOn();
+
+            if (tempDice == null) {
+                continue;
+            } else if ((tempDice.getValue() == 5)) {
                 numberOfFive++;
-            }
-            else if ((playerWindowPanel.getCellWithIndex(i)).getValue() == 2) {
+            } else if ((tempDice.getValue() == 6)) {
                 numberOfSix++;
             }
         }
-        if (numberOfFive < numberOfSix) {
+        if(numberOfFive < numberOfSix) {
             return numberOfFive * 2;
         }
         else {

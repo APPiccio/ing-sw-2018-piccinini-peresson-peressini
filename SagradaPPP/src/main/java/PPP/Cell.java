@@ -72,4 +72,18 @@ public class Cell {
         }
         return this.value == cell.getValue() && this.color == cell.getColor();
     }
+
+    @Override
+    public String toString(){
+        StringBuilder string = new StringBuilder();
+        string.append("Color = " + color + "\t\t");
+        string.append("Value = " + value + "\t\t");
+        if (diceOn != null) {
+            string.append("Dice = " + diceOn.toString() + "\n");
+        }
+        else{
+            string.append("\n");
+        }
+        return string.toString();
+    }
 }
