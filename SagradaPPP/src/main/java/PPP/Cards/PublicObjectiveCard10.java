@@ -19,7 +19,7 @@ public class PublicObjectiveCard10 extends PublicObjectiveCard implements Public
 
         HashMap<Color, Integer> colorVariety = new HashMap<>();
 
-
+        return 0;
     }
 
 }
