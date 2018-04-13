@@ -23,12 +23,12 @@ public class PublicObjectiveCard10 extends PublicObjectiveCard implements Public
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
 
             Dice tempDice = playerWindowPanel.getCellWithIndex(i).getDiceOn();
-            Color tempDiceColor = tempDice.getColor();
 
             if (tempDice == null) {
                 continue;
             }
             else {
+                Color tempDiceColor = tempDice.getColor();
                 if (colorVariety.containsKey(tempDiceColor)) {
                     colorVariety.computeIfPresent(tempDiceColor, (k, v) -> v + 1);
                 }
