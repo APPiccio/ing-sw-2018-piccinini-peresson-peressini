@@ -1,9 +1,11 @@
 package PPP;
 
 public class Player {
+
     private String username;
     private String url;
-    private PlayerBoard playerBoard;
+    private WindowPanel myPanel;
+    private Color PrivateColor;
 
     public Player(Player player){
         this.username = player.getUsername();
@@ -21,4 +23,11 @@ public class Player {
         this.username = username;
     }
 
+    public Color getPrivateColor() {
+        return PrivateColor;
+    }
+
+    public WindowPanel getMyPanel() {
+        return new WindowPanel(myPanel);
+    }
 }
