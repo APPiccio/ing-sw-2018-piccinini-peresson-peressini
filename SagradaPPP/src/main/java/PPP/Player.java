@@ -4,7 +4,7 @@ public class Player {
 
     private String username;
     private String url;
-    private PlayerBoard playerBoard;
+    private WindowPanel myPanel;
     private Color PrivateColor;
 
     public Player(Player player){
@@ -27,7 +27,7 @@ public class Player {
         return PrivateColor;
     }
 
-    public PlayerBoard getPlayerBoard() {
-        return playerBoard;
+    public WindowPanel getMyPanel() {
+        return new WindowPanel(myPanel);
     }
 }
