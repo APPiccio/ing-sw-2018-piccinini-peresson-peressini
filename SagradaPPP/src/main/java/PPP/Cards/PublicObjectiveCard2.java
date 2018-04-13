@@ -10,15 +10,16 @@ import java.util.ArrayList;
 
 public class PublicObjectiveCard2 extends PublicObjectiveCard implements PublicObjectiveCardAction {
 
-    private ArrayList<Color> colors = new ArrayList<>();
-    private int coloredColumns = 0;
-
     public PublicObjectiveCard2() {
         super(StaticValues.PUBLICOBJECTIVECARD2_NAME, 2);
     }
 
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
+
+        ArrayList<Color> colors = new ArrayList<>();
+        int coloredColumns = 0;
+
         for (int i = 0; i < StaticValues.PATTERN_COL; i++) {
             for (int j = 0; j < StaticValues.PATTERN_ROW; j++) {
                 Dice tempDice = playerWindowPanel.getCellWithPosition(j, i).getDiceOn();

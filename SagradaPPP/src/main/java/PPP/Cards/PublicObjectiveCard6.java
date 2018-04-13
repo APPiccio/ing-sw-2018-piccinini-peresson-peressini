@@ -7,15 +7,16 @@ import PPP.WindowPanel;
 
 public class PublicObjectiveCard6 extends PublicObjectiveCard implements PublicObjectiveCardAction {
 
-    private int numberOfThree = 0;
-    private int numberOfFour = 0;
-
     public PublicObjectiveCard6() {
         super(StaticValues.PUBLICOBJECTIVECARD6_NAME, 6);
     }
 
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
+
+        int numberOfThree = 0;
+        int numberOfFour = 0;
+
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
             if ((playerWindowPanel.getCellWithIndex(i)).getValue() == 1) {
                 numberOfThree++;
