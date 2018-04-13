@@ -4,40 +4,58 @@ import java.util.ArrayList;
 
 public class RoundTrack {
 
-    private ArrayList<ArrayList<Dice>> diceOnTrack;
+    private ArrayList<ArrayList<Dice>> dicesOnTrack;
+
+    /**
+     * Init the first dimention of the ArrayList and 10 istances of the second dimention.
+     */
+    public RoundTrack(int turns) {
+        dicesOnTrack = new ArrayList<>();
+        for (int i = 0;i < turns ;i++){
+            dicesOnTrack.add(new ArrayList<>());
+        }
+    }
 
     public RoundTrack() {
-        diceOnTrack = new ArrayList<>();
-        for (int i = 0;i <= 9;i++){
-            diceOnTrack.add(new ArrayList<>());
+        this(10);
+    }
+    public ArrayList<Dice> getDicesOnTurn(int turn){
+        return new ArrayList<>(dicesOnTrack.get(turn - 1));
+    }
+    public void setDicesOnTurn(int turn, ArrayList<Dice> dices){
+        dicesOnTrack.set(turn-1,dices);
+    }
+
+    public void setDice(int turn, int index, Dice dice){
+        dicesOnTrack.get(turn-1).set(index,dice);
+
+    }
+
+    public void addDice(int turn, Dice dice){
+        dicesOnTrack.get(turn - 1).add(dice);
+    }
+
+    public Dice getDice(int turn, int index){
+        return new Dice(getDicesOnTurn(turn).get(index));
+    }
+
+
+    public boolean removeDice(int turn,int index){
+        ArrayList<Dice> dices = dicesOnTrack.get(turn-1);
+        if(dices.isEmpty()){
+            return false;
+        }else {
+            dices.remove(index);
+            return true;
         }
     }
 
-    public void putDice(int turn, Dice dice){
-        if (turn > 0 && turn <= 10){
-            int index = turn - 1; // turn starts from 1
-            if(diceOnTrack.get(index) == null){
-                diceOnTrack.add(index, new ArrayList<>());
-                diceOnTrack.get(index).add(dice);
-            }else {
-                diceOnTrack.get(index).add(dice);
-            }
-        }else{
-            throw new IllegalArgumentException("Invalid turn: " + turn);
-        }
+    public int dicesOnTurn(int turn){
+        return getDicesOnTurn(turn).size();
     }
 
-    public Dice getTopDice(int turn){
-        if (turn > 0 && turn <= 10) {
-            int index = turn - 1; // turn starts from 1
-            if (diceOnTrack.get(index) == null) {
-                return null;
-            } else {
-                ArrayList<Dice> diceOnThisTurn = diceOnTrack.get(index);
-                return diceOnThisTurn.size() == 0 ? null : diceOnThisTurn.get(diceOnThisTurn.size() - 1); // inline if that decides to return null if the sub-array.size is 0
-            }
-        }else{
-            throw new IllegalArgumentException("Invalid turn: " + turn);
-        }
+    public boolean hasDiceOnTurn(int turn){
+        return !getDicesOnTurn(turn).isEmpty();
     }
+
 }

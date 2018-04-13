@@ -11,20 +11,28 @@ public class RoundTrackTest {
     @Test
     public static void testRoundTrack(){
         RoundTrack roundTrack = new RoundTrack();
-        ArrayList<Dice> dices = new ArrayList<>();
-        Dice dice;
-        for (int i = 1; i <= 10 ; i++) {
-            dice = new Dice();
-            dices.add(dice);
-            roundTrack.putDice(i,dice);
-            roundTrack.putDice(i,dice);
+        ArrayList<Dice> firtsRowDices = new ArrayList<>();
+        ArrayList<Dice> secondRowDices = new ArrayList<>();
+        Dice dice1,dice2;
+        for (int i = 0; i <= 9; i++){
+            dice1 = new Dice();
+            dice2 = new Dice();
+            firtsRowDices.add(dice1);
+            secondRowDices.add(dice2);
+            roundTrack.addDice(i + 1,dice1);
+            roundTrack.addDice(i + 1,dice2);
+        }
+        roundTrack.removeDice(5,roundTrack.dicesOnTurn(2)-1);
+        secondRowDices.set(4,null);
+
+        for (int i = 0; i <= 9; i++){
+
+            if(secondRowDices.get(i) != null) {
+                assertEquals(true,roundTrack.getDice(i + 1, roundTrack.dicesOnTurn(i + 1) - 1).equals(secondRowDices.get(i)));
+            }else {
+                assertEquals(true,roundTrack.getDice(i + 1, roundTrack.dicesOnTurn(i + 1) - 1).equals(firtsRowDices.get(i)));
+            }
 
         }
-        for (int i = 1; i <= 10 ; i++) {
-            assertEquals(true ,roundTrack.getTopDice(i).equals(dices.get(i - 1)));
-            //TODO: Add check for dices under the top one;
-
-        }
-
     }
 }
