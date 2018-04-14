@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 //Color Diagonals: count of diagonally adjacent same color dice
 
-public class PublicObjectiveCard9 extends PublicObjectiveCard implements PublicObjectiveCardAction {
+public class PublicObjectiveCard9 extends PublicObjectiveCard{
 
     public PublicObjectiveCard9() {
         super(StaticValues.PUBLICOBJECTIVECARD9_NAME, 9);

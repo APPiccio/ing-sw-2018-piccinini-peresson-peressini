@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 //Shade Variety: sets of one of each value anywhere
 
-public class PublicObjectiveCard8 extends PublicObjectiveCard implements PublicObjectiveCardAction {
+public class PublicObjectiveCard8 extends PublicObjectiveCard{
 
     public PublicObjectiveCard8() {
         super(StaticValues.PUBLICOBJECTIVECARD8_NAME, 8);

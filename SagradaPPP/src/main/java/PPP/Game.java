@@ -18,7 +18,7 @@ public class Game {
     public void init(){
         RoundTrack roundTrack = new RoundTrack(StaticValues.NUMBER_OF_TURNS);
         roundTrack.setCurrentRounds(1);
-        
+
 
     }
 

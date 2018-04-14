@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 //Column Shade Variety: columns with no repeated values
 
-public class PublicObjectiveCard4 extends PublicObjectiveCard implements PublicObjectiveCardAction {
+public class PublicObjectiveCard4 extends PublicObjectiveCard{
 
     public PublicObjectiveCard4() {
         super(StaticValues.PUBLICOBJECTIVECARD4_NAME, 4);

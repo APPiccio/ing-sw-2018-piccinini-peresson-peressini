@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 //Row Color Variety: rows with no repeated colors
 
-public class PublicObjectiveCard1 extends PublicObjectiveCard implements PublicObjectiveCardAction {
+public class PublicObjectiveCard1 extends PublicObjectiveCard{
 
     public PublicObjectiveCard1() {
         super(StaticValues.PUBLICOBJECTIVECARD1_NAME, 1);

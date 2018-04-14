@@ -6,7 +6,7 @@ import PPP.WindowPanel;
 
 //Deep Shades: sets of 5 & 6 values anywhere
 
-public class PublicObjectiveCard7 extends PublicObjectiveCard implements PublicObjectiveCardAction {
+public class PublicObjectiveCard7 extends PublicObjectiveCard{
 
     public PublicObjectiveCard7() {
         super(StaticValues.PUBLICOBJECTIVECARD7_NAME, 7);

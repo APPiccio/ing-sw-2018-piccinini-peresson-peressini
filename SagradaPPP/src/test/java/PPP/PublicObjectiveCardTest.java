@@ -21,11 +21,9 @@ public class PublicObjectiveCardTest {
 
         result = panel.addDiceOnCellWithIndex(0,new Dice(Color.values()[0], 1));
         result = panel.addDiceOnCellWithIndex(1,new Dice(Color.values()[1], 2));
-
         result = panel.addDiceOnCellWithIndex(2,new Dice(Color.values()[2], 1));
         result = panel.addDiceOnCellWithIndex(3,new Dice(Color.values()[3], 2));
         result = panel.addDiceOnCellWithIndex(4,new Dice(Color.values()[4], 1));
-
 
         result = panel.addDiceOnCellWithIndex(5,new Dice(Color.values()[1], 3));
         result = panel.addDiceOnCellWithIndex(6,new Dice(Color.values()[2], 4));
@@ -45,18 +43,7 @@ public class PublicObjectiveCardTest {
         result = panel.addDiceOnCellWithIndex(18,new Dice(Color.values()[1], 4));
         result = panel.addDiceOnCellWithIndex(19,new Dice(Color.values()[2], 3));
 
-
         assertEquals(24, card.getScore(panel));
-
-
-
-
-
-
-
-
-
-
 
     }
 }

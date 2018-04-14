@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 //Color Variety: sets of one of each color anywhere
 
-public class PublicObjectiveCard10 extends PublicObjectiveCard implements PublicObjectiveCardAction {
+public class PublicObjectiveCard10 extends PublicObjectiveCard{
 
     public PublicObjectiveCard10() {
         super(StaticValues.PUBLICOBJECTIVECARD10_NAME, 10);
