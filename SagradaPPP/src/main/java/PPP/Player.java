@@ -5,10 +5,11 @@ public class Player {
     private String username;
     private String url;
     private WindowPanel myPanel;
-    private Color PrivateColor;
+    private Color privateColor;
 
     public Player(Player player){
         this.username = player.getUsername();
+        this.privateColor = player.getPrivateColor();
     }
 
     public Player(String username){
@@ -24,7 +25,7 @@ public class Player {
     }
 
     public Color getPrivateColor() {
-        return PrivateColor;
+        return privateColor;
     }
 
     public WindowPanel getMyPanel() {

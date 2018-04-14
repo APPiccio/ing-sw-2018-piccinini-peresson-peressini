@@ -10,6 +10,8 @@ public class StaticValues {
     public static final int PATTERN_COL = 5;
     public static final int NUMBER_OF_CELLS = 20;
     public static final int NUMBER_OF_COLORS = 5;
+    public static final int NUMBER_OF_TURNS = 10;
+
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;

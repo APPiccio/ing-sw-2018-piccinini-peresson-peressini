@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class Game {
     private ArrayList<Player> players;
-    private Integer turn;
     private Player activePlayer;
     private DiceBag diceBag;
     private ArrayList<WindowPanel> panels;
@@ -14,6 +13,13 @@ public class Game {
     public Game(){
         diceBag = new DiceBag();
         players = new ArrayList<Player>();
+    }
+
+    public void init(){
+        RoundTrack roundTrack = new RoundTrack(StaticValues.NUMBER_OF_TURNS);
+        roundTrack.setCurrentRounds(1);
+        
+
     }
 
     public void joinGame(String username) {
