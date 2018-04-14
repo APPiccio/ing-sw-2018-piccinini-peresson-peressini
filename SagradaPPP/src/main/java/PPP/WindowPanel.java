@@ -115,7 +115,6 @@ public class WindowPanel {
     public boolean addDiceOnCellWithIndex(int i, Dice dice){
         Cell currentCell = cells.get(i);
         if (currentCell == null) return false;
-        System.out.println(currentCell.toString());
         if(diceOk(currentCell,dice,i)){
             currentCell.setDiceOn(dice);
             return true;
@@ -125,23 +124,19 @@ public class WindowPanel {
 
     private boolean diceOk(Cell cell, Dice dice, int i){
         if(cell.hasDiceon()) {
-            System.out.println("hasDiceOn failure " + cell.toString());
             return false;
         }
 
         if (windowIsEmpty()){
             if(!borderPosition(i)){
-                System.out.println("NotBorderPosition failure");
                 return false;
             }
         }
         else {
             if (!atLeastOneNear(i)){
-                System.out.println("NoNear failure");
                 return false;
             }
             if (hasSimilarDiceAttached(dice,i)){
-                System.out.println("Similar attacched failure " + dice.toString());
                 return false;
             }
         }
@@ -149,8 +144,6 @@ public class WindowPanel {
         if(!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
         if (cell.hasValueRestriction() && dice.getValue() == cell.getValue()) return true;
         if (cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
-
-        System.out.println("restriction failure");
         return false;
     }
 
