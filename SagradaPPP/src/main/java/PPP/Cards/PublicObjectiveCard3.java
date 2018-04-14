@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 //Row Shade Variety: rows with no repeated values
 
-public class PublicObjectiveCard3 extends PublicObjectiveCard{
+public class PublicObjectiveCard3 extends PublicObjectiveCard {
 
     public PublicObjectiveCard3() {
         super(StaticValues.PUBLICOBJECTIVECARD3_NAME, 3);

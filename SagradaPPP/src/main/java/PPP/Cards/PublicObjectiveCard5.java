@@ -6,7 +6,7 @@ import PPP.WindowPanel;
 
 //Light Shades: sets of 1 & 2 values anywhere
 
-public class PublicObjectiveCard5 extends PublicObjectiveCard{
+public class PublicObjectiveCard5 extends PublicObjectiveCard {
 
     public PublicObjectiveCard5() {
         super(StaticValues.PUBLICOBJECTIVECARD5_NAME, 5);

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 //Column Color Variety: columns with no repeated colors
 
-public class PublicObjectiveCard2 extends PublicObjectiveCard{
+public class PublicObjectiveCard2 extends PublicObjectiveCard {
 
     public PublicObjectiveCard2() {
         super(StaticValues.PUBLICOBJECTIVECARD2_NAME, 2);

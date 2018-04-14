@@ -6,7 +6,7 @@ import PPP.WindowPanel;
 
 //Medium Shades: sets of 3 & 4 values anywhere
 
-public class PublicObjectiveCard6 extends PublicObjectiveCard{
+public class PublicObjectiveCard6 extends PublicObjectiveCard {
 
     public PublicObjectiveCard6() {
         super(StaticValues.PUBLICOBJECTIVECARD6_NAME, 6);
