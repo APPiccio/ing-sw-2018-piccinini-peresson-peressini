@@ -73,7 +73,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard implements PublicO
                     if(tmpCell.getDiceOn().getColor() == dice.getColor()){
                         return true;
                     }
-            }
+                }
             if (xBSX < 0 || xBSX > StaticValues.PATTERN_COL && yBSX < 0 || yBSX > StaticValues.PATTERN_ROW) {
                 tmpCell = panel.getCellWithPosition(yBSX, xBSX);
                 if (tmpCell.hasDiceon()){
@@ -81,14 +81,9 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard implements PublicO
                         return true;
                     }
             }
-            return false;
-        } else {
-            return false;
+                return false;
+            } else {
+                return false;
+            }
         }
-    }
-}
-
-
-
-
 }
