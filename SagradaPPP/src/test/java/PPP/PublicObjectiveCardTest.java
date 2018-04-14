@@ -5,7 +5,6 @@ import PPP.Cards.PublicObjectiveCard1;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -21,9 +20,7 @@ public class PublicObjectiveCardTest {
         PublicObjectiveCard card = new PublicObjectiveCard1();
 
         result = panel.addDiceOnCellWithIndex(0,new Dice(Color.values()[0], 1));
-        System.out.println("Dice = " + panel.getCellWithIndex(0).getDiceOn().toString());
         result = panel.addDiceOnCellWithIndex(1,new Dice(Color.values()[1], 2));
-        System.out.println("Dice = " + panel.getCellWithIndex(1).getDiceOn().toString());
 
         result = panel.addDiceOnCellWithIndex(2,new Dice(Color.values()[2], 1));
         result = panel.addDiceOnCellWithIndex(3,new Dice(Color.values()[3], 2));

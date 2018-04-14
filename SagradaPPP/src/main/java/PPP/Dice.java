@@ -69,4 +69,9 @@ public class Dice {
     public boolean equals(Dice dice) {
         return this.color == dice.getColor() && this.value == dice.getValue();
     }
+
+
+    public boolean isSimialr(Dice dice){
+        return color.equals(dice.getColor()) || value == dice.getValue();
+    }
 }
