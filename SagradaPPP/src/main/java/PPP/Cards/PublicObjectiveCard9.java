@@ -22,7 +22,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard implements PublicO
         int score = 0;
         for (int y = 0; y < StaticValues.PATTERN_COL; y++) {
             for (int x = 0; x < StaticValues.PATTERN_ROW; x++) {
-                if(hasASameColourDiceOnDiagonal(x,y,playerWindowPanel)){
+                if (hasASameColourDiceOnDiagonal(x, y, playerWindowPanel)) {
                     score++;
                 }
 
@@ -54,36 +54,40 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard implements PublicO
 
             Cell tmpCell;
             if (xTDX < 0 || xTDX > StaticValues.PATTERN_COL && yTDX < 0 || yTDX > StaticValues.PATTERN_ROW) {
-                 tmpCell = panel.getCellWithPosition(yTDX, xTDX);
-                if (tmpCell.hasDiceon()){
-                    if(tmpCell.getDiceOn().getColor() == dice.getColor()){
+                tmpCell = panel.getCellWithPosition(yTDX, xTDX);
+                if (tmpCell.hasDiceon()) {
+                    if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
                         return true;
+                    }
                 }
             }
             if (xBDX < 0 || xBDX > StaticValues.PATTERN_COL && yBDX < 0 || yBDX > StaticValues.PATTERN_ROW) {
                 tmpCell = panel.getCellWithPosition(yBDX, xBDX);
-                if (tmpCell.hasDiceon()){
-                    if(tmpCell.getDiceOn().getColor() == dice.getColor()){
-                        return true;
-                    }
-            }
-            if (xTSX < 0 || xTSX > StaticValues.PATTERN_COL && yTSX < 0 || yTSX > StaticValues.PATTERN_ROW) {
-                tmpCell = panel.getCellWithPosition(yTSX, xTSX);
-                if (tmpCell.hasDiceon()){
-                    if(tmpCell.getDiceOn().getColor() == dice.getColor()){
+                if (tmpCell.hasDiceon()) {
+                    if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
                         return true;
                     }
                 }
-            if (xBSX < 0 || xBSX > StaticValues.PATTERN_COL && yBSX < 0 || yBSX > StaticValues.PATTERN_ROW) {
-                tmpCell = panel.getCellWithPosition(yBSX, xBSX);
-                if (tmpCell.hasDiceon()){
-                    if(tmpCell.getDiceOn().getColor() == dice.getColor()){
+            }
+            if (xTSX < 0 || xTSX > StaticValues.PATTERN_COL && yTSX < 0 || yTSX > StaticValues.PATTERN_ROW) {
+                tmpCell = panel.getCellWithPosition(yTSX, xTSX);
+                if (tmpCell.hasDiceon()) {
+                    if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
                         return true;
                     }
+                }
             }
-                return false;
-            } else {
-                return false;
+            if (xBSX < 0 || xBSX > StaticValues.PATTERN_COL && yBSX < 0 || yBSX > StaticValues.PATTERN_ROW) {
+                tmpCell = panel.getCellWithPosition(yBSX, xBSX);
+                if (tmpCell.hasDiceon()) {
+                    if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
+                        return true;
+                    }
+                }
             }
+            return false;
         }
+        else return false;
+    }
 }
+
