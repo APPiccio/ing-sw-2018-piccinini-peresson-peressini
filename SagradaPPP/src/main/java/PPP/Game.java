@@ -9,6 +9,8 @@ public class Game {
     private ArrayList<WindowPanel> panels;
     private int numOfPlayer = 1;
 
+    //TODO: Add a method that given the username string returns the desired players
+    //TODO: Add overloading methods that take a Player as a parameter instead of a String
 
     public Game(){
         diceBag = new DiceBag();
@@ -17,7 +19,7 @@ public class Game {
 
     public void init(){
         RoundTrack roundTrack = new RoundTrack(StaticValues.NUMBER_OF_TURNS);
-        roundTrack.setCurrentRounds(1);
+        roundTrack.setCurrentRound(1);
 
 
     }

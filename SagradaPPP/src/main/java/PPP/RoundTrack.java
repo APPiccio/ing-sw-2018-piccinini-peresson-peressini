@@ -6,15 +6,15 @@ public class RoundTrack {
 
     private ArrayList<ArrayList<Dice>> dicesOnTrack;
     private int rounds;
-    private int currentRounds;
+    private int currentRound;
 
     /**
      * Init the first dimention of the ArrayList and 10 istances of the second dimention.
      */
 
     public RoundTrack(int rounds) {
-        rounds = rounds;
-        currentRounds = 0;
+        this.rounds = rounds;
+        currentRound = 0;
         dicesOnTrack = new ArrayList<>();
         for (int i = 0;i < rounds ;i++){
             dicesOnTrack.add(new ArrayList<>());
@@ -24,7 +24,7 @@ public class RoundTrack {
     public RoundTrack() {
         this(10);
     }
-    public ArrayList<Dice> getDicesOnTurn(int round){
+    public ArrayList<Dice> getDicesOnRound(int round){
         return new ArrayList<>(dicesOnTrack.get(round - 1));
     }
     public void setDicesOnTurn(int round , ArrayList<Dice> dices){
@@ -41,7 +41,7 @@ public class RoundTrack {
     }
 
     public Dice getDice(int round, int index){
-        return new Dice(getDicesOnTurn(round).get(index));
+        return new Dice(getDicesOnRound(round).get(index));
     }
 
 
@@ -55,27 +55,31 @@ public class RoundTrack {
         }
     }
 
-    public int dicesOnTurn(int turn){
-        return getDicesOnTurn(turn).size();
+    public int dicesOnRound(int turn){
+        return getDicesOnRound(turn).size();
     }
 
-    public boolean hasDiceOnTurn(int turn){
-        return !getDicesOnTurn(turn).isEmpty();
+    public boolean hasDiceOnRound(int turn){
+        return !getDicesOnRound(turn).isEmpty();
     }
 
     public int getRounds() {
         return rounds;
     }
 
-    public void setRounds(int rounds) {
-        this.rounds = rounds;
+    public int getCurrentRound() {
+        return currentRound;
     }
 
-    public int getCurrentRounds() {
-        return currentRounds;
+    public void setCurrentRound(int currentRound) {
+        this.currentRound = currentRound;
     }
 
-    public void setCurrentRounds(int currentRounds) {
-        this.currentRounds = currentRounds;
+    public void nextRound(){
+        if(currentRound < rounds){
+            currentRound++;
+        }else {
+            throw new IllegalStateException("trying to increment round over its upper bound");
+        }
     }
 }
