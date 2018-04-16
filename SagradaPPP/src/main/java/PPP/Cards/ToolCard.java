@@ -3,31 +3,31 @@ package PPP.Cards;
 import PPP.*;
 
 public abstract class ToolCard{
+
     private String name;
-    private int ID;
+    private int id;
     private Color color;
     private Boolean used;
 
     public ToolCard() {
         name = null;
-        ID = 0;
+        id = 0;
         color = null;
         used = false;
     }
 
-    protected ToolCard(String name,int id,Color color){
+    protected ToolCard(String name,int id,Color color) {
         this.name = name;
-        this.ID = id;
+        this.id = id;
         this.color = color;
         this.used = false;
-
     }
 
-    public void setUsed(){
+    public void setUsed() {
         used = true;
     }
 
-    public int getCost(){
+    public int getCost() {
         return used ? StaticValues.COST_USED_TOOLCARD : StaticValues.COST_UNUSED_TOOLCARD;
     }
 
@@ -39,5 +39,6 @@ public abstract class ToolCard{
         return color;
     }
 
-    abstract Object activate(Game game) ;
+    abstract Object activate(Game game);
+
 }

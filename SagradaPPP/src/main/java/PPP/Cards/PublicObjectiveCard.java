@@ -5,16 +5,16 @@ import PPP.WindowPanel;
 public abstract class PublicObjectiveCard {
 
     private String name;
-    private int ID;
+    private int id;
 
     public PublicObjectiveCard() {
         this.name = null;
-        this.ID = 0;
+        this.id = 0;
     }
 
-    protected PublicObjectiveCard(String name, int ID) {
+    protected PublicObjectiveCard(String name, int id) {
         this.name = name;
-        this.ID = ID;
+        this.id = id;
     }
 
     public String getName() {
@@ -22,7 +22,7 @@ public abstract class PublicObjectiveCard {
     }
 
     public int getID() {
-        return ID;
+        return id;
     }
 
     public abstract int getScore(WindowPanel playerWindowPanel);
