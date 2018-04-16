@@ -25,7 +25,7 @@ public class PublicObjectiveCard10 extends PublicObjectiveCard {
             else {
                 Color tempDiceColor = tempDice.getColor();
                 if (colorVariety.containsKey(tempDiceColor)) {
-                    colorVariety.computeIfPresent(tempDiceColor, (k, v) -> v + 1);
+                    colorVariety.computeIfPresent(tempDiceColor, (key, value) -> value + 1);
                 }
                 else {
                     colorVariety.put(tempDiceColor, 1);

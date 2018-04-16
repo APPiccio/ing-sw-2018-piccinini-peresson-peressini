@@ -5,7 +5,7 @@ import PPP.*;
 
 import java.util.ArrayList;
 
-public class ToolCard1 extends ToolCard implements  ToolCardAction{
+public class ToolCard1 extends ToolCard {
 
     public ToolCard1() {
         super(StaticValues.TOOLCARD1_NAME,1, Color.PURPLE);
