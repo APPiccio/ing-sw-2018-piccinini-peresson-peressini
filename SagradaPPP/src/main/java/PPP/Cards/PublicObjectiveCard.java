@@ -2,7 +2,7 @@ package PPP.Cards;
 
 import PPP.WindowPanel;
 
-public abstract class PublicObjectiveCard implements PublicObjectiveCardAction {
+public abstract class PublicObjectiveCard {
 
     private String name;
     private int ID;
@@ -24,5 +24,7 @@ public abstract class PublicObjectiveCard implements PublicObjectiveCardAction {
     public int getID() {
         return ID;
     }
+
+    abstract int getScore(WindowPanel playerWindowPanel);
 
 }
