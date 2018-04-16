@@ -22,7 +22,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
         int score = 0;
         for (int y = 0; y < StaticValues.PATTERN_ROW; y++) {
             for (int x = 0; x < StaticValues.PATTERN_COL; x++) {
-                if (hasASameColourDiceOnDiagonal(x, y, playerWindowPanel)) {
+                if (isDiceLegal(x, y, playerWindowPanel)) {
                     score++;
                 }
 
@@ -34,7 +34,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
         return score;
     }
 
-    private boolean hasASameColourDiceOnDiagonal(int x, int y, WindowPanel panel) {
+    private boolean isDiceLegal(int x, int y, WindowPanel panel) {
         boolean returnValue = false;
         Cell cell = panel.getCellWithPosition(y, x);
         if (cell.hasDiceon()) {

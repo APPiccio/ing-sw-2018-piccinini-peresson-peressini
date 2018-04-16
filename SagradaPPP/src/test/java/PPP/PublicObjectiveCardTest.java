@@ -86,6 +86,7 @@ public class PublicObjectiveCardTest {
         assertEquals(11, card.getScore(panel));
 
     }
+
     @Test
     public static void card10() throws FileNotFoundException {
 
@@ -94,6 +95,7 @@ public class PublicObjectiveCardTest {
 
 
         PublicObjectiveCard card = new PublicObjectiveCard10();
+
 
         panel.addDiceOnCellWithIndex(0,new Dice(Color.RED, 1));
         panel.addDiceOnCellWithIndex(1,new Dice(Color.GREEN, 2));

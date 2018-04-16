@@ -25,6 +25,6 @@ public abstract class PublicObjectiveCard {
         return ID;
     }
 
-    abstract int getScore(WindowPanel playerWindowPanel);
+    public abstract int getScore(WindowPanel playerWindowPanel);
 
 }
