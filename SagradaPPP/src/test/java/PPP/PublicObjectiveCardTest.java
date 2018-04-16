@@ -132,7 +132,7 @@ public class PublicObjectiveCardTest {
 
 
 
-        PublicObjectiveCard card = new PublicObjectiveCard10();
+        PublicObjectiveCard card = new PublicObjectiveCard8();
 
         panel.addDiceOnCellWithIndex(0,new Dice(Color.RED, 1));
         panel.addDiceOnCellWithIndex(1,new Dice(Color.GREEN, 2));
@@ -160,6 +160,7 @@ public class PublicObjectiveCardTest {
 
         assertEquals(0, card.getScore(panel));
 
+        panel = new WindowPanel(0,0);
         panel.addDiceOnCellWithIndex(0,new Dice(Color.RED, 1));
         panel.addDiceOnCellWithIndex(1,new Dice(Color.GREEN, 2));
         panel.addDiceOnCellWithIndex(2,new Dice(Color.BLUE, 1));
