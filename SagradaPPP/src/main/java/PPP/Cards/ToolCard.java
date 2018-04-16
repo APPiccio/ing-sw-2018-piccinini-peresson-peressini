@@ -38,4 +38,6 @@ public abstract class ToolCard{
     public Color getColor() {
         return color;
     }
+
+    abstract Object activate(Game game) ;
 }
