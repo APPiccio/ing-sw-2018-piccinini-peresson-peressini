@@ -68,7 +68,7 @@ public class WindowPanel {
     }
 
     public Cell getCellWithPosition(int row, int col) {
-        if ((row < 0 || row > StaticValues.PATTERN_ROW) || (col < 0 || col > StaticValues.PATTERN_COL)) {
+        if ((row < 0 || row >= StaticValues.PATTERN_ROW) || (col < 0 || col >= StaticValues.PATTERN_COL)) {
             //access denied to wrong cells
             return null;
         }

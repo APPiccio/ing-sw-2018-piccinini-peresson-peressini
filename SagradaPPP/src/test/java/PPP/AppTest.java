@@ -35,7 +35,7 @@ public class AppTest
      * Rigourous Test :-)
      */
 
-    public void testApp() throws IllegalDiceValueException, FileNotFoundException {
+    public void testApp() throws IllegalDiceValueException {
         //CellTest.cellValueTest();
         //DiceTest.diceValueTest();
         //DiceBagTest.diceBagGenTest();
@@ -43,9 +43,15 @@ public class AppTest
         //RoundTrackTest.testRoundTrack();
         //WindowPanelTest.testDiceOn();
         //GameTest.joiningTest();
-        PublicObjectiveCardTest.card1();
+
 
 
         assertTrue( true);
+    }
+    public void testCards() throws FileNotFoundException {
+        PublicObjectiveCardTest.card1();
+        PublicObjectiveCardTest.card9();
+        PublicObjectiveCardTest.card10();
+        PublicObjectiveCardTest.card8();
     }
 }
