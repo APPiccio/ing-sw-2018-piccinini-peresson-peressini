@@ -26,11 +26,11 @@ public class Cell {
         value = null;
     }
 
-    public Boolean hasValueRestriction(){
+    public boolean hasValueRestriction(){
         return value != null;
     }
 
-    public Boolean hasColorRestriction(){
+    public boolean hasColorRestriction(){
         return color != null;
     }
 
@@ -59,11 +59,11 @@ public class Cell {
         this.diceOn = diceOn;
     }//TODO implement color and value constraints
 
-    public Boolean hasDiceon(){
+    public boolean hasDiceon(){
         return diceOn != null;
     }
 
-    public Object equals(Cell cell) {
+    public boolean equals(Cell cell) {
         if(this.hasDiceon()){
             if(cell.hasDiceon()){
                 return this.diceOn.equals(cell.getDiceOn()) && this.value == cell.getValue() && this.color == cell.getColor();
