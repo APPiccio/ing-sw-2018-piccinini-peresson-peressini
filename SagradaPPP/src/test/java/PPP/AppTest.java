@@ -1,6 +1,5 @@
 package PPP;
 
-import PPP.Cards.PublicObjectiveCard;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;

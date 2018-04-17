@@ -1,6 +1,7 @@
 package PPP;
 
 import PPP.Cards.*;
+import com.sagrada.ppp.Cards.*;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;

@@ -1,8 +1,8 @@
 package PPP.Cards;
 
+import PPP.WindowPanel;
 import PPP.Dice;
 import PPP.StaticValues;
-import PPP.WindowPanel;
 
 //Medium Shades: sets of 3 & 4 values anywhere
 

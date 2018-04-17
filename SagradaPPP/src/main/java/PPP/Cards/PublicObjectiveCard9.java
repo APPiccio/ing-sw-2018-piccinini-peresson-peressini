@@ -1,11 +1,10 @@
 package PPP.Cards;
 
 
+import PPP.WindowPanel;
 import PPP.Cell;
 import PPP.Dice;
 import PPP.StaticValues;
-import PPP.WindowPanel;
-
 
 
 //Color Diagonals: count of diagonally adjacent same color dice

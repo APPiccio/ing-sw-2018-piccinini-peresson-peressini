@@ -1,8 +1,9 @@
 package PPP.Cards;
 
+import PPP.WindowPanel;
 import PPP.Dice;
 import PPP.StaticValues;
-import PPP.WindowPanel;
+
 import java.util.ArrayList;
 
 //Row Shade Variety: rows with no repeated values

@@ -1,6 +1,8 @@
 package PPP.Cards;
 
-import PPP.*;
+import PPP.Color;
+import PPP.Game;
+import PPP.StaticValues;
 
 public abstract class ToolCard{
 

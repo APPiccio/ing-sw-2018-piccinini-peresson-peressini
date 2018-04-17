@@ -1,9 +1,10 @@
 package PPP.Cards;
 
+import PPP.WindowPanel;
 import PPP.Color;
 import PPP.Dice;
 import PPP.StaticValues;
-import PPP.WindowPanel;
+
 import java.util.HashMap;
 
 //Color Variety: sets of one of each color anywhere

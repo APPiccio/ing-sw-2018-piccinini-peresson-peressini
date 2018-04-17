@@ -1,8 +1,8 @@
 package PPP.Cards;
 
+import PPP.WindowPanel;
 import PPP.Dice;
 import PPP.StaticValues;
-import PPP.WindowPanel;
 
 //Light Shades: sets of 1 & 2 values anywhere
 

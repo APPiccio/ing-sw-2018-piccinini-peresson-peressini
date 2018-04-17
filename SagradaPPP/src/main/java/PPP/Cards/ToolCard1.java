@@ -1,7 +1,10 @@
 package PPP.Cards;
 
 
-import PPP.*;
+import PPP.Color;
+import PPP.Dice;
+import PPP.Game;
+import PPP.StaticValues;
 
 import java.util.ArrayList;
 
