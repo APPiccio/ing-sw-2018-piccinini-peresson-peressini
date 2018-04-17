@@ -63,6 +63,7 @@ public class Cell {
         return diceOn != null;
     }
 
+
     public boolean equals(Cell cell) {
         if(this.hasDiceon()){
             if(cell.hasDiceon()){

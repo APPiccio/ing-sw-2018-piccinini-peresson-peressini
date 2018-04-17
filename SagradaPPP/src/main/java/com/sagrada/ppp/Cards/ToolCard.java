@@ -9,7 +9,7 @@ public abstract class ToolCard{
     private String name;
     private int id;
     private Color color;
-    private Boolean used;
+    private boolean used;
 
     public ToolCard() {
         name = null;

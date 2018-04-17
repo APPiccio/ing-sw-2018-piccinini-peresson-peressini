@@ -34,14 +34,14 @@ public class AppTest
      * Rigourous Test :-)
      */
 
-    public void testApp() throws IllegalDiceValueException {
-        //CellTest.cellValueTest();
-        //DiceTest.diceValueTest();
-        //DiceBagTest.diceBagGenTest();
-        //WindowPanelTest.testPanelComposition();
-        //RoundTrackTest.testRoundTrack();
-        //WindowPanelTest.testDiceOn();
-        //GameTest.joiningTest();
+    public void testApp() throws IllegalDiceValueException, FileNotFoundException {
+        CellTest.cellValueTest();
+        DiceTest.diceValueTest();
+        DiceBagTest.diceBagGenTest();
+        WindowPanelTest.testPanelComposition();
+        RoundTrackTest.testRoundTrack();
+        WindowPanelTest.testDiceOn();
+        GameTest.joiningTest();
 
         assertTrue( true);
     }
