@@ -1,11 +1,10 @@
 package PPP.Cards;
 
-import PPP.WindowPanel;
 import PPP.Color;
 import PPP.Dice;
 import PPP.StaticValues;
-
-import java.util.HashMap;
+import PPP.WindowPanel;
+import java.util.EnumMap;
 
 //Color Variety: sets of one of each color anywhere
 
@@ -17,18 +16,14 @@ public class PublicObjectiveCard10 extends PublicObjectiveCard {
 
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
-        HashMap<Color, Integer> colorVariety = new HashMap<>();
+        EnumMap<Color, Integer> colorVariety = new EnumMap<>(Color.class);
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
             Dice tempDice = playerWindowPanel.getCellWithIndex(i).getDiceOn();
-            if (tempDice == null) {
-                continue;
-            }
-            else {
+            if (tempDice != null) {
                 Color tempDiceColor = tempDice.getColor();
                 if (colorVariety.containsKey(tempDiceColor)) {
                     colorVariety.computeIfPresent(tempDiceColor, (key, value) -> value + 1);
-                }
-                else {
+                } else {
                     colorVariety.put(tempDiceColor, 1);
                 }
             }
