@@ -43,8 +43,6 @@ public class AppTest
         //WindowPanelTest.testDiceOn();
         //GameTest.joiningTest();
 
-
-
         assertTrue( true);
     }
     public void testCards() throws FileNotFoundException {
