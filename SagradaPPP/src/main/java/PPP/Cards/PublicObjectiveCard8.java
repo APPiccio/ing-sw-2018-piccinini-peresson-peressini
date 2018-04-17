@@ -18,15 +18,11 @@ public class PublicObjectiveCard8 extends PublicObjectiveCard {
         HashMap<Integer, Integer> shadeVariety = new HashMap<>();
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
             Dice tempDice = playerWindowPanel.getCellWithIndex(i).getDiceOn();
-            if (tempDice == null) {
-                continue;
-            }
-            else {
+            if (tempDice != null) {
                 int tempDiceValue = tempDice.getValue();
                 if (shadeVariety.containsKey(tempDiceValue)) {
                     shadeVariety.computeIfPresent(tempDiceValue, (key, value) -> value + 1);
-                }
-                else {
+                } else {
                     shadeVariety.put(tempDiceValue, 1);
                 }
             }
