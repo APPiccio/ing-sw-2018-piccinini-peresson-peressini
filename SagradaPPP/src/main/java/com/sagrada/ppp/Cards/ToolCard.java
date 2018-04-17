@@ -1,8 +1,8 @@
-package PPP.Cards;
+package com.sagrada.ppp.Cards;
 
-import PPP.Color;
-import PPP.Game;
-import PPP.StaticValues;
+import com.sagrada.ppp.Color;
+import com.sagrada.ppp.Game;
+import com.sagrada.ppp.StaticValues;
 
 public abstract class ToolCard{
 

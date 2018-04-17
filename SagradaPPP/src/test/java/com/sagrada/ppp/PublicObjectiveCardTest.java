@@ -1,6 +1,5 @@
-package PPP;
+package com.sagrada.ppp;
 
-import PPP.Cards.*;
 import com.sagrada.ppp.Cards.*;
 import org.junit.Test;
 

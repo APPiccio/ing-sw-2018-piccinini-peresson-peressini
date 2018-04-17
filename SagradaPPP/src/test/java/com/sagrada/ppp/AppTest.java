@@ -1,4 +1,4 @@
-package PPP;
+package com.sagrada.ppp;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

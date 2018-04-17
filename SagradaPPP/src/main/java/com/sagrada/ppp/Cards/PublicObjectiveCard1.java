@@ -1,9 +1,9 @@
-package PPP.Cards;
+package com.sagrada.ppp.Cards;
 
-import PPP.WindowPanel;
-import PPP.Color;
-import PPP.Dice;
-import PPP.StaticValues;
+import com.sagrada.ppp.Color;
+import com.sagrada.ppp.Dice;
+import com.sagrada.ppp.StaticValues;
+import com.sagrada.ppp.WindowPanel;
 
 import java.util.ArrayList;
 

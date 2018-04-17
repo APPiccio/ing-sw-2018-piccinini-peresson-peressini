@@ -1,4 +1,4 @@
-package PPP;
+package com.sagrada.ppp;
 
 public class StaticValues {
 

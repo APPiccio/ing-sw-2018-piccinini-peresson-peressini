@@ -1,10 +1,10 @@
-package PPP.Cards;
+package com.sagrada.ppp.Cards;
 
 
-import PPP.WindowPanel;
-import PPP.Cell;
-import PPP.Dice;
-import PPP.StaticValues;
+import com.sagrada.ppp.Cell;
+import com.sagrada.ppp.Dice;
+import com.sagrada.ppp.StaticValues;
+import com.sagrada.ppp.WindowPanel;
 
 
 //Color Diagonals: count of diagonally adjacent same color dice

@@ -1,6 +1,6 @@
-package PPP.Cards;
+package com.sagrada.ppp.Cards;
 
-import PPP.WindowPanel;
+import com.sagrada.ppp.WindowPanel;
 
 public abstract class PublicObjectiveCard {
 

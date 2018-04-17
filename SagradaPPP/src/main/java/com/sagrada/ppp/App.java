@@ -1,6 +1,4 @@
-package PPP;
-
-import java.util.ArrayList;
+package com.sagrada.ppp;
 
 /**
  * Hello world!

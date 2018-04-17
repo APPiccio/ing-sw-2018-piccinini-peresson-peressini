@@ -1,9 +1,10 @@
-package PPP.Cards;
+package com.sagrada.ppp.Cards;
 
-import PPP.Color;
-import PPP.Dice;
-import PPP.StaticValues;
-import PPP.WindowPanel;
+import com.sagrada.ppp.Color;
+import com.sagrada.ppp.Dice;
+import com.sagrada.ppp.StaticValues;
+import com.sagrada.ppp.WindowPanel;
+
 import java.util.EnumMap;
 
 //Color Variety: sets of one of each color anywhere
