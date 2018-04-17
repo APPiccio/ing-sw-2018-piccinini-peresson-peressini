@@ -6,7 +6,7 @@ public abstract class ToolCard{
     private String name;
     private int ID;
     private Color color;
-    private Boolean used;
+    private boolean used;
 
     public ToolCard() {
         name = null;
