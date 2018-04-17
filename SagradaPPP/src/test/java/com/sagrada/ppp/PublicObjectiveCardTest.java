@@ -2,9 +2,7 @@ package com.sagrada.ppp;
 
 import com.sagrada.ppp.Cards.*;
 import org.junit.Test;
-
 import java.io.FileNotFoundException;
-
 import static junit.framework.Assert.assertEquals;
 
 public class PublicObjectiveCardTest {
@@ -13,12 +11,46 @@ public class PublicObjectiveCardTest {
     public static void card1() throws FileNotFoundException {
 
         PublicObjectiveCard card = new PublicObjectiveCard1();
-
         WindowPanel panel = TestPanels.panel200();
         assertEquals(24, card.getScore(panel));
+
+    }
+
+    @Test
+    public static void card5() throws FileNotFoundException {
+
+        PublicObjectiveCard card = new PublicObjectiveCard5();
+        assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
+        assertEquals(10*2, card.getScore(TestPanels.panel0())); //master panel
+        assertEquals(0, card.getScore(TestPanels.panel10()));
+        assertEquals(0, card.getScore(TestPanels.panel20()));
+
+    }
+
+    @Test
+    public static void card6() throws FileNotFoundException {
+
+        PublicObjectiveCard card = new PublicObjectiveCard6();
+        assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
+        assertEquals(10*2, card.getScore(TestPanels.panel10())); //master panel
+        assertEquals(0, card.getScore(TestPanels.panel0()));
+        assertEquals(0, card.getScore(TestPanels.panel20()));
+
+    }
+
+    @Test
+    public static void card7() throws FileNotFoundException {
+
+        PublicObjectiveCard card = new PublicObjectiveCard7();
+        assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
+        assertEquals(10*2, card.getScore(TestPanels.panel20())); //master panel
+        assertEquals(0, card.getScore(TestPanels.panel0()));
+        assertEquals(0, card.getScore(TestPanels.panel10()));
+
     }
 
     /**
+     *
      *
      * This getScore() method doesn't check any dice value
      */
