@@ -36,7 +36,7 @@ public class Dice {
         this(Color.getRandomColor(),value);
     }
 
-    //completly random dice
+    //completely random dice
     public Dice() {
         this(Color.getRandomColor(),new Random().nextInt(6) + 1);
     }
