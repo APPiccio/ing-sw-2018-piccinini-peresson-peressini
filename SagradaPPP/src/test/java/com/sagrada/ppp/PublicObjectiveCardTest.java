@@ -18,6 +18,15 @@ public class PublicObjectiveCardTest {
 
     }
 
+    public static void card2() throws FileNotFoundException{
+
+        PublicObjectiveCard card = new PublicObjectiveCard2();
+        assertEquals(0, card.getScore(new WindowPanel(0,0)));
+
+    }
+
+
+
     public static void card3() throws FileNotFoundException {
 
         PublicObjectiveCard card = new PublicObjectiveCard3();
@@ -25,6 +34,13 @@ public class PublicObjectiveCardTest {
         assertEquals(20, card.getScore(TestPanels.panel_310()));
         assertEquals(10, card.getScore(TestPanels.panel_311()));
         assertEquals(0, card.getScore(TestPanels.panel_312()));
+
+    }
+
+    public static void card4() throws FileNotFoundException{
+
+        PublicObjectiveCard card = new PublicObjectiveCard4();
+        assertEquals(0, card.getScore(new WindowPanel(0,0)));
 
     }
 
