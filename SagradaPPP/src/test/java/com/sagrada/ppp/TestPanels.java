@@ -267,8 +267,106 @@ public class TestPanels {
         return panel;
     }
 
+    //every column with no color duplication
+    public static WindowPanel panel_220() throws FileNotFoundException {
+
+        WindowPanel panel = new WindowPanel(0, 0);
+
+        panel.addDiceOnCellWithIndex(0, new Dice(Color.BLUE, 1));
+        panel.addDiceOnCellWithIndex(5,new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(10, new Dice(Color.RED, 1));
+        panel.addDiceOnCellWithIndex(15,new Dice(Color.PURPLE, 2));
+
+        panel.addDiceOnCellWithIndex(1, new Dice(Color.GREEN, 3));
+        panel.addDiceOnCellWithIndex(6,new Dice(Color.YELLOW, 4));
+        panel.addDiceOnCellWithIndex(11,new Dice(Color.PURPLE, 3));
+        panel.addDiceOnCellWithIndex(16,new Dice(Color.RED, 4));
+
+        panel.addDiceOnCellWithIndex(2,new Dice(Color.BLUE, 5));
+        panel.addDiceOnCellWithIndex(7,new Dice(Color.GREEN, 6));
+        panel.addDiceOnCellWithIndex(12,new Dice(Color.RED, 5));
+        panel.addDiceOnCellWithIndex(17,new Dice(Color.PURPLE, 6));
+
+        panel.addDiceOnCellWithIndex(3,new Dice(Color.YELLOW, 1));
+        panel.addDiceOnCellWithIndex(8,new Dice(Color.BLUE, 3));
+        panel.addDiceOnCellWithIndex(13,new Dice(Color.GREEN, 1));
+        panel.addDiceOnCellWithIndex(18,new Dice(Color.RED, 3));
+
+        panel.addDiceOnCellWithIndex(4,new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(9,new Dice(Color.RED, 4));
+        panel.addDiceOnCellWithIndex(14,new Dice(Color.YELLOW, 2));
+        panel.addDiceOnCellWithIndex(19,new Dice(Color.PURPLE, 4));
+
+        return panel;
+    }
+
+    //1 col with hole, 2 with repeated color
+    public static WindowPanel panel_221() throws FileNotFoundException {
+
+        WindowPanel panel = new WindowPanel(0, 0);
+
+        //GREEN duplicated
+        panel.addDiceOnCellWithIndex(0, new Dice(Color.BLUE, 1));
+        panel.addDiceOnCellWithIndex(5,new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(10, new Dice(Color.RED, 1));
+        panel.addDiceOnCellWithIndex(15,new Dice(Color.BLUE, 2));
+
+        panel.addDiceOnCellWithIndex(1, new Dice(Color.GREEN, 3));
+        panel.addDiceOnCellWithIndex(6,new Dice(Color.YELLOW, 4));
+        panel.addDiceOnCellWithIndex(11,new Dice(Color.PURPLE, 3));
+        panel.addDiceOnCellWithIndex(16,new Dice(Color.RED, 4));
+
+        panel.addDiceOnCellWithIndex(2,new Dice(Color.BLUE, 5));
+        panel.addDiceOnCellWithIndex(7,new Dice(Color.GREEN, 6));
+        panel.addDiceOnCellWithIndex(12,new Dice(Color.RED, 5));
+        panel.addDiceOnCellWithIndex(17,new Dice(Color.PURPLE, 6));
+
+        panel.addDiceOnCellWithIndex(3,new Dice(Color.YELLOW, 1));
+        panel.addDiceOnCellWithIndex(8,new Dice(Color.BLUE, 3));
+        panel.addDiceOnCellWithIndex(13,new Dice(Color.GREEN, 1));
+        panel.addDiceOnCellWithIndex(18,new Dice(Color.RED, 3));
+
+        panel.addDiceOnCellWithIndex(4,new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(14,new Dice(Color.YELLOW, 2));
+        panel.addDiceOnCellWithIndex(19,new Dice(Color.PURPLE, 4));
+
+        return panel;
+    }
+
+    //no col with 4 different color
+    public static WindowPanel panel_222() throws FileNotFoundException {
+
+        WindowPanel panel = new WindowPanel(0, 0);
+
+        //GREEN duplicated
+        panel.addDiceOnCellWithIndex(0, new Dice(Color.BLUE, 1));
+        panel.addDiceOnCellWithIndex(5,new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(10, new Dice(Color.RED, 1));
+        panel.addDiceOnCellWithIndex(15,new Dice(Color.BLUE, 2));
+
+        panel.addDiceOnCellWithIndex(1, new Dice(Color.GREEN, 3));
+        panel.addDiceOnCellWithIndex(6,new Dice(Color.YELLOW, 4));
+        panel.addDiceOnCellWithIndex(16,new Dice(Color.RED, 4));
+
+        panel.addDiceOnCellWithIndex(2,new Dice(Color.BLUE, 5));
+        panel.addDiceOnCellWithIndex(7,new Dice(Color.GREEN, 6));
+        panel.addDiceOnCellWithIndex(12,new Dice(Color.BLUE, 5));
+        panel.addDiceOnCellWithIndex(17,new Dice(Color.PURPLE, 6));
+
+        panel.addDiceOnCellWithIndex(3,new Dice(Color.YELLOW, 1));
+        panel.addDiceOnCellWithIndex(13,new Dice(Color.GREEN, 1));
+        panel.addDiceOnCellWithIndex(18,new Dice(Color.RED, 3));
+
+        panel.addDiceOnCellWithIndex(4,new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(14,new Dice(Color.YELLOW, 2));
+        panel.addDiceOnCellWithIndex(19,new Dice(Color.PURPLE, 4));
+
+        return panel;
+    }
+
+
     //no value duplication in the same row
-    public static WindowPanel panel_310() throws FileNotFoundException{
+    public static WindowPanel panel_230() throws FileNotFoundException{
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -304,7 +402,7 @@ public class TestPanels {
     }
 
     //1 ROW with hole, 1 ROW with color duplication
-    public static WindowPanel panel_311() throws FileNotFoundException{
+    public static WindowPanel panel_231() throws FileNotFoundException{
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -339,7 +437,7 @@ public class TestPanels {
     }
 
     //no row with 5 different value
-    public static WindowPanel panel_312() throws FileNotFoundException{
+    public static WindowPanel panel_232() throws FileNotFoundException{
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -367,5 +465,77 @@ public class TestPanels {
 
         return panel;
     }
+
+    //every column with no value duplication
+    public static WindowPanel panel_240() throws FileNotFoundException {
+
+        WindowPanel panel = new WindowPanel(0, 0);
+
+        panel.addDiceOnCellWithIndex(0, new Dice(Color.BLUE, 1));
+        panel.addDiceOnCellWithIndex(5,new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(10, new Dice(Color.RED, 3));
+        panel.addDiceOnCellWithIndex(15,new Dice(Color.PURPLE, 4));
+
+        panel.addDiceOnCellWithIndex(1, new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(6,new Dice(Color.YELLOW, 3));
+        panel.addDiceOnCellWithIndex(11,new Dice(Color.PURPLE, 4));
+        panel.addDiceOnCellWithIndex(16,new Dice(Color.RED, 5));
+
+        panel.addDiceOnCellWithIndex(2,new Dice(Color.BLUE, 3));
+        panel.addDiceOnCellWithIndex(7,new Dice(Color.GREEN, 4));
+        panel.addDiceOnCellWithIndex(12,new Dice(Color.RED, 5));
+        panel.addDiceOnCellWithIndex(17,new Dice(Color.PURPLE, 6));
+
+        panel.addDiceOnCellWithIndex(3,new Dice(Color.YELLOW, 1));
+        panel.addDiceOnCellWithIndex(8,new Dice(Color.BLUE, 3));
+        panel.addDiceOnCellWithIndex(13,new Dice(Color.GREEN, 4));
+        panel.addDiceOnCellWithIndex(18,new Dice(Color.RED, 2));
+
+        panel.addDiceOnCellWithIndex(4,new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(9,new Dice(Color.RED, 4));
+        panel.addDiceOnCellWithIndex(14,new Dice(Color.YELLOW, 5));
+        panel.addDiceOnCellWithIndex(19,new Dice(Color.PURPLE, 6));
+
+        return panel;
+    }
+
+    //1 col with hol, 2 with repeated value
+    public static WindowPanel panel_241() throws FileNotFoundException {
+
+        WindowPanel panel = new WindowPanel(0, 0);
+
+        panel.addDiceOnCellWithIndex(0, new Dice(Color.BLUE, 1));
+        panel.addDiceOnCellWithIndex(5,new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(10, new Dice(Color.RED, 3));
+        panel.addDiceOnCellWithIndex(15,new Dice(Color.BLUE, 1));
+
+        panel.addDiceOnCellWithIndex(1, new Dice(Color.GREEN, 3));
+        panel.addDiceOnCellWithIndex(6,new Dice(Color.YELLOW, 4));
+        panel.addDiceOnCellWithIndex(11,new Dice(Color.PURPLE, 5));
+        panel.addDiceOnCellWithIndex(16,new Dice(Color.RED, 6));
+
+        panel.addDiceOnCellWithIndex(2,new Dice(Color.BLUE, 6));
+        panel.addDiceOnCellWithIndex(7,new Dice(Color.GREEN, 5));
+        panel.addDiceOnCellWithIndex(12,new Dice(Color.RED, 4));
+        panel.addDiceOnCellWithIndex(17,new Dice(Color.PURPLE, 3));
+
+        panel.addDiceOnCellWithIndex(3,new Dice(Color.YELLOW, 1));
+        panel.addDiceOnCellWithIndex(8,new Dice(Color.BLUE, 3));
+        panel.addDiceOnCellWithIndex(13,new Dice(Color.GREEN, 1));
+        panel.addDiceOnCellWithIndex(18,new Dice(Color.RED, 2));
+
+        panel.addDiceOnCellWithIndex(4,new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(14,new Dice(Color.YELLOW, 3));
+        panel.addDiceOnCellWithIndex(19,new Dice(Color.PURPLE, 4));
+
+        return panel;
+    }
+
+    //no col with 4 different value
+    public static WindowPanel panel_242() throws FileNotFoundException {
+        return TestPanels.panel_222();
+    }
+
+
 
 }
