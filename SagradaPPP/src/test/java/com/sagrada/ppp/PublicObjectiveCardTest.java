@@ -11,8 +11,20 @@ public class PublicObjectiveCardTest {
     public static void card1() throws FileNotFoundException {
 
         PublicObjectiveCard card = new PublicObjectiveCard1();
-        WindowPanel panel = TestPanels.panel200();
-        assertEquals(24, card.getScore(panel));
+        assertEquals(0, card.getScore(new WindowPanel(0,0)));
+        assertEquals(24, card.getScore(TestPanels.panel_210()));
+        assertEquals(12, card.getScore(TestPanels.panel_211()));
+        assertEquals(0, card.getScore(TestPanels.panel_212()));
+
+    }
+
+    public static void card3() throws FileNotFoundException {
+
+        PublicObjectiveCard card = new PublicObjectiveCard3();
+        assertEquals(0, card.getScore(new WindowPanel(0,0)));
+        assertEquals(20, card.getScore(TestPanels.panel_310()));
+        assertEquals(10, card.getScore(TestPanels.panel_311()));
+        assertEquals(0, card.getScore(TestPanels.panel_312()));
 
     }
 
@@ -20,13 +32,14 @@ public class PublicObjectiveCardTest {
     public static void card5() throws FileNotFoundException {
 
         PublicObjectiveCard card = new PublicObjectiveCard5();
+
         assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
-        assertEquals(0, card.getScore(TestPanels.panel60()));
-        assertEquals(0, card.getScore(TestPanels.panel61()));
-        assertEquals(0, card.getScore(TestPanels.panel70()));
-        assertEquals(0, card.getScore(TestPanels.panel71()));
-        assertEquals(10*2, card.getScore(TestPanels.panel50())); //master panel
-        assertEquals(5*2, card.getScore(TestPanels.panel51()));
+        assertEquals(0, card.getScore(TestPanels.panel_60()));
+        assertEquals(0, card.getScore(TestPanels.panel_61()));
+        assertEquals(0, card.getScore(TestPanels.panel_70()));
+        assertEquals(0, card.getScore(TestPanels.panel_71()));
+        assertEquals(10*2, card.getScore(TestPanels.panel_50())); //master panel
+        assertEquals(5*2, card.getScore(TestPanels.panel_51()));
 
     }
 
@@ -35,12 +48,12 @@ public class PublicObjectiveCardTest {
 
         PublicObjectiveCard card = new PublicObjectiveCard6();
         assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
-        assertEquals(0, card.getScore(TestPanels.panel50()));
-        assertEquals(0, card.getScore(TestPanels.panel51()));
-        assertEquals(0, card.getScore(TestPanels.panel70()));
-        assertEquals(0, card.getScore(TestPanels.panel71()));
-        assertEquals(10*2, card.getScore(TestPanels.panel60())); //master panel
-        assertEquals(5*2, card.getScore(TestPanels.panel61()));
+        assertEquals(0, card.getScore(TestPanels.panel_50()));
+        assertEquals(0, card.getScore(TestPanels.panel_51()));
+        assertEquals(0, card.getScore(TestPanels.panel_70()));
+        assertEquals(0, card.getScore(TestPanels.panel_71()));
+        assertEquals(10*2, card.getScore(TestPanels.panel_60())); //master panel
+        assertEquals(5*2, card.getScore(TestPanels.panel_61()));
 
     }
 
@@ -49,12 +62,12 @@ public class PublicObjectiveCardTest {
 
         PublicObjectiveCard card = new PublicObjectiveCard7();
         assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
-        assertEquals(0, card.getScore(TestPanels.panel50()));
-        assertEquals(0, card.getScore(TestPanels.panel51()));
-        assertEquals(0, card.getScore(TestPanels.panel60()));
-        assertEquals(0, card.getScore(TestPanels.panel61()));
-        assertEquals(10*2, card.getScore(TestPanels.panel70())); //master panel
-        assertEquals(5*2, card.getScore(TestPanels.panel71()));
+        assertEquals(0, card.getScore(TestPanels.panel_50()));
+        assertEquals(0, card.getScore(TestPanels.panel_51()));
+        assertEquals(0, card.getScore(TestPanels.panel_60()));
+        assertEquals(0, card.getScore(TestPanels.panel_61()));
+        assertEquals(10*2, card.getScore(TestPanels.panel_70())); //master panel
+        assertEquals(5*2, card.getScore(TestPanels.panel_71()));
 
     }
 

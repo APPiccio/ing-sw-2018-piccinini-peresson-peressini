@@ -49,6 +49,7 @@ public class AppTest
     public void testCards() throws FileNotFoundException {
 
         PublicObjectiveCardTest.card1();
+        PublicObjectiveCardTest.card3();
         PublicObjectiveCardTest.card5();
         PublicObjectiveCardTest.card6();
         PublicObjectiveCardTest.card7();
