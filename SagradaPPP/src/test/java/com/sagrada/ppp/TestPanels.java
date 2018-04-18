@@ -36,6 +36,27 @@ public class TestPanels {
 
     }
 
+    //zig-zag panel
+    public static WindowPanel panel51() throws FileNotFoundException {
+
+        WindowPanel panel = new WindowPanel(0, 0);
+
+        panel.addDiceOnCellWithIndex(0, new Dice(Color.BLUE, 1));
+        panel.addDiceOnCellWithIndex(6, new Dice(Color.PURPLE, 2));
+        panel.addDiceOnCellWithIndex(2, new Dice(Color.PURPLE, 2));
+        panel.addDiceOnCellWithIndex(8, new Dice(Color.YELLOW, 1));
+        panel.addDiceOnCellWithIndex(4, new Dice(Color.YELLOW, 1));
+
+        panel.addDiceOnCellWithIndex(10, new Dice(Color.PURPLE, 2));
+        panel.addDiceOnCellWithIndex(16, new Dice(Color.YELLOW, 1));
+        panel.addDiceOnCellWithIndex(12, new Dice(Color.YELLOW, 1));
+        panel.addDiceOnCellWithIndex(18, new Dice(Color.GREEN, 2));
+        panel.addDiceOnCellWithIndex(14, new Dice(Color.GREEN, 2));
+
+        return panel;
+
+    }
+
     public static WindowPanel panel60() throws FileNotFoundException {
 
         WindowPanel panel = new WindowPanel(0, 0);
@@ -68,6 +89,27 @@ public class TestPanels {
 
     }
 
+    //zig-zag panel
+    public static WindowPanel panel61() throws FileNotFoundException {
+
+        WindowPanel panel = new WindowPanel(0, 0);
+
+        panel.addDiceOnCellWithIndex(0, new Dice(Color.BLUE, 3));
+        panel.addDiceOnCellWithIndex(6, new Dice(Color.PURPLE, 4));
+        panel.addDiceOnCellWithIndex(2, new Dice(Color.PURPLE, 4));
+        panel.addDiceOnCellWithIndex(8, new Dice(Color.YELLOW, 3));
+        panel.addDiceOnCellWithIndex(4, new Dice(Color.YELLOW, 3));
+
+        panel.addDiceOnCellWithIndex(10, new Dice(Color.PURPLE, 4));
+        panel.addDiceOnCellWithIndex(16, new Dice(Color.YELLOW, 3));
+        panel.addDiceOnCellWithIndex(12, new Dice(Color.YELLOW, 3));
+        panel.addDiceOnCellWithIndex(18, new Dice(Color.GREEN, 4));
+        panel.addDiceOnCellWithIndex(14, new Dice(Color.GREEN, 4));
+
+        return panel;
+
+    }
+
     public static WindowPanel panel70() throws FileNotFoundException {
 
         WindowPanel panel = new WindowPanel(0, 0);
@@ -95,6 +137,27 @@ public class TestPanels {
         panel.addDiceOnCellWithIndex(17, new Dice(Color.BLUE, 6));
         panel.addDiceOnCellWithIndex(18, new Dice(Color.GREEN, 5));
         panel.addDiceOnCellWithIndex(19, new Dice(Color.PURPLE, 6));
+
+        return panel;
+
+    }
+
+    //zig-zag panel
+    public static WindowPanel panel71() throws FileNotFoundException {
+
+        WindowPanel panel = new WindowPanel(0, 0);
+
+        panel.addDiceOnCellWithIndex(0, new Dice(Color.BLUE, 5));
+        panel.addDiceOnCellWithIndex(6, new Dice(Color.PURPLE, 6));
+        panel.addDiceOnCellWithIndex(2, new Dice(Color.PURPLE, 6));
+        panel.addDiceOnCellWithIndex(8, new Dice(Color.YELLOW, 5));
+        panel.addDiceOnCellWithIndex(4, new Dice(Color.YELLOW, 5));
+
+        panel.addDiceOnCellWithIndex(10, new Dice(Color.PURPLE, 6));
+        panel.addDiceOnCellWithIndex(16, new Dice(Color.YELLOW, 5));
+        panel.addDiceOnCellWithIndex(12, new Dice(Color.YELLOW, 5));
+        panel.addDiceOnCellWithIndex(18, new Dice(Color.GREEN, 6));
+        panel.addDiceOnCellWithIndex(14, new Dice(Color.GREEN, 6));
 
         return panel;
 

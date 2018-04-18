@@ -22,8 +22,11 @@ public class PublicObjectiveCardTest {
         PublicObjectiveCard card = new PublicObjectiveCard5();
         assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
         assertEquals(0, card.getScore(TestPanels.panel60()));
+        assertEquals(0, card.getScore(TestPanels.panel61()));
         assertEquals(0, card.getScore(TestPanels.panel70()));
+        assertEquals(0, card.getScore(TestPanels.panel71()));
         assertEquals(10*2, card.getScore(TestPanels.panel50())); //master panel
+        assertEquals(5*2, card.getScore(TestPanels.panel51()));
 
     }
 
@@ -33,8 +36,11 @@ public class PublicObjectiveCardTest {
         PublicObjectiveCard card = new PublicObjectiveCard6();
         assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
         assertEquals(0, card.getScore(TestPanels.panel50()));
+        assertEquals(0, card.getScore(TestPanels.panel51()));
         assertEquals(0, card.getScore(TestPanels.panel70()));
+        assertEquals(0, card.getScore(TestPanels.panel71()));
         assertEquals(10*2, card.getScore(TestPanels.panel60())); //master panel
+        assertEquals(5*2, card.getScore(TestPanels.panel61()));
 
     }
 
@@ -44,8 +50,11 @@ public class PublicObjectiveCardTest {
         PublicObjectiveCard card = new PublicObjectiveCard7();
         assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
         assertEquals(0, card.getScore(TestPanels.panel50()));
+        assertEquals(0, card.getScore(TestPanels.panel51()));
         assertEquals(0, card.getScore(TestPanels.panel60()));
+        assertEquals(0, card.getScore(TestPanels.panel61()));
         assertEquals(10*2, card.getScore(TestPanels.panel70())); //master panel
+        assertEquals(5*2, card.getScore(TestPanels.panel71()));
 
     }
 
