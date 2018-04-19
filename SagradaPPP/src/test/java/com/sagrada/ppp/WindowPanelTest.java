@@ -18,7 +18,7 @@ public class WindowPanelTest {
         assertEquals(true, panel.addDiceOnCellWithIndex(0,dice));
         //mettere dado dove c'è già
         assertEquals(false, panel.addDiceOnCellWithIndex(0,dice));
-        //mettere dado dove c'è restrizione
+        //mettere dado dove c'è restizione
         dice = new Dice(3);
         assertEquals(false, panel.addDiceOnCellWithPosition(0,4,dice));
 
@@ -73,7 +73,7 @@ public class WindowPanelTest {
 
         }
 
-        
+
 
     }
 }

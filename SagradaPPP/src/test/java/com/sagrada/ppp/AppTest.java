@@ -10,8 +10,8 @@ import java.io.FileNotFoundException;
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
+public class AppTest
+        extends TestCase
 {
     /**
      * Create the test case
@@ -47,7 +47,7 @@ public class AppTest
         assertTrue( true);
 
     }
-    public void testCards() throws FileNotFoundException {
+    public void testCards()  {
 
         PublicObjectiveCardTest.card1();
         PublicObjectiveCardTest.card2();
