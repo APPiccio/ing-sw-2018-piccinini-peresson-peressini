@@ -2,11 +2,10 @@ package com.sagrada.ppp;
 
 public class TestPanels {
 
-<<<<<<< Updated upstream
-    public static WindowPanel panel_50() throws FileNotFoundException {
-=======
-    public static WindowPanel panel50()  {
->>>>>>> Stashed changes
+
+
+    public static WindowPanel panel_50()  {
+
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -39,11 +38,9 @@ public class TestPanels {
     }
 
     //zig-zag panel
-<<<<<<< Updated upstream
-    public static WindowPanel panel_51() throws FileNotFoundException {
-=======
-    public static WindowPanel panel51()  {
->>>>>>> Stashed changes
+
+    public static WindowPanel panel_51()  {
+
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -63,11 +60,8 @@ public class TestPanels {
 
     }
 
-<<<<<<< Updated upstream
-    public static WindowPanel panel_60() throws FileNotFoundException {
-=======
-    public static WindowPanel panel60()  {
->>>>>>> Stashed changes
+
+    public static WindowPanel panel_60()  {
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -100,11 +94,9 @@ public class TestPanels {
     }
 
     //zig-zag panel
-<<<<<<< Updated upstream
-    public static WindowPanel panel_61() throws FileNotFoundException {
-=======
-    public static WindowPanel panel61()  {
->>>>>>> Stashed changes
+
+    public static WindowPanel panel_61()  {
+
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -124,11 +116,9 @@ public class TestPanels {
 
     }
 
-<<<<<<< Updated upstream
-    public static WindowPanel panel_70() throws FileNotFoundException {
-=======
-    public static WindowPanel panel70()  {
->>>>>>> Stashed changes
+
+    public static WindowPanel panel_70()  {
+
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -161,11 +151,8 @@ public class TestPanels {
     }
 
     //zig-zag panel
-<<<<<<< Updated upstream
-    public static WindowPanel panel_71() throws FileNotFoundException {
-=======
-    public static WindowPanel panel71()  {
->>>>>>> Stashed changes
+
+    public static WindowPanel panel_71()  {
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -405,12 +392,11 @@ public class TestPanels {
         return panel;
     }
 
-<<<<<<< Updated upstream
+
     //NO color duplication in the same row, every color used, no 5 and 6 value
-    public static WindowPanel panel_210() throws FileNotFoundException {
-=======
-    public static WindowPanel panel200()  {
->>>>>>> Stashed changes
+
+    public static WindowPanel panel210()  {
+
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -443,7 +429,7 @@ public class TestPanels {
     }
 
     //1 ROW with hole, 1 ROW with color duplication
-    public static WindowPanel panel_211() throws FileNotFoundException{
+    public static WindowPanel panel_211(){
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -478,7 +464,7 @@ public class TestPanels {
     }
 
     //no row with 5 different colors
-    public static WindowPanel panel_212() throws FileNotFoundException{
+    public static WindowPanel panel_212(){
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -514,7 +500,7 @@ public class TestPanels {
     }
 
     //every column with no color duplication
-    public static WindowPanel panel_220() throws FileNotFoundException {
+    public static WindowPanel panel_220()  {
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -547,7 +533,7 @@ public class TestPanels {
     }
 
     //1 col with hole, 2 with repeated color
-    public static WindowPanel panel_221() throws FileNotFoundException {
+    public static WindowPanel panel_221() {
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -580,7 +566,7 @@ public class TestPanels {
     }
 
     //no col with 4 different color
-    public static WindowPanel panel_222() throws FileNotFoundException {
+    public static WindowPanel panel_222() {
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -612,7 +598,7 @@ public class TestPanels {
 
 
     //no value duplication in the same row
-    public static WindowPanel panel_230() throws FileNotFoundException{
+    public static WindowPanel panel_230() {
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -648,7 +634,7 @@ public class TestPanels {
     }
 
     //1 ROW with hole, 1 ROW with color duplication
-    public static WindowPanel panel_231() throws FileNotFoundException{
+    public static WindowPanel panel_231() {
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -683,7 +669,7 @@ public class TestPanels {
     }
 
     //no row with 5 different value
-    public static WindowPanel panel_232() throws FileNotFoundException{
+    public static WindowPanel panel_232() {
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -713,7 +699,7 @@ public class TestPanels {
     }
 
     //every column with no value duplication
-    public static WindowPanel panel_240() throws FileNotFoundException {
+    public static WindowPanel panel_240()  {
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -746,7 +732,7 @@ public class TestPanels {
     }
 
     //1 col with hol, 2 with repeated value
-    public static WindowPanel panel_241() throws FileNotFoundException {
+    public static WindowPanel panel_241() {
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -778,7 +764,7 @@ public class TestPanels {
     }
 
     //no col with 4 different value
-    public static WindowPanel panel_242() throws FileNotFoundException {
+    public static WindowPanel panel_242() {
         return TestPanels.panel_222();
     }
 
