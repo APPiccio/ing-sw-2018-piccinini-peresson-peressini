@@ -30,10 +30,15 @@ public class WindowPanel {
     //side 1 for the front
 
 
-    public WindowPanel(int cardNumber, int side) throws FileNotFoundException {
+    public WindowPanel(int cardNumber, int side)  {
 
         int fileIndex = cardNumber * 2 - side;
-        JSONTokener tokener = new JSONTokener(new FileReader("templates/panel" + fileIndex + ".json"));
+        JSONTokener tokener = null;
+        try {
+            tokener = new JSONTokener(new FileReader("templates/panel" + fileIndex + ".json"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         JSONObject jsonObject = new JSONObject(tokener);
         JSONArray jsonArrayCells = jsonObject.getJSONArray("cells");
         cells = new ArrayList<>();

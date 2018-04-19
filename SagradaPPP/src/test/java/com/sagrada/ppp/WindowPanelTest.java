@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class WindowPanelTest {
 
     @Test
-    public static void testDiceOn() throws FileNotFoundException {
+    public static void testDiceOn()  {
         WindowPanel panel = new WindowPanel(1,1);
 
         Dice dice = new Dice(Color.YELLOW);
@@ -28,7 +28,7 @@ public class WindowPanelTest {
 
 
     @Test
-    public static void testPanelComposition() throws FileNotFoundException {
+    public static void testPanelComposition()  {
 
         WindowPanel panel;
         int absIndex;

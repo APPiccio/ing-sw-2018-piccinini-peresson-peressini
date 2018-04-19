@@ -47,7 +47,7 @@ public class AppTest
         assertTrue( true);
 
     }
-    public void testCards() throws FileNotFoundException {
+    public void testCards()  {
 
         PublicObjectiveCardTest.card1();
         PublicObjectiveCardTest.card2();
