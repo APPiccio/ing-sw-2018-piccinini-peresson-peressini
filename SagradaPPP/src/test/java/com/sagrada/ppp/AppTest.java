@@ -1,8 +1,10 @@
 package com.sagrada.ppp;
 
+import com.sagrada.ppp.Cards.PublicObjectiveCard;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import java.io.FileNotFoundException;
 
 /**
@@ -45,7 +47,6 @@ public class AppTest
         assertTrue( true);
 
     }
-
     public void testCards() throws FileNotFoundException {
 
         PublicObjectiveCardTest.card1();

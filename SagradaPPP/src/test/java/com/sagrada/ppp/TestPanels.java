@@ -197,7 +197,7 @@ public class TestPanels {
     }
 
     //1 ROW with hole, 1 ROW with color duplication
-    public static WindowPanel panel_211() throws FileNotFoundException {
+    public static WindowPanel panel_211() throws FileNotFoundException{
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -232,7 +232,7 @@ public class TestPanels {
     }
 
     //no row with 5 different colors
-    public static WindowPanel panel_212() throws FileNotFoundException {
+    public static WindowPanel panel_212() throws FileNotFoundException{
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -364,8 +364,9 @@ public class TestPanels {
         return panel;
     }
 
+
     //no value duplication in the same row
-    public static WindowPanel panel_230() throws FileNotFoundException {
+    public static WindowPanel panel_230() throws FileNotFoundException{
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -401,7 +402,7 @@ public class TestPanels {
     }
 
     //1 ROW with hole, 1 ROW with color duplication
-    public static WindowPanel panel_231() throws FileNotFoundException {
+    public static WindowPanel panel_231() throws FileNotFoundException{
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -436,7 +437,7 @@ public class TestPanels {
     }
 
     //no row with 5 different value
-    public static WindowPanel panel_232() throws FileNotFoundException {
+    public static WindowPanel panel_232() throws FileNotFoundException{
 
         WindowPanel panel = new WindowPanel(0, 0);
 
@@ -534,5 +535,7 @@ public class TestPanels {
     public static WindowPanel panel_242() throws FileNotFoundException {
         return TestPanels.panel_222();
     }
+
+
 
 }
