@@ -103,8 +103,6 @@ public class PublicObjectiveCardTest {
 
         PublicObjectiveCard card = new PublicObjectiveCard9();
 
-
-
         assertEquals(11, card.getScore(TestPanels.panel_190()));
         assertEquals(20, card.getScore(TestPanels.panel_191()));
         assertEquals(10, card.getScore(TestPanels.panel_192()));

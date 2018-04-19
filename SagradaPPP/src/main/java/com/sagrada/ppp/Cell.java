@@ -9,7 +9,12 @@ public class Cell {
     public Cell(Cell cell){
         this.color = cell.getColor();
         this.value = cell.getValue();
-        this.diceOn = cell.getDiceOn();
+        if (cell.hasDiceon()) {
+            this.diceOn = new Dice(cell.getDiceOn());
+        }
+        else{
+            this.diceOn = null;
+        }
     }
 
     public Cell(Color color){

@@ -41,7 +41,7 @@ public class AppTest
         DiceBagTest.diceBagGenTest();
         WindowPanelTest.testPanelComposition();
         RoundTrackTest.testRoundTrack();
-        WindowPanelTest.testDiceOn();
+        WindowPanelTest.testDicePositioning();
         GameTest.joiningTest();
 
         assertTrue( true);
