@@ -395,7 +395,7 @@ public class TestPanels {
 
     //NO color duplication in the same row, every color used, no 5 and 6 value
 
-    public static WindowPanel panel210()  {
+    public static WindowPanel panel_210()  {
 
 
         WindowPanel panel = new WindowPanel(0, 0);
