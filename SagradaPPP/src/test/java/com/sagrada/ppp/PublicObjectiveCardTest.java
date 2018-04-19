@@ -19,7 +19,7 @@ public class PublicObjectiveCardTest {
     }
 
     @Test
-    public static void card2() throws FileNotFoundException {
+    public static void card2() {
 
         PublicObjectiveCard card = new PublicObjectiveCard2();
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
@@ -30,7 +30,7 @@ public class PublicObjectiveCardTest {
     }
 
     @Test
-    public static void card3() throws FileNotFoundException {
+    public static void card3() {
 
         PublicObjectiveCard card = new PublicObjectiveCard3();
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
@@ -41,7 +41,7 @@ public class PublicObjectiveCardTest {
     }
 
     @Test
-    public static void card4() throws FileNotFoundException {
+    public static void card4()  {
 
         PublicObjectiveCard card = new PublicObjectiveCard4();
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
@@ -110,6 +110,13 @@ public class PublicObjectiveCardTest {
         assertEquals(10, card.getScore(TestPanels.panel_192()));
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
 
+        assertEquals(10,card.getScore(TestPanels.panel_212()));
+        assertEquals(6,card.getScore(TestPanels.panel_222()));
+        assertEquals(12,card.getScore(TestPanels.panel_241()));
+        assertEquals(13,card.getScore(TestPanels.panel_240()));
+        assertEquals(0,card.getScore(TestPanels.panel_193()));
+
+
     }
 
     @Test
@@ -119,6 +126,12 @@ public class PublicObjectiveCardTest {
         assertEquals(12, card.getScore(TestPanels.panel_1100()));
         assertEquals(16, card.getScore(TestPanels.panel_1101()));
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
+
+        assertEquals(12,card.getScore(TestPanels.panel_240()));
+        assertEquals(16,card.getScore(TestPanels.panel_70()));
+        assertEquals(0,card.getScore(TestPanels.panel_71()));
+        assertEquals(8,card.getScore(TestPanels.panel_232()));
+
 
 
     }
@@ -132,8 +145,10 @@ public class PublicObjectiveCardTest {
         assertEquals(15, card.getScore(TestPanels.panel_181()));
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
 
-
-
+        assertEquals(10,card.getScore(TestPanels.panel_240()));
+        assertEquals(0,card.getScore(TestPanels.panel_193()));
+        assertEquals(0,card.getScore(TestPanels.panel_70()));
+        assertEquals(5,card.getScore(TestPanels.panel_232()));
 
 
 
