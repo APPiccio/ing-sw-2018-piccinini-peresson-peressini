@@ -1,6 +1,5 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.Cards.PublicObjectiveCard;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -40,9 +39,17 @@ public class AppTest
         DiceTest.diceValueTest();
         DiceBagTest.diceBagGenTest();
         WindowPanelTest.testPanelComposition();
-        RoundTrackTest.testRoundTrack();
         WindowPanelTest.testDicePositioning();
+
+        RoundTrackTest.testRoundTrack();
+        RoundTrackTest.testRoundTrackBehavior();
+        RoundTrackTest.testRemove();
+        RoundTrackTest.testSetDiceMethods();
+        RoundTrackTest.testGetters();
+
+
         GameTest.joiningTest();
+
 
         assertTrue( true);
 

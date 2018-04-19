@@ -14,7 +14,7 @@ public class RoundTrack {
 
     public RoundTrack(int rounds) {
         this.rounds = rounds;
-        currentRound = 0;
+        currentRound = 1;
         dicesOnTrack = new ArrayList<>();
         for (int i = 0;i < rounds ;i++){
             dicesOnTrack.add(new ArrayList<>());
@@ -23,6 +23,12 @@ public class RoundTrack {
 
     public RoundTrack() {
         this(10);
+    }
+
+    public RoundTrack(RoundTrack roundTrack) {
+        this.rounds = roundTrack.rounds;
+        this.currentRound = roundTrack.currentRound;
+        this.dicesOnTrack = new ArrayList<>(roundTrack.dicesOnTrack);
     }
     public ArrayList<Dice> getDicesOnRound(int round){
         return new ArrayList<>(dicesOnTrack.get(round - 1));
