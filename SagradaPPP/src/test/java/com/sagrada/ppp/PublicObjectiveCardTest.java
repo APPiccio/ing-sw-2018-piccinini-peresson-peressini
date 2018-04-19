@@ -1,9 +1,9 @@
 package com.sagrada.ppp;
 
 import com.sagrada.ppp.Cards.*;
-import org.junit.Test;
 import java.io.FileNotFoundException;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 public class PublicObjectiveCardTest {
 
@@ -18,7 +18,8 @@ public class PublicObjectiveCardTest {
 
     }
 
-    public static void card2() throws FileNotFoundException{
+    @Test
+    public static void card2() throws FileNotFoundException {
 
         PublicObjectiveCard card = new PublicObjectiveCard2();
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
@@ -28,8 +29,7 @@ public class PublicObjectiveCardTest {
 
     }
 
-
-
+    @Test
     public static void card3() throws FileNotFoundException {
 
         PublicObjectiveCard card = new PublicObjectiveCard3();
@@ -40,7 +40,8 @@ public class PublicObjectiveCardTest {
 
     }
 
-    public static void card4() throws FileNotFoundException{
+    @Test
+    public static void card4() throws FileNotFoundException {
 
         PublicObjectiveCard card = new PublicObjectiveCard4();
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
@@ -54,7 +55,6 @@ public class PublicObjectiveCardTest {
     public static void card5() throws FileNotFoundException {
 
         PublicObjectiveCard card = new PublicObjectiveCard5();
-
         assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
         assertEquals(0, card.getScore(TestPanels.panel_60()));
         assertEquals(0, card.getScore(TestPanels.panel_61()));

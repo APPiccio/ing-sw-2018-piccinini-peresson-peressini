@@ -45,6 +45,7 @@ public class AppTest
         GameTest.joiningTest();
 
         assertTrue( true);
+
     }
     public void testCards() throws FileNotFoundException {
 
@@ -60,4 +61,5 @@ public class AppTest
         PublicObjectiveCardTest.card10();
 
     }
+
 }
