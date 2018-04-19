@@ -1,10 +1,10 @@
 package com.sagrada.ppp;
 
 import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 
 public class CellTest {
+
     @Test
     public static void cellValueTest() {
 

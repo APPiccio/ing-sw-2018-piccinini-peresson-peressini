@@ -1,6 +1,7 @@
 package com.sagrada.ppp;
 
 public class Cell {
+
     private Color color;
     private Integer value;
     private Dice diceOn;
