@@ -3,57 +3,53 @@ package com.sagrada.ppp;
 public class Cell {
 
     private Color color;
-    private Dice diceOn;
     private Integer value;
+    private Dice diceOn;
 
-    public Cell(Cell cell) {
+    public Cell(Cell cell){
         this.color = cell.getColor();
         this.value = cell.getValue();
         if (cell.hasDiceOn()) {
-            this.diceOn = cell.getDiceOn();
+            this.diceOn = new Dice(cell.getDiceOn());
         }
-        else {
+        else{
             this.diceOn = null;
         }
     }
 
-    public Cell(Color color) {
+    public Cell(Color color){
         this.color = color;
-        this.value = null;
+        value = null;
     }
 
-    public Cell(int value) {
-        this.color = null;
+    public Cell(int value){
         this.value = value;
+        color = null;
     }
 
-    public Cell() {
-        this.color = null;
-        this.value = null;
-    }
-
-    public boolean hasColorRestriction(){
-        return color != null;
+    public Cell(){
+        color = null;
+        value = null;
     }
 
     public boolean hasValueRestriction(){
         return value != null;
     }
 
-    public boolean hasDiceOn() {
-        return diceOn != null;
+    public boolean hasColorRestriction(){
+        return color != null;
     }
 
     public Color getColor() {
         return color;
     }
 
-    public Integer getValue() {
-        return value;
-    }
-
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public Integer getValue() {
+        return value;
     }
 
     public void setValue(Integer value) {
@@ -62,16 +58,24 @@ public class Cell {
 
     public Dice getDiceOn() {
         if(this.hasDiceOn()) return new Dice(diceOn);
-        else return null;
+        return null;
     }
 
     public void setDiceOn(Dice diceOn) {
         this.diceOn = diceOn;
+    }//TODO implement color and value constraints
+
+    public boolean hasDiceOn(){
+        return diceOn != null;
     }
 
-    public boolean equals(Cell cell) {
-        if(this.hasDiceOn()) {
-            if(cell.hasDiceOn()) {
+    public boolean equals(Object object) {
+        if (object == null) return false;
+        if (object == this) return true;
+        if (!(object instanceof Cell))return false;
+        Cell cell = (Cell) object;
+        if(this.hasDiceOn()){
+            if(cell.hasDiceOn()){
                 return this.diceOn.equals(cell.getDiceOn()) && this.value == cell.getValue() && this.color == cell.getColor();
             }
             else return false;
@@ -80,15 +84,16 @@ public class Cell {
     }
 
     @Override
-    public String toString() {
+    public String toString(){
         StringBuilder string = new StringBuilder();
         string.append("Color = " + color + "\t\t");
         string.append("Value = " + value + "\t\t");
         if (diceOn != null) {
             string.append("Dice = " + diceOn.toString() + "\n");
         }
-        else string.append("\n");
+        else{
+            string.append("\n");
+        }
         return string.toString();
     }
-
 }

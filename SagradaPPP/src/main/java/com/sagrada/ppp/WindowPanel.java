@@ -244,7 +244,11 @@ public class WindowPanel {
         return true;
     }
 
-    public boolean equals(WindowPanel panel){
+    public boolean equals(Object object){
+        if (object == null) return false;
+        if (object == this) return true;
+        if (!(object instanceof WindowPanel))return false;
+        WindowPanel panel = (WindowPanel) object;
         if (this.cells.size() != panel.getCells().size()) return false;
         for(int i = 0; i < cells.size(); i++){
             if(!cells.get(i).equals(panel.getCellWithIndex(i))) return false;
