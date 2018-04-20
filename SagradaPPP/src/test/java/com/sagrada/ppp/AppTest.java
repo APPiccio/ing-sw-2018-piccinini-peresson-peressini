@@ -36,8 +36,7 @@ public class AppTest
 
     public void testApp() throws IllegalDiceValueException, FileNotFoundException {
 
-        CellTest.cellValueTest();
-        DiceTest.diceValueTest();
+        CellTest.cellTest();
         DiceBagTest.sizeTest();
         DiceBagTest.numberOfColorTest();
         WindowPanelTest.testPanelComposition();
@@ -57,7 +56,7 @@ public class AppTest
 
     }
 
-    public void testCards()  {
+    public void testCards() {
 
         PublicObjectiveCardTest.card1();
         PublicObjectiveCardTest.card2();

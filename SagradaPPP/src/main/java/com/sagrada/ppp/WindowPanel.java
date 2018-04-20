@@ -135,7 +135,7 @@ public class WindowPanel {
     }
 
     private boolean diceOk(Cell cell, Dice dice, int i){
-        if(cell.hasDiceon()) {
+        if(cell.hasDiceOn()) {
             System.out.println("WARNING --> ANOTHER DICE IN THIS POSITION");
             return false;
         }
@@ -174,7 +174,7 @@ public class WindowPanel {
         for(int j = row; j < row + 3; j++){
             for(int k = col; k < col + 3; k++){
                 if(validPosition(j,k)){
-                    if(getCellWithPosition(j,k).hasDiceon()) {
+                    if(getCellWithPosition(j,k).hasDiceOn()) {
                         return true;
                     }
                 }
@@ -218,7 +218,7 @@ public class WindowPanel {
     public boolean cellPairSimilarity(int row, int col, Dice dice){
         if(validPosition(row,col)){
             Cell cell = getCellWithPosition(row,col);
-            if(cell.hasDiceon()){
+            if(cell.hasDiceOn()){
                 if(cell.getDiceOn().isSimialr(dice)) return true;
             }
         }
@@ -239,7 +239,7 @@ public class WindowPanel {
 
     private boolean windowIsEmpty(){
         for(Cell cell : cells){
-            if (cell.hasDiceon()) return false;
+            if (cell.hasDiceOn()) return false;
         }
         return true;
     }

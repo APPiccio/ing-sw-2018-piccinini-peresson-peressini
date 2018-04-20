@@ -36,7 +36,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
     private boolean isDiceLegal(int x, int y, WindowPanel panel) {
         boolean returnValue = false;
         Cell cell = panel.getCellWithPosition(y, x);
-        if (cell.hasDiceon()) {
+        if (cell.hasDiceOn()) {
             Dice dice = cell.getDiceOn();
             //top-dx cell
             int xTDX = x + 1;
@@ -55,7 +55,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
             Cell tmpCell;
             tmpCell = panel.getCellWithPosition(yTDX, xTDX);
             if (tmpCell != null) {
-                if (tmpCell.hasDiceon()) {
+                if (tmpCell.hasDiceOn()) {
                     if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
                         return true;
                     }
@@ -64,7 +64,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
 
             tmpCell = panel.getCellWithPosition(yBDX, xBDX);
             if (tmpCell != null) {
-                if (tmpCell.hasDiceon()) {
+                if (tmpCell.hasDiceOn()) {
                     if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
                         return true;
                     }
@@ -73,7 +73,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
 
             tmpCell = panel.getCellWithPosition(yTSX, xTSX);
             if (tmpCell != null) {
-                if (tmpCell.hasDiceon()) {
+                if (tmpCell.hasDiceOn()) {
                     if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
                         return true;
                     }
@@ -82,7 +82,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
 
             tmpCell = panel.getCellWithPosition(yBSX, xBSX);
             if (tmpCell != null) {
-                if (tmpCell.hasDiceon()) {
+                if (tmpCell.hasDiceOn()) {
                     if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
                         return true;
                     }
