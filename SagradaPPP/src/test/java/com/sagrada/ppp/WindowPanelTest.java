@@ -45,7 +45,7 @@ public class WindowPanelTest {
         assertEquals(true, panel.addDiceOnCellWithIndex(12, new Dice(Color.RED  , 5 )));
 
 
-        //testing that the repo can't be returned
+        //testing if the repo can't be returned
         WindowPanel panelCopy = new WindowPanel(panel);
         assertEquals(true, panelCopy.equals(panel));
         assertEquals(false, panelCopy.hashCode() == panel.hashCode());
@@ -76,8 +76,8 @@ public class WindowPanelTest {
                     for(int l = 0; l < StaticValues.PATTERN_COL; l++){
                         currentCell = panel.getCellWithIndex(absIndex);
 
-                        //System.out.println("currentCell =" + currentCell.getValue() + currentCell.getColor() + currentCell.hasDiceon());
-                        //System.out.println("panelCell =" + panel.getCellWithPosition(k,l).getValue() + panel.getCellWithPosition(k,l).getColor() + panel.getCellWithPosition(k,l).hasDiceon());
+                        //System.out.println("currentCell =" + currentCell.getValue() + currentCell.getColor() + currentCell.hasDiceOn());
+                        //System.out.println("panelCell =" + panel.getCellWithPosition(k,l).getValue() + panel.getCellWithPosition(k,l).getColor() + panel.getCellWithPosition(k,l).hasDiceOn());
 
                         assertEquals(TRUE, currentCell.equals(panel.getCellWithPosition(k,l)));
 
@@ -96,7 +96,7 @@ public class WindowPanelTest {
                     }
                     myString.append("\n____________________________________\n");
                 }
-                System.out.println(myString.toString());
+                //System.out.println(myString.toString());
             }
 
         }

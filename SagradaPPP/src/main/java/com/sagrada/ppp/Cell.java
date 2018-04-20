@@ -9,7 +9,7 @@ public class Cell {
     public Cell(Cell cell){
         this.color = cell.getColor();
         this.value = cell.getValue();
-        if (cell.hasDiceon()) {
+        if (cell.hasDiceOn()) {
             this.diceOn = new Dice(cell.getDiceOn());
         }
         else{
@@ -57,7 +57,7 @@ public class Cell {
     }
 
     public Dice getDiceOn() {
-        if(this.hasDiceon()) return new Dice(diceOn);
+        if(this.hasDiceOn()) return new Dice(diceOn);
         return null;
     }
 
@@ -65,14 +65,17 @@ public class Cell {
         this.diceOn = diceOn;
     }//TODO implement color and value constraints
 
-    public boolean hasDiceon(){
+    public boolean hasDiceOn(){
         return diceOn != null;
     }
 
-
-    public boolean equals(Cell cell) {
-        if(this.hasDiceon()){
-            if(cell.hasDiceon()){
+    public boolean equals(Object object) {
+        if (object == null) return false;
+        if (object == this) return true;
+        if (!(object instanceof Cell))return false;
+        Cell cell = (Cell) object;
+        if(this.hasDiceOn()){
+            if(cell.hasDiceOn()){
                 return this.diceOn.equals(cell.getDiceOn()) && this.value == cell.getValue() && this.color == cell.getColor();
             }
             else return false;

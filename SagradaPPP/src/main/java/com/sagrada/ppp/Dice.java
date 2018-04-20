@@ -66,7 +66,11 @@ public class Dice {
     }
 
 
-    public boolean equals(Dice dice) {
+    public boolean equals(Object object) {
+        if (object == null) return false;
+        if (object == this) return true;
+        if (!(object instanceof Dice))return false;
+        Dice dice = (Dice) object;
         return this.color == dice.getColor() && this.value == dice.getValue();
     }
 
