@@ -10,7 +10,7 @@ public class Cell {
         this.color = cell.getColor();
         this.value = cell.getValue();
         if (cell.hasDiceOn()) {
-            this.diceOn = new Dice(cell.getDiceOn());
+            this.diceOn = cell.getDiceOn();
         }
         else{
             this.diceOn = null;
@@ -63,7 +63,7 @@ public class Cell {
 
     public void setDiceOn(Dice diceOn) {
         this.diceOn = diceOn;
-    }//TODO implement color and value constraints
+    }
 
     public boolean hasDiceOn(){
         return diceOn != null;

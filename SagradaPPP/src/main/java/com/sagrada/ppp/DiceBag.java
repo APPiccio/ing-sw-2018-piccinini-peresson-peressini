@@ -24,17 +24,32 @@ public class DiceBag {
         return bag.get(i);
     }
 
-    public Dice getRandomDice() {
-        return bag.get(new Random().nextInt(bag.size()));
+    public Dice extractRandomDice() {
+        return bag.remove(new Random().nextInt(bag.size()));
     }
 
     public ArrayList<Dice> getDiceBag() {
         return new ArrayList<>(bag);
     }
 
-    //public ArrayList<Dice> removeDices(int n) {
-
-    //}
+    public ArrayList<Dice> extractDices(int n) {
+        try {
+            if (bag.size() < n || n <= 0) {
+                throw new IllegalDiceExtractionException(n);
+            }
+            else {
+                ArrayList<Dice> dices = new ArrayList<>();
+                for (int i = 0; i < n; i++) {
+                    dices.add(extractRandomDice());
+                }
+                return dices;
+            }
+        }
+        catch (IllegalDiceExtractionException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public int numberOfColor(Color color){
         return (int) bag.stream().filter(x -> x.getColor() == color).count();
