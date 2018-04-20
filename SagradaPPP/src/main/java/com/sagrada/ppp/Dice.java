@@ -7,32 +7,33 @@ public class Dice {
     private Color color;
     private int value;
 
-    public Dice(Dice dice){
+    public Dice(Dice dice) {
         this.color = dice.getColor();
         this.value = dice.getValue();
     }
 
-
-    public Dice(Color color, int value)  {
-        if (value < 1 || value > 6) {
-            try {
+    public Dice(Color color, int value) {
+        try {
+            if (value < 1 || value > 6) {
                 throw new IllegalDiceValueException();
-            } catch (IllegalDiceValueException e) {
-                e.printStackTrace();
             }
-        } else {
-            this.value = value;
-            this.color = color;
+            else {
+                this.color = color;
+                this.value = value;
+            }
+        }
+        catch (IllegalDiceValueException e) {
+            e.printStackTrace();
         }
     }
 
     //in case we need a random value
-    public Dice(Color color)  {
+    public Dice(Color color) {
         this(color,new Random().nextInt(6) + 1);
     }
 
     //in case we need a random color
-    public Dice(int value){
+    public Dice(int value) {
         this(Color.getRandomColor(),value);
     }
 
@@ -42,21 +43,27 @@ public class Dice {
     }
 
     public Color getColor() {
-        return color;
+        return this.color;
     }
 
     public int getValue() {
-        return value;
+        return this.value;
+    }
+
+    public boolean isSimilar(Dice dice) {
+        return this.color.equals(dice.getColor()) || this.value == dice.getValue();
     }
 
     public void setValue(int value) {
-        if (value < 1 || value > 6) {
-            try {
+        try {
+            if (value < 1 || value > 6) {
                 throw new IllegalDiceValueException();
-            } catch (IllegalDiceValueException e) {
-                e.printStackTrace();
             }
-        } else this.value = value;
+            else this.value = value;
+        }
+        catch (IllegalDiceValueException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -64,17 +71,12 @@ public class Dice {
         return "Color: " + color.name() + ", Value: " + value;
     }
 
-
     public boolean equals(Object object) {
         if (object == null) return false;
         if (object == this) return true;
-        if (!(object instanceof Dice))return false;
+        if (!(object instanceof Dice)) return false;
         Dice dice = (Dice) object;
         return this.color == dice.getColor() && this.value == dice.getValue();
     }
 
-
-    public boolean isSimialr(Dice dice){
-        return color.equals(dice.getColor()) || value == dice.getValue();
-    }
 }

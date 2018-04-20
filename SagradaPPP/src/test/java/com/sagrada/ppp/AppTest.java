@@ -3,7 +3,6 @@ package com.sagrada.ppp;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import java.io.FileNotFoundException;
 
 /**
@@ -37,6 +36,7 @@ public class AppTest
     public void testApp() throws IllegalDiceValueException, FileNotFoundException {
 
         CellTest.cellTest();
+        DiceTest.diceTest();
         DiceBagTest.diceBagTest();
         WindowPanelTest.testPanelComposition();
         WindowPanelTest.testDicePositioning();

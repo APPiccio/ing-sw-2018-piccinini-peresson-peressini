@@ -219,7 +219,7 @@ public class WindowPanel {
         if(validPosition(row,col)){
             Cell cell = getCellWithPosition(row,col);
             if(cell.hasDiceOn()){
-                if(cell.getDiceOn().isSimialr(dice)) return true;
+                if(cell.getDiceOn().isSimilar(dice)) return true;
             }
         }
         return false;
