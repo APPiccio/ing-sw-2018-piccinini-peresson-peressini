@@ -1,33 +1,41 @@
 package com.sagrada.ppp;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class CellTest {
 
     @Test
-    public static void cellValueTest() {
+    public static void cellTest() {
 
-        Dice dice = new Dice();
+        Dice dice = new Dice(); //Dice with random color and random value
         Cell blankCell = new Cell();
-        Cell numberedCell = new Cell(dice.getValue());
         Cell coloredCell = new Cell(dice.getColor());
-
-        numberedCell.setDiceOn(dice);
+        Cell numberedCell = new Cell(dice.getValue());
         coloredCell.setDiceOn(dice);
+        numberedCell.setDiceOn(dice);
 
-        assertEquals(Boolean.FALSE, blankCell.hasColorRestriction());
-        assertEquals(Boolean.FALSE, blankCell.hasValueRestriction());
-        assertEquals(Boolean.FALSE, blankCell.hasDiceOn());
+        //hasColorRestrictionTest
+        assertFalse(blankCell.hasColorRestriction());
+        assertFalse(numberedCell.hasColorRestriction());
+        assertTrue(coloredCell.hasColorRestriction());
 
-        assertEquals(Boolean.FALSE, numberedCell.hasColorRestriction());
-        assertEquals(Boolean.TRUE, numberedCell.hasValueRestriction());
-        assertEquals(Boolean.TRUE, numberedCell.hasDiceOn());
+        //hasValueRestrictionTest
+        assertFalse(blankCell.hasValueRestriction());
+        assertFalse(coloredCell.hasValueRestriction());
+        assertTrue(numberedCell.hasValueRestriction());
 
-        assertEquals(Boolean.TRUE, coloredCell.hasColorRestriction());
-        assertEquals(Boolean.FALSE, coloredCell.hasValueRestriction());
-        assertEquals(Boolean.TRUE, coloredCell.hasDiceOn());
+        //hasDiceOnTest
+        assertFalse(blankCell.hasDiceOn());
+        assertTrue(coloredCell.hasDiceOn());
+        assertTrue(numberedCell.hasDiceOn());
 
+        //getDiceOnTest - setDiceOnTest
+        assertNull(blankCell.getDiceOn());
+        assertTrue((coloredCell.getDiceOn()).equals(dice));
+        assertTrue((numberedCell.getDiceOn()).equals(dice));
+        assertNotEquals((coloredCell.getDiceOn()).hashCode(), dice.hashCode());
+        assertNotEquals((numberedCell.getDiceOn()).hashCode(), dice.hashCode());
 
     }
 

@@ -1,6 +1,5 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.Cards.PublicObjectiveCard;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -36,18 +35,28 @@ public class AppTest
      */
 
     public void testApp() throws IllegalDiceValueException, FileNotFoundException {
-        CellTest.cellValueTest();
-        DiceTest.diceValueTest();
-        DiceBagTest.diceBagGenTest();
+
+        CellTest.cellTest();
+        DiceBagTest.sizeTest();
+        DiceBagTest.numberOfColorTest();
         WindowPanelTest.testPanelComposition();
-        RoundTrackTest.testRoundTrack();
         WindowPanelTest.testDicePositioning();
+
+        RoundTrackTest.testRoundTrack();
+        RoundTrackTest.testRoundTrackBehavior();
+        RoundTrackTest.testRemove();
+        RoundTrackTest.testSetDiceMethods();
+        RoundTrackTest.testGetters();
+
+
         GameTest.joiningTest();
+
 
         assertTrue( true);
 
     }
-    public void testCards()  {
+
+    public void testCards() {
 
         PublicObjectiveCardTest.card1();
         PublicObjectiveCardTest.card2();

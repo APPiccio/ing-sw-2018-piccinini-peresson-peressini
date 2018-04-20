@@ -94,8 +94,6 @@ public class PublicObjectiveCardTest {
     }
 
     /**
-     *
-     *
      * This getScore() method doesn't check any dice value
      */
     @Test
@@ -147,8 +145,5 @@ public class PublicObjectiveCardTest {
         assertEquals(0,card.getScore(TestPanels.panel_193()));
         assertEquals(0,card.getScore(TestPanels.panel_70()));
         assertEquals(5,card.getScore(TestPanels.panel_232()));
-
-
-
     }
 }

@@ -41,7 +41,6 @@ public class Dice {
         this(Color.getRandomColor(),new Random().nextInt(6) + 1);
     }
 
-
     public Color getColor() {
         return color;
     }
