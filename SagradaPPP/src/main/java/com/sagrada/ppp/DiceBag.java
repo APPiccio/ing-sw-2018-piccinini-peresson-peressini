@@ -7,6 +7,11 @@ public class DiceBag {
 
     private ArrayList<Dice> bag;
 
+    public DiceBag(DiceBag diceBag){
+        this.bag = diceBag.getDiceBag();
+    }
+
+
     public DiceBag() {
         bag = new ArrayList<>();
         for (Color color: Color.values()) {
@@ -25,7 +30,7 @@ public class DiceBag {
     }
 
     public Dice extractRandomDice() {
-        return bag.remove(new Random().nextInt(bag.size()));
+        return new Dice(bag.remove(new Random().nextInt(bag.size())));
     }
 
     public ArrayList<Dice> getDiceBag() {

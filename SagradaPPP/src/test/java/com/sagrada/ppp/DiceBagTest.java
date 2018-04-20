@@ -26,12 +26,20 @@ public class DiceBagTest {
 
         //getDiceBagTest
         assertEquals(diceBag.size(), diceBag.getDiceBag().size());
+        
+        //testing extraction
+        DiceBag x = new DiceBag();
+        DiceBag y = new DiceBag(x);
 
-        //removeDicesTest
-        for (int i = 0; i < random; i++) {
-            dices.add(diceBag.getRandomDice());
-        }
-        assertTrue(diceBag.getDiceBag().containsAll(dices));
+        ArrayList<Dice> z = new ArrayList<>();
+
+        z.addAll(x.extractDices(10));
+        z.addAll(x.extractDices(20));
+        z.addAll(x.extractDices(25));
+        z.addAll(x.extractDices(35));
+
+        assertTrue(x.getDiceBag().size() == 0);
+        assertTrue(y.getDiceBag().containsAll(z));
     }
 
 }
