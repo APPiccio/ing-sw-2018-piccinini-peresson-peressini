@@ -22,7 +22,13 @@ public class WindowPanel {
         this.panelName = windowPanel.getPanelName();
         this.favorTokens = windowPanel.getFavorTokens();
         this.cardID = windowPanel.getCardID();
-        this.cells = windowPanel.getCells();
+
+        this.cells = new ArrayList<>();
+        ArrayList<Cell> cells = windowPanel.getCells();
+
+        for (Cell cell : cells){
+            this.cells.add(new Cell(cell));
+        }
     }
 
 
@@ -130,19 +136,23 @@ public class WindowPanel {
 
     private boolean diceOk(Cell cell, Dice dice, int i){
         if(cell.hasDiceon()) {
+            System.out.println("WARNING --> ANOTHER DICE IN THIS POSITION");
             return false;
         }
 
         if (windowIsEmpty()){
             if(!borderPosition(i)){
+                System.out.println("WARNING --> WINDOW EMPTY AND NO BORDER POSITION");
                 return false;
             }
         }
         else {
             if (!atLeastOneNear(i)){
+                System.out.println("WARNING --> NO DICE NEAR");
                 return false;
             }
             if (hasSimilarDiceAttached(dice,i)){
+                System.out.println("WARNING --> SIMILAR ATTACHED");
                 return false;
             }
         }
@@ -150,6 +160,7 @@ public class WindowPanel {
         if(!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
         if (cell.hasValueRestriction() && dice.getValue() == cell.getValue()) return true;
         if (cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
+        System.out.println("WARNING --> INVALID DICE FOR THIS CELL DUE TO RESTRICTION");
         return false;
     }
 
@@ -178,7 +189,7 @@ public class WindowPanel {
     }
 
     private boolean borderPosition(int i){
-        int row = i / StaticValues.PATTERN_COL;
+        int row = i / StaticValues.PATTERN_ROW;
         int col = i - row*StaticValues.PATTERN_COL;
 
         if(row == 0 || row == StaticValues.PATTERN_ROW || col == 0 || col == StaticValues.PATTERN_COL) return true;
@@ -232,6 +243,14 @@ public class WindowPanel {
         }
         return true;
     }
+
+    public boolean equals(WindowPanel panel){
+        if (this.cells.size() != panel.getCells().size()) return false;
+        for(int i = 0; i < cells.size(); i++){
+            if(!cells.get(i).equals(panel.getCellWithIndex(i))) return false;
+        }
+        return true;
+     }
 
     public String toString(){
         StringBuilder myString = new StringBuilder();
