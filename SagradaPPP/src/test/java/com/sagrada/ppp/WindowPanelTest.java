@@ -1,59 +1,53 @@
 package com.sagrada.ppp;
 
 import org.junit.Test;
-
-import java.io.FileNotFoundException;
-
+import static org.junit.Assert.*;
 import static java.lang.Boolean.TRUE;
-import static org.junit.Assert.assertEquals;
 
 public class WindowPanelTest {
 
     @Test
-    public static void testDicePositioning()  {
+    public static void testDicePositioning() {
+
         WindowPanel panel = new WindowPanel(1,1);
 
         //first dice in a non border position
-        assertEquals(false, panel.addDiceOnCellWithIndex(8, new Dice()));
+        assertFalse(panel.addDiceOnCellWithIndex(8, new Dice()));
 
         //first dice in a border position
-        assertEquals(true, panel.addDiceOnCellWithIndex(17, new Dice(Color.BLUE,1)));
+        assertTrue(panel.addDiceOnCellWithIndex(17, new Dice(Color.BLUE, 1)));
 
         //putting another dice without any other dice near
-        assertEquals(false, panel.addDiceOnCellWithIndex(8, new Dice()));
+        assertFalse(panel.addDiceOnCellWithIndex(8, new Dice()));
 
         //putting a dice near another with the same color
-        assertEquals(false, panel.addDiceOnCellWithIndex(16, new Dice(Color.BLUE)));
+        assertFalse(panel.addDiceOnCellWithIndex(16, new Dice(Color.BLUE)));
 
         //putting a dice near another with the same value
-        assertEquals(false, panel.addDiceOnCellWithIndex(16, new Dice(1)));
+        assertFalse(panel.addDiceOnCellWithIndex(16, new Dice(1)));
 
         //putting a dice over another
-        assertEquals(false, panel.addDiceOnCellWithIndex(17, new Dice()));
+        assertFalse(panel.addDiceOnCellWithIndex(17, new Dice()));
 
         //putting a near dice with different value and color
-        assertEquals(true, panel.addDiceOnCellWithIndex(16, new Dice(Color.YELLOW , 3)));
+        assertTrue(panel.addDiceOnCellWithIndex(16, new Dice(Color.YELLOW, 3)));
 
         //putting a near dice with correct value and color but violating cell value restriction
-        assertEquals(false, panel.addDiceOnCellWithIndex(15, new Dice(Color.GREEN, 5)));
+        assertFalse(panel.addDiceOnCellWithIndex(15, new Dice(Color.GREEN, 5)));
 
         //same as the previous one but with cell color restriction
-        assertEquals(false, panel.addDiceOnCellWithIndex(12, new Dice(Color.PURPLE , 5)));
+        assertFalse(panel.addDiceOnCellWithIndex(12, new Dice(Color.PURPLE, 5)));
 
-        //previus but respecting restriction value and color
-        assertEquals(true, panel.addDiceOnCellWithIndex(15, new Dice(Color.GREEN, 2)));
-        assertEquals(true, panel.addDiceOnCellWithIndex(12, new Dice(Color.RED  , 5 )));
-
+        //previous but respecting restriction value and color
+        assertTrue(panel.addDiceOnCellWithIndex(15, new Dice(Color.GREEN, 2)));
+        assertTrue(panel.addDiceOnCellWithIndex(12, new Dice(Color.RED, 5)));
 
         //testing if the repo can't be returned
         WindowPanel panelCopy = new WindowPanel(panel);
-        assertEquals(true, panelCopy.equals(panel));
-        assertEquals(false, panelCopy.hashCode() == panel.hashCode());
+        assertEquals(panelCopy, panel);
+        assertNotEquals(panelCopy.hashCode(), panel.hashCode());
 
     }
-
-
-
 
     @Test
     public static void testPanelComposition()  {

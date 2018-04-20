@@ -32,8 +32,8 @@ public class CellTest {
 
         //getDiceOnTest - setDiceOnTest
         assertNull(blankCell.getDiceOn());
-        assertTrue((coloredCell.getDiceOn()).equals(dice));
-        assertTrue((numberedCell.getDiceOn()).equals(dice));
+        assertEquals((coloredCell.getDiceOn()), dice);
+        assertEquals((numberedCell.getDiceOn()), dice);
         assertNotEquals((coloredCell.getDiceOn()).hashCode(), dice.hashCode());
         assertNotEquals((numberedCell.getDiceOn()).hashCode(), dice.hashCode());
 
