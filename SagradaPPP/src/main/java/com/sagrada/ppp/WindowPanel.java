@@ -157,9 +157,7 @@ public class WindowPanel {
             }
         }
 
-        if(!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
-        if (cell.hasValueRestriction() && dice.getValue() == cell.getValue()) return true;
-        if (cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
+        if(diceOkWithRestriction(cell,dice)) return true;
         System.out.println("WARNING --> INVALID DICE FOR THIS CELL DUE TO RESTRICTION");
         return false;
     }
@@ -286,6 +284,53 @@ public class WindowPanel {
         }
         return myString.toString();
 
+    }
+
+    //get index of cells where the dice can be put without breaking rules
+    public ArrayList<Integer> getLegalPosition(Dice dice){
+        ArrayList<Integer> h = new ArrayList<>();
+        for(int i = 0; i < 19; i++){
+            if (diceOk(getCellWithIndex(i), dice, i)){
+                h.add(i);
+            }
+        }
+        return h;
+    }
+
+    //return the indexes of "dices" that can be put in the "i" cell
+    public ArrayList<Integer> getLegalDicesFromSetAndCellIndex(ArrayList<Dice> dices, int i){
+        ArrayList<Integer> h = new ArrayList<>();
+        for(int j = 0; j < dices.size(); j++){
+            if(diceOk(getCellWithIndex(i), dices.get(j), i)) {
+                h.add(j);
+            }
+        }
+        return h;
+    }
+
+    //return dice from a set that can match a generic position in the panel (playable dice)
+    public ArrayList<Integer> getLegalDices(ArrayList<Dice> dices){
+        ArrayList<Integer> h = new ArrayList<>();
+        for(int j = 0; j < dices.size(); j++){
+            for(int i = 0; i < cells.size(); i++){
+                Cell cell = getCellWithIndex(i);
+                if (diceOk(cell, dices.get(j), i)){
+                    h.add(j);
+                    break;
+                }
+            }
+        }
+        return h;
+    }
+
+
+
+
+    public boolean diceOkWithRestriction(Cell cell, Dice dice){
+        if(!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
+        if (cell.hasValueRestriction() && dice.getValue() == cell.getValue()) return true;
+        if (cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
+        return false;
     }
 
 
