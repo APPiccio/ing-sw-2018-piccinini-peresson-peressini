@@ -116,11 +116,7 @@ public class WindowPanel {
     }
 
     public ArrayList<Cell> getCells(){
-        ArrayList<Cell> local = new ArrayList<>();
-        for(Cell cell : cells){
-            local.add(new Cell(cell));
-        }
-        return local;
+        return new ArrayList<>(cells);
     }
 
     public boolean addDiceOnCellWithIndex(int i, Dice dice){
@@ -332,6 +328,9 @@ public class WindowPanel {
         if (cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
         return false;
     }
+
+
+
 
 
 }

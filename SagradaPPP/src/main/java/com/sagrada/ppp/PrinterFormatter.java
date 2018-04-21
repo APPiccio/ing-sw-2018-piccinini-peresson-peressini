@@ -1,9 +1,12 @@
 package com.sagrada.ppp;
+
+import java.util.ArrayList;
+
 public class PrinterFormatter {
 
     private final static String bottomCell = "------------";
 
-    public static String printWindowPanel(WindowPanel panel){
+    /*public static String printWindowPanel(WindowPanel panel){
         StringBuilder string = new StringBuilder();
 
         //generating top board
@@ -54,13 +57,81 @@ public class PrinterFormatter {
             }
         }
         return  string.toString();
+    }*/
+
+
+    //Modified version of APPiccio's code. It's neater
+    public static String printWindowPanelContent(WindowPanel panel){
+        StringBuilder result = new StringBuilder();
+        if(panel == null){
+            return "This WindowPanel is Null!\n";
+        }else {
+
+            result.append("Panel Name: " + panel.getPanelName() + "\n");
+            ArrayList<Cell> cells = panel.getCells();
+            int i = 0;
+            for (Cell c:cells) {
+                if(c.hasDiceOn()){
+                    result.append("|"+c.getDiceOn().getColor()+"||"+c.getDiceOn().getValue()+"|\t");
+                }else {
+                    result.append("| NULL |\t");
+                }
+                if(i < StaticValues.PATTERN_COL - 1) i++;
+                else {
+                    result.append("\n");
+                    i = 0;
+                }
+            }
+        }
+        return result.toString();
+    }
+
+    //Modified version of APPiccio's code. It's neater
+    public static String printWindowPanelLayout(WindowPanel panel){
+        StringBuilder result = new StringBuilder();
+        if(panel == null){
+            return "This WindowPanel is Null!\n";
+        }else {
+
+            result.append("Panel Name: " + panel.getPanelName() + "\n");
+            ArrayList<Cell> cells = panel.getCells();
+            int i = 0;
+            for (Cell c:cells) {
+                if(c.hasColorRestriction()){
+                    result.append("| "+c.getColor()+"  |\t");
+                }else if(c.hasValueRestriction()){
+                    result.append("| "+c.getValue()+" |\t\t");
+                }
+                else {
+                    result.append("| BLANK |\t");
+                }
+                if(i < StaticValues.PATTERN_COL - 1) i++;
+                else {
+                    result.append("\n");
+                    i = 0;
+                }
+            }
+        }
+        return result.toString();
     }
 
     public static void main(String[] args) {
         WindowPanel panel = new WindowPanel(0,0);
         panel.addDiceOnCellWithIndex(0, new Dice());
         panel.addDiceOnCellWithIndex(1, new Dice());
-        System.out.println(printWindowPanel(panel));
+        panel.addDiceOnCellWithIndex(2, new Dice());
+        panel.addDiceOnCellWithIndex(3, new Dice());
+        panel.addDiceOnCellWithIndex(4, new Dice());
+        panel.addDiceOnCellWithIndex(5, new Dice());
+        panel.addDiceOnCellWithIndex(6, new Dice());
+        panel.addDiceOnCellWithIndex(7, new Dice());
+        panel.addDiceOnCellWithIndex(8, new Dice());
+
+        System.out.println(printWindowPanelContent(panel));
+
+
+        panel = new WindowPanel(4,1);
+        System.out.println(printWindowPanelLayout(panel));
 
     }
 
