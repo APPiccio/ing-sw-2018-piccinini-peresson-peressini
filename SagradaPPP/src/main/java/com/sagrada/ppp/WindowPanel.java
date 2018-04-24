@@ -320,10 +320,11 @@ public class WindowPanel {
     }
 
 
-    public void setDice(int i, Dice dice){
-        cells.get(i).setDiceOn(dice);
+    public Dice removeDice(int i){
+        Dice dice = cells.get(i).getDiceOn();
+        cells.set(i, null);
+        return dice;
     }
-
 
 
     public boolean diceOkWithRestriction(Cell cell, Dice dice){
