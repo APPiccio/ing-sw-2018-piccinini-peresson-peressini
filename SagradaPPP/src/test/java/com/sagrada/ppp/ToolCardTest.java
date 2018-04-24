@@ -28,6 +28,17 @@ public class ToolCardTest {
     }
 
     @Test
+    public void card4() {
+        WindowPanel windowPanel = ToolCardTestPanels.panel_40();
+        WindowPanel windowMod = new WindowPanel(windowPanel);
+
+        ToolCard toolCard4 = new ToolCard4();
+
+    }
+
+
+
+    @Test
     public void card10(){
         WindowPanel windowPanel = TestPanels.panel_230();
         ToolCard toolCard10 = new ToolCard10();
