@@ -4,6 +4,8 @@ package com.sagrada.ppp;
 import com.sagrada.ppp.Cards.*;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 public class ToolCardTest {
@@ -33,6 +35,32 @@ public class ToolCardTest {
         ToolCard toolCard10 = new ToolCard10();
         
 
+
+    }
+
+    @Test
+    public void card7 (){
+        Game g = new Game();
+        g.joinGame("pinco");
+        g.joinGame("pallo");
+        g.joinGame("pallone");
+        g.joinGame("pallino");
+        g.init();
+
+        ArrayList<Dice> result = g.getDraftPool();
+        ToolCard toolCard7 = new ToolCard7();
+        CommandToolCard commandToolCard = new CommandToolCard7(result);
+        toolCard7.use(commandToolCard);
+
+        for (Dice d: g.getDraftPool()
+                ) {
+            System.out.println(d.toString());
+        }
+        System.out.println("------------------------------------------------------");
+        for (Dice d: result
+             ) {
+            System.out.println(d.toString());
+        }
 
     }
 }

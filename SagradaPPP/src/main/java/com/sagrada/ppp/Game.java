@@ -29,8 +29,9 @@ public class Game {
 
     public void init(){
         roundTrack.setCurrentRound(1);
-        draftPool.addAll(diceBag.extractDices(numOfPlayer*2+1));
         numOfPlayer = players.size();
+        draftPool.addAll(diceBag.extractDices(numOfPlayer*2+1));
+
     }
 
     public ArrayList<Dice> getDraftPool(){
