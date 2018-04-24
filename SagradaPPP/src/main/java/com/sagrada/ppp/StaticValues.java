@@ -18,8 +18,17 @@ public class StaticValues {
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
-    public static final String TOOLCARD1_NAME = "Pinza Sgrossatrice";
+
+
+
+    //Tool Card names
+    public static final String TOOLCARD1_NAME = "Grozing Pliers";
     public static final String TOOLCARD2_NAME = "";
+    public static final String TOOLCARD6_NAME = "Flux Remover";
+    public static final String TOOLCARD7_NAME = "Glazing Hammer";
+    public static final String TOOLCARD8_NAME = "Running Pliers";
+    public static final String TOOLCARD9_NAME = "Cork-backed Straightedge";
+
 
     public static final String PUBLICOBJECTIVECARD1_NAME = "Row Color Variety";
     public static final String PUBLICOBJECTIVECARD2_NAME = "Column Color Variety";
