@@ -7,21 +7,48 @@ public class Game {
     private Player activePlayer;
     private DiceBag diceBag;
     private ArrayList<WindowPanel> panels;
-    private int numOfPlayer = 1;
+    private int numOfPlayer;
+    private ArrayList<Dice> draftPool;
+    RoundTrack roundTrack;
+    GameStatus gameStatus;
 
     //TODO: Add a method that given the username string returns the desired players
     //TODO: Add overloading methods that take a Player as a parameter instead of a String
 
     public Game(){
         diceBag = new DiceBag();
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
+        draftPool = new ArrayList<>();
+        roundTrack = new RoundTrack(StaticValues.NUMBER_OF_TURNS);
+        gameStatus = GameStatus.INIT;
     }
 
     public void init(){
-        RoundTrack roundTrack = new RoundTrack(StaticValues.NUMBER_OF_TURNS);
         roundTrack.setCurrentRound(1);
+        draftPool.addAll(diceBag.extractDices(numOfPlayer*2+1));
+        numOfPlayer = players.size();
+    }
 
+    public ArrayList<Dice> getDraftPool(){
+        ArrayList<Dice> h = new ArrayList<>();
+        for(Dice dice : draftPool){
+            h.add(new Dice(dice));
+        }
+        return h;
+    }
 
+    public void toNextTurn(){
+        if (roundTrack.getCurrentRound() == 10){
+            gameStatus = GameStatus.SCORE;
+            System.out.println("WARNING --> 10 turns played");
+            return;
+        }
+        else{
+            roundTrack.setDicesOnTurn(roundTrack.getCurrentRound(), getDraftPool());
+            roundTrack.setCurrentRound(roundTrack.getCurrentRound() + 1);
+            draftPool.clear();
+            draftPool.addAll(diceBag.extractDices(numOfPlayer*2 + 1));
+        }
     }
 
     public void joinGame(String username) {
@@ -64,5 +91,4 @@ public class Game {
         }
         return score;
     }
-
 }
