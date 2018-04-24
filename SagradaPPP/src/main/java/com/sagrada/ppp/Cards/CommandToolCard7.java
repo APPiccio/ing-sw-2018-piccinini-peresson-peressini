@@ -1,10 +1,21 @@
 package com.sagrada.ppp.Cards;
 
-import com.sagrada.ppp.WindowPanel;
+import com.sagrada.ppp.*;
+
+import java.util.ArrayList;
 
 public class CommandToolCard7 implements CommandToolCard{
+
+    ArrayList<Dice> draftPool;
+
+    public CommandToolCard7(ArrayList<Dice> draftPool) {
+        this.draftPool = draftPool;
+    }
+
     @Override
     public void useCard() {
-        return ;
+        for (Dice d:draftPool) {
+            d.throwDice();
+        }
     }
 }

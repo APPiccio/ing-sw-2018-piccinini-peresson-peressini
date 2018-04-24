@@ -43,7 +43,11 @@ public class RoundTrack {
      * @return Array that contains the dices stacked on top of a round.
      */
     public ArrayList<Dice> getDicesOnRound(int round){
-        return new ArrayList<>(dicesOnTrack.get(round - 1));
+        ArrayList<Dice> h = new ArrayList<>();
+        for(Dice dice : dicesOnTrack.get(round - 1)){
+            h.add(new Dice(dice));
+        }
+        return h;
     }
 
     /**

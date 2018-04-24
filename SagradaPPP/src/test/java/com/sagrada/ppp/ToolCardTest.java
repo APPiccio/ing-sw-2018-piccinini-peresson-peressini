@@ -4,6 +4,8 @@ package com.sagrada.ppp;
 import com.sagrada.ppp.Cards.*;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 public class ToolCardTest {
@@ -90,14 +92,84 @@ public class ToolCardTest {
 
 
     @Test
+    public void card11(){
+        DiceBag diceBag = new DiceBag();
+        Dice dice = diceBag.extractRandomDice();
+
+        DiceBag diceBagCopy = new DiceBag(diceBag);
+        Dice diceCopy = new Dice(dice);
+
+        ToolCard toolCard11 = new ToolCard11();
+        toolCard11.use(new CommandToolCard11(diceBagCopy,diceCopy));
+
+        //assertEquals(false, diceCopy.equals(dice));
+        //assertEquals(false, diceBag.equals(diceBagCopy));
+
+        System.out.println("dado da riserva = " + dice.toString());
+        System.out.println("secondo dado = " + diceCopy.toString());
+
+
+    }
+
+    @Test
     public void card10(){
+        Dice dice = new Dice(Color.PURPLE, 1);
+        Dice trash = new Dice(dice);
 
+        ToolCard toolCard10 = new ToolCard10();
+        toolCard10.use(new CommandToolCard10(trash));
 
+        assertEquals(7 - dice.getValue(), trash.getValue());
 
+        dice.setValue(2);
+        trash.setValue(2);
+        toolCard10.use(new CommandToolCard10(trash));
+        assertEquals(7 - dice.getValue(), trash.getValue());
 
+        dice.setValue(3);
+        trash.setValue(3);
+        toolCard10.use(new CommandToolCard10(trash));
+        assertEquals(7 - dice.getValue(), trash.getValue());
 
+        dice.setValue(4);
+        trash.setValue(4);
+        toolCard10.use(new CommandToolCard10(trash));
+        assertEquals(7 - dice.getValue(), trash.getValue());
 
+        dice.setValue(5);
+        trash.setValue(5);
+        toolCard10.use(new CommandToolCard10(trash));
+        assertEquals(7 - dice.getValue(), trash.getValue());
 
+        dice.setValue(6);
+        trash.setValue(6);
+        toolCard10.use(new CommandToolCard10(trash));
+        assertEquals(7 - dice.getValue(), trash.getValue());
+    }
+
+    @Test
+    public void card7 (){
+        Game g = new Game();
+        g.joinGame("pinco");
+        g.joinGame("pallo");
+        g.joinGame("pallone");
+        g.joinGame("pallino");
+        g.init();
+
+        ArrayList<Dice> result = g.getDraftPool();
+        ToolCard toolCard7 = new ToolCard7();
+        CommandToolCard commandToolCard = new CommandToolCard7(result);
+        toolCard7.use(commandToolCard);
+
+        for (Dice d: g.getDraftPool()
+                ) {
+            System.out.println(d.toString());
+        }
+        System.out.println("------------------------------------------------------");
+        for (Dice d: result
+             ) {
+            System.out.println(d.toString());
+        }
 
     }
 }
