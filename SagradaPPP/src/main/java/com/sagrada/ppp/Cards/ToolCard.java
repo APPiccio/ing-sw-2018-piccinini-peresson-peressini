@@ -3,6 +3,7 @@ package com.sagrada.ppp.Cards;
 import com.sagrada.ppp.Color;
 import com.sagrada.ppp.Game;
 import com.sagrada.ppp.StaticValues;
+import com.sagrada.ppp.WindowPanel;
 
 public abstract class ToolCard{
 
@@ -25,6 +26,11 @@ public abstract class ToolCard{
         this.used = false;
     }
 
+    public WindowPanel use(CommandToolCard commandToolCard){
+        setUsed();
+        return commandToolCard.useCard();
+    }
+
     public void setUsed() {
         used = true;
     }
@@ -41,6 +47,5 @@ public abstract class ToolCard{
         return color;
     }
 
-    abstract Object activate(Game game);
 
 }
