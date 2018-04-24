@@ -66,6 +66,10 @@ public class Dice {
         }
     }
 
+    public void flip(){
+        this.value = 7 - this.value;
+    }
+
     @Override
     public String toString() {
         return "Color: " + color.name() + ", Value: " + value;

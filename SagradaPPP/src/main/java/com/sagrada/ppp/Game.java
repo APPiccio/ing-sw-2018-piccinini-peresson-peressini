@@ -9,8 +9,8 @@ public class Game {
     private ArrayList<WindowPanel> panels;
     private int numOfPlayer;
     private ArrayList<Dice> draftPool;
-    RoundTrack roundTrack;
-    GameStatus gameStatus;
+    private RoundTrack roundTrack;
+    private GameStatus gameStatus;
 
     //TODO: Add a method that given the username string returns the desired players
     //TODO: Add overloading methods that take a Player as a parameter instead of a String

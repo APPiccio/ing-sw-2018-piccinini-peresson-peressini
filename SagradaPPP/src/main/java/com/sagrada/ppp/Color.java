@@ -27,9 +27,9 @@ public enum Color {
                 return Color.RED;
             case "yellow":
                 return Color.YELLOW;
+            default:
+                return null;
         }
-        //TODO add default case
-        return null;
     }
 
 }
