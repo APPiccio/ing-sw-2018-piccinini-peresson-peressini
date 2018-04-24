@@ -62,6 +62,7 @@ public class PublicObjectiveCardTest {
         assertEquals(0, card.getScore(TestPanels.panel_71()));
         assertEquals(10*2, card.getScore(TestPanels.panel_50())); //master panel
         assertEquals(5*2, card.getScore(TestPanels.panel_51()));
+        assertEquals(9*2, card.getScore(TestPanels.panel_52()));
 
     }
 
@@ -76,6 +77,8 @@ public class PublicObjectiveCardTest {
         assertEquals(0, card.getScore(TestPanels.panel_71()));
         assertEquals(10*2, card.getScore(TestPanels.panel_60())); //master panel
         assertEquals(5*2, card.getScore(TestPanels.panel_61()));
+        assertEquals(9*2, card.getScore(TestPanels.panel_62()));
+
 
     }
 
@@ -90,6 +93,7 @@ public class PublicObjectiveCardTest {
         assertEquals(0, card.getScore(TestPanels.panel_61()));
         assertEquals(10*2, card.getScore(TestPanels.panel_70())); //master panel
         assertEquals(5*2, card.getScore(TestPanels.panel_71()));
+        assertEquals(9*2, card.getScore(TestPanels.panel_72()));
 
     }
 
