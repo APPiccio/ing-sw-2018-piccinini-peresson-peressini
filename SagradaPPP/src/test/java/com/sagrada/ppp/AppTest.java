@@ -55,6 +55,11 @@ public class AppTest
 
     }
 
+    public void testToolCard(){
+        ToolCardTest toolCardTest = new ToolCardTest();
+        toolCardTest.testAllToolCards();
+    }
+
     public void testCards() {
 
 

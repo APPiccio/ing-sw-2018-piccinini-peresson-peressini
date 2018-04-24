@@ -1,9 +1,12 @@
 package com.sagrada.ppp;
 
+import com.sagrada.ppp.Cards.CommandToolCard;
+
 import java.util.ArrayList;
 
 public class Game {
     private ArrayList<Player> players;
+    private ArrayList<CommandToolCard> toolCards;
     private Player activePlayer;
     private DiceBag diceBag;
     private ArrayList<WindowPanel> panels;
@@ -21,6 +24,7 @@ public class Game {
         draftPool = new ArrayList<>();
         roundTrack = new RoundTrack(StaticValues.NUMBER_OF_TURNS);
         gameStatus = GameStatus.INIT;
+        toolCards = new ArrayList<>();
     }
 
     public void init(){
