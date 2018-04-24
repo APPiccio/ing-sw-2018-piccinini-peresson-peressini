@@ -16,7 +16,7 @@ public class CommandToolCard1 implements CommandToolCard{
         this.sign = sign;
     }
 
-    public WindowPanel useCard(){
+    public void useCard(){
         Dice dice = windowPanel.getCellWithIndex(dicePosition).getDiceOn();
         if(dice != null) {
             if(!((dice.getValue() == 6 && sign == +1) || (dice.getValue() == 1 && sign == -1))){
@@ -24,6 +24,5 @@ public class CommandToolCard1 implements CommandToolCard{
                 windowPanel.setDice(dicePosition, dice);
             }
         }
-        return new WindowPanel(windowPanel);
     }
 }

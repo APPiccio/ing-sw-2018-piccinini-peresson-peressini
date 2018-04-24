@@ -26,9 +26,9 @@ public abstract class ToolCard{
         this.used = false;
     }
 
-    public WindowPanel use(CommandToolCard commandToolCard){
+    public void use(CommandToolCard commandToolCard){
         setUsed();
-        return commandToolCard.useCard();
+        commandToolCard.useCard();
     }
 
     public void setUsed() {
