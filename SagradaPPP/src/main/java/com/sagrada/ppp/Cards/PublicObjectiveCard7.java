@@ -14,20 +14,18 @@ public class PublicObjectiveCard7 extends PublicObjectiveCard {
 
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
-
         int numberOfFive = 0;
         int numberOfSix = 0;
-
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
-
             Dice tempDice = playerWindowPanel.getCellWithIndex(i).getDiceOn();
-
-            if (tempDice == null) {
-                continue;
-            } else if ((tempDice.getValue() == 5)) {
-                numberOfFive++;
-            } else if ((tempDice.getValue() == 6)) {
-                numberOfSix++;
+            if (tempDice != null) {
+                int tempValue = tempDice.getValue();
+                if (tempValue == 5) {
+                    numberOfFive++;
+                }
+                else if (tempValue == 6) {
+                    numberOfSix++;
+                }
             }
         }
         if(numberOfFive < numberOfSix) {

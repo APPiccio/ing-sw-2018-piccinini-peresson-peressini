@@ -57,11 +57,9 @@ public class AppTest
 
     public void testCards() {
 
-
         PublicObjectiveCardTest.card1();
         PublicObjectiveCardTest.card2();
         PublicObjectiveCardTest.card3();
-
         PublicObjectiveCardTest.card4();
         PublicObjectiveCardTest.card5();
         PublicObjectiveCardTest.card6();
