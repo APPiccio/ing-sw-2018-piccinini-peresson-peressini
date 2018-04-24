@@ -2,21 +2,17 @@ package com.sagrada.ppp.Cards;
 
 import com.sagrada.ppp.*;
 
-public class CommandToolCard10 {
+public class CommandToolCard10 implements CommandToolCard{
 
-    private int dicePosition;
-    private WindowPanel windowPanel;
+    private Dice dice;
 
-    public CommandToolCard10(int dicePosition){
-        this.dicePosition = dicePosition;
+    public CommandToolCard10(Dice dice) {
+        this.dice = dice;
     }
 
-    public WindowPanel useCard(){
-        Dice dice = windowPanel.getCellWithIndex(dicePosition).getDiceOn();
+    public void useCard(){
         if(dice != null){
             dice.setValue(7 - dice.getValue());
-            windowPanel.setDice(dicePosition, dice);
         }
-        return windowPanel;
     }
 }
