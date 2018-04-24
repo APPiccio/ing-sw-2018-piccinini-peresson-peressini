@@ -50,6 +50,10 @@ public class Dice {
         return this.value;
     }
 
+    public void throwDice(){
+        value = new Random().nextInt(6) + 1;
+    }
+
     public boolean isSimilar(Dice dice) {
         return this.color.equals(dice.getColor()) || this.value == dice.getValue();
     }
