@@ -84,10 +84,6 @@ public class ToolCardTest {
 
     @Test
     public void card4() {
-        WindowPanel windowPanel = ToolCardTestPanels.panel_40();
-        WindowPanel windowMod = new WindowPanel(windowPanel);
-
-        ToolCard toolCard4 = new ToolCard4();
 
     }
 
