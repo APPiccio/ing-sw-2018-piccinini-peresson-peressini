@@ -5,6 +5,25 @@ import java.util.ArrayList;
 public class PrinterFormatter {
 
     private final static String bottomCell = "------------";
+    private static final char TOP_RIGHT = (int) '┐';
+    private static final char TOP_LEFT = (int) '┌';
+    private static final char TOP_CENTER = (int) '┬';
+    private static final char MID_RIGHT = (int) '┤';
+    private static final char MID_CENTER = (int) '┼';
+    private static final char MID_LEFT = (int) '├';
+    private static final char BOTTOM_RIGHT = (int) '┐';
+    private static final char BOTTOM_CENTER = (int) '┴';
+    private static final char BOTTOM_LEFT = (int) '└';
+    private static final char HORIZZONTAL = (int) '─';
+    private static final char VERTICAL = (int) '│';
+
+
+    //width and height in chars
+    private static final int CELL_WIDTH = 20;
+    private static final int CELL_HEIGHT = 20;
+
+
+
 
     /*public static String printWindowPanel(WindowPanel panel){
         StringBuilder string = new StringBuilder();
@@ -96,6 +115,7 @@ public class PrinterFormatter {
             result.append("Panel Name: " + panel.getPanelName() + "\n");
             ArrayList<Cell> cells = panel.getCells();
             int i = 0;
+            int row = 0;
             for (Cell c:cells) {
                 if(c.hasColorRestriction()){
                     result.append("| "+c.getColor()+"  |\t");
@@ -114,6 +134,8 @@ public class PrinterFormatter {
         }
         return result.toString();
     }
+
+
 
     public static void main(String[] args) {
         WindowPanel panel = new WindowPanel(0,0);
