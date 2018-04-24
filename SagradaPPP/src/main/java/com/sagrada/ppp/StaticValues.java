@@ -12,23 +12,23 @@ public class StaticValues {
     public static final int NUMBER_OF_COLORS = 5;
     public static final int NUMBER_OF_TURNS = 10;
     public static final int DICE_FACES = 6;
-    public static final int TWOPLAYERS = 2;
-    public static final int THREEPLAYERS = 3;
-    public static final int FOURPLAYERS = 4;
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
 
-
-
     //Tool Card names
     public static final String TOOLCARD1_NAME = "Grozing Pliers";
-    public static final String TOOLCARD2_NAME = "";
-    public static final String TOOLCARD6_NAME = "Flux Remover";
+    public static final String TOOLCARD2_NAME = "Eglomise Brush";
+    public static final String TOOLCARD3_NAME = "Copper Foil Burnisher";
+    public static final String TOOLCARD4_NAME = "Lathekin";
+    public static final String TOOLCARD5_NAME = "Lens Cutter";
+    public static final String TOOLCARD6_NAME = "Flux Brush";
     public static final String TOOLCARD7_NAME = "Glazing Hammer";
     public static final String TOOLCARD8_NAME = "Running Pliers";
     public static final String TOOLCARD9_NAME = "Cork-backed Straightedge";
-
+    public static final String TOOLCARD10_NAME = "Grinding Stone";
+    public static final String TOOLCARD11_NAME = "Flux Remover";
+    public static final String TOOLCARD12_NAME = "Tap Wheel";
 
     public static final String PUBLICOBJECTIVECARD1_NAME = "Row Color Variety";
     public static final String PUBLICOBJECTIVECARD2_NAME = "Column Color Variety";
@@ -46,9 +46,6 @@ public class StaticValues {
     public static final String PRIVATEOBJECTIVECARDGREEN_NAME = "Shades of Green";
     public static final String PRIVATEOBJECTIVECARDBLUE_NAME = "Shades of Blue";
     public static final String PRIVATEOBJECTIVECARDPURPLE_NAME = "Shades of Purple";
-
-
-
 
     //Colors for print formatter
     // Reset
