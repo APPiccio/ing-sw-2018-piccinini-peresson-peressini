@@ -4,7 +4,7 @@ import com.sagrada.ppp.WindowPanel;
 
 public class CommandToolCard6 implements CommandToolCard {
     @Override
-    public WindowPanel useCard() {
-        return null;
+    public void useCard() {
+        return;
     }
 }
