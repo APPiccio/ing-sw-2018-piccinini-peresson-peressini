@@ -1,24 +1,23 @@
 package com.sagrada.ppp;
 
-
 import com.sagrada.ppp.Cards.*;
 import org.junit.Test;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
 import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class ToolCardTest {
 
     @Test
-    public void testAllToolCards(){
+    public void testAllToolCards() {
+
         card1();
+        card4();
         card10();
         card11();
         card12();
-    }
 
+    }
 
     @Test
     public void card1(){
@@ -91,23 +90,64 @@ public class ToolCardTest {
     @Test
     public void card4() {
 
+        WindowPanel windowPanel = TestPanels.panel_222();
+        WindowPanel windowPanelCopy = new WindowPanel(windowPanel);
+        LinkedHashMap<Integer, Integer> positions = new LinkedHashMap<>();
+        positions.put(2, 9);
+        positions.put(12, 11);
+
+        ToolCard toolCard4 = new ToolCard4();
+        toolCard4.use(new CommandToolCard4(positions, windowPanelCopy));
+
+        //Testing non-touched cells
+        for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
+            if (i != 2 && i != 9 && i !=11 && i != 12) {
+                assertEquals(windowPanel.getCellWithIndex(i), windowPanelCopy.getCellWithIndex(i));
+            }
+        }
+
+        //Testing changes
+        assertEquals(windowPanel.getCellWithIndex(12), windowPanelCopy.getCellWithIndex(11));
+        assertEquals(windowPanel.getCellWithIndex(2), windowPanelCopy.getCellWithIndex(9));
+
+        positions.remove(2);
+        positions.remove(12);
+        positions.put(9, 2);
+        positions.put(11, 12);
+        toolCard4.use(new CommandToolCard4(positions, windowPanelCopy));
+
+        for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
+            assertEquals(windowPanel.getCellWithIndex(i), windowPanelCopy.getCellWithIndex(i));
+        }
+
     }
 
 
 
     @Test
-    public void card11(){
-        DiceBag diceBag = new DiceBag();
-        Dice dice = diceBag.extractRandomDice();
+    public void card7 (){
+        Game g = new Game();
+        g.joinGame("pinco");
+        g.joinGame("pallo");
+        g.joinGame("pallone");
+        g.joinGame("pallino");
+        g.init();
 
-        DiceBag diceBagCopy = new DiceBag(diceBag);
-        Dice diceCopy = new Dice(dice);
+        ArrayList<Dice> result = g.getDraftPool();
+        ToolCard toolCard7 = new ToolCard7();
+        CommandToolCard commandToolCard = new CommandToolCard7(result);
+        toolCard7.use(commandToolCard);
 
-        ToolCard toolCard11 = new ToolCard11();
-        toolCard11.use(new CommandToolCard11(diceBagCopy,diceCopy));
+        for (Dice d: g.getDraftPool()
+                ) {
+            System.out.println(d.toString());
+        }
+        System.out.println("------------------------------------------------------");
+        for (Dice d: result
+             ) {
+            System.out.println(d.toString());
+        }
 
-        //not meanful testing random dice throw
-        assertTrue(true);
     }
 
     @Test
@@ -147,60 +187,49 @@ public class ToolCardTest {
     }
 
     @Test
-    public void card7 (){
-        Game g = new Game();
-        g.joinGame("pinco");
-        g.joinGame("pallo");
-        g.joinGame("pallone");
-        g.joinGame("pallino");
-        g.init();
+    public void card11(){
+        DiceBag diceBag = new DiceBag();
+        Dice dice = diceBag.extractRandomDice();
 
-        ArrayList<Dice> result = g.getDraftPool();
-        ToolCard toolCard7 = new ToolCard7();
-        CommandToolCard commandToolCard = new CommandToolCard7(result);
-        toolCard7.use(commandToolCard);
+        DiceBag diceBagCopy = new DiceBag(diceBag);
+        Dice diceCopy = new Dice(dice);
 
-        for (Dice d: g.getDraftPool()
-                ) {
-            System.out.println(d.toString());
-        }
-        System.out.println("------------------------------------------------------");
-        for (Dice d: result
-             ) {
-            System.out.println(d.toString());
-        }
+        ToolCard toolCard11 = new ToolCard11();
+        toolCard11.use(new CommandToolCard11(diceBagCopy,diceCopy));
 
+        //not meanful testing random dice throw
+        assertTrue(true);
     }
 
     @Test
-    public void card12(){
+    public void card12() {
+
         WindowPanel windowPanel = TestPanels.panel_222();
         WindowPanel windowPanelCopy = new WindowPanel(windowPanel);
         ToolCard toolCard12 = new ToolCard12();
 
-        LinkedHashMap<Integer, Integer> positions = new LinkedHashMap<>(
-        );
+        LinkedHashMap<Integer, Integer> positions = new LinkedHashMap<>();
         positions.put(12,11);
         toolCard12.use(new CommandToolCard12(positions, windowPanelCopy));
 
         //testing that non touched cells are equals to the original panel
-        for(int i = 0; i < 20; i++){
+        for(int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++){
             if(i != 12 && i != 11){
-                assertTrue(windowPanel.getCellWithIndex(i).equals(windowPanelCopy.getCellWithIndex(i)));
+                assertEquals(windowPanel.getCellWithIndex(i), windowPanelCopy.getCellWithIndex(i));
             }
         }
         //testing change
-        assertTrue(windowPanel.getCellWithIndex(12).equals(windowPanelCopy.getCellWithIndex(11)));
+        assertEquals(windowPanel.getCellWithIndex(12), windowPanelCopy.getCellWithIndex(11));
 
         windowPanelCopy = new WindowPanel(windowPanel);
 
         positions.put(11,12);
         toolCard12.use(new CommandToolCard12(positions, windowPanelCopy));
 
-        for(int i = 0; i < 20; i++){
-            assertTrue(windowPanel.getCellWithIndex(i).equals(windowPanelCopy.getCellWithIndex(i)));
+        for(int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++){
+            assertEquals(windowPanel.getCellWithIndex(i), windowPanelCopy.getCellWithIndex(i));
         }
 
-
     }
+
 }
