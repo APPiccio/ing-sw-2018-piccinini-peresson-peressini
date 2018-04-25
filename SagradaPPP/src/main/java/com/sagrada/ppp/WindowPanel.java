@@ -321,8 +321,10 @@ public class WindowPanel {
 
 
     public Dice removeDice(int i){
-        Dice dice = cells.get(i).getDiceOn();
-        cells.set(i, null);
+        Cell cell = cells.get(i);
+        Dice dice = cell.getDiceOn();
+        cell.setDiceOn(null);
+        cells.set(i, cell);
         return dice;
     }
 

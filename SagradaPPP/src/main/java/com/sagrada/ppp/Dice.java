@@ -58,6 +58,10 @@ public class Dice {
         return this.color.equals(dice.getColor()) || this.value == dice.getValue();
     }
 
+    public void setColor(Color color){
+        this.color = color;
+    }
+
     public void setValue(int value) {
         try {
             if (value < 1 || value > 6) {

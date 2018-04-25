@@ -3,8 +3,9 @@ package com.sagrada.ppp;
 
 import com.sagrada.ppp.Cards.*;
 import org.junit.Test;
-
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import static org.junit.Assert.*;
 
@@ -13,6 +14,9 @@ public class ToolCardTest {
     @Test
     public void testAllToolCards(){
         card1();
+        card10();
+        card11();
+        card12();
     }
 
 
@@ -102,13 +106,8 @@ public class ToolCardTest {
         ToolCard toolCard11 = new ToolCard11();
         toolCard11.use(new CommandToolCard11(diceBagCopy,diceCopy));
 
-        //assertEquals(false, diceCopy.equals(dice));
-        //assertEquals(false, diceBag.equals(diceBagCopy));
-
-        System.out.println("dado da riserva = " + dice.toString());
-        System.out.println("secondo dado = " + diceCopy.toString());
-
-
+        //not meanful testing random dice throw
+        assertTrue(true);
     }
 
     @Test
@@ -170,6 +169,38 @@ public class ToolCardTest {
              ) {
             System.out.println(d.toString());
         }
+
+    }
+
+    @Test
+    public void card12(){
+        WindowPanel windowPanel = TestPanels.panel_222();
+        WindowPanel windowPanelCopy = new WindowPanel(windowPanel);
+        ToolCard toolCard12 = new ToolCard12();
+
+        LinkedHashMap<Integer, Integer> positions = new LinkedHashMap<>(
+        );
+        positions.put(12,11);
+        toolCard12.use(new CommandToolCard12(positions, windowPanelCopy));
+
+        //testing that non touched cells are equals to the original panel
+        for(int i = 0; i < 20; i++){
+            if(i != 12 && i != 11){
+                assertTrue(windowPanel.getCellWithIndex(i).equals(windowPanelCopy.getCellWithIndex(i)));
+            }
+        }
+        //testing change
+        assertTrue(windowPanel.getCellWithIndex(12).equals(windowPanelCopy.getCellWithIndex(11)));
+
+        windowPanelCopy = new WindowPanel(windowPanel);
+
+        positions.put(11,12);
+        toolCard12.use(new CommandToolCard12(positions, windowPanelCopy));
+
+        for(int i = 0; i < 20; i++){
+            assertTrue(windowPanel.getCellWithIndex(i).equals(windowPanelCopy.getCellWithIndex(i)));
+        }
+
 
     }
 }

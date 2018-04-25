@@ -818,7 +818,7 @@ public class TestPanels {
         return panel;
     }
 
-    //1 col with hol, 2 with repeated value
+    //1 col with hole, 2 with repeated value
     public static WindowPanel panel_241() {
 
         WindowPanel panel = new WindowPanel(0, 0);

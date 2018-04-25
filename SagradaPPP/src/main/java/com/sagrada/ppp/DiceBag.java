@@ -72,4 +72,17 @@ public class DiceBag {
         return (int) bag.stream().filter(x -> x.getValue() == n && x.getColor() == color).count();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (!(obj instanceof DiceBag)) return false;
+        DiceBag diceBag = (DiceBag) obj;
+        for(Color color : Color.values()){
+            for(int i = 1; i < 7; i++){
+                if(this.numberOf(i,color) != diceBag.numberOf(i,color)) return false;
+            }
+        }
+        return true;
+    }
 }
