@@ -27,6 +27,9 @@ public class Player {
     }
 
     public Dice getActiveDice() {
+        if(activeDice == null){
+            return null;
+        }
         return new Dice(activeDice);
     }
 
