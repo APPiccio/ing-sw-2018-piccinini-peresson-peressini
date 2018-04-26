@@ -17,7 +17,7 @@ public class PublicObjectiveCard5 extends PublicObjectiveCard {
         int numberOfOne = 0;
         int numberOfTwo = 0;
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
-            Dice tempDice = playerWindowPanel.getCellWithIndex(i).getDiceOn();
+            Dice tempDice = playerWindowPanel.getCell(i).getDiceOn();
             if (tempDice != null) {
                 int tempValue = tempDice.getValue();
                 if (tempValue == 1) {

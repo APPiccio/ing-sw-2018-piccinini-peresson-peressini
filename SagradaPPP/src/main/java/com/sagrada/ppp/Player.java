@@ -4,12 +4,30 @@ public class Player {
 
     private String username;
     private String url;
-    private WindowPanel myPanel;
+    private WindowPanel panel;
     private Color privateColor;
 
+
+
+    private Dice activeDice;
+
+    public void setPanel(WindowPanel panel) {
+        this.panel = panel;
+    }
+
     public Player(Player player){
-        this.username = player.getUsername();
-        this.privateColor = player.getPrivateColor();
+        this.username = player.username;
+        this.privateColor = player.privateColor;
+        this.activeDice = player.activeDice;
+    }
+
+
+    public void setActiveDice(Dice activeDice) {
+        this.activeDice = activeDice;
+    }
+
+    public Dice getActiveDice() {
+        return new Dice(activeDice);
     }
 
     public Player(String username){
@@ -28,7 +46,7 @@ public class Player {
         return privateColor;
     }
 
-    public WindowPanel getMyPanel() {
-        return new WindowPanel(myPanel);
+    public WindowPanel getPanel() {
+        return new WindowPanel(panel);
     }
 }

@@ -116,7 +116,7 @@ public class RoundTrackTest {
         }
         roundTrack1.setDicesOnTurn(1,dices);
         assertEquals(true,roundTrack1.getDicesOnRound(1).equals(dices));
-        assertEquals(true,roundTrack1.getDicesOnRound(1).hashCode() == dices.hashCode());
+        assertEquals(false,roundTrack1.getDicesOnRound(1).hashCode() == dices.hashCode());
 
         assertEquals(true,roundTrack1.getRounds() == 10);
         assertEquals(true, roundTrack1.getCurrentRound() == 1);

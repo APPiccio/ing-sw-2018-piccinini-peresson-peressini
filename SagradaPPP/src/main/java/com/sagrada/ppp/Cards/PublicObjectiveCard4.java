@@ -23,7 +23,7 @@ public class PublicObjectiveCard4 extends PublicObjectiveCard {
 
         for (int i = 0; i < StaticValues.PATTERN_COL; i++) {
             for (int j = 0; j < StaticValues.PATTERN_ROW; j++) {
-                Dice tempDice = playerWindowPanel.getCellWithPosition(j, i).getDiceOn();
+                Dice tempDice = playerWindowPanel.getCell(j, i).getDiceOn();
                 if(tempDice == null || values.contains(tempDice.getValue())) {
                     break;
                 }

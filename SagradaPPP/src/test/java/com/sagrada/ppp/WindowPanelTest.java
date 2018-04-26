@@ -12,35 +12,35 @@ public class WindowPanelTest {
         WindowPanel panel = new WindowPanel(1,1);
 
         //first dice in a non border position
-        assertFalse(panel.addDiceOnCellWithIndex(8, new Dice()));
+        assertFalse(panel.addDice(8, new Dice()));
 
         //first dice in a border position
-        assertTrue(panel.addDiceOnCellWithIndex(17, new Dice(Color.BLUE, 1)));
+        assertTrue(panel.addDice(17, new Dice(Color.BLUE, 1)));
 
         //putting another dice without any other dice near
-        assertFalse(panel.addDiceOnCellWithIndex(8, new Dice()));
+        assertFalse(panel.addDice(8, new Dice()));
 
         //putting a dice near another with the same color
-        assertFalse(panel.addDiceOnCellWithIndex(16, new Dice(Color.BLUE)));
+        assertFalse(panel.addDice(16, new Dice(Color.BLUE)));
 
         //putting a dice near another with the same value
-        assertFalse(panel.addDiceOnCellWithIndex(16, new Dice(1)));
+        assertFalse(panel.addDice(16, new Dice(1)));
 
         //putting a dice over another
-        assertFalse(panel.addDiceOnCellWithIndex(17, new Dice()));
+        assertFalse(panel.addDice(17, new Dice()));
 
         //putting a near dice with different value and color
-        assertTrue(panel.addDiceOnCellWithIndex(16, new Dice(Color.YELLOW, 3)));
+        assertTrue(panel.addDice(16, new Dice(Color.YELLOW, 3)));
 
         //putting a near dice with correct value and color but violating cell value restriction
-        assertFalse(panel.addDiceOnCellWithIndex(15, new Dice(Color.GREEN, 5)));
+        assertFalse(panel.addDice(15, new Dice(Color.GREEN, 5)));
 
         //same as the previous one but with cell color restriction
-        assertFalse(panel.addDiceOnCellWithIndex(12, new Dice(Color.PURPLE, 5)));
+        assertFalse(panel.addDice(12, new Dice(Color.PURPLE, 5)));
 
         //previous but respecting restriction value and color
-        assertTrue(panel.addDiceOnCellWithIndex(15, new Dice(Color.GREEN, 2)));
-        assertTrue(panel.addDiceOnCellWithIndex(12, new Dice(Color.RED, 5)));
+        assertTrue(panel.addDice(15, new Dice(Color.GREEN, 2)));
+        assertTrue(panel.addDice(12, new Dice(Color.RED, 5)));
 
         //testing if the repo can't be returned
         WindowPanel panelCopy = new WindowPanel(panel);
@@ -68,12 +68,12 @@ public class WindowPanelTest {
 
                 for(int k = 0; k < StaticValues.PATTERN_ROW; k++){
                     for(int l = 0; l < StaticValues.PATTERN_COL; l++){
-                        currentCell = panel.getCellWithIndex(absIndex);
+                        currentCell = panel.getCell(absIndex);
 
                         //System.out.println("currentCell =" + currentCell.getValue() + currentCell.getColor() + currentCell.hasDiceOn());
-                        //System.out.println("panelCell =" + panel.getCellWithPosition(k,l).getValue() + panel.getCellWithPosition(k,l).getColor() + panel.getCellWithPosition(k,l).hasDiceOn());
+                        //System.out.println("panelCell =" + panel.getCell(k,l).getValue() + panel.getCell(k,l).getColor() + panel.getCell(k,l).hasDiceOn());
 
-                        assertEquals(TRUE, currentCell.equals(panel.getCellWithPosition(k,l)));
+                        assertEquals(TRUE, currentCell.equals(panel.getCell(k,l)));
 
                         if(currentCell.hasColorRestriction()){
                             myString.append(currentCell.getColor().toString() + "|\t\t ");

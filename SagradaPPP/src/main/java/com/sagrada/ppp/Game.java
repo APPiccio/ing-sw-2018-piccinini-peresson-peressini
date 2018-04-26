@@ -42,6 +42,14 @@ public class Game {
         return h;
     }
 
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
+    public Player getPlayer(String username){
+        return players.stream().filter(x -> x.getUsername().equals(username)).findFirst().orElse(null);
+    }
+
     public void toNextTurn(){
         if (roundTrack.getCurrentRound() == 10){
             gameStatus = GameStatus.SCORE;
@@ -84,7 +92,7 @@ public class Game {
     public int getPrivateScore(Player activePlayer) {
         int score = 0;
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
-            Dice tempDice = activePlayer.getMyPanel().getCellWithIndex(i).getDiceOn();
+            Dice tempDice = activePlayer.getPanel().getCell(i).getDiceOn();
             if (tempDice == null) {
                 continue;
             }

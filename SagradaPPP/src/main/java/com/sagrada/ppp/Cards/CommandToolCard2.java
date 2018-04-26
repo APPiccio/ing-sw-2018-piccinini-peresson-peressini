@@ -17,7 +17,7 @@ public class CommandToolCard2 implements CommandToolCard {
 
     @Override
     public void useCard() {
-        windowPanel.addDiceOnCellWithIndex(positions.getValue(), windowPanel.removeDice(positions.getKey()),
+        windowPanel.addDice(positions.getValue(), windowPanel.removeDice(positions.getKey()),
                 true, false, false);
     }
 

@@ -15,7 +15,7 @@ public class CommandToolCard12 implements CommandToolCard {
 
     public void useCard() {
         for(Integer pos : positions.keySet())
-            windowPanel.addDiceOnCellWithIndex(positions.get(pos), windowPanel.removeDice(pos));
+            windowPanel.addDice(positions.get(pos), windowPanel.removeDice(pos));
     }
 
 }

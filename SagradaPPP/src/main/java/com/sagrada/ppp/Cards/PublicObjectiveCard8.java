@@ -18,7 +18,7 @@ public class PublicObjectiveCard8 extends PublicObjectiveCard {
     public int getScore(WindowPanel playerWindowPanel) {
         HashMap<Integer, Integer> shadeVariety = new HashMap<>();
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
-            Dice tempDice = playerWindowPanel.getCellWithIndex(i).getDiceOn();
+            Dice tempDice = playerWindowPanel.getCell(i).getDiceOn();
             if (tempDice != null) {
                 int tempDiceValue = tempDice.getValue();
                 if (shadeVariety.containsKey(tempDiceValue)) {

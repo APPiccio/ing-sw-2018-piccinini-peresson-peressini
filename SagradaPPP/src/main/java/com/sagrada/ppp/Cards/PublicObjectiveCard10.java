@@ -19,7 +19,7 @@ public class PublicObjectiveCard10 extends PublicObjectiveCard {
     public int getScore(WindowPanel playerWindowPanel) {
         EnumMap<Color, Integer> colorVariety = new EnumMap<>(Color.class);
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
-            Dice tempDice = playerWindowPanel.getCellWithIndex(i).getDiceOn();
+            Dice tempDice = playerWindowPanel.getCell(i).getDiceOn();
             if (tempDice != null) {
                 Color tempDiceColor = tempDice.getColor();
                 if (colorVariety.containsKey(tempDiceColor)) {
