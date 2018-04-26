@@ -336,8 +336,9 @@ public class WindowPanel {
 
     public boolean diceOkWithRestriction(Cell cell, Dice dice, boolean ignoreColor, boolean ignoreValue) {
         if (!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
-        if (!ignoreValue && cell.hasValueRestriction() && dice.getValue() == cell.getValue()) return true;
-        if (!ignoreColor && cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
+        if (ignoreColor || ignoreValue) return true;
+        if (cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
+        if (cell.hasValueRestriction() && dice.getValue() == cell.getValue()) return true;
         return false;
     }
 

@@ -855,6 +855,18 @@ public class TestPanels {
         return TestPanels.panel_222();
     }
 
+    public static WindowPanel toolCardPanel_X() {
 
+        WindowPanel panel = new WindowPanel(10, StaticValues.FRONT_SIDE);
+
+        panel.addDiceOnCellWithIndex(2, new Dice(Color.GREEN, 3));
+
+        panel.addDiceOnCellWithIndex(8,new Dice(Color.BLUE, 6));
+
+        panel.addDiceOnCellWithIndex(13,new Dice(Color.PURPLE, 5));
+
+        return panel;
+
+    }
 
 }

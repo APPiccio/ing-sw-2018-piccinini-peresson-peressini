@@ -1,6 +1,7 @@
 package com.sagrada.ppp;
 
 import com.sagrada.ppp.Cards.*;
+import javafx.util.Pair;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ public class ToolCardTest {
     public void testAllToolCards() {
 
         card1();
+        card2();
+        card3();
         card4();
         card5();
         card10();
@@ -90,6 +93,56 @@ public class ToolCardTest {
     }
 
     @Test
+    public void card2() {
+
+        WindowPanel windowPanel = TestPanels.toolCardPanel_X();
+        WindowPanel windowPanelCopy = new WindowPanel(windowPanel);
+        Pair<Integer, Integer> positions = new Pair<>(13, 6);
+
+        ToolCard toolCard2 = new ToolCard2();
+        toolCard2.use(new CommandToolCard2(positions, windowPanelCopy));
+
+        //Testing non-touched cells
+        for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
+            if (i != 6 && i != 13) {
+                assertEquals(windowPanel.getCellWithIndex(i), windowPanelCopy.getCellWithIndex(i));
+            }
+        }
+
+        //Testing changes
+        assertEquals(windowPanel.getCellWithIndex(13).getDiceOn().getValue(),
+                windowPanelCopy.getCellWithIndex(6).getDiceOn().getValue());
+        assertEquals(windowPanel.getCellWithIndex(13).getDiceOn().getColor(),
+                windowPanelCopy.getCellWithIndex(6).getDiceOn().getColor());
+
+    }
+
+    @Test
+    public void card3() {
+
+        WindowPanel windowPanel = TestPanels.toolCardPanel_X();
+        WindowPanel windowPanelCopy = new WindowPanel(windowPanel);
+        Pair<Integer, Integer> positions = new Pair<>(13, 9);
+
+        ToolCard toolCard3 = new ToolCard3();
+        toolCard3.use(new CommandToolCard3(positions, windowPanelCopy));
+
+        //Testing non-touched cells
+        for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
+            if (i != 9 && i != 13) {
+                assertEquals(windowPanel.getCellWithIndex(i), windowPanelCopy.getCellWithIndex(i));
+            }
+        }
+
+        //Testing changes
+        assertEquals(windowPanel.getCellWithIndex(13).getDiceOn().getValue(),
+                windowPanelCopy.getCellWithIndex(9).getDiceOn().getValue());
+        assertEquals(windowPanel.getCellWithIndex(13).getDiceOn().getColor(),
+                windowPanelCopy.getCellWithIndex(9).getDiceOn().getColor());
+
+    }
+
+    @Test
     public void card4() {
 
         WindowPanel windowPanel = TestPanels.panel_222();
@@ -103,7 +156,7 @@ public class ToolCardTest {
 
         //Testing non-touched cells
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
-            if (i != 2 && i != 9 && i !=11 && i != 12) {
+            if (i != 2 && i != 9 && i != 11 && i != 12) {
                 assertEquals(windowPanel.getCellWithIndex(i), windowPanelCopy.getCellWithIndex(i));
             }
         }
