@@ -1,5 +1,7 @@
 package com.sagrada.ppp;
 
+import com.sagrada.ppp.Utils.StaticValues;
+
 public class TestPanels {
 
 

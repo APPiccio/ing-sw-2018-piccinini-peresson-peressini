@@ -1,4 +1,8 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.Utils;
+
+import com.sagrada.ppp.Cell;
+import com.sagrada.ppp.Dice;
+import com.sagrada.ppp.WindowPanel;
 
 import java.util.ArrayList;
 

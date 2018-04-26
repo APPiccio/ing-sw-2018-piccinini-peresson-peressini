@@ -1,7 +1,7 @@
 package com.sagrada.ppp.Cards;
 
 import com.sagrada.ppp.Dice;
-import com.sagrada.ppp.StaticValues;
+import com.sagrada.ppp.Utils.StaticValues;
 import com.sagrada.ppp.WindowPanel;
 
 //Medium Shades: sets of 3 & 4 values anywhere

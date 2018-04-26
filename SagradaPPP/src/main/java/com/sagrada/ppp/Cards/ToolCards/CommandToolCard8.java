@@ -1,4 +1,4 @@
-package com.sagrada.ppp.Cards;
+package com.sagrada.ppp.Cards.ToolCards;
 
 import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.Player;

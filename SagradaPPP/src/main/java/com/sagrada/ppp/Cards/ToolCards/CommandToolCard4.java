@@ -1,21 +1,23 @@
-package com.sagrada.ppp.Cards;
+package com.sagrada.ppp.Cards.ToolCards;
 
-import com.sagrada.ppp.WindowPanel;
+import com.sagrada.ppp.*;
 import java.util.LinkedHashMap;
 
-public class CommandToolCard12 implements CommandToolCard {
+public class CommandToolCard4 implements CommandToolCard {
 
     private LinkedHashMap<Integer, Integer> positions;
     private WindowPanel windowPanel;
 
-    public CommandToolCard12(LinkedHashMap<Integer,Integer> positions, WindowPanel windowPanel){
+    public CommandToolCard4(LinkedHashMap<Integer, Integer> positions, WindowPanel windowPanel) {
         this.positions = positions;
         this.windowPanel = windowPanel;
     }
 
+    @Override
     public void useCard() {
-        for(Integer pos : positions.keySet())
+        for (Integer pos : positions.keySet()) {
             windowPanel.addDice(positions.get(pos), windowPanel.removeDice(pos));
+        }
     }
 
 }

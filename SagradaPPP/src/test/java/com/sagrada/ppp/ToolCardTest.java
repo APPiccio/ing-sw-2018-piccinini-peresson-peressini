@@ -1,6 +1,7 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.Cards.*;
+import com.sagrada.ppp.Cards.ToolCards.*;
+import com.sagrada.ppp.Utils.StaticValues;
 import javafx.util.Pair;
 import org.junit.Test;
 import static org.junit.Assert.*;
