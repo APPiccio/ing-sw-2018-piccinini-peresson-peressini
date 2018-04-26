@@ -119,10 +119,14 @@ public class WindowPanel {
         return new ArrayList<>(cells);
     }
 
-    public boolean addDiceOnCellWithIndex(int i, Dice dice){
+    public boolean addDiceOnCellWithIndex(int i, Dice dice) {
+        return addDiceOnCellWithIndex(i, dice, false, false, false);
+    }
+
+    public boolean addDiceOnCellWithIndex(int i, Dice dice, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
         Cell currentCell = cells.get(i);
         if (currentCell == null) return false;
-        if(diceOk(currentCell,dice,i)){
+        if (diceOk(currentCell, dice, i, ignoreColor, ignoreValue, ignorePosition)) {
             currentCell.setDiceOn(dice);
             return true;
         }
@@ -130,30 +134,32 @@ public class WindowPanel {
         return false;
     }
 
-    private boolean diceOk(Cell cell, Dice dice, int i){
-        if(cell.hasDiceOn()) {
+    private boolean diceOk(Cell cell, Dice dice, int i) {
+        return diceOk(cell, dice, i, false, false, false);
+    }
+
+    private boolean diceOk(Cell cell, Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
+        if (cell.hasDiceOn()) {
             System.out.println("WARNING --> ANOTHER DICE IN THIS POSITION");
             return false;
         }
-
-        if (windowIsEmpty()){
-            if(!borderPosition(i)){
+        if (windowIsEmpty()) {
+            if (!borderPosition(i)) {
                 System.out.println("WARNING --> WINDOW EMPTY AND NO BORDER POSITION");
                 return false;
             }
         }
         else {
-            if (!atLeastOneNear(i)){
+            if (!atLeastOneNear(i)) {
                 System.out.println("WARNING --> NO DICE NEAR");
                 return false;
             }
-            if (hasSimilarDiceAttached(dice,i)){
+            if (hasSimilarDiceAttached(dice,i)) {
                 System.out.println("WARNING --> SIMILAR ATTACHED");
                 return false;
             }
         }
-
-        if(diceOkWithRestriction(cell,dice)) return true;
+        if (diceOkWithRestriction(cell, dice, ignoreColor, ignoreValue)) return true;
         System.out.println("WARNING --> INVALID DICE FOR THIS CELL DUE TO RESTRICTION");
         return false;
     }
@@ -328,17 +334,11 @@ public class WindowPanel {
         return dice;
     }
 
-
-    public boolean diceOkWithRestriction(Cell cell, Dice dice){
-        if(!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
-        if (cell.hasValueRestriction() && dice.getValue() == cell.getValue()) return true;
-        if (cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
+    public boolean diceOkWithRestriction(Cell cell, Dice dice, boolean ignoreColor, boolean ignoreValue) {
+        if (!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
+        if (!ignoreValue && cell.hasValueRestriction() && dice.getValue() == cell.getValue()) return true;
+        if (!ignoreColor && cell.hasColorRestriction() && dice.getColor().equals(cell.getColor())) return true;
         return false;
     }
 
-
-
-
-
 }
-
