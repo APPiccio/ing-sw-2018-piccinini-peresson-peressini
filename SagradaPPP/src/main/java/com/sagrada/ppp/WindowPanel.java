@@ -336,9 +336,5 @@ public class WindowPanel {
         return false;
     }
 
-
-
-
-
 }
 
