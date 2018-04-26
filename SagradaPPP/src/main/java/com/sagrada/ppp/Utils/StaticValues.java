@@ -16,6 +16,10 @@ public class StaticValues {
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
 
+    //Connection static value
+    public static final int RMI_PORT = 1099;
+    public static final String REGISTRY_NAME = "SagradaRegistry";
+
     //Tool Card names
     public static final String TOOLCARD1_NAME = "Grozing Pliers";
     public static final String TOOLCARD2_NAME = "Eglomise Brush";

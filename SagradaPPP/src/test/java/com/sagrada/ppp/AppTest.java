@@ -8,7 +8,7 @@ import junit.framework.TestSuite;
 import java.io.FileNotFoundException;
 
 /**
- * Unit test for simple App.
+ * Unit test for simple Client.
  */
 public class AppTest
         extends TestCase

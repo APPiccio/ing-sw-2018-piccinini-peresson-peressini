@@ -3,9 +3,10 @@ package com.sagrada.ppp;
 import com.sagrada.ppp.Cards.ToolCards.CommandToolCard;
 import com.sagrada.ppp.Utils.StaticValues;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Game {
+public class Game implements Serializable{
     private ArrayList<Player> players;
     private ArrayList<CommandToolCard> toolCards;
     private Player activePlayer;
@@ -65,15 +66,25 @@ public class Game {
         }
     }
 
-    public void joinGame(String username) {
+    public int joinGame(String username) {
         int i = 1;
         String user = username;
         while(isInMatch(user)){
             user = username + "(" + i + ")";
             i++;
         }
-        players.add(new Player(user));
+        Player h = new Player(user);
+        players.add(h);
+        return h.hashCode();
     }
+
+    public String getPlayerUsername(int hashCode){
+        for(Player player : players){
+            if (player.hashCode() == hashCode) return player.getUsername();
+        }
+        return null;
+    }
+
 
     public boolean isInMatch(String username){
         for(Player player : players){
