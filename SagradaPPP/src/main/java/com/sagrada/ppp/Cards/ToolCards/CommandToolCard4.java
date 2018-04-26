@@ -1,4 +1,4 @@
-package com.sagrada.ppp.Cards;
+package com.sagrada.ppp.Cards.ToolCards;
 
 import com.sagrada.ppp.*;
 import java.util.LinkedHashMap;
@@ -16,7 +16,7 @@ public class CommandToolCard4 implements CommandToolCard {
     @Override
     public void useCard() {
         for (Integer pos : positions.keySet()) {
-            windowPanel.addDiceOnCellWithIndex(positions.get(pos), windowPanel.removeDice(pos));
+            windowPanel.addDice(positions.get(pos), windowPanel.removeDice(pos));
         }
     }
 

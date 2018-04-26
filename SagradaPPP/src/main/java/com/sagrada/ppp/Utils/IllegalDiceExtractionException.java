@@ -1,4 +1,4 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.Utils;
 
 public class IllegalDiceExtractionException extends Exception {
 

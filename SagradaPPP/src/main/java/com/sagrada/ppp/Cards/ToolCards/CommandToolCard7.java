@@ -1,4 +1,4 @@
-package com.sagrada.ppp.Cards;
+package com.sagrada.ppp.Cards.ToolCards;
 
 import com.sagrada.ppp.*;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class CommandToolCard7 implements CommandToolCard{
 
-    ArrayList<Dice> draftPool;
+    private ArrayList<Dice> draftPool;
 
     public CommandToolCard7(ArrayList<Dice> draftPool) {
         this.draftPool = draftPool;

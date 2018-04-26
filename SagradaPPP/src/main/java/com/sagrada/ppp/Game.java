@@ -1,6 +1,7 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.Cards.CommandToolCard;
+import com.sagrada.ppp.Cards.ToolCards.CommandToolCard;
+import com.sagrada.ppp.Utils.StaticValues;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,14 @@ public class Game {
             h.add(new Dice(dice));
         }
         return h;
+    }
+
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
+    public Player getPlayer(String username){
+        return players.stream().filter(x -> x.getUsername().equals(username)).findFirst().orElse(null);
     }
 
     public void toNextTurn(){
@@ -84,7 +93,7 @@ public class Game {
     public int getPrivateScore(Player activePlayer) {
         int score = 0;
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
-            Dice tempDice = activePlayer.getMyPanel().getCellWithIndex(i).getDiceOn();
+            Dice tempDice = activePlayer.getPanel().getCell(i).getDiceOn();
             if (tempDice == null) {
                 continue;
             }

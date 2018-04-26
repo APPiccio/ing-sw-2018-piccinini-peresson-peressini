@@ -1,7 +1,8 @@
-package com.sagrada.ppp.Cards;
+package com.sagrada.ppp.Cards.ToolCards;
 
 
 import com.sagrada.ppp.*;
+import com.sagrada.ppp.Utils.StaticValues;
 
 public class ToolCard1 extends ToolCard{
 

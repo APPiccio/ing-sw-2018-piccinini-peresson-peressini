@@ -3,7 +3,7 @@ package com.sagrada.ppp.Cards;
 
 import com.sagrada.ppp.Cell;
 import com.sagrada.ppp.Dice;
-import com.sagrada.ppp.StaticValues;
+import com.sagrada.ppp.Utils.StaticValues;
 import com.sagrada.ppp.WindowPanel;
 
 
@@ -35,7 +35,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
 
     private boolean isDiceLegal(int x, int y, WindowPanel panel) {
         boolean returnValue = false;
-        Cell cell = panel.getCellWithPosition(y, x);
+        Cell cell = panel.getCell(y, x);
         if (cell.hasDiceOn()) {
             Dice dice = cell.getDiceOn();
             //top-dx cell
@@ -53,7 +53,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
 
 
             Cell tmpCell;
-            tmpCell = panel.getCellWithPosition(yTDX, xTDX);
+            tmpCell = panel.getCell(yTDX, xTDX);
             if (tmpCell != null) {
                 if (tmpCell.hasDiceOn()) {
                     if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
@@ -62,7 +62,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
                 }
             }
 
-            tmpCell = panel.getCellWithPosition(yBDX, xBDX);
+            tmpCell = panel.getCell(yBDX, xBDX);
             if (tmpCell != null) {
                 if (tmpCell.hasDiceOn()) {
                     if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
@@ -71,7 +71,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
                 }
             }
 
-            tmpCell = panel.getCellWithPosition(yTSX, xTSX);
+            tmpCell = panel.getCell(yTSX, xTSX);
             if (tmpCell != null) {
                 if (tmpCell.hasDiceOn()) {
                     if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
@@ -80,7 +80,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
                 }
             }
 
-            tmpCell = panel.getCellWithPosition(yBSX, xBSX);
+            tmpCell = panel.getCell(yBSX, xBSX);
             if (tmpCell != null) {
                 if (tmpCell.hasDiceOn()) {
                     if (tmpCell.getDiceOn().getColor() == dice.getColor()) {

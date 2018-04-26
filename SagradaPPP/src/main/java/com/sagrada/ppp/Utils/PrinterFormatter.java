@@ -1,4 +1,8 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.Utils;
+
+import com.sagrada.ppp.Cell;
+import com.sagrada.ppp.Dice;
+import com.sagrada.ppp.WindowPanel;
 
 import java.util.ArrayList;
 
@@ -42,7 +46,7 @@ public class PrinterFormatter {
                 switch (i){
                     case 0:
                         for (int col = 0; col < StaticValues.PATTERN_COL; col++) {
-                            Cell cell = panel.getCellWithPosition(row,col);
+                            Cell cell = panel.getCell(row,col);
                             if(cell.hasDiceOn()) {
                                 string.append(String.format("%" + 4 + "s", "_"));
                                 string.append(String.format("%" + 9 + "s", "|"));
@@ -55,7 +59,7 @@ public class PrinterFormatter {
                         break;
                     case 1:
                         for (int col = 0; col < StaticValues.PATTERN_COL; col++) {
-                            Cell cell = panel.getCellWithPosition(row,col);
+                            Cell cell = panel.getCell(row,col);
                             String h;
                             if(cell.hasDiceOn()) {
                                 h = "|"+cell.getDiceOn().getValue() + "| " + cell.getDiceOn().getColor();
@@ -139,15 +143,15 @@ public class PrinterFormatter {
 
     public static void main(String[] args) {
         WindowPanel panel = new WindowPanel(0,0);
-        panel.addDiceOnCellWithIndex(0, new Dice());
-        panel.addDiceOnCellWithIndex(1, new Dice());
-        panel.addDiceOnCellWithIndex(2, new Dice());
-        panel.addDiceOnCellWithIndex(3, new Dice());
-        panel.addDiceOnCellWithIndex(4, new Dice());
-        panel.addDiceOnCellWithIndex(5, new Dice());
-        panel.addDiceOnCellWithIndex(6, new Dice());
-        panel.addDiceOnCellWithIndex(7, new Dice());
-        panel.addDiceOnCellWithIndex(8, new Dice());
+        panel.addDice(0, new Dice());
+        panel.addDice(1, new Dice());
+        panel.addDice(2, new Dice());
+        panel.addDice(3, new Dice());
+        panel.addDice(4, new Dice());
+        panel.addDice(5, new Dice());
+        panel.addDice(6, new Dice());
+        panel.addDice(7, new Dice());
+        panel.addDice(8, new Dice());
 
         System.out.println(printWindowPanelContent(panel));
 

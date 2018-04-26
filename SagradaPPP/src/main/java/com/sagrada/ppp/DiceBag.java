@@ -1,5 +1,8 @@
 package com.sagrada.ppp;
 
+import com.sagrada.ppp.Utils.IllegalDiceExtractionException;
+import com.sagrada.ppp.Utils.StaticValues;
+
 import java.util.ArrayList;
 import java.util.Random;
 
