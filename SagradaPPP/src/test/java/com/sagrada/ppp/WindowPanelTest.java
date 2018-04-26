@@ -1,6 +1,6 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.Utils.StaticValues;
+import com.sagrada.ppp.utils.StaticValues;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static java.lang.Boolean.TRUE;

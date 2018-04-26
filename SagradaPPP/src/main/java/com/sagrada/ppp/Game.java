@@ -1,7 +1,7 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.Cards.ToolCards.CommandToolCard;
-import com.sagrada.ppp.Utils.StaticValues;
+import com.sagrada.ppp.cards.ToolCards.CommandToolCard;
+import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.Serializable;
 import java.util.ArrayList;

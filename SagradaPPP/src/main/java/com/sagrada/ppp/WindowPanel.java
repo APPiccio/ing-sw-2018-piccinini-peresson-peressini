@@ -1,7 +1,7 @@
 package com.sagrada.ppp;
 
 
-import com.sagrada.ppp.Utils.StaticValues;
+import com.sagrada.ppp.utils.StaticValues;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;

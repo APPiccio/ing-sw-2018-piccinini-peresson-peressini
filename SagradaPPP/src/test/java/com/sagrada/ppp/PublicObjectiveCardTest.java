@@ -1,7 +1,7 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.Cards.*;
-import java.io.FileNotFoundException;
+import com.sagrada.ppp.cards.*;
+
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 

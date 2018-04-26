@@ -1,6 +1,6 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.Utils.StaticValues;
+import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.controller.Controller;
 
 import java.rmi.RemoteException;
