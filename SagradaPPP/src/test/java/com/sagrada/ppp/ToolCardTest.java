@@ -348,6 +348,10 @@ public class ToolCardTest {
 
         assertEquals(null,g.getPlayer("pinco").getPanel().getCell(7).getDiceOn());
 
+        g.getPlayer("pinco").setActiveDice(null);
+        commandToolCard9 = new CommandToolCard9(g.getPlayer("pinco"),7);
+        toolCard9.use(commandToolCard9);
+
     }
 
     @Test
