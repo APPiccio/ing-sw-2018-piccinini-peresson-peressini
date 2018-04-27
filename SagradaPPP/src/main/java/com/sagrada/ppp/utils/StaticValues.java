@@ -125,4 +125,20 @@ public class StaticValues {
     public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
     public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
 
+    // Cli View string command
+    public static final String STRING_COMMAND_QUIT = "quit";
+    public static final String STRING_COMMAND_LOGIN = "login";
+    public static final String STRING_COMMAND_SHOW_GAMES = "show joinable multiplayer games";
+    public static final String STRING_COMMAND_CREATE_GAME = "create your own lobby";
+
+
+
+
+    // Cli View command
+    public static final String COMMAND_QUIT = ":q";
+    public static final String COMMAND_LOGIN = ":login";
+    public static final String COMMAND_SHOW_GAMES = ":games";
+    public static final String COMMAND_CREATE_GAME = ":new";
+
+
 }

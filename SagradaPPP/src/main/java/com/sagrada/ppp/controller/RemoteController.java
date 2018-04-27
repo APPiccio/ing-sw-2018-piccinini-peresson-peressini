@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public interface RemoteController extends Remote {
 
-    void createGame(boolean multiplayer) throws RemoteException;
     int login(String username) throws RemoteException;
-    String getUsername(int hashCode) throws RemoteException;
-    ArrayList<Player> getPlayers() throws RemoteException;
 
+    int createGame(boolean multiplayer, String name, String username) throws RemoteException;
+
+    ArrayList<String> getJoinableGames() throws RemoteException;
 }

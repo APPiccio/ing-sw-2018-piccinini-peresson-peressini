@@ -16,17 +16,24 @@ public class Game implements Serializable{
     private ArrayList<Dice> draftPool;
     private RoundTrack roundTrack;
     private GameStatus gameStatus;
+    private String name;
 
     //TODO: Add a method that given the username string returns the desired players
     //TODO: Add overloading methods that take a Player as a parameter instead of a String
 
-    public Game(){
+    public Game(String name, String username){
         diceBag = new DiceBag();
         players = new ArrayList<>();
         draftPool = new ArrayList<>();
         roundTrack = new RoundTrack(StaticValues.NUMBER_OF_TURNS);
         gameStatus = GameStatus.INIT;
         toolCards = new ArrayList<>();
+        this.name = name;
+        players.add(new Player(username));
+    }
+
+    public Game(){
+        this("cardTest","cardTest");
     }
 
     public void init(){
@@ -42,6 +49,11 @@ public class Game implements Serializable{
             h.add(new Dice(dice));
         }
         return h;
+    }
+
+    //TO DO check if enum should be passed as a copy and not as a reference --> private invariant
+    public GameStatus getGameStatus() {
+        return gameStatus;
     }
 
     public Player getActivePlayer() {
@@ -115,5 +127,9 @@ public class Game implements Serializable{
             }
         }
         return score;
+    }
+
+    public String getName() {
+        return name;
     }
 }

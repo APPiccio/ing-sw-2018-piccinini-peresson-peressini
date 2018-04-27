@@ -7,6 +7,7 @@ import com.sagrada.ppp.view.CliView;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Scanner;
 
 /**
  * Hello world!
@@ -21,6 +22,8 @@ public class Client
 
         Registry registry = null;
         RemoteController controller = null;
+        Scanner scanner = new Scanner(System.in);
+
         try {
             registry = LocateRegistry.getRegistry(StaticValues.RMI_PORT);
             controller = (RemoteController) registry.lookup(StaticValues.REGISTRY_NAME);
@@ -32,10 +35,9 @@ public class Client
 
 
         //TO DO : remove this line and replace with the choice single-multi player
-        controller.createGame(true);
         CliView view = new CliView(controller);
-        int playerID = view.userLogin();
-        view.playerInLobby(playerID);
+        view.start();
+        System.out.println("Stopping client...");
     }
 
 
