@@ -48,11 +48,24 @@ public class Service {
         return gamesName;
     }
 
+    public boolean thereIsGameWithName(String name){
+        for(Game game : games.values()){
+            if (game.getName().equals(name)) return true;
+        }
+        return false;
+    }
+
 
     public int createGame(boolean multiplayer, String name, String username){
         Game game;
         if(multiplayer) {
-            game = new Game(name, username);
+            String gameName = name;
+            int i = 1;
+            while(thereIsGameWithName(gameName)){
+                gameName = name + "(" + i + ")";
+                i++;
+            }
+            game = new Game(gameName, username);
         }
         else{
             //TO DO space intentionally left for single player implementation
@@ -64,12 +77,46 @@ public class Service {
         return game.hashCode();
     }
 
-    public boolean joinGame(int gameHashCode, String username){
+    public ArrayList<Player> getPlayers(int gameHashCode){
+        return  games.get(gameHashCode).getPlayers();
+    }
+
+    public void leaveLobby(int gameHashCode, String username){
         Game game = games.get(gameHashCode);
+        if(game != null){
+            game.leaveLobby(username);
+            if(game.getPlayers().size() == 0){
+                games.remove(gameHashCode);
+            }
+        }
+    }
+
+    public boolean joinGame(String gameName, String username){
+        Game game = null;
+        for(Game x : games.values()){
+            if (x.getName().equals(gameName)){
+                game = x;
+                break;
+            }
+        }
         if(game != null) {
-            game.joinGame(username);
+            if (game.joinGame(username) > 0) return true;
         }
         return false;
+    }
+
+    public void attachLobbyObserver(int gameHashCode, Observer observer){
+        Game game = games.get(gameHashCode);
+        if(game != null){
+            game.attach(observer);
+        }
+    }
+
+    public void detachLobbyObserver(int gameHashCode, Observer observer){
+        Game game = games.get(gameHashCode);
+        if(game != null){
+            game.detach(observer);
+        }
     }
 
 }

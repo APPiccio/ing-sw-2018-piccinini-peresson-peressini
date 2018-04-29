@@ -5,6 +5,7 @@ import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Game implements Serializable{
     private ArrayList<Player> players;
@@ -17,6 +18,8 @@ public class Game implements Serializable{
     private RoundTrack roundTrack;
     private GameStatus gameStatus;
     private String name;
+    private ArrayList<Observer> observers;
+
 
     //TODO: Add a method that given the username string returns the desired players
     //TODO: Add overloading methods that take a Player as a parameter instead of a String
@@ -30,6 +33,7 @@ public class Game implements Serializable{
         toolCards = new ArrayList<>();
         this.name = name;
         players.add(new Player(username));
+        observers = new ArrayList<>();
     }
 
     public Game(){
@@ -79,6 +83,7 @@ public class Game implements Serializable{
     }
 
     public int joinGame(String username) {
+        if(players.size() == 4 || !gameStatus.equals(GameStatus.INIT)) return -1;
         int i = 1;
         String user = username;
         while(isInMatch(user)){
@@ -87,6 +92,7 @@ public class Game implements Serializable{
         }
         Player h = new Player(user);
         players.add(h);
+        notifyAllObservers(0,user);
         return h.hashCode();
     }
 
@@ -129,7 +135,37 @@ public class Game implements Serializable{
         return score;
     }
 
+    public void leaveLobby(String username){
+        for(Player player : players){
+            if (player.getUsername().equals(username)){
+                players.remove(player);
+                return;
+            }
+        }
+    }
+
     public String getName() {
         return name;
     }
+
+    public void attach(Observer observer){
+        observers.add(observer);
+    }
+
+    public void detach(Observer observer){
+        observers.remove(observer);
+    }
+
+    public void notifyAllObservers(int updateCode){
+        notifyAllObservers(updateCode,"no_username");
+    }
+
+
+    public void notifyAllObservers(int updateCode, String username){
+        for (Observer observer : observers) {
+            observer.update(updateCode, username);
+        }
+    }
+
 }
+

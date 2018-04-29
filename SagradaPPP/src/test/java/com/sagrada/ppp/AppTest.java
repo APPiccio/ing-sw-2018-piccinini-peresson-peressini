@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 /**
  * Unit test for simple Client.
@@ -36,7 +37,6 @@ public class AppTest
      */
 
     public void testApp() throws IllegalDiceValueException, FileNotFoundException {
-
         CellTest.cellTest();
         DiceTest.diceTest();
         DiceBagTest.diceBagTest();
