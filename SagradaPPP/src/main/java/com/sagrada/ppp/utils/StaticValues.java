@@ -125,4 +125,29 @@ public class StaticValues {
     public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
     public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
 
+    // Cli View string command
+    public static final String STRING_COMMAND_QUIT = "quit";
+    public static final String STRING_COMMAND_LOGIN = "login";
+    public static final String STRING_COMMAND_SHOW_GAMES = "show joinable multiplayer games";
+    public static final String STRING_COMMAND_CREATE_GAME = "create your own lobby";
+    public static final String STRING_COMMAND_JOIN_GAME = "join an existing lobby (write join lobbyName myUsername)";
+    public static final String STRING_COMMAND_LEAVE_GAME = "leave lobby/game";
+    public static final String STRING_COMMAND_HELP = "show commands list";
+    public static final String STRING_COMMAND_PLAYERS_IN_LOBBY = "show players connected to this lobby";
+    public static final String STRING_COMMAND_START_GAME = "start game";
+
+    // Cli View command
+    public static final String COMMAND_QUIT = ":q";
+    public static final String COMMAND_LOGIN = ":login";
+    public static final String COMMAND_SHOW_GAMES = ":games";
+    public static final String COMMAND_CREATE_GAME = ":new";
+    public static final String COMMAND_JOIN_GAME = ":join";
+    public static final String COMMAND_LEAVE_GAME = ":leave";
+    public static final String COMMAND_HELP = ":help";
+    public static final String COMMAND_PLAYERS_IN_LOBBY = ":players";
+    public static final String COMMAND_START_GAME = ":start";
+
+
+
+
 }
