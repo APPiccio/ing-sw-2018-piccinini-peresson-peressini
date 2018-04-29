@@ -116,6 +116,9 @@ public class WindowPanel {
         this.cardID = cardID;
     }
 
+    /**
+     * @return returns a copy of the cells on the pane
+     */
     public ArrayList<Cell> getCells(){
         ArrayList<Cell> h = new ArrayList<>();
         for(Cell cell : cells){
@@ -124,26 +127,42 @@ public class WindowPanel {
         return h;
     }
 
+    /**
+     * overload of addDice(int,Dice,bool,bool,bool) method, all restrictions are active.
+     */
     public boolean addDice(int i, Dice dice) {
         return addDice(i, dice, false, false, false);
     }
 
+    /**
+     * function that adds a dice in an empty cell.
+     * @param i: index that selects the cell in witch the dice will be added
+     * @param dice: dice to add
+     * @param ignoreColor: ignore color restrictions on windowWpane
+     * @param ignoreValue: ignore value restrictions on windowPanel
+     * @param ignorePosition: ignore positioning rules.
+     * @return returns true if the operation is successful
+     */
     public boolean addDice(int i, Dice dice, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
-        Cell currentCell = cells.get(i);
-        if (currentCell == null) return false;
-        if (diceOk(currentCell, dice, i, ignoreColor, ignoreValue, ignorePosition)) {
-            currentCell.setDiceOn(dice);
+        if (diceOk(dice, i, ignoreColor, ignoreValue, ignorePosition)) {
+            cells.get(i).setDiceOn(dice);
             return true;
         }
         System.out.println("WARNING ---> CELL " + i + " - WRONG DICE PLACEMENT, IF IS NOT INTENDED FIX IT" );
         return false;
     }
 
-    private boolean diceOk(Cell cell, Dice dice, int i) {
-        return diceOk(cell, dice, i, false, false, false);
+    /**
+     * @param dice dice subject of the control
+     * @param  i index of the cell
+     * @return true if the operation is successful
+     */
+    private boolean diceOk(Dice dice, int i) {
+        return diceOk(dice, i, false, false, false);
     }
 
-    private boolean diceOk(Cell cell, Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
+    private boolean diceOk(Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
+        Cell cell = cells.get(i);
         if (cell.hasDiceOn()) {
             System.out.println("PLACEMENT ERROR >>> ANOTHER DICE IN THIS POSITION");
             return false;
@@ -233,10 +252,8 @@ public class WindowPanel {
 
     public boolean addDiceOnCellWithPosition(int row, int col, Dice dice){
         int i = row * StaticValues.PATTERN_COL + col;
-        Cell currentCell = cells.get(i);
-        if (currentCell == null) return false;
-        if(diceOk(currentCell,dice, i)){
-            currentCell.setDiceOn(dice);
+        if(diceOk(dice, i)){
+            cells.get(i).setDiceOn(dice);
             return true;
         }
         return false;
@@ -297,7 +314,7 @@ public class WindowPanel {
     public ArrayList<Integer> getLegalPosition(Dice dice){
         ArrayList<Integer> h = new ArrayList<>();
         for(int i = 0; i < 19; i++){
-            if (diceOk(getCell(i), dice, i)){
+            if (diceOk(dice, i)){
                 h.add(i);
             }
         }
@@ -308,7 +325,7 @@ public class WindowPanel {
     public ArrayList<Integer> getLegalDicesFromSetAndCellIndex(ArrayList<Dice> dices, int i){
         ArrayList<Integer> h = new ArrayList<>();
         for(int j = 0; j < dices.size(); j++){
-            if(diceOk(getCell(i), dices.get(j), i)) {
+            if(diceOk(dices.get(j), i)) {
                 h.add(j);
             }
         }
@@ -320,8 +337,7 @@ public class WindowPanel {
         ArrayList<Integer> h = new ArrayList<>();
         for(int j = 0; j < dices.size(); j++){
             for(int i = 0; i < cells.size(); i++){
-                Cell cell = getCell(i);
-                if (diceOk(cell, dices.get(j), i)){
+                if (diceOk(dices.get(j), i)){
                     h.add(j);
                     break;
                 }
