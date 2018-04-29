@@ -1,6 +1,7 @@
 package com.sagrada.ppp.utils;
 
 import com.sagrada.ppp.Cell;
+import com.sagrada.ppp.Color;
 import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.WindowPanel;
 
@@ -89,23 +90,27 @@ public class PrinterFormatter {
         if(panel == null){
             return "This WindowPanel is Null!\n";
         }else {
-
+            String format = "│%1$20s│%2$20s│%3$20s│%4$20s│%5$20s│\n";
             result.append("Panel Name: " + panel.getPanelName() + "\n");
             ArrayList<Cell> cells = panel.getCells();
+            String[] row = new String[5];
             int i = 0;
             for (Cell c:cells) {
                 if(c.hasDiceOn()){
-                    result.append("|"+c.getDiceOn().getColor()+"||"+c.getDiceOn().getValue()+"|\t");
+                    row[i] = center(getColoredString(c.getDiceOn().getColor(),"" + c.getDiceOn().getValue()),20,' ',true);
                 }else {
-                    result.append("| NULL |\t");
+
+                    row[i] = center(getColoredString(Color.NULL,"NULL"),20, ' ',true);
                 }
                 if(i < StaticValues.PATTERN_COL - 1) i++;
                 else {
-                    result.append("\n");
+
+                    result.append(String.format(format,row));
                     i = 0;
                 }
             }
         }
+        result.append(StaticValues.RESET);
         return result.toString();
     }
 
@@ -159,6 +164,40 @@ public class PrinterFormatter {
         panel = new WindowPanel(4,1);
         System.out.println(printWindowPanelLayout(panel));
 
+    }
+    private static String getColoredString(Color color,String msg){
+        switch (color){
+            case GREEN:
+                return StaticValues.GREEN_BOLD + msg + StaticValues.RESET;
+            case RED:
+                return StaticValues.RED_BOLD + msg + StaticValues.RESET;
+            case BLUE:
+                return StaticValues.BLUE_BOLD + msg + StaticValues.RESET;
+            case YELLOW:
+                return StaticValues.YELLOW_BOLD + msg + StaticValues.RESET;
+            case PURPLE:
+                return StaticValues.PURPLE_BOLD + msg + StaticValues.RESET;
+            case NULL:
+                return StaticValues.WHITE_BOLD + msg + StaticValues.RESET;
+                default:
+                    return StaticValues.RESET;
+        }
+
+    }
+
+    private static String center(String msg, int lenght, char paddinChar, boolean pr){
+        int pad = lenght-msg.length();
+        String p = "";
+
+        for (int i=0; i<pad/2; i++)
+            p = p + paddinChar;
+
+        /* If s.length is odd */
+        if (pad%2 == 1)
+            /* Pad one extra either right or left */
+            if (pr) msg = msg + paddinChar;
+            else msg = paddinChar + msg;
+        return (p+msg+p);
     }
 
 }

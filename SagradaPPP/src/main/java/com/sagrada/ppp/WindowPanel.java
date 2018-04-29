@@ -148,7 +148,7 @@ public class WindowPanel {
             cells.get(i).setDiceOn(dice);
             return true;
         }
-        System.out.println("WARNING ---> CELL " + i + " - WRONG DICE PLACEMENT, IF IS NOT INTENDED FIX IT" );
+        System.out.println("PLACING ERROR >>> CELL " + i + " - WRONG DICE PLACEMENT, IF IS NOT INTENDED FIX IT" );
         return false;
     }
 

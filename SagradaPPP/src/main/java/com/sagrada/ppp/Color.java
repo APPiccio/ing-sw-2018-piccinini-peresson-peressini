@@ -7,7 +7,8 @@ public enum Color {
     GREEN,
     PURPLE,
     RED,
-    YELLOW;
+    YELLOW,
+    NULL;
 
     public static Color getRandomColor(){
         //return a random color from enum
