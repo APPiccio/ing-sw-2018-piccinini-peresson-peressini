@@ -7,6 +7,7 @@ import com.sagrada.ppp.controller.Controller;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
 
+import java.io.PrintWriter;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -69,6 +70,7 @@ public class CliView {
                     String username = split[2];
                     if(controller.joinGame(gameName,username)){
                         System.out.println("Joining game...");
+                        inLobby();
                     }
                     else {
                         System.out.println("Error, unable to join this lobby.");

@@ -1,12 +1,16 @@
 package com.sagrada.ppp;
 
+import java.io.Console;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
-public class LobbyObserver implements Observer, Serializable {
-    Game game;
+public class LobbyObserver extends UnicastRemoteObject implements Remote, Observer, Serializable {
 
-    public LobbyObserver(){
-
+    public LobbyObserver() throws RemoteException{
+        super();
     }
 
     //UPDATE CODE
