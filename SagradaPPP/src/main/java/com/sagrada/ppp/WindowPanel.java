@@ -1,6 +1,7 @@
 package com.sagrada.ppp;
 
 
+import com.sagrada.ppp.utils.PrinterFormatter;
 import com.sagrada.ppp.utils.StaticValues;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -279,34 +280,8 @@ public class WindowPanel {
      }
 
     public String toString(){
-        StringBuilder myString = new StringBuilder();
-        myString.append("PanelName = " + getPanelName().toUpperCase() + "\n" );
-        myString.append("Favor tokens = " + getFavorTokens() + "\n" );
-        myString.append("CardID = " + getCardID() + "\n\n" );
-        Cell currentCell;
 
-        int absIndex = 0;
-
-        for(int k = 0; k < StaticValues.PATTERN_ROW; k++){
-            for(int l = 0; l < StaticValues.PATTERN_COL; l++){
-                currentCell = getCell(absIndex);
-
-                if(currentCell.hasColorRestriction()){
-                    myString.append(currentCell.getColor().toString() + "|\t\t ");
-                }
-                else{
-                    if(currentCell.hasValueRestriction()){
-                        myString.append(currentCell.getValue() + "|\t\t ");
-                    }
-                    else{
-                        myString.append("BLANK |\t\t");
-                    }
-                }
-                absIndex++;
-            }
-            myString.append("\n____________________________________\n");
-        }
-        return myString.toString();
+        return PrinterFormatter.printWindowPanelContent(this);
 
     }
 
