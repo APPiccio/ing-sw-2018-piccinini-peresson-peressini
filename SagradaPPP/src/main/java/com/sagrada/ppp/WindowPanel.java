@@ -26,13 +26,12 @@ public class WindowPanel {
         this.cardID = windowPanel.getCardID();
 
         this.cells = new ArrayList<>();
-        ArrayList<Cell> cells = windowPanel.getCells();
+        ArrayList<Cell> tempCells = windowPanel.getCells();
 
-        for (Cell cell : cells){
+        for (Cell cell : tempCells){
             this.cells.add(new Cell(cell));
         }
     }
-
 
     //cardNumber from 1 to 12
     //side 1 for the front
@@ -41,13 +40,14 @@ public class WindowPanel {
     public WindowPanel(int cardNumber, int side)  {
 
         int fileIndex = cardNumber * 2 - side;
-        JSONTokener tokener = null;
+        JSONTokener jsonTokener = null;
         try {
-            tokener = new JSONTokener(new FileReader("templates/panel" + fileIndex + ".json"));
+            jsonTokener = new JSONTokener(new FileReader("templates/panel" + fileIndex + ".json"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        JSONObject jsonObject = new JSONObject(tokener);
+
+        JSONObject jsonObject = new JSONObject(jsonTokener);
         JSONArray jsonArrayCells = jsonObject.getJSONArray("cells");
         cells = new ArrayList<>();
 
@@ -175,7 +175,7 @@ public class WindowPanel {
             }
         }
         else {
-            if (!atLeastOneNear(i) && !ignorePosition) {
+            if (noDiceNear(i) && !ignorePosition) {
                 System.out.println("PLACEMENT ERROR >>> NO DICE NEAR");
                 return false;
             }
@@ -189,7 +189,7 @@ public class WindowPanel {
         return false;
     }
 
-    public boolean atLeastOneNear(int i){
+    public boolean noDiceNear(int i){
         int row = i / StaticValues.PATTERN_COL;
         int col = i - row*StaticValues.PATTERN_COL;
 
@@ -200,25 +200,23 @@ public class WindowPanel {
             for(int k = col; k < col + 3; k++){
                 if(validPosition(j,k)){
                     if(getCell(j,k).hasDiceOn()) {
-                        return true;
+                        return false;
                     }
                 }
             }
         }
-        return false;
+        return true;
     }
 
     private boolean validPosition(int row, int col){
-        if(row >= 0 && row < StaticValues.PATTERN_ROW && col >= 0 && col < StaticValues.PATTERN_COL) return true;
-        return false;
+        return row >= 0 && row < StaticValues.PATTERN_ROW && col >= 0 && col < StaticValues.PATTERN_COL;
     }
 
     private boolean borderPosition(int i){
         int row = i / StaticValues.PATTERN_ROW;
         int col = i - row*StaticValues.PATTERN_COL;
 
-        if(row == 0 || row == StaticValues.PATTERN_ROW || col == 0 || col == StaticValues.PATTERN_COL) return true;
-        return false;
+        return row == 0 || row == StaticValues.PATTERN_ROW || col == 0 || col == StaticValues.PATTERN_COL;
     }
 
     private boolean hasSimilarDiceAttached(Dice dice, int i){
@@ -244,7 +242,7 @@ public class WindowPanel {
         if(validPosition(row,col)){
             Cell cell = getCell(row,col);
             if(cell.hasDiceOn()){
-                if(cell.getDiceOn().isSimilar(dice)) return true;
+                return cell.getDiceOn().isSimilar(dice);
             }
         }
         return false;
