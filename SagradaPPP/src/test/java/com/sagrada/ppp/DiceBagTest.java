@@ -6,8 +6,12 @@ import java.util.ArrayList;
 
 public class DiceBagTest {
 
+    public DiceBagTest() {
+        diceBagTest();
+    }
+
     @Test
-    public static void diceBagTest() {
+    public void diceBagTest() {
 
         DiceBag diceBag = new DiceBag();
 

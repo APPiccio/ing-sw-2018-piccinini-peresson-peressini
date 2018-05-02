@@ -37,19 +37,13 @@ public class AppTest
      */
 
     public void testApp(){
-        CellTest.cellTest();
-        DiceTest.diceTest();
-        DiceBagTest.diceBagTest();
-        WindowPanelTest.testPanelComposition();
-        WindowPanelTest.testDicePositioning();
 
-        RoundTrackTest.testRoundTrack();
-        RoundTrackTest.testRoundTrackBehavior();
-        RoundTrackTest.testRemove();
-        RoundTrackTest.testSetDiceMethods();
-        RoundTrackTest.testGetters();
-
-        GameTest.joiningTest();
+        new CellTest();
+        new DiceBagTest();
+        new DiceTest();
+        new WindowPanelTest();
+        new RoundTrackTest();
+        new GameTest();
 
         assertTrue( true);
 
@@ -62,16 +56,7 @@ public class AppTest
 
     public void testCards() {
 
-        PublicObjectiveCardTest.card1();
-        PublicObjectiveCardTest.card2();
-        PublicObjectiveCardTest.card3();
-        PublicObjectiveCardTest.card4();
-        PublicObjectiveCardTest.card5();
-        PublicObjectiveCardTest.card6();
-        PublicObjectiveCardTest.card7();
-        PublicObjectiveCardTest.card8();
-        PublicObjectiveCardTest.card9();
-        PublicObjectiveCardTest.card10();
+        new PublicObjectiveCardTest();
 
     }
 

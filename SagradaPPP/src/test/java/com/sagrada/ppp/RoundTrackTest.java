@@ -8,9 +8,17 @@ import static junit.framework.Assert.assertEquals;
 
 public class RoundTrackTest {
 
+    public RoundTrackTest() {
+        testGetters();
+        testRemove();
+        testRoundTrack();
+        testRoundTrackBehavior();
+        testSetDiceMethods();
+    }
+
     //testing constructor
     @Test
-    public static void testRoundTrack(){
+    public void testRoundTrack(){
         RoundTrack roundTrack = new RoundTrack();
         RoundTrack roundTrack1 = new RoundTrack(roundTrack);
         assertEquals(false, roundTrack.hashCode() == roundTrack1.hashCode());
@@ -18,7 +26,7 @@ public class RoundTrackTest {
     }
 
     @Test
-    public static void testRoundTrackBehavior(){
+    public void testRoundTrackBehavior(){
         RoundTrack roundTrack = new RoundTrack();
         ArrayList<Dice> firtsRowDices = new ArrayList<>();
         ArrayList<Dice> secondRowDices = new ArrayList<>();
@@ -49,7 +57,7 @@ public class RoundTrackTest {
 
     //test remove and hasDiceOnRound
     @Test
-    public static void testRemove(){
+    public void testRemove(){
         RoundTrack roundTrack = new RoundTrack();
 
         //removing non existing dice
@@ -74,7 +82,7 @@ public class RoundTrackTest {
 
     //testing setDice setDicesOnTurn and addDice
     @Test
-    public static void testSetDiceMethods(){
+    public void testSetDiceMethods(){
         ArrayList<Dice> dices = new ArrayList<>();
         RoundTrack roundTrack1 = new RoundTrack();
         RoundTrack roundTrack2 = new RoundTrack();
@@ -100,7 +108,7 @@ public class RoundTrackTest {
 
 
     @Test
-    public static void testGetters(){
+    public void testGetters(){
         ArrayList<Dice> dices = new ArrayList<>();
         RoundTrack roundTrack1 = new RoundTrack();
         RoundTrack roundTrack2 = new RoundTrack();
