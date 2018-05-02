@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import static junit.framework.Assert.assertEquals;
 
 public class GameTest {
+    public GameTest() {
+        joiningTest();
+    }
 
     @Test
-    public static void joiningTest(){
+    public void joiningTest(){
 
         Game game = new Game("test");
 

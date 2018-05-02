@@ -5,8 +5,12 @@ import static org.junit.Assert.*;
 
 public class CellTest {
 
+    public CellTest() {
+        cellTest();
+    }
+
     @Test
-    public static void cellTest() {
+    public void cellTest() {
 
         Dice dice = new Dice(); //Dice with random color and random value
         Cell blankCell = new Cell();

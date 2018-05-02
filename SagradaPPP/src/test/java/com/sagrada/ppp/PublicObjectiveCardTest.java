@@ -3,12 +3,27 @@ package com.sagrada.ppp;
 import com.sagrada.ppp.cards.*;
 
 import static org.junit.Assert.assertEquals;
+
+import org.junit.After;
 import org.junit.Test;
 
 public class PublicObjectiveCardTest {
 
+    public PublicObjectiveCardTest() {
+        card1();
+        card2();
+        card3();
+        card4();
+        card5();
+        card6();
+        card7();
+        card8();
+        card9();
+        card10();
+    }
+
     @Test
-    public static void card1()  {
+    public void card1()  {
 
         PublicObjectiveCard card = new PublicObjectiveCard1();
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
@@ -19,7 +34,7 @@ public class PublicObjectiveCardTest {
     }
 
     @Test
-    public static void card2() {
+    public void card2() {
 
         PublicObjectiveCard card = new PublicObjectiveCard2();
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
@@ -30,7 +45,7 @@ public class PublicObjectiveCardTest {
     }
 
     @Test
-    public static void card3() {
+    public void card3() {
 
         PublicObjectiveCard card = new PublicObjectiveCard3();
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
@@ -41,7 +56,7 @@ public class PublicObjectiveCardTest {
     }
 
     @Test
-    public static void card4()  {
+    public void card4()  {
 
         PublicObjectiveCard card = new PublicObjectiveCard4();
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
@@ -52,7 +67,7 @@ public class PublicObjectiveCardTest {
     }
 
     @Test
-    public static void card5()  {
+    public void card5()  {
 
         PublicObjectiveCard card = new PublicObjectiveCard5();
         assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
@@ -67,7 +82,7 @@ public class PublicObjectiveCardTest {
     }
 
     @Test
-    public static void card6()  {
+    public void card6()  {
 
         PublicObjectiveCard card = new PublicObjectiveCard6();
         assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
@@ -83,7 +98,7 @@ public class PublicObjectiveCardTest {
     }
 
     @Test
-    public static void card7()  {
+    public void card7()  {
 
         PublicObjectiveCard card = new PublicObjectiveCard7();
         assertEquals(0, card.getScore(new WindowPanel(0,0))); //empty panel
@@ -101,7 +116,7 @@ public class PublicObjectiveCardTest {
      * This getScore() method doesn't check any dice value
      */
     @Test
-    public static void card9()  {
+    public void card9()  {
 
         PublicObjectiveCard card = new PublicObjectiveCard9();
 
@@ -120,7 +135,7 @@ public class PublicObjectiveCardTest {
     }
 
     @Test
-    public static void card10()  {
+    public void card10()  {
         PublicObjectiveCard card = new PublicObjectiveCard10();
 
         assertEquals(12, card.getScore(TestPanels.panel_1100()));
@@ -137,7 +152,7 @@ public class PublicObjectiveCardTest {
     }
 
     @Test
-    public static void card8()  {
+    public void card8()  {
 
         PublicObjectiveCard card = new PublicObjectiveCard8();
 

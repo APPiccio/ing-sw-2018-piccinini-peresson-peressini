@@ -6,9 +6,12 @@ import static org.junit.Assert.*;
 import static java.lang.Boolean.TRUE;
 
 public class WindowPanelTest {
+    public WindowPanelTest() {
+        testDicePositioning();
+    }
 
     @Test
-    public static void testDicePositioning() {
+    public void testDicePositioning() {
 
         WindowPanel panel = new WindowPanel(1,1);
 
@@ -51,7 +54,7 @@ public class WindowPanelTest {
     }
 
     @Test
-    public static void testPanelComposition()  {
+    public void testPanelComposition()  {
 
         WindowPanel panel;
         int absIndex;

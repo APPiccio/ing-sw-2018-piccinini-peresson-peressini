@@ -4,9 +4,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class DiceTest {
+    public DiceTest() {
+        diceTest();
+    }
 
     @Test
-    public static void diceTest() {
+    public void diceTest() {
 
         Dice x = new Dice(Color.BLUE, 5);
         Dice y = new Dice(Color.BLUE, 6);
