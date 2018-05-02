@@ -11,7 +11,7 @@ public class GameTest {
     @Test
     public static void joiningTest(){
 
-        Game game = new Game();
+        Game game = new Game("test");
 
         String rightName;
 

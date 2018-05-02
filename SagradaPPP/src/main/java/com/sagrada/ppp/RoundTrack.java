@@ -129,7 +129,7 @@ public class RoundTrack {
     }
 
     /**
-     * @return from 1
+     * @return int from 1 to 10, representing the current turn
      */
     public int getCurrentRound() {
         return currentRound;
