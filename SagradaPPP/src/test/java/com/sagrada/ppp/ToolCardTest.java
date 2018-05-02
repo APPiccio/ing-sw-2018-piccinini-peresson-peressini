@@ -269,7 +269,7 @@ public class ToolCardTest {
 
     @Test
     public void card6(){
-        Game g = new Game();
+        Game g = new Game("test");
         g.joinGame("pinco");
         g.joinGame("pallo");
         g.joinGame("pallone");
@@ -287,7 +287,7 @@ public class ToolCardTest {
 
     @Test
     public void card7 (){
-        Game g = new Game();
+        Game g = new Game("test");
         g.joinGame("pinco");
         g.joinGame("pallo");
         g.joinGame("pallone");
@@ -312,7 +312,7 @@ public class ToolCardTest {
     }
     @Test
     public void card8(){
-        Game g = new Game();
+        Game g = new Game("test");
         g.joinGame("pinco");
         g.joinGame("pallo");
         g.joinGame("pallone");
@@ -330,7 +330,7 @@ public class ToolCardTest {
     }
     @Test
     public void card9(){
-        Game g = new Game();
+        Game g = new Game("test");
         g.joinGame("pinco");
         g.joinGame("pallo");
         g.joinGame("pallone");

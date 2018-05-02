@@ -32,12 +32,13 @@ public class Game implements Serializable{
         gameStatus = GameStatus.INIT;
         toolCards = new ArrayList<>();
         this.name = name;
+        if(username != null)
         players.add(new Player(username));
         observers = new ArrayList<>();
     }
 
-    public Game(){
-        this("cardTest","cardTest");
+    public Game(String name){
+        this(name,null);
     }
 
     public void init(){

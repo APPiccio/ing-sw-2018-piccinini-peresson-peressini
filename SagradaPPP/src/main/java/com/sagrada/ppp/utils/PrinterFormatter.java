@@ -17,7 +17,7 @@ public class PrinterFormatter {
     private static final char BOTTOM_RIGHT = (int) '┘';
     private static final char BOTTOM_CENTER = (int) '┴';
     private static final char BOTTOM_LEFT = (int) '└';
-    private static final char HORIZZONTAL = (int) '─';
+    private static final String HORIZZONTAL = "─────────";
     private static final char VERTICAL = (int) '│';
 
 
@@ -33,15 +33,21 @@ public class PrinterFormatter {
             String format = verticalDivider+"%1$20s"+verticalDivider+"%2$20s"+verticalDivider+"%3$20s"+verticalDivider+"%4$20s"+verticalDivider+"%5$20s"+verticalDivider+"\n";
 
             //insert title
-            result.append("Panel Name: " + panel.getPanelName() + "\n");
-            result.append("Favor Tokens: " + panel.getFavorTokens() + "\n");
-            result.append("Card ID: " + panel.getCardID() + "\n");
+            result.append("Panel Name: ");
+            result.append(panel.getPanelName());
+            result.append("\n");
+            result.append("Favor Tokens: ");
+            result.append(panel.getFavorTokens());
+            result.append("\n");
+            result.append("Card ID: ");
+            result.append(panel.getCardID());
+            result.append("\n");
 
 
             String[] rowValue = new String[5];
             String[] rowColor = new String[5];
             String[] horizontalRow = {
-                    "─────────","─────────","─────────","─────────","─────────",
+                    HORIZZONTAL,HORIZZONTAL,HORIZZONTAL,HORIZZONTAL,HORIZZONTAL
             };
 
             //add top table row
@@ -141,19 +147,19 @@ public class PrinterFormatter {
 
     }
 
-    private static String center(String msg, int lenght, char paddinChar, boolean pr){
-        int pad = lenght-msg.length();
+    private static String center(String msg, int length, char paddingChar, boolean pr){
+        int pad = length-msg.length();
 
         StringBuilder pBuilder = new StringBuilder();
         for (int i = 0; i<pad/2; i++)
-            pBuilder.append(paddinChar);
+            pBuilder.append(paddingChar);
         String p = pBuilder.toString();
 
         /* If s.length is odd */
         if (pad%2 == 1)
             /* Pad one extra either right or left */
-            if (pr) msg = msg + paddinChar;
-            else msg = paddinChar + msg;
+            if (pr) msg = msg + paddingChar;
+            else msg = paddingChar + msg;
         return (p+msg+p);
     }
 
