@@ -22,7 +22,7 @@ public class CommandToolCard9 implements CommandToolCard {
         try {
             if (dice != null) {
                 WindowPanel windowPanel = player.getPanel();
-                if (!windowPanel.atLeastOneNear(index) && windowPanel.addDice(index, dice, false, false, true)) {
+                if (windowPanel.noDiceNear(index) && windowPanel.addDice(index, dice, false, false, true)) {
                     player.setActiveDice(null);
                     player.setPanel(windowPanel);
                 } else {

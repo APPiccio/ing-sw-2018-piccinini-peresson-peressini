@@ -1,6 +1,7 @@
 package com.sagrada.ppp;
 
 
+import com.sagrada.ppp.utils.PrinterFormatter;
 import com.sagrada.ppp.utils.StaticValues;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,13 +26,12 @@ public class WindowPanel {
         this.cardID = windowPanel.getCardID();
 
         this.cells = new ArrayList<>();
-        ArrayList<Cell> cells = windowPanel.getCells();
+        ArrayList<Cell> tempCells = windowPanel.getCells();
 
-        for (Cell cell : cells){
+        for (Cell cell : tempCells){
             this.cells.add(new Cell(cell));
         }
     }
-
 
     //cardNumber from 1 to 12
     //side 1 for the front
@@ -40,13 +40,14 @@ public class WindowPanel {
     public WindowPanel(int cardNumber, int side)  {
 
         int fileIndex = cardNumber * 2 - side;
-        JSONTokener tokener = null;
+        JSONTokener jsonTokener = null;
         try {
-            tokener = new JSONTokener(new FileReader("templates/panel" + fileIndex + ".json"));
+            jsonTokener = new JSONTokener(new FileReader("templates/panel" + fileIndex + ".json"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        JSONObject jsonObject = new JSONObject(tokener);
+
+        JSONObject jsonObject = new JSONObject(jsonTokener);
         JSONArray jsonArrayCells = jsonObject.getJSONArray("cells");
         cells = new ArrayList<>();
 
@@ -116,6 +117,9 @@ public class WindowPanel {
         this.cardID = cardID;
     }
 
+    /**
+     * @return returns a copy of the cells on the pane
+     */
     public ArrayList<Cell> getCells(){
         ArrayList<Cell> h = new ArrayList<>();
         for(Cell cell : cells){
@@ -124,26 +128,42 @@ public class WindowPanel {
         return h;
     }
 
+    /**
+     * overload of addDice(int,Dice,bool,bool,bool) method, all restrictions are active.
+     */
     public boolean addDice(int i, Dice dice) {
         return addDice(i, dice, false, false, false);
     }
 
+    /**
+     * function that adds a dice in an empty cell.
+     * @param i: index that selects the cell in witch the dice will be added
+     * @param dice: dice to add
+     * @param ignoreColor: ignore color restrictions on windowWpane
+     * @param ignoreValue: ignore value restrictions on windowPanel
+     * @param ignorePosition: ignore positioning rules.
+     * @return returns true if the operation is successful
+     */
     public boolean addDice(int i, Dice dice, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
-        Cell currentCell = cells.get(i);
-        if (currentCell == null) return false;
-        if (diceOk(currentCell, dice, i, ignoreColor, ignoreValue, ignorePosition)) {
-            currentCell.setDiceOn(dice);
+        if (diceOk(dice, i, ignoreColor, ignoreValue, ignorePosition)) {
+            cells.get(i).setDiceOn(dice);
             return true;
         }
-        System.out.println("WARNING ---> CELL " + i + " - WRONG DICE PLACEMENT, IF IS NOT INTENDED FIX IT" );
+        System.out.println("PLACING ERROR >>> CELL " + i + " - WRONG DICE PLACEMENT, IF IS NOT INTENDED FIX IT" );
         return false;
     }
 
-    private boolean diceOk(Cell cell, Dice dice, int i) {
-        return diceOk(cell, dice, i, false, false, false);
+    /**
+     * @param dice dice subject of the control
+     * @param  i index of the cell
+     * @return true if the operation is successful
+     */
+    private boolean diceOk(Dice dice, int i) {
+        return diceOk(dice, i, false, false, false);
     }
 
-    private boolean diceOk(Cell cell, Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
+    private boolean diceOk(Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
+        Cell cell = cells.get(i);
         if (cell.hasDiceOn()) {
             System.out.println("PLACEMENT ERROR >>> ANOTHER DICE IN THIS POSITION");
             return false;
@@ -155,7 +175,7 @@ public class WindowPanel {
             }
         }
         else {
-            if (!atLeastOneNear(i) && !ignorePosition) {
+            if (noDiceNear(i) && !ignorePosition) {
                 System.out.println("PLACEMENT ERROR >>> NO DICE NEAR");
                 return false;
             }
@@ -169,7 +189,7 @@ public class WindowPanel {
         return false;
     }
 
-    public boolean atLeastOneNear(int i){
+    public boolean noDiceNear(int i){
         int row = i / StaticValues.PATTERN_COL;
         int col = i - row*StaticValues.PATTERN_COL;
 
@@ -180,25 +200,23 @@ public class WindowPanel {
             for(int k = col; k < col + 3; k++){
                 if(validPosition(j,k)){
                     if(getCell(j,k).hasDiceOn()) {
-                        return true;
+                        return false;
                     }
                 }
             }
         }
-        return false;
+        return true;
     }
 
     private boolean validPosition(int row, int col){
-        if(row >= 0 && row < StaticValues.PATTERN_ROW && col >= 0 && col < StaticValues.PATTERN_COL) return true;
-        return false;
+        return row >= 0 && row < StaticValues.PATTERN_ROW && col >= 0 && col < StaticValues.PATTERN_COL;
     }
 
     private boolean borderPosition(int i){
         int row = i / StaticValues.PATTERN_ROW;
         int col = i - row*StaticValues.PATTERN_COL;
 
-        if(row == 0 || row == StaticValues.PATTERN_ROW || col == 0 || col == StaticValues.PATTERN_COL) return true;
-        return false;
+        return row == 0 || row == StaticValues.PATTERN_ROW || col == 0 || col == StaticValues.PATTERN_COL;
     }
 
     private boolean hasSimilarDiceAttached(Dice dice, int i){
@@ -224,7 +242,7 @@ public class WindowPanel {
         if(validPosition(row,col)){
             Cell cell = getCell(row,col);
             if(cell.hasDiceOn()){
-                if(cell.getDiceOn().isSimilar(dice)) return true;
+                return cell.getDiceOn().isSimilar(dice);
             }
         }
         return false;
@@ -233,10 +251,8 @@ public class WindowPanel {
 
     public boolean addDiceOnCellWithPosition(int row, int col, Dice dice){
         int i = row * StaticValues.PATTERN_COL + col;
-        Cell currentCell = cells.get(i);
-        if (currentCell == null) return false;
-        if(diceOk(currentCell,dice, i)){
-            currentCell.setDiceOn(dice);
+        if(diceOk(dice, i)){
+            cells.get(i).setDiceOn(dice);
             return true;
         }
         return false;
@@ -262,34 +278,8 @@ public class WindowPanel {
      }
 
     public String toString(){
-        StringBuilder myString = new StringBuilder();
-        myString.append("PanelName = " + getPanelName().toUpperCase() + "\n" );
-        myString.append("Favor tokens = " + getFavorTokens() + "\n" );
-        myString.append("CardID = " + getCardID() + "\n\n" );
-        Cell currentCell;
 
-        int absIndex = 0;
-
-        for(int k = 0; k < StaticValues.PATTERN_ROW; k++){
-            for(int l = 0; l < StaticValues.PATTERN_COL; l++){
-                currentCell = getCell(absIndex);
-
-                if(currentCell.hasColorRestriction()){
-                    myString.append(currentCell.getColor().toString() + "|\t\t ");
-                }
-                else{
-                    if(currentCell.hasValueRestriction()){
-                        myString.append(currentCell.getValue() + "|\t\t ");
-                    }
-                    else{
-                        myString.append("BLANK |\t\t");
-                    }
-                }
-                absIndex++;
-            }
-            myString.append("\n____________________________________\n");
-        }
-        return myString.toString();
+        return PrinterFormatter.printWindowPanelContent(this);
 
     }
 
@@ -297,7 +287,7 @@ public class WindowPanel {
     public ArrayList<Integer> getLegalPosition(Dice dice){
         ArrayList<Integer> h = new ArrayList<>();
         for(int i = 0; i < 19; i++){
-            if (diceOk(getCell(i), dice, i)){
+            if (diceOk(dice, i)){
                 h.add(i);
             }
         }
@@ -308,7 +298,7 @@ public class WindowPanel {
     public ArrayList<Integer> getLegalDicesFromSetAndCellIndex(ArrayList<Dice> dices, int i){
         ArrayList<Integer> h = new ArrayList<>();
         for(int j = 0; j < dices.size(); j++){
-            if(diceOk(getCell(i), dices.get(j), i)) {
+            if(diceOk(dices.get(j), i)) {
                 h.add(j);
             }
         }
@@ -320,8 +310,7 @@ public class WindowPanel {
         ArrayList<Integer> h = new ArrayList<>();
         for(int j = 0; j < dices.size(); j++){
             for(int i = 0; i < cells.size(); i++){
-                Cell cell = getCell(i);
-                if (diceOk(cell, dices.get(j), i)){
+                if (diceOk(dices.get(j), i)){
                     h.add(j);
                     break;
                 }

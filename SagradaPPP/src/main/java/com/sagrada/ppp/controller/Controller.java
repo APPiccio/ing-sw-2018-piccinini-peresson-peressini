@@ -1,6 +1,5 @@
 package com.sagrada.ppp.controller;
 
-import com.sagrada.ppp.Game;
 import com.sagrada.ppp.Observer;
 import com.sagrada.ppp.Player;
 import com.sagrada.ppp.Service;

@@ -1,5 +1,8 @@
 package com.sagrada.ppp;
 
-public interface Observer {
-    void update(int updateCode, String username);
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface Observer extends Remote {
+    void update(int updateCode, String username) throws RemoteException;
 }

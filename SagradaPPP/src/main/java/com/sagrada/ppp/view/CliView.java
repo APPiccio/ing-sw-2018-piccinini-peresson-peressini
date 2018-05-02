@@ -3,17 +3,15 @@ package com.sagrada.ppp.view;
 import com.sagrada.ppp.LobbyObserver;
 import com.sagrada.ppp.Observer;
 import com.sagrada.ppp.Player;
-import com.sagrada.ppp.controller.Controller;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
 
-import java.io.PrintWriter;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class CliView {
+public class CliView extends UnicastRemoteObject implements Observer{
     Scanner scanner;
     RemoteController controller;
     String username;
@@ -21,7 +19,7 @@ public class CliView {
     int gameHashCode;
     Observer lobbyObserver;
 
-    public CliView(RemoteController controller){
+    public CliView(RemoteController controller) throws RemoteException{
         this.scanner = new Scanner(System.in);
         this.controller = controller;
 
@@ -66,15 +64,16 @@ public class CliView {
                     break;
 
                 case StaticValues.COMMAND_JOIN_GAME:
-                    String gameName = split[1];
-                    String username = split[2];
-                    if(controller.joinGame(gameName,username)){
-                        System.out.println("Joining game...");
-                        inLobby();
-                    }
-                    else {
-                        System.out.println("Error, unable to join this lobby.");
-                    }
+                    if(split.length == 3){
+                        String gameName = split[1];
+                        String username = split[2];
+                        if(controller.joinGame(gameName,username)){
+                            System.out.println("Joining game...");
+                        }
+                        else {
+                            System.out.println("Error, unable to join this lobby.");
+                        }
+                    }else System.out.println("Error, wrong number of parameters");
                     break;
                 case StaticValues.COMMAND_HELP:
                     showCommandList();
@@ -128,8 +127,7 @@ public class CliView {
     }
 
     public void inLobby() throws RemoteException {
-        lobbyObserver = new LobbyObserver();
-        controller.attachLobbyObserver(gameHashCode, lobbyObserver);
+        controller.attachLobbyObserver(gameHashCode, this);
         System.out.println("You are now in lobby");
         showLobbyCommandList();
         String command = scanner.nextLine();
@@ -161,6 +159,26 @@ public class CliView {
         }
 
 
+
+    }
+    //UPDATE CODE
+    // 0 --> user join the lobby
+    // 1 --> user leave the lobby
+    // 2 --> game started
+    public void update(int updateCode,String username) throws RemoteException {
+        switch (updateCode){
+            case 0:
+                System.out.println("--> " + username + " has joined the lobby!");
+                break;
+            case 1:
+                System.out.println("--> " + username + " has left the lobby!");
+                break;
+            case 2:
+                System.out.println("--> STARTING GAME...");
+                break;
+            default:
+                break;
+        }
     }
 
 }

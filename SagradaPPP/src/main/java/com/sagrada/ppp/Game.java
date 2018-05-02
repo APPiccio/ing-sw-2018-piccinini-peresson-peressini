@@ -4,8 +4,8 @@ import com.sagrada.ppp.cards.ToolCards.CommandToolCard;
 import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Game implements Serializable{
     private ArrayList<Player> players;
@@ -163,7 +163,11 @@ public class Game implements Serializable{
 
     public void notifyAllObservers(int updateCode, String username){
         for (Observer observer : observers) {
-            observer.update(updateCode, username);
+            try {
+                observer.update(updateCode, username);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
     }
 
