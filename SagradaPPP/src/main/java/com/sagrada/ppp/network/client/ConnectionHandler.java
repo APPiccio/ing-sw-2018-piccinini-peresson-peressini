@@ -7,10 +7,6 @@ public class ConnectionHandler {
     private ConnectionMode connectionMode;
     private ConnectionModeEnum connectionModeEnum;
 
-    public ConnectionHandler() {
-        this(ConnectionModeEnum.RMI);
-    }
-
     public ConnectionHandler(ConnectionModeEnum type){
         if(type.equals(ConnectionModeEnum.RMI)){
             connectionMode = new RmiConnection();

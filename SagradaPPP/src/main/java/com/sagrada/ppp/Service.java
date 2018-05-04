@@ -1,5 +1,6 @@
 package com.sagrada.ppp;
 
+import com.sagrada.ppp.network.server.ServerThread;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.controller.Controller;
 
@@ -21,6 +22,8 @@ public class Service {
             Registry registry = LocateRegistry.createRegistry(StaticValues.RMI_PORT);
             registry.rebind(StaticValues.REGISTRY_NAME, controller);
             System.out.println("--> controller exported");
+            ServerThread serverThread = new ServerThread(this);
+            serverThread.start();
         } catch (RemoteException e) {
             e.printStackTrace();
         }
