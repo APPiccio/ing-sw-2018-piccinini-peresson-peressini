@@ -1,12 +1,12 @@
 package com.sagrada.ppp;
 
 import com.sagrada.ppp.controller.RemoteController;
-import com.sagrada.ppp.utils.StaticValues;
+import com.sagrada.ppp.network.client.ConnectionHandler;
+import com.sagrada.ppp.network.client.ConnectionMode;
+import com.sagrada.ppp.network.client.ConnectionModeEnum;
 import com.sagrada.ppp.view.CliView;
 
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 /**
@@ -19,22 +19,35 @@ public class Client
     public static void main( String[] args ) throws RemoteException {
 
         System.out.println("--> Connetting...");
-
-        Registry registry = null;
         RemoteController controller = null;
         Scanner scanner = new Scanner(System.in);
-
-        try {
-            registry = LocateRegistry.getRegistry(StaticValues.RMI_PORT);
-            controller = (RemoteController) registry.lookup(StaticValues.REGISTRY_NAME);
-            System.out.println("--> Connected!");
-        } catch (Exception e) {
-            System.out.println("--> Remote connection failed. Stopping application");
-            e.printStackTrace();
+        ConnectionModeEnum connectionModeEnum;
+        //TODO : make server able to reach client on socket and rmi simultaneously. Until that this code is useless
+        System.out.println("Choose connection mode. Type rmi or socket");
+        String connectionChoice = scanner.nextLine();
+        //check on invalid choice
+        while(!connectionChoice.equals("rmi") && !connectionChoice.equals("socket")){
+            System.out.println("Invalid option, type 'rmi' or 'socket'");
+            connectionChoice = scanner.nextLine();
+        }
+        //from here should be a valid choice
+        if(connectionChoice.equals("rmi")){
+            connectionModeEnum = ConnectionModeEnum.RMI;
+        }
+        else{
+            connectionModeEnum = ConnectionModeEnum.SOCKET;
         }
 
+        //initializing connection
+        ConnectionHandler connectionHandler = new ConnectionHandler(connectionModeEnum);
+        controller = connectionHandler.getController();
+        //failed to connect
+        if(controller == null){
+            System.out.println("Unable to connect, please try again later");
+            return;
+        }
 
-        //TO DO : remove this line and replace with the choice single-multi player
+        //TODO : remove this line and replace with the choice single-multi player
         CliView view = new CliView(controller);
         view.start();
         System.out.println("Stopping client...");
