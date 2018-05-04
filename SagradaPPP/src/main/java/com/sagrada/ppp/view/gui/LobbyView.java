@@ -1,5 +1,6 @@
 package com.sagrada.ppp.view.gui;
 
+import com.sagrada.ppp.WindowPanel;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,6 +11,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -18,9 +20,7 @@ import org.w3c.dom.Text;
 
 
 public class LobbyView extends Application {
-    private Button loginButton;
-    private GridPane lobbyContainer;
-    private VBox loginContainer;
+
     private Scene scene;
 
     public static void main(String[] args) {
@@ -29,28 +29,20 @@ public class LobbyView extends Application {
     }
     public Scene render(){
 
-        loginButton = new Button("Login");
-        lobbyContainer = new GridPane();
-        loginContainer = new VBox();
-        Label title = new Label("Enter your username:");
-        TextField username = new TextField();
-
-        lobbyContainer.setHgap(10);
-        lobbyContainer.setVgap(10);
-        lobbyContainer.add(title,2,0,2,1);
-        lobbyContainer.add(username,1,1,6,1);
 
 
 
-
-        scene = new Scene(lobbyContainer,300,300);
+        AnchorPane v = new AnchorPane(new WindowPanelPane(new WindowPanel(4,0),400,400));
+        scene = new Scene(v,450,400);
         return scene;
     }
 
     @Override
     public void start(Stage primaryStage)  {
-
-        primaryStage.setScene(render());
+        primaryStage.setMaxWidth(1000);
+        primaryStage.setMaxHeight(1000);
+        Scene s =render();
+        primaryStage.setScene(s);
         primaryStage.show();
     }
 

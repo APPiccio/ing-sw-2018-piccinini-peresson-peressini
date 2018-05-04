@@ -148,6 +148,20 @@ public class StaticValues {
     public static final String COMMAND_START_GAME = ":start";
 
 
+    //AssetUrl
+    public static final String FILE_URI_PREFIX = "file:";
+    public static final String BLANK_CELL_ASSET = "graphics/blank.png";
+    public static final String RED_CELL_ASSET = "graphics/red.png";
+    public static final String BLUE_CELL_ASSET = "graphics/blue.png";
+    public static final String YELLOW_CELL_ASSET = "graphics/yellow.png";
+    public static final String GREEN_CELL_ASSET = "graphics/green.png";
+    public static final String PURPLE_CELL_ASSET = "graphics/purple.png";
+    public static final String RESTRICTION_CELL_ASSET = "graphics/cell_"; //you need to add the index of the restriction
+
+
+
+
+
 
 
 }
