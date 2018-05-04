@@ -19,6 +19,8 @@ public class StaticValues {
     //Connection static value
     public static final int RMI_PORT = 1099;
     public static final String REGISTRY_NAME = "SagradaRegistry";
+    public static final int SOCKET_PORT = 1996;
+    public static final String SERVER_ADDRESS = "127.0.0.1";
 
     //Tool Card names
     public static final String TOOLCARD1_NAME = "Grozing Pliers";
