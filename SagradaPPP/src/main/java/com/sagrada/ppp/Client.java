@@ -5,6 +5,8 @@ import com.sagrada.ppp.network.client.ConnectionHandler;
 import com.sagrada.ppp.network.client.ConnectionMode;
 import com.sagrada.ppp.network.client.ConnectionModeEnum;
 import com.sagrada.ppp.view.CliView;
+import com.sagrada.ppp.view.gui.GuiView;
+import javafx.application.Application;
 
 import java.rmi.RemoteException;
 import java.util.Scanner;
@@ -48,8 +50,20 @@ public class Client
         }
 
         //TODO : remove this line and replace with the choice single-multi player
-        CliView view = new CliView(controller);
-        view.start();
+        System.out.println("Choose gui or cli!");
+        String viewMode = scanner.nextLine();
+        while (viewMode.equals("gui") || viewMode.equals("cli")){
+            System.out.println("Choose a valid option, type 'guy' or 'cli'.");
+        }
+
+        if(connectionChoice.equals("cli")){
+            CliView view = new CliView(controller);
+            view.start();
+        }
+        else{
+            new Thread(() -> Application.launch(GuiView.class)).start();
+        }
+
         System.out.println("Stopping client...");
     }
 

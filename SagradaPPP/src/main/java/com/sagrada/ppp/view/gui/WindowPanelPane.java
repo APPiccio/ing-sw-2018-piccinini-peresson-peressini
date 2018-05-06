@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -29,14 +30,14 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         tokens = new Label("Tokens:" + panel.getFavorTokens());
         double cellHeight = height/4;
         double cellWidth = width/4;
-        this.setPadding(new Insets(10));
-        this.setHgap(6);
-        this.setVgap(6);
+        this.setPadding(new Insets(height*.05));
+        this.setHgap(height*.02);
+        this.setVgap(width*.02);
         this.setAlignment(Pos.CENTER);
         this.setStyle("-fx-background-color: black;" +
                 "-fx-background-radius: 10px;");
 
-        
+
         int col = 0;
         int row = 0;
         for (Cell c:panel.getCells()) {
@@ -50,7 +51,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
                 cell.setBackground(
                         new Background(
                                 new BackgroundImage(
-                                        new Image(getAssetUri(c.getColor()),cellWidth,cellHeight,true,true),
+                                        new Image(getAssetUri(c.getColor()),cellWidth,cellHeight,false,true),
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
@@ -59,7 +60,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
                 cell.setBackground(
                         new Background(
                                 new BackgroundImage(
-                                        new Image(getAssetUri(c.getValue()),cellWidth,cellHeight,true,true),
+                                        new Image(getAssetUri(c.getValue()),cellWidth,cellHeight,false,true),
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
@@ -68,7 +69,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
                 cell.setBackground(
                         new Background(
                                 new BackgroundImage(
-                                        new Image(FILE_URI_PREFIX + BLANK_CELL_ASSET,cellWidth,cellHeight,true,false),
+                                        new Image(FILE_URI_PREFIX + BLANK_CELL_ASSET,cellWidth,cellHeight,false,false),
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
@@ -78,13 +79,13 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
             }
             if(c.hasDiceOn()){
                 Button diceButton = new Button();
-                diceButton.setPrefSize(cellWidth-10,cellHeight-10);
+                diceButton.setPrefSize(cellWidth*.80,cellHeight*.80);
                 diceButton.setAlignment(Pos.CENTER);
                 diceButton.setMouseTransparent(true);
                 diceButton.setBackground(
                         new Background(
                                 new BackgroundImage(
-                                        new Image(getAssetUri(c.getDiceOn().getColor(),c.getDiceOn().getValue()),cellWidth-10,cellHeight-10,true,true),
+                                        new Image(getAssetUri(c.getDiceOn().getColor(),c.getDiceOn().getValue()),cellWidth*.80,cellHeight*.80,true,true),
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
@@ -97,13 +98,15 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
 
             cell.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
             this.add(cell,col,row);
-            if(col < 4){
+            if(col < PATTERN_COL-1){
                 col++;
             }else {
                 col = 0;
                 row++;
             }
         }
+
+        //Adding labels on the bottom of the grid view
         name.setStyle("-fx-text-fill: white;");
         tokens.setStyle("-fx-text-fill: white;");
         GridPane.setHalignment(tokens,HPos.CENTER);
@@ -115,6 +118,9 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
     }
 
 
+    /**
+     * @implNote handling mouse event on a cell
+     */
     @Override
     public void handle(MouseEvent event) {
         System.out.println(event.getSource().toString());
