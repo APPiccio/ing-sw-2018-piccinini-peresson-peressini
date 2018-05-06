@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import static com.sagrada.ppp.utils.StaticValues.*;
 
 public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent> {
-    WindowPanel panel;
-    ArrayList<Button> cells;
-    Label name,tokens;
+    private WindowPanel panel;
+    private ArrayList<Button> cells;
+    private Label name,tokens;
 
     public WindowPanelPane(WindowPanel panel,double height,double width) {
         this.panel = panel;
@@ -40,19 +40,17 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         int col = 0;
         int row = 0;
         for (Cell c:panel.getCells()) {
-            AnchorPane cell = new AnchorPane();
+            BorderPane cell = new BorderPane();
             cell.setId(Integer.toString(col) + Integer.toString(row));
             //cell.setPadding(new Insets(1));
             cell.setPrefSize(cellWidth,cellHeight);
             cell.setMaxSize(height,width);
-            
-            if(c.hasDiceOn()){
 
-            }else if(c.hasColorRestriction()){
+           if(c.hasColorRestriction()){
                 cell.setBackground(
                         new Background(
                                 new BackgroundImage(
-                                        new Image(getAssetUri(c.getColor()),cellWidth,cellHeight,true,false),
+                                        new Image(getAssetUri(c.getColor()),cellWidth,cellHeight,true,true),
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
@@ -61,7 +59,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
                 cell.setBackground(
                         new Background(
                                 new BackgroundImage(
-                                        new Image(getAssetUri(c.getValue()),cellWidth,cellHeight,true,false),
+                                        new Image(getAssetUri(c.getValue()),cellWidth,cellHeight,true,true),
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
@@ -70,11 +68,28 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
                 cell.setBackground(
                         new Background(
                                 new BackgroundImage(
-                                        new Image(FILE_URI_PREFIX + "graphics/blank.png",cellWidth,cellHeight,true,false),
+                                        new Image(FILE_URI_PREFIX + BLANK_CELL_ASSET,cellWidth,cellHeight,true,false),
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
                                         BackgroundSize.DEFAULT)));
+
+
+            }
+            if(c.hasDiceOn()){
+                Button diceButton = new Button();
+                diceButton.setPrefSize(cellWidth-10,cellHeight-10);
+                diceButton.setAlignment(Pos.CENTER);
+                diceButton.setMouseTransparent(true);
+                diceButton.setBackground(
+                        new Background(
+                                new BackgroundImage(
+                                        new Image(getAssetUri(c.getDiceOn().getColor(),c.getDiceOn().getValue()),cellWidth-10,cellHeight-10,true,true),
+                                        BackgroundRepeat.NO_REPEAT,
+                                        BackgroundRepeat.NO_REPEAT,
+                                        BackgroundPosition.CENTER,
+                                        BackgroundSize.DEFAULT)));
+                cell.setCenter(diceButton);
 
 
             }
@@ -118,12 +133,30 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
             case PURPLE:
                 return  FILE_URI_PREFIX + PURPLE_CELL_ASSET;
             default:
-                return RESET;
+                return null;
         }
 
     }
     private static String getAssetUri(int val){
         return FILE_URI_PREFIX +  RESTRICTION_CELL_ASSET + val + ".png";
+
+    }
+
+    private static String getAssetUri(Color color,int val){
+        switch (color){
+            case GREEN:
+                return FILE_URI_PREFIX + GREEN_DICE_ASSET +val+ PNG_ASSET;
+            case RED:
+                return  FILE_URI_PREFIX + RED_DICE_ASSET +val+ PNG_ASSET;
+            case BLUE:
+                return  FILE_URI_PREFIX + BLUE_DICE_ASSET +val+ PNG_ASSET;
+            case YELLOW:
+                return  FILE_URI_PREFIX + YELLOW_DICE_ASSET +val+ PNG_ASSET;
+            case PURPLE:
+                return  FILE_URI_PREFIX + PURPLE_DICE_ASSET +val+ PNG_ASSET;
+            default:
+                return null;
+        }
 
     }
 }

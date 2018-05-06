@@ -159,6 +159,14 @@ public class StaticValues {
     public static final String GREEN_CELL_ASSET = "graphics/green.png";
     public static final String PURPLE_CELL_ASSET = "graphics/purple.png";
     public static final String RESTRICTION_CELL_ASSET = "graphics/cell_"; //you need to add the index of the restriction
+    public static final String YELLOW_DICE_ASSET = "graphics/yellowDice_";
+    public static final String BLUE_DICE_ASSET = "graphics/blueDice_";
+    public static final String RED_DICE_ASSET = "graphics/redDice_";
+    public static final String GREEN_DICE_ASSET = "graphics/greenDice_";
+    public static final String PURPLE_DICE_ASSET = "graphics/purpleDice_";
+    public static final String PNG_ASSET = ".png";
+    public static final String JPG_ASSET = ".jpg";
+
 
 
 
