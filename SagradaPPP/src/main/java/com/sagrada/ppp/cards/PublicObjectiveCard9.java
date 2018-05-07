@@ -1,21 +1,26 @@
 package com.sagrada.ppp.cards;
 
-
 import com.sagrada.ppp.Cell;
 import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.WindowPanel;
 
-
-//Color Diagonals: count of diagonally adjacent same color dice
-//Tested
-
+/**
+ *  Card description:
+ *  Color Diagonals: count of diagonally adjacent same color dice
+ */
 public class PublicObjectiveCard9 extends PublicObjectiveCard {
 
+    /**
+     * @see PublicObjectiveCard#PublicObjectiveCard(String, int)
+     */
     public PublicObjectiveCard9() {
         super(StaticValues.PUBLICOBJECTIVECARD9_NAME, 9);
     }
 
+    /**
+     * @see PublicObjectiveCard#getScore(WindowPanel)
+     */
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
         int score = 0;
@@ -24,20 +29,22 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
                 if (isDiceLegal(x, y, playerWindowPanel)) {
                     score++;
                 }
-
-
             }
-
         }
-
         return score;
     }
 
+    /**
+     * @param x
+     * @param y
+     * @param panel
+     * @return
+     */
     private boolean isDiceLegal(int x, int y, WindowPanel panel) {
-        boolean returnValue = false;
         Cell cell = panel.getCell(y, x);
         if (cell.hasDiceOn()) {
             Dice dice = cell.getDiceOn();
+            Cell tmpCell;
             //top-dx cell
             int xTDX = x + 1;
             int yTDX = y - 1;
@@ -51,46 +58,28 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
             int xBSX = x - 1;
             int yBSX = y + 1;
 
-
-            Cell tmpCell;
             tmpCell = panel.getCell(yTDX, xTDX);
-            if (tmpCell != null) {
-                if (tmpCell.hasDiceOn()) {
-                    if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
-                        return true;
-                    }
-                }
+            if (tmpCell != null && tmpCell.hasDiceOn() && tmpCell.getDiceOn().getColor() == dice.getColor()) {
+                return true;
             }
 
             tmpCell = panel.getCell(yBDX, xBDX);
-            if (tmpCell != null) {
-                if (tmpCell.hasDiceOn()) {
-                    if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
-                        return true;
-                    }
-                }
+            if (tmpCell != null && tmpCell.hasDiceOn() && tmpCell.getDiceOn().getColor() == dice.getColor()) {
+                return true;
             }
 
             tmpCell = panel.getCell(yTSX, xTSX);
-            if (tmpCell != null) {
-                if (tmpCell.hasDiceOn()) {
-                    if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
-                        return true;
-                    }
-                }
+            if (tmpCell != null && tmpCell.hasDiceOn() && tmpCell.getDiceOn().getColor() == dice.getColor()) {
+                return true;
             }
 
             tmpCell = panel.getCell(yBSX, xBSX);
-            if (tmpCell != null) {
-                if (tmpCell.hasDiceOn()) {
-                    if (tmpCell.getDiceOn().getColor() == dice.getColor()) {
-                        return true;
-                    }
-                }
+            if (tmpCell != null && tmpCell.hasDiceOn() && tmpCell.getDiceOn().getColor() == dice.getColor()) {
+                return true;
             }
             return false;
         }
         else return false;
     }
-}
 
+}

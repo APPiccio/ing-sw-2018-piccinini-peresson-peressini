@@ -4,14 +4,22 @@ import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.WindowPanel;
 
-//Light Shades: sets of 1 & 2 values anywhere
-
+/**
+ *  Card description:
+ *  Light Shades: sets of 1 & 2 values anywhere
+ */
 public class PublicObjectiveCard5 extends PublicObjectiveCard {
 
+    /**
+     * @see PublicObjectiveCard#PublicObjectiveCard(String, int)
+     */
     public PublicObjectiveCard5() {
         super(StaticValues.PUBLICOBJECTIVECARD5_NAME, 5);
     }
 
+    /**
+     * @see PublicObjectiveCard#getScore(WindowPanel)
+     */
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
         int numberOfOne = 0;
