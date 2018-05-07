@@ -28,8 +28,24 @@ public class CliView extends UnicastRemoteObject implements Observer{
 
     public void start() throws RemoteException {
         System.out.println("Welcome in SAGRADA\n");
-        System.out.println("Please enter a command. If you need help just type :help");
+        System.out.println("Please enter your username! This can't be empty or with spaces.");
         String command = scanner.nextLine();
+        String username = scanner.nextLine();
+        while (username.length() <= 0 || username.indexOf(" ") == -1) {
+            System.out.println("Error, try again! This can't be empty or with spaces.");
+            username = scanner.nextLine();
+        }
+
+        hashCode = controller.joinGame(username);
+        while (hashCode < 0){
+            System.out.println("Join failed. Trying new attempt...");
+            controller.joinGame(username);
+        }
+        username = controller.getUsername(hashCode,gameHashCode);
+        System.out.println("Join copmleted. You are now identified as : " + username);
+        inLobby();
+
+        /*
         String[] split = command.split(" ");
         command = split[0];
         while(!command.equals(StaticValues.COMMAND_QUIT)){
@@ -91,6 +107,7 @@ public class CliView extends UnicastRemoteObject implements Observer{
             command = split[0];
 
         }
+        */
     }
 
 
@@ -128,7 +145,9 @@ public class CliView extends UnicastRemoteObject implements Observer{
 
     public void inLobby() throws RemoteException {
         controller.attachLobbyObserver(gameHashCode, this);
-        System.out.println("You are now in lobby");
+        System.out.println("Congratulations , you are now in lobby!");
+        System.out.println("--> Game ID = " + gameHashCode);
+        System.out.println("--> Your ID = " + hashCode + " as " + username);
         showLobbyCommandList();
         String command = scanner.nextLine();
         while (!command.equals(StaticValues.COMMAND_QUIT)){
