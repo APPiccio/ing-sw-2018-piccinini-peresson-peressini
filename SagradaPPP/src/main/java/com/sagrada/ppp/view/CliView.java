@@ -1,5 +1,6 @@
 package com.sagrada.ppp.view;
 
+import com.sagrada.ppp.JoinGameResult;
 import com.sagrada.ppp.LobbyObserver;
 import com.sagrada.ppp.Observer;
 import com.sagrada.ppp.Player;
@@ -27,21 +28,24 @@ public class CliView extends UnicastRemoteObject implements Observer{
 
 
     public void start() throws RemoteException {
-        System.out.println("Welcome in SAGRADA\n");
+        System.out.println("Welcome in SAGRADA");
         System.out.println("Please enter your username! This can't be empty or with spaces.");
-        String command = scanner.nextLine();
-        String username = scanner.nextLine();
-        while (username.length() <= 0 || username.indexOf(" ") == -1) {
+        username = scanner.nextLine();
+        while (username.length() <= 0 || username.indexOf(" ") != -1) {
             System.out.println("Error, try again! This can't be empty or with spaces.");
             username = scanner.nextLine();
         }
 
-        hashCode = controller.joinGame(username);
+        JoinGameResult joinGameResult = controller.joinGame(username);
         while (hashCode < 0){
             System.out.println("Join failed. Trying new attempt...");
-            controller.joinGame(username);
+            joinGameResult = controller.joinGame(username);
         }
-        username = controller.getUsername(hashCode,gameHashCode);
+
+        gameHashCode = joinGameResult.getGameHashCode();
+        hashCode = joinGameResult.getPlayerHashCode();
+
+        username = joinGameResult.getUsername();
         System.out.println("Join copmleted. You are now identified as : " + username);
         inLobby();
 

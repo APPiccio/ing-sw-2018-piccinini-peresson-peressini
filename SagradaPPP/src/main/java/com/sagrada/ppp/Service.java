@@ -59,23 +59,24 @@ public class Service {
     }
 
 
-    public int joinGame(String username){
+    public JoinGameResult joinGame(String username){
         Game game = null;
-        int playerHashCode = -1;
+        JoinGameResult joinGameResult = new JoinGameResult(-1,-1, null);
         for(Game x : games.values()){
-                if (x.isJoinable()) {
-                    playerHashCode = x.joinGame(username);
-
-                }
-                notifyAll();
-            if(playerHashCode != -1) break;
+            if (x.isJoinable()) {
+                joinGameResult.setPlayerHashCode(x.joinGame(username));
+                joinGameResult.setGameHashCode(x.hashCode());
+                joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
+            }
+            if(joinGameResult.getPlayerHashCode() != -1) break;
         }
-        if(playerHashCode == -1){
+        if(joinGameResult.getPlayerHashCode() == -1){
             //no joinable game, let's create a new one
-            int gameHashCode = this.createGame(true, username);
-            playerHashCode = games.get(gameHashCode).getPlayerHashCode(username);
+            joinGameResult.setGameHashCode(createGame(true, username));
+            joinGameResult.setPlayerHashCode(games.get(joinGameResult.getGameHashCode()).getPlayerHashCode(username));
+            joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
         }
-        return playerHashCode;
+        return joinGameResult;
     }
 
     public void attachLobbyObserver(int gameHashCode, Observer observer){
@@ -95,5 +96,7 @@ public class Service {
     public String getUsername(int playerHashCode, int gameHashCode){
         return games.get(gameHashCode).getPlayerUsername(playerHashCode);
     }
+
+
 
 }

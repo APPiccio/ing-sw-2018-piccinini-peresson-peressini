@@ -1,6 +1,8 @@
 package com.sagrada.ppp.network.server;
 
+import com.sagrada.ppp.JoinGameResult;
 import com.sagrada.ppp.Service;
+import com.sagrada.ppp.network.commands.*;
 import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.*;
@@ -25,28 +27,14 @@ public class SocketThread extends Thread {
     }
 
     public void run() {
-
-        String line;
         while (true) {
             //DO SOCKET SERVER STUFF TO CLIENT
             try {
                 System.out.println("mi metto in attesa");
-                line = in.readObject().toString();
-                System.out.println("leggo..");
-                if ((line == null) || line.equalsIgnoreCase(StaticValues.COMMAND_QUIT)) {
-                    socket.close();
-                    return;
-                } else {
-                    //DECODE CLIENT INPUT
-                    System.out.println("detected input : " + line);
-                    switch (line){
-                        case StaticValues.COMMAND_SHOW_GAMES:
-                            break;
-                        default:
-                            break;
-                    }
+                JoinGameRequest request = (JoinGameRequest) in.readObject();
+                Response response = use(request);
+                out.writeObject(response);
 
-                }
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -55,4 +43,10 @@ public class SocketThread extends Thread {
             }
         }
     }
+
+    public Response use(JoinGameRequest request){
+        JoinGameResult joinGameResult = service.joinGame(request.username);
+        return new JoinGameResponse(joinGameResult);
+    }
+
 }

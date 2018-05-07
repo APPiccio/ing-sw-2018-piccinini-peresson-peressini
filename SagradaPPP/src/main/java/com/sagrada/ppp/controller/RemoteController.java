@@ -1,5 +1,6 @@
 package com.sagrada.ppp.controller;
 
+import com.sagrada.ppp.JoinGameResult;
 import com.sagrada.ppp.Observer;
 import com.sagrada.ppp.Player;
 
@@ -15,7 +16,7 @@ public interface RemoteController extends Remote {
 
     void attachLobbyObserver(int gameHashCode, Observer observer) throws RemoteException;
 
-    int joinGame(String username) throws RemoteException;
+    JoinGameResult joinGame(String username) throws RemoteException;
 
     String getUsername(int playerHashCode, int gameHashCode) throws RemoteException;
 
