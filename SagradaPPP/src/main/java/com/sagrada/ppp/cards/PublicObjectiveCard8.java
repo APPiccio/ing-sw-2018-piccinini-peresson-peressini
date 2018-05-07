@@ -3,17 +3,24 @@ package com.sagrada.ppp.cards;
 import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.WindowPanel;
-
 import java.util.HashMap;
 
-//Shade Variety: sets of one of each value anywhere
-
+/**
+ *  Card description:
+ *  Shade Variety: sets of one of each value anywhere
+ */
 public class PublicObjectiveCard8 extends PublicObjectiveCard {
 
+    /**
+     * @see PublicObjectiveCard#PublicObjectiveCard(String, int)
+     */
     public PublicObjectiveCard8() {
         super(StaticValues.PUBLICOBJECTIVECARD8_NAME, 8);
     }
 
+    /**
+     * @see PublicObjectiveCard#getScore(WindowPanel)
+     */
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
         HashMap<Integer, Integer> shadeVariety = new HashMap<>();
@@ -42,4 +49,5 @@ public class PublicObjectiveCard8 extends PublicObjectiveCard {
             return minValue * 5;
         }
     }
+
 }

@@ -4,14 +4,22 @@ import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.WindowPanel;
 
-//Deep Shades: sets of 5 & 6 values anywhere
-
+/**
+ *  Card description:
+ *  Deep Shades: sets of 5 & 6 values anywhere
+ */
 public class PublicObjectiveCard7 extends PublicObjectiveCard {
 
+    /**
+     * @see PublicObjectiveCard#PublicObjectiveCard(String, int)
+     */
     public PublicObjectiveCard7() {
         super(StaticValues.PUBLICOBJECTIVECARD7_NAME, 7);
     }
 
+    /**
+     * @see PublicObjectiveCard#getScore(WindowPanel)
+     */
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
         int numberOfFive = 0;

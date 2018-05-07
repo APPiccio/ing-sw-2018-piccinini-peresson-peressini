@@ -4,14 +4,22 @@ import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.WindowPanel;
 
-//Medium Shades: sets of 3 & 4 values anywhere
-
+/**
+ *  Card description:
+ *  Medium Shades: sets of 3 & 4 values anywhere
+ */
 public class PublicObjectiveCard6 extends PublicObjectiveCard {
 
+    /**
+     * @see PublicObjectiveCard#PublicObjectiveCard(String, int)
+     */
     public PublicObjectiveCard6() {
         super(StaticValues.PUBLICOBJECTIVECARD6_NAME, 6);
     }
 
+    /**
+     * @see PublicObjectiveCard#getScore(WindowPanel)
+     */
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
         int numberOfThree = 0;

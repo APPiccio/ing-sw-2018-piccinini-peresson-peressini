@@ -4,17 +4,24 @@ import com.sagrada.ppp.Color;
 import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.WindowPanel;
-
 import java.util.EnumMap;
 
-//Color Variety: sets of one of each color anywhere
-
+/**
+ *  Card description:
+ *  Color Variety: sets of one of each color anywhere
+ */
 public class PublicObjectiveCard10 extends PublicObjectiveCard {
 
+    /**
+     * @see PublicObjectiveCard#PublicObjectiveCard(String, int)
+     */
     public PublicObjectiveCard10() {
         super(StaticValues.PUBLICOBJECTIVECARD10_NAME, 10);
     }
 
+    /**
+     * @see PublicObjectiveCard#getScore(WindowPanel)
+     */
     @Override
     public int getScore(WindowPanel playerWindowPanel) {
         EnumMap<Color, Integer> colorVariety = new EnumMap<>(Color.class);
@@ -43,4 +50,5 @@ public class PublicObjectiveCard10 extends PublicObjectiveCard {
             return minValue * 4;
         }
     }
+
 }

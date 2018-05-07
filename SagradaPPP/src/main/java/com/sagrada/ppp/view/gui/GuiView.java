@@ -1,47 +1,31 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.WindowPanel;
+import com.sagrada.ppp.utils.StaticValues;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class GuiView extends Application {
+public class GuiView extends Application implements BusEventHandler {
 
-
-    private Scene scene;
-
-    public Scene render(){
-
-
-        WindowPanel wp = new WindowPanel(6,0);
-        wp.addDice(0,new Dice());
-        wp.addDice(1,new Dice());
-        wp.addDice(2,new Dice());
-        wp.addDice(3,new Dice());
-        wp.addDice(4,new Dice());
-        wp.addDice(5,new Dice());
-        wp.addDice(6,new Dice());
-
-
-
-
-
-
-
-
-        AnchorPane v = new AnchorPane(new WindowPanelPane(wp,500,500));
-        scene = new Scene(v,500,500);
-        return scene;
-    }
+    private Stage stage;
 
     @Override
     public void start(Stage primaryStage)  {
-        Scene s =render();
+        stage = primaryStage;
         primaryStage.setMinHeight(500);
         primaryStage.setMinWidth(500);
-        primaryStage.setScene(s);
+        LobbyPane lobbyPane = new LobbyPane();
+        lobbyPane.attach(this);
+        primaryStage.setScene(new Scene(lobbyPane,500,500));
         primaryStage.show();
     }
+
+    @Override
+    public void onClose(Pane pane) {
+        stage.setScene(new Scene(new WindowPanelPane(
+                new WindowPanel(6, StaticValues.FRONT_SIDE),500,500)));
+    }
+
 }
