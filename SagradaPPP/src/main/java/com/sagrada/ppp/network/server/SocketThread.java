@@ -41,7 +41,6 @@ public class SocketThread extends Thread {
                     System.out.println("detected input : " + line);
                     switch (line){
                         case StaticValues.COMMAND_SHOW_GAMES:
-                            out.writeObject(service.getJoinableGames());
                             break;
                         default:
                             break;

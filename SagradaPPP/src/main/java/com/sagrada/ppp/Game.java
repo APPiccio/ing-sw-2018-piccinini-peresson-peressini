@@ -17,28 +17,21 @@ public class Game implements Serializable{
     private ArrayList<Dice> draftPool;
     private RoundTrack roundTrack;
     private GameStatus gameStatus;
-    private String name;
     private ArrayList<Observer> observers;
 
 
     //TODO: Add a method that given the username string returns the desired players
     //TODO: Add overloading methods that take a Player as a parameter instead of a String
 
-    public Game(String name, String username){
+    public Game(String username){
         diceBag = new DiceBag();
         players = new ArrayList<>();
         draftPool = new ArrayList<>();
         roundTrack = new RoundTrack(StaticValues.NUMBER_OF_TURNS);
         gameStatus = GameStatus.INIT;
         toolCards = new ArrayList<>();
-        this.name = name;
-        if(username != null)
-        players.add(new Player(username));
+        if(username != null) players.add(new Player(username));
         observers = new ArrayList<>();
-    }
-
-    public Game(String name){
-        this(name,null);
     }
 
     public void init(){
@@ -84,7 +77,6 @@ public class Game implements Serializable{
     }
 
     public int joinGame(String username) {
-        if(players.size() == 4 || !gameStatus.equals(GameStatus.INIT)) return -1;
         int i = 1;
         String user = username;
         while(isInMatch(user)){
@@ -95,6 +87,10 @@ public class Game implements Serializable{
         players.add(h);
         notifyAllObservers(0,user);
         return h.hashCode();
+    }
+
+    public boolean isJoinable(){
+        return players.size() < StaticValues.MAX_USER_PER_GAME && gameStatus.equals(GameStatus.INIT);
     }
 
     public String getPlayerUsername(int hashCode){
@@ -124,10 +120,7 @@ public class Game implements Serializable{
         int score = 0;
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
             Dice tempDice = activePlayer.getPanel().getCell(i).getDiceOn();
-            if (tempDice == null) {
-                continue;
-            }
-            else {
+            if (tempDice != null) {
                 if (tempDice.getColor() == activePlayer.getPrivateColor()) {
                     score += tempDice.getValue();
                 }
@@ -145,8 +138,13 @@ public class Game implements Serializable{
         }
     }
 
-    public String getName() {
-        return name;
+    public int getPlayerHashCode(String username){
+        for(Player player : players){
+            if (player.getUsername().equals(username)){
+                return player.hashCode();
+            }
+        }
+        return -1;
     }
 
     public void attach(Observer observer){

@@ -52,11 +52,12 @@ public class Client
         //TODO : remove this line and replace with the choice single-multi player
         System.out.println("Choose gui or cli!");
         String viewMode = scanner.nextLine();
-        while (viewMode.equals("gui") || viewMode.equals("cli")){
+        while (!viewMode.equals("gui") && !viewMode.equals("cli")){
             System.out.println("Choose a valid option, type 'guy' or 'cli'.");
+            viewMode = scanner.nextLine();
         }
 
-        if(connectionChoice.equals("cli")){
+        if(viewMode.equals("cli")){
             CliView view = new CliView(controller);
             view.start();
         }

@@ -28,53 +28,17 @@ public class Service {
             e.printStackTrace();
         }
     }
-    //
-    public ArrayList<String> getJoinableGames(){
-        ArrayList<String> gamesName = new ArrayList<>();
-        for(Game game : games.values()){
-            if(game.getGameStatus() == GameStatus.INIT && game instanceof Game){
-                StringBuilder stringBuilder = new StringBuilder();
-                stringBuilder.append(game.getName() + " - Players in lobby: {");
-                ArrayList<Player> players = game.getPlayers();
-                for(int i = 0; i < players.size(); i++){
-                    if (i == 0){
-                        stringBuilder.append(players.get(i).getUsername());
-                    }
-                    else {
-                        stringBuilder.append(" , " + players.get(i).getUsername());
-                    }
-                }
-                stringBuilder.append("}");
-                gamesName.add(stringBuilder.toString());
-            }
-        }
-        return gamesName;
-    }
 
-    public boolean thereIsGameWithName(String name){
-        for(Game game : games.values()){
-            if (game.getName().equals(name)) return true;
-        }
-        return false;
-    }
-
-
-    public int createGame(boolean multiplayer, String name, String username){
+    public int createGame(boolean multiplayer, String username){
         Game game;
         if(multiplayer) {
-            String gameName = name;
-            int i = 1;
-            while(thereIsGameWithName(gameName)){
-                gameName = name + "(" + i + ")";
-                i++;
-            }
-            game = new Game(gameName, username);
+            game = new Game(username);
         }
         else{
             //TO DO space intentionally left for single player implementation
 
             //line to be removed in case of singleplayer implementation
-            game = new Game(name, username);
+            game = new Game(username);
         }
         games.put(game.hashCode(), game);
         return game.hashCode();
@@ -94,18 +58,24 @@ public class Service {
         }
     }
 
-    public boolean joinGame(String gameName, String username){
+
+    public int joinGame(String username){
         Game game = null;
+        int playerHashCode = -1;
         for(Game x : games.values()){
-            if (x.getName().equals(gameName)){
-                game = x;
-                break;
-            }
+                if (x.isJoinable()) {
+                    playerHashCode = x.joinGame(username);
+
+                }
+                notifyAll();
+            if(playerHashCode != -1) break;
         }
-        if(game != null) {
-            if (game.joinGame(username) > 0) return true;
+        if(playerHashCode == -1){
+            //no joinable game, let's create a new one
+            int gameHashCode = this.createGame(true, username);
+            playerHashCode = games.get(gameHashCode).getPlayerHashCode(username);
         }
-        return false;
+        return playerHashCode;
     }
 
     public void attachLobbyObserver(int gameHashCode, Observer observer){
@@ -120,6 +90,10 @@ public class Service {
         if(game != null){
             game.detach(observer);
         }
+    }
+
+    public String getUsername(int playerHashCode, int gameHashCode){
+        return games.get(gameHashCode).getPlayerUsername(playerHashCode);
     }
 
 }
