@@ -126,43 +126,5 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         System.out.println(event.getSource().toString());
     }
 
-    private static String getAssetUri(Color color){
-        switch (color){
-            case GREEN:
-                return FILE_URI_PREFIX + GREEN_CELL_ASSET;
-            case RED:
-                return  FILE_URI_PREFIX + RED_CELL_ASSET;
-            case BLUE:
-                return  FILE_URI_PREFIX + BLUE_CELL_ASSET;
-            case YELLOW:
-                return  FILE_URI_PREFIX + YELLOW_CELL_ASSET;
-            case PURPLE:
-                return  FILE_URI_PREFIX + PURPLE_CELL_ASSET;
-            default:
-                return null;
-        }
 
-    }
-    private static String getAssetUri(int val){
-        return FILE_URI_PREFIX +  RESTRICTION_CELL_ASSET + val + ".png";
-
-    }
-
-    private static String getAssetUri(Color color,int val){
-        switch (color){
-            case GREEN:
-                return FILE_URI_PREFIX + GREEN_DICE_ASSET +val+ PNG_ASSET;
-            case RED:
-                return  FILE_URI_PREFIX + RED_DICE_ASSET +val+ PNG_ASSET;
-            case BLUE:
-                return  FILE_URI_PREFIX + BLUE_DICE_ASSET +val+ PNG_ASSET;
-            case YELLOW:
-                return  FILE_URI_PREFIX + YELLOW_DICE_ASSET +val+ PNG_ASSET;
-            case PURPLE:
-                return  FILE_URI_PREFIX + PURPLE_DICE_ASSET +val+ PNG_ASSET;
-            default:
-                return null;
-        }
-
-    }
 }

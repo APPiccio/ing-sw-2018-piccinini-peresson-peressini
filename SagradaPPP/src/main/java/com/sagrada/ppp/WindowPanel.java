@@ -147,7 +147,7 @@ public class WindowPanel {
      * function that adds a dice in an empty cell.
      * @param i: index that selects the cell in witch the dice will be added
      * @param dice: dice to add
-     * @param ignoreColor: ignore color restrictions on windowWpane
+     * @param ignoreColor: ignore color restrictions on windowPanel
      * @param ignoreValue: ignore value restrictions on windowPanel
      * @param ignorePosition: ignore positioning rules.
      * @return returns true if the operation is successful

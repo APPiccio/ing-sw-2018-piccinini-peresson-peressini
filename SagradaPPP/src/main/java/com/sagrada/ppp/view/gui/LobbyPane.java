@@ -1,11 +1,15 @@
 package com.sagrada.ppp.view.gui;
 
+import com.sagrada.ppp.Dice;
+import com.sagrada.ppp.WindowPanel;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+
 import java.util.ArrayList;
 
 public class LobbyPane extends VBox implements EventHandler<MouseEvent> {
@@ -14,12 +18,19 @@ public class LobbyPane extends VBox implements EventHandler<MouseEvent> {
     private Button play;
     private ArrayList<BusEventHandler> events;
 
-    public LobbyPane() {
+    public LobbyPane(double prefHeight) {
 
         events = new ArrayList<>();
-
         this.setAlignment(Pos.CENTER);
         this.setSpacing(10); //set space between nodes
+        this.setBackground(
+                new Background(
+                        new BackgroundImage(
+                                new Image("file:graphics/splash.png"),
+                                BackgroundRepeat.NO_REPEAT,
+                                BackgroundRepeat.NO_REPEAT,
+                                BackgroundPosition.CENTER,
+                                new BackgroundSize(getWidth(),getHeight(),false,false,true,true))));
 
         play = new Button();
         play.setText("Play");

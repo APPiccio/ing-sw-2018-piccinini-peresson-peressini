@@ -21,12 +21,14 @@ public class GuiView extends Application implements BusEventHandler {
     public void start(Stage primaryStage) throws RemoteException {
         controller = Client.getController();
         stage = primaryStage;
-        primaryStage.setMinHeight(500);
-        primaryStage.setMinWidth(500);
-        LobbyPane lobbyPane = new LobbyPane();
+
+        LobbyPane lobbyPane = new LobbyPane(200);
         lobbyPane.attach(this);
-        primaryStage.setTitle(Integer.toString(controller.pippo()));
-        primaryStage.setScene(new Scene(lobbyPane,500,500));
+        primaryStage.setMinHeight(300);
+        primaryStage.setMinWidth(300* 1400/2500);
+        primaryStage.setResizable(false);
+
+        primaryStage.setScene(new Scene(lobbyPane,700*1436/2156,700));
         primaryStage.show();
     }
 
@@ -42,6 +44,7 @@ public class GuiView extends Application implements BusEventHandler {
     public void onClose(Pane pane) {
         stage.setScene(new Scene(new WindowPanelPane(
                 new WindowPanel(6, StaticValues.FRONT_SIDE),500,500)));
+        stage.setResizable(true);
     }
 
 }
