@@ -12,6 +12,9 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 
+/**
+ * WindowPanel is used to implement methods and attributes o
+ */
 public class WindowPanel {
 
     private String panelName;
@@ -20,6 +23,9 @@ public class WindowPanel {
     private ArrayList<Cell> cells;
 
 
+    /**
+     * @param windowPanel window pane to be copied
+     */
     public WindowPanel(WindowPanel windowPanel){
         this.panelName = windowPanel.getPanelName();
         this.favorTokens = windowPanel.getFavorTokens();
@@ -33,10 +39,11 @@ public class WindowPanel {
         }
     }
 
-    //cardNumber from 1 to 12
-    //side 1 for the front
 
-
+    /**
+     * @param cardNumber is the ID of the physic card that has face up and face down, between 1 and 12
+     * @param side front or rear of the card, 1 means face up, 0 means face down
+     */
     public WindowPanel(int cardNumber, int side)  {
 
         int fileIndex = cardNumber * 2 - side;
@@ -79,6 +86,7 @@ public class WindowPanel {
             }
         }
     }
+
 
     public Cell getCell(int row, int col) {
         if ((row < 0 || row >= StaticValues.PATTERN_ROW) || (col < 0 || col >= StaticValues.PATTERN_COL)) {
@@ -162,6 +170,15 @@ public class WindowPanel {
         return diceOk(dice, i, false, false, false);
     }
 
+
+    /**
+     * @param dice dice to be put
+     * @param i cell index from 0 to 19
+     * @param ignoreColor flag showing if color restriction has to be avoided
+     * @param ignoreValue flag showing if color restriction has to be avoided
+     * @param ignorePosition flag showing if color restriction has to be avoided
+     * @return true if the placement has been done successfully
+     */
     private boolean diceOk(Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
         Cell cell = cells.get(i);
         if (cell.hasDiceOn()) {
@@ -189,6 +206,10 @@ public class WindowPanel {
         return false;
     }
 
+    /**
+     * @param i cell index
+     * @return true if the i cell has a dice in the 3x3 square around, false otherwise
+     */
     public boolean noDiceNear(int i){
         int row = i / StaticValues.PATTERN_COL;
         int col = i - row*StaticValues.PATTERN_COL;
@@ -208,10 +229,19 @@ public class WindowPanel {
         return true;
     }
 
+    /**
+     * @param row
+     * @param col
+     * @return true if the position is present in the 4x5 pattern table.
+     */
     private boolean validPosition(int row, int col){
         return row >= 0 && row < StaticValues.PATTERN_ROW && col >= 0 && col < StaticValues.PATTERN_COL;
     }
 
+    /**
+     * @param i cell index
+     * @return true if the cell i is in the edge of the panel
+     */
     private boolean borderPosition(int i){
         int row = i / StaticValues.PATTERN_ROW;
         int col = i - row*StaticValues.PATTERN_COL;
@@ -219,6 +249,11 @@ public class WindowPanel {
         return row == 0 || row == StaticValues.PATTERN_ROW || col == 0 || col == StaticValues.PATTERN_COL;
     }
 
+    /**
+     * @param dice dice to be put
+     * @param i index of the cell
+     * @return return false if there is a dice on a cell next to i that has same color OR same value of dice parameter
+     */
     private boolean hasSimilarDiceAttached(Dice dice, int i){
         int row = i / StaticValues.PATTERN_COL;
         int col = i - row*StaticValues.PATTERN_COL;
@@ -258,6 +293,9 @@ public class WindowPanel {
         return false;
     }
 
+    /**
+     * @return true if there is no placed dices
+     */
     private boolean windowIsEmpty(){
         for(Cell cell : cells){
             if (cell.hasDiceOn()) return false;
@@ -284,6 +322,11 @@ public class WindowPanel {
     }
 
     //get index of cells where the dice can be put without breaking rules
+
+    /**
+     * @param dice
+     * @return array of the indexes where the dice can be put withput breaking any rules
+     */
     public ArrayList<Integer> getLegalPosition(Dice dice){
         ArrayList<Integer> h = new ArrayList<>();
         for(int i = 0; i < 19; i++){
@@ -294,7 +337,11 @@ public class WindowPanel {
         return h;
     }
 
-    //return the indexes of "dices" that can be put in the "i" cell
+    /**
+     * @param dices generic subset of dices
+     * @param i target index position
+     * @return the indexes of "dices" that can be put in the "i" cell
+     */
     public ArrayList<Integer> getLegalDicesFromSetAndCellIndex(ArrayList<Dice> dices, int i){
         ArrayList<Integer> h = new ArrayList<>();
         for(int j = 0; j < dices.size(); j++){
@@ -305,7 +352,10 @@ public class WindowPanel {
         return h;
     }
 
-    //return dice from a set that can match a generic position in the panel (playable dice)
+    /**
+     * @param dices subset of dices
+     * @return dice from a set that can match a generic position in the panel (playable dice)
+     */
     public ArrayList<Integer> getLegalDices(ArrayList<Dice> dices){
         ArrayList<Integer> h = new ArrayList<>();
         for(int j = 0; j < dices.size(); j++){
@@ -320,6 +370,10 @@ public class WindowPanel {
     }
 
 
+    /**
+     * @param i cell index
+     * @return the removed dice from the panel in the i position
+     */
     public Dice removeDice(int i){
         Cell cell = cells.get(i);
         Dice dice = cell.getDiceOn();
@@ -328,6 +382,13 @@ public class WindowPanel {
         return dice;
     }
 
+    /**
+     * @param cell target cell
+     * @param dice dice to bu put
+     * @param ignoreColor ingore cell color restriction
+     * @param ignoreValue ignore cell value restriction
+     * @return true if the dice doesn't break any rules
+     */
     public boolean diceOkWithRestriction(Cell cell, Dice dice, boolean ignoreColor, boolean ignoreValue) {
         if (!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
         if (ignoreColor || ignoreValue) return true;

@@ -1,12 +1,10 @@
-package com.sagrada.ppp.network.client;
+package com.sagrada.ppp.controller;
 
 import com.sagrada.ppp.JoinGameResult;
 import com.sagrada.ppp.Observer;
 import com.sagrada.ppp.Player;
-import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.network.commands.JoinGameRequest;
 import com.sagrada.ppp.network.commands.JoinGameResponse;
-import com.sagrada.ppp.network.commands.Response;
 import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.*;
@@ -14,7 +12,7 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class SocketClientController implements RemoteController {
+public class SocketClientController implements RemoteController{
 
     private Socket socket;
     private ObjectOutputStream out;
@@ -39,14 +37,9 @@ public class SocketClientController implements RemoteController {
     }
 
     @Override
-    public void attachLobbyObserver(int gameHashCode, Observer observer) throws RemoteException {
-
-    }
-
-    @Override
-    public JoinGameResult joinGame(String username) throws RemoteException {
+    public JoinGameResult joinGame(String username, Observer observer) throws RemoteException {
         try {
-            out.writeObject(new JoinGameRequest(username));
+            out.writeObject(new JoinGameRequest(username, observer));
             JoinGameResponse response = (JoinGameResponse) in.readObject();
             return response.joinGameResult;
         } catch (IOException e) {

@@ -29,6 +29,11 @@ public class Service {
         }
     }
 
+    /**
+     * @param multiplayer bool to indicate game mode
+     * @param username username of the player
+     * @return the hashcode of the game right after the creation
+     */
     public int createGame(boolean multiplayer, String username){
         Game game;
         if(multiplayer) {
@@ -59,7 +64,11 @@ public class Service {
     }
 
 
-    public JoinGameResult joinGame(String username){
+    /**
+     * @param username player username
+     * @return game hashcode, player hashcode and player username
+     */
+    public JoinGameResult joinGame(String username, Observer observer){
         Game game = null;
         JoinGameResult joinGameResult = new JoinGameResult(-1,-1, null);
         for(Game x : games.values()){
@@ -76,6 +85,7 @@ public class Service {
             joinGameResult.setPlayerHashCode(games.get(joinGameResult.getGameHashCode()).getPlayerHashCode(username));
             joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
         }
+        attachLobbyObserver(joinGameResult.getGameHashCode(), observer);
         return joinGameResult;
     }
 

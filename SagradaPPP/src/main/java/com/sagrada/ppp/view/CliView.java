@@ -36,10 +36,10 @@ public class CliView extends UnicastRemoteObject implements Observer{
             username = scanner.nextLine();
         }
 
-        JoinGameResult joinGameResult = controller.joinGame(username);
+        JoinGameResult joinGameResult = controller.joinGame(username, this);
         while (hashCode < 0){
             System.out.println("Join failed. Trying new attempt...");
-            joinGameResult = controller.joinGame(username);
+            joinGameResult = controller.joinGame(username, this);
         }
 
         gameHashCode = joinGameResult.getGameHashCode();
@@ -148,7 +148,6 @@ public class CliView extends UnicastRemoteObject implements Observer{
     }
 
     public void inLobby() throws RemoteException {
-        controller.attachLobbyObserver(gameHashCode, this);
         System.out.println("Congratulations , you are now in lobby!");
         System.out.println("--> Game ID = " + gameHashCode);
         System.out.println("--> Your ID = " + hashCode + " as " + username);

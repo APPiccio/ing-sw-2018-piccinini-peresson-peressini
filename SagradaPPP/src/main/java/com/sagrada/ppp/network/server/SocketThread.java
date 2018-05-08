@@ -45,7 +45,7 @@ public class SocketThread extends Thread {
     }
 
     public Response use(JoinGameRequest request){
-        JoinGameResult joinGameResult = service.joinGame(request.username);
+        JoinGameResult joinGameResult = service.joinGame(request.username, request.observer);
         return new JoinGameResponse(joinGameResult);
     }
 

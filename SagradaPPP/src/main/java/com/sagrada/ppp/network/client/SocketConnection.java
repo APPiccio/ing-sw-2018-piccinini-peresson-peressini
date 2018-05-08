@@ -1,6 +1,7 @@
 package com.sagrada.ppp.network.client;
 
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.controller.SocketClientController;
 
 import java.io.IOException;
 
