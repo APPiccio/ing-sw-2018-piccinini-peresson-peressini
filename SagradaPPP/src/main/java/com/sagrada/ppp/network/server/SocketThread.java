@@ -32,8 +32,6 @@ public class SocketThread extends Thread {
             try {
                 System.out.println("mi metto in attesa");
                 JoinGameRequest request = (JoinGameRequest) in.readObject();
-                Response response = use(request);
-                out.writeObject(response);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -43,10 +41,4 @@ public class SocketThread extends Thread {
             }
         }
     }
-
-    public Response use(JoinGameRequest request){
-        JoinGameResult joinGameResult = service.joinGame(request.username, request.observer);
-        return new JoinGameResponse(joinGameResult);
-    }
-
 }

@@ -22,6 +22,7 @@ public class Service {
             Registry registry = LocateRegistry.createRegistry(StaticValues.RMI_PORT);
             registry.rebind(StaticValues.REGISTRY_NAME, controller);
             System.out.println("--> controller exported");
+            //Socket connection
             ServerThread serverThread = new ServerThread(this);
             serverThread.start();
         } catch (RemoteException e) {
