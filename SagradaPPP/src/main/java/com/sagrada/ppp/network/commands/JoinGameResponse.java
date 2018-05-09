@@ -10,4 +10,9 @@ public class JoinGameResponse implements Response, Serializable {
     public JoinGameResponse(JoinGameResult joinGameResult){
         this.joinGameResult = joinGameResult;
     }
+
+    @Override
+    public void handle(ResponseHandler handler) {
+        handler.handle(this);
+    }
 }

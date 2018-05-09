@@ -13,11 +13,10 @@ public class Game implements Serializable{
     private Player activePlayer;
     private DiceBag diceBag;
     private ArrayList<WindowPanel> panels;
-    private int numOfPlayer;
     private ArrayList<Dice> draftPool;
     private RoundTrack roundTrack;
     private GameStatus gameStatus;
-    private ArrayList<Observer> observers;
+    private ArrayList<LobbyObsever> lobbyObsevers;
 
 
     //TODO: Add a method that given the username string returns the desired players
@@ -31,13 +30,12 @@ public class Game implements Serializable{
         gameStatus = GameStatus.INIT;
         toolCards = new ArrayList<>();
         if(username != null) players.add(new Player(username));
-        observers = new ArrayList<>();
+        lobbyObsevers = new ArrayList<>();
     }
 
     public void init(){
         roundTrack.setCurrentRound(1);
-        numOfPlayer = players.size();
-        draftPool.addAll(diceBag.extractDices(numOfPlayer*2+1));
+        draftPool.addAll(diceBag.extractDices(players.size() *2+1));
 
     }
 
@@ -72,7 +70,7 @@ public class Game implements Serializable{
             roundTrack.setDicesOnTurn(roundTrack.getCurrentRound(), getDraftPool());
             roundTrack.setCurrentRound(roundTrack.getCurrentRound() + 1);
             draftPool.clear();
-            draftPool.addAll(diceBag.extractDices(numOfPlayer*2 + 1));
+            draftPool.addAll(diceBag.extractDices(players.size() *2 + 1));
         }
     }
 
@@ -85,7 +83,7 @@ public class Game implements Serializable{
         }
         Player h = new Player(user);
         players.add(h);
-        notifyAllObservers(0,user);
+        notifyAllLobbyObservers(user,players.size());
         return h.hashCode();
     }
 
@@ -147,23 +145,18 @@ public class Game implements Serializable{
         return -1;
     }
 
-    public void attach(Observer observer){
-        observers.add(observer);
+    public void attachLobbyObserver(LobbyObsever observer){
+        lobbyObsevers.add(observer);
     }
 
-    public void detach(Observer observer){
-        observers.remove(observer);
+    public void detachLobbyObserver(LobbyObsever observer){
+        lobbyObsevers.remove(observer);
     }
 
-    public void notifyAllObservers(int updateCode){
-        notifyAllObservers(updateCode,"no_username");
-    }
-
-
-    public void notifyAllObservers(int updateCode, String username){
-        for (Observer observer : observers) {
+    public void notifyAllLobbyObservers(String username, int numOfPlayers){
+        for (LobbyObsever observer : lobbyObsevers) {
             try {
-                observer.update(updateCode, username);
+                observer.onPlayerJoined(username , numOfPlayers);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

@@ -7,11 +7,13 @@ import java.io.Serializable;
 public class JoinGameRequest implements Request , Serializable {
 
     public String username;
-    public Observer observer;
 
-    public JoinGameRequest(String username, Observer observer){
+    public JoinGameRequest(String username){
         this.username = username;
-        this.observer = observer;
+    }
+
+    public Response handle(RequestHandler handler){
+        return handler.handle(this);
     }
 
 }

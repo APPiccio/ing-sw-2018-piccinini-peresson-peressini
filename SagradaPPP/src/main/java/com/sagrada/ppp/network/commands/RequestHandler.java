@@ -1,6 +1,7 @@
 package com.sagrada.ppp.network.commands;
 
-public class RequestHandler {
+public interface RequestHandler {
 
-
+    Response handle(Request request);
+    Response handle(JoinGameRequest request);
 }

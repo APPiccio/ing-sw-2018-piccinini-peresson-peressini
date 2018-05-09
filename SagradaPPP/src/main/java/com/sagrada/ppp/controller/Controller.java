@@ -1,9 +1,6 @@
 package com.sagrada.ppp.controller;
 
-import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.Observer;
-import com.sagrada.ppp.Player;
-import com.sagrada.ppp.Service;
+import com.sagrada.ppp.*;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -26,7 +23,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
 
-    public JoinGameResult joinGame(String username, Observer observer) throws RemoteException{
+    public JoinGameResult joinGame(String username, LobbyObsever observer) throws RemoteException{
         return service.joinGame(username, observer);
     }
 
@@ -34,4 +31,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         return service.getUsername(playerHashCode, gameHashCode);
     }
 
+    @Override
+    public int getNumPlayers(int gameHashCode) throws RemoteException {
+        return service.getNumPlayers(gameHashCode);
+    }
 }

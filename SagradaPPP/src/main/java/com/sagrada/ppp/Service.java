@@ -69,14 +69,15 @@ public class Service {
      * @param username player username
      * @return game hashcode, player hashcode and player username
      */
-    public JoinGameResult joinGame(String username, Observer observer){
+    public synchronized JoinGameResult joinGame(String username, LobbyObsever observer){
+        System.out.println(username + "is trying to connect..");
         Game game = null;
         JoinGameResult joinGameResult = new JoinGameResult(-1,-1, null);
         for(Game x : games.values()){
             if (x.isJoinable()) {
-                joinGameResult.setPlayerHashCode(x.joinGame(username));
-                joinGameResult.setGameHashCode(x.hashCode());
-                joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
+                    joinGameResult.setPlayerHashCode(x.joinGame(username));
+                    joinGameResult.setGameHashCode(x.hashCode());
+                    joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
             }
             if(joinGameResult.getPlayerHashCode() != -1) break;
         }
@@ -87,20 +88,21 @@ public class Service {
             joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
         }
         attachLobbyObserver(joinGameResult.getGameHashCode(), observer);
+        notifyAll();
         return joinGameResult;
     }
 
-    public void attachLobbyObserver(int gameHashCode, Observer observer){
+    public void attachLobbyObserver(int gameHashCode, LobbyObsever observer){
         Game game = games.get(gameHashCode);
         if(game != null){
-            game.attach(observer);
+            game.attachLobbyObserver(observer);
         }
     }
 
-    public void detachLobbyObserver(int gameHashCode, Observer observer){
+    public void detachLobbyObserver(int gameHashCode, LobbyObsever observer){
         Game game = games.get(gameHashCode);
         if(game != null){
-            game.detach(observer);
+            game.detachLobbyObserver(observer);
         }
     }
 
@@ -108,6 +110,14 @@ public class Service {
         return games.get(gameHashCode).getPlayerUsername(playerHashCode);
     }
 
+
+    public int getNumPlayers(int gameHashCode){
+        Game game = games.get(gameHashCode);
+        if(game != null){
+            return  game.getPlayers().size();
+        }
+        return -1;
+    }
 
 
 }

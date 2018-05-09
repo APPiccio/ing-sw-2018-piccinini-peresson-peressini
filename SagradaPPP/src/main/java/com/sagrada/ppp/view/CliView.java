@@ -1,7 +1,7 @@
 package com.sagrada.ppp.view;
 
 import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.LobbyObserver;
+import com.sagrada.ppp.LobbyObsever;
 import com.sagrada.ppp.Observer;
 import com.sagrada.ppp.Player;
 import com.sagrada.ppp.controller.RemoteController;
@@ -12,18 +12,18 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class CliView extends UnicastRemoteObject implements Observer{
+public class CliView extends UnicastRemoteObject implements LobbyObsever {
     Scanner scanner;
     RemoteController controller;
     String username;
     int hashCode;
     int gameHashCode;
-    Observer lobbyObserver;
+    LobbyObsever thisLobby;
 
     public CliView(RemoteController controller) throws RemoteException{
         this.scanner = new Scanner(System.in);
         this.controller = controller;
-
+        this.thisLobby = this;
     }
 
 
@@ -44,7 +44,6 @@ public class CliView extends UnicastRemoteObject implements Observer{
 
         gameHashCode = joinGameResult.getGameHashCode();
         hashCode = joinGameResult.getPlayerHashCode();
-
         username = joinGameResult.getUsername();
         System.out.println("Join copmleted. You are now identified as : " + username);
         inLobby();
@@ -187,20 +186,13 @@ public class CliView extends UnicastRemoteObject implements Observer{
     // 0 --> user join the lobby
     // 1 --> user leave the lobby
     // 2 --> game started
-    public void update(int updateCode,String username) throws RemoteException {
-        switch (updateCode){
-            case 0:
-                System.out.println("--> " + username + " has joined the lobby!");
-                break;
-            case 1:
-                System.out.println("--> " + username + " has left the lobby!");
-                break;
-            case 2:
-                System.out.println("--> STARTING GAME...");
-                break;
-            default:
-                break;
-        }
+    public void onPlayerJoined(String username, int numOfPlayers) throws RemoteException {
+        System.out.println(username + " has joined the game!");
+        System.out.println("There are " + numOfPlayers + " active players!");
+    }
+
+    public void notifyJoinPlayer(String username) {
+
     }
 
 }

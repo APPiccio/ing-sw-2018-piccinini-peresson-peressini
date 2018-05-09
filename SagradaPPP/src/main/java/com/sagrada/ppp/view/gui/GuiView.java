@@ -4,6 +4,7 @@ import com.sagrada.ppp.Client;
 import com.sagrada.ppp.WindowPanel;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
+import com.sagrada.ppp.view.View;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -11,7 +12,7 @@ import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
 
-public class GuiView extends Application implements BusEventHandler {
+public class GuiView extends Application implements BusEventHandler, View {
 
     private Stage stage;
     public RemoteController controller;
@@ -47,4 +48,7 @@ public class GuiView extends Application implements BusEventHandler {
         stage.setResizable(true);
     }
 
+    @Override
+    public void notifyJoinPlayer(String username) {
+    }
 }
