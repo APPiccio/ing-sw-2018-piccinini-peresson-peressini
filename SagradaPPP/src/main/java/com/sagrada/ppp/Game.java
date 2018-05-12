@@ -16,7 +16,9 @@ public class Game implements Serializable{
     private ArrayList<Dice> draftPool;
     private RoundTrack roundTrack;
     private GameStatus gameStatus;
-    private ArrayList<LobbyObsever> lobbyObsevers;
+    private ArrayList<LobbyObserver> lobbyObservers;
+    private LobbyTimer lobbyTimer;
+    private long lobbyTimerStartTime;
 
 
     //TODO: Add a method that given the username string returns the desired players
@@ -30,10 +32,11 @@ public class Game implements Serializable{
         gameStatus = GameStatus.INIT;
         toolCards = new ArrayList<>();
         if(username != null) players.add(new Player(username));
-        lobbyObsevers = new ArrayList<>();
+        lobbyObservers = new ArrayList<>();
     }
 
     public void init(){
+        gameStatus = GameStatus.ACTIVE;
         roundTrack.setCurrentRound(1);
         draftPool.addAll(diceBag.extractDices(players.size() *2+1));
 
@@ -74,7 +77,11 @@ public class Game implements Serializable{
         }
     }
 
-    public int joinGame(String username) {
+    public long getLobbyTimerStartTime(){
+        return lobbyTimerStartTime;
+    }
+
+    public int joinGame(String username, LobbyObserver observer) {
         int i = 1;
         String user = username;
         while(isInMatch(user)){
@@ -84,6 +91,23 @@ public class Game implements Serializable{
         Player h = new Player(user);
         players.add(h);
         notifyAllLobbyObservers(user,players.size());
+        attachLobbyObserver(observer);
+        if(players.size() == 2){
+            //start timer
+            lobbyTimerStartTime = System.currentTimeMillis();
+            lobbyTimer = new LobbyTimer(lobbyTimerStartTime, this);
+            lobbyTimer.start();
+            notifyTimerChanges(TimerStatus.START);
+        }
+        else{
+            if(players.size() == 4){
+                //starting game
+                lobbyTimer.interrupt();
+                notifyTimerChanges(TimerStatus.FINISH);
+                init();
+
+            }
+        }
         return h.hashCode();
     }
 
@@ -127,10 +151,19 @@ public class Game implements Serializable{
         return score;
     }
 
-    public void leaveLobby(String username){
+    public void leaveLobby(String username, LobbyObserver observer){
         for(Player player : players){
             if (player.getUsername().equals(username)){
                 players.remove(player);
+                detachLobbyObserver(observer);
+                //TODO : add notification to user right here
+                if(players.size() < 2){
+                    if(lobbyTimer != null) {
+                        lobbyTimer.interrupt();
+                    }
+                    lobbyTimerStartTime = 0;
+                    notifyTimerChanges(TimerStatus.INTERRUPT);
+                }
                 return;
             }
         }
@@ -145,16 +178,28 @@ public class Game implements Serializable{
         return -1;
     }
 
-    public void attachLobbyObserver(LobbyObsever observer){
-        lobbyObsevers.add(observer);
+    public void attachLobbyObserver(LobbyObserver observer){
+        lobbyObservers.add(observer);
     }
 
-    public void detachLobbyObserver(LobbyObsever observer){
-        lobbyObsevers.remove(observer);
+    public void detachLobbyObserver(LobbyObserver observer){
+        lobbyObservers.remove(observer);
     }
+
+    public void notifyTimerChanges(TimerStatus timerStatus){
+        for(LobbyObserver observer : lobbyObservers){
+            try {
+                observer.onTimerChanges(lobbyTimerStartTime, timerStatus)
+                ;
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public void notifyAllLobbyObservers(String username, int numOfPlayers){
-        for (LobbyObsever observer : lobbyObsevers) {
+        for (LobbyObserver observer : lobbyObservers) {
             try {
                 observer.onPlayerJoined(username , numOfPlayers);
             } catch (RemoteException e) {
@@ -162,6 +207,5 @@ public class Game implements Serializable{
             }
         }
     }
-
 }
 

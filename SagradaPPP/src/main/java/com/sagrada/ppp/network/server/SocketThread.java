@@ -1,14 +1,15 @@
 package com.sagrada.ppp.network.server;
 
 import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.LobbyObsever;
+import com.sagrada.ppp.LobbyObserver;
 import com.sagrada.ppp.Service;
+import com.sagrada.ppp.TimerStatus;
 import com.sagrada.ppp.network.commands.*;
 import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
 
-public class SocketThread extends Thread implements LobbyObsever, RequestHandler{
+public class SocketThread extends Thread implements LobbyObserver, RequestHandler{
     private Socket socket;
     private Service service;
     private ObjectOutputStream out;
@@ -56,6 +57,15 @@ public class SocketThread extends Thread implements LobbyObsever, RequestHandler
         }
     }
 
+    @Override
+    public void onTimerChanges(long timerStart, TimerStatus timerStatus){
+        try {
+            out.writeObject(new TimerNotification(timerStart, timerStatus));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Response handle(Request request){
         return null;
     }
@@ -63,6 +73,11 @@ public class SocketThread extends Thread implements LobbyObsever, RequestHandler
     public Response handle(JoinGameRequest joinGameRequest){
         JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this);
         return new JoinGameResponse(joinGameResult);
+    }
+
+    public Response handle(LeaveGameRequest request){
+        service.leaveLobby(request.gameHashCode, request.username, this);
+        return null;
     }
 
 }

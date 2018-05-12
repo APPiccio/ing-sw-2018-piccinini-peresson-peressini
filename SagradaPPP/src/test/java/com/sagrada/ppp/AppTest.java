@@ -1,6 +1,7 @@
 package com.sagrada.ppp;
 
 import com.sagrada.ppp.utils.IllegalDiceValueException;
+import com.sagrada.ppp.utils.StaticValues;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -43,8 +44,8 @@ public class AppTest
         new DiceTest();
         new WindowPanelTest();
         new RoundTrackTest();
-        new GameTest();
-
+        //new GameTest();
+        assertEquals(20, StaticValues.getLobbyTimer());
         assertTrue( true);
 
     }

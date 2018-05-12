@@ -18,12 +18,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         return service.getPlayers(gameHashCode);
     }
 
-    public void leaveLobby(int gameHashCode, String username) throws RemoteException{
-        service.leaveLobby(gameHashCode,username);
+    public void leaveLobby(int gameHashCode, String username, LobbyObserver observer) throws RemoteException{
+        service.leaveLobby(gameHashCode,username, observer);
     }
 
 
-    public JoinGameResult joinGame(String username, LobbyObsever observer) throws RemoteException{
+    public JoinGameResult joinGame(String username, LobbyObserver observer) throws RemoteException{
         return service.joinGame(username, observer);
     }
 

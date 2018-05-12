@@ -4,5 +4,5 @@ public enum GameStatus {
     INIT,
     ACTIVE,
     SCORE,
-    CLOSE;
+    CLOSE
 }

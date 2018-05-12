@@ -1,24 +1,24 @@
 package com.sagrada.ppp.view;
 
 import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.LobbyObsever;
-import com.sagrada.ppp.Observer;
-import com.sagrada.ppp.Player;
+import com.sagrada.ppp.LobbyObserver;
+import com.sagrada.ppp.TimerStatus;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.Scanner;
 
-public class CliView extends UnicastRemoteObject implements LobbyObsever {
-    Scanner scanner;
-    RemoteController controller;
-    String username;
-    int hashCode;
-    int gameHashCode;
-    LobbyObsever thisLobby;
+public class CliView extends UnicastRemoteObject implements LobbyObserver, Serializable {
+    transient Scanner scanner;
+    transient RemoteController controller;
+    transient String username;
+    transient int hashCode;
+    transient int gameHashCode;
+    transient LobbyObserver thisLobby;
+    transient long lobbyTimerStartTime;
 
     public CliView(RemoteController controller) throws RemoteException{
         this.scanner = new Scanner(System.in);
@@ -45,7 +45,12 @@ public class CliView extends UnicastRemoteObject implements LobbyObsever {
         gameHashCode = joinGameResult.getGameHashCode();
         hashCode = joinGameResult.getPlayerHashCode();
         username = joinGameResult.getUsername();
+        lobbyTimerStartTime = joinGameResult.getTimerStart();
         System.out.println("Join copmleted. You are now identified as : " + username);
+        if(lobbyTimerStartTime != 0){
+            long remainingTime = ((lobbyTimerStartTime + StaticValues.getLobbyTimer()) - System.currentTimeMillis())/1000;
+            System.out.println("---> The game will start in " + remainingTime + " seconds");
+        }
         inLobby();
 
         /*
@@ -140,33 +145,25 @@ public class CliView extends UnicastRemoteObject implements LobbyObsever {
 
     public void showLobbyCommandList(){
         System.out.println("LOBBY COMMANDS:");
-        System.out.println("\t" + StaticValues.COMMAND_PLAYERS_IN_LOBBY + "\t" + StaticValues.STRING_COMMAND_PLAYERS_IN_LOBBY);
-        System.out.println("\t" + StaticValues.COMMAND_START_GAME + "\t" + StaticValues.STRING_COMMAND_START_GAME);
         System.out.println("\t" + StaticValues.COMMAND_QUIT + "\t" + StaticValues.STRING_COMMAND_QUIT);
         System.out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
+        System.out.println("\t" + StaticValues.COMMAND_LEAVE_GAME + "\t" + StaticValues.STRING_COMMAND_LEAVE_GAME);
     }
 
+
+    //TODO add show list of active players when someone join the lobby
     public void inLobby() throws RemoteException {
         System.out.println("Congratulations , you are now in lobby!");
         System.out.println("--> Game ID = " + gameHashCode);
-        System.out.println("--> Your ID = " + hashCode + " as " + username);
+        System.out.println("--> Your ID = " + hashCode + " as " + username + "\n");
         showLobbyCommandList();
         String command = scanner.nextLine();
         while (!command.equals(StaticValues.COMMAND_QUIT)){
             switch(command){
-                case StaticValues.COMMAND_PLAYERS_IN_LOBBY:
-                    ArrayList<Player> players = controller.getPlayers(gameHashCode);
-                    System.out.println("There are " + players.size() + "players in lobby");
-                    for(Player player : players){
-                        System.out.println("-> " + player.getUsername());
-                    }
-                    break;
                 case StaticValues.COMMAND_LEAVE_GAME:
-                    controller.leaveLobby(gameHashCode , username);
+                    controller.leaveLobby(gameHashCode , username, this);
                     System.out.println("Back to main menu");
                     return;
-                case StaticValues.COMMAND_START_GAME:
-                    break;
                 case StaticValues.COMMAND_HELP :
                     showLobbyCommandList();
                     break;
@@ -182,17 +179,35 @@ public class CliView extends UnicastRemoteObject implements LobbyObsever {
 
 
     }
-    //UPDATE CODE
-    // 0 --> user join the lobby
-    // 1 --> user leave the lobby
-    // 2 --> game started
     public void onPlayerJoined(String username, int numOfPlayers) throws RemoteException {
-        System.out.println(username + " has joined the game!");
-        System.out.println("There are " + numOfPlayers + " active players!");
+        System.out.println("--->" + username + " has joined the game!");
+        System.out.println("---> There are now " + numOfPlayers + " active players!");
     }
 
-    public void notifyJoinPlayer(String username) {
+    @Override
+    public void onTimerChanges(long timerStart, TimerStatus timerStatus) throws RemoteException {
 
+        long duration = ((StaticValues.getLobbyTimer() + timerStart) - System.currentTimeMillis())/1000;
+        if(timerStatus.equals(TimerStatus.START)){
+            System.out.println("---> Timer started! The game will start in " + duration + " seconds");
+        }
+        else {
+            if(timerStatus.equals(TimerStatus.INTERRUPT)){
+                System.out.println("---> Timer interrupted! Waiting for other players...");
+            }
+            else {
+                if(timerStatus.equals(TimerStatus.FINISH)){
+                    System.out.println("---> Countdown completed or full lobby. The game will start soon");
+                    inGame();
+                }
+            }
+        }
+    }
+
+    //do stuff in game
+    private void inGame(){
+        //do something
+        System.out.println("------------> GAME STARTED! <------------");
     }
 
 }

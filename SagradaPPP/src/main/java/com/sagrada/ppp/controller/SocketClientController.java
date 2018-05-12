@@ -1,36 +1,34 @@
 package com.sagrada.ppp.controller;
 
 import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.LobbyObsever;
-import com.sagrada.ppp.Observer;
+import com.sagrada.ppp.LobbyObserver;
 import com.sagrada.ppp.Player;
 import com.sagrada.ppp.network.commands.*;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.view.View;
 
 import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
-public class SocketClientController implements RemoteController, ResponseHandler {
+public class SocketClientController implements RemoteController, ResponseHandler, Serializable {
 
-    private Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
-    private ArrayList<LobbyObsever> lobbyObsevers;
-    private Response response;
-    private ArrayList<Response> notificationQueue;
-    private boolean waitingForResponse;
-    private JoinGameResult joinGameResult;
-    private ListeningThread notificationThread;
-    private Object responseLock;
+    private transient Socket socket;
+    private transient ObjectOutputStream out;
+    private transient ObjectInputStream in;
+    private transient ArrayList<LobbyObserver> lobbyObservers;
+    private transient Response response;
+    private transient ArrayList<Response> notificationQueue;
+    private transient boolean waitingForResponse;
+    private transient JoinGameResult joinGameResult;
+    private transient ListeningThread notificationThread;
+    private transient Object responseLock;
 
     public SocketClientController() throws IOException {
         socket = new Socket(StaticValues.SERVER_ADDRESS, StaticValues.SOCKET_PORT);
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
-        lobbyObsevers = new ArrayList<>();
+        lobbyObservers = new ArrayList<>();
         response = null;
         notificationQueue = new ArrayList<>();
         waitingForResponse = false;
@@ -46,22 +44,27 @@ public class SocketClientController implements RemoteController, ResponseHandler
     }
 
     @Override
-    public void leaveLobby(int gameHashCode, String username) throws RemoteException {
-
+    public void leaveLobby(int gameHashCode, String username, LobbyObserver observer) throws RemoteException {
+        try {
+            out.writeObject(new LeaveGameRequest(gameHashCode,username));
+            lobbyObservers.remove(observer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public JoinGameResult joinGame(String username, LobbyObsever observer) throws RemoteException {
+    public JoinGameResult joinGame(String username, LobbyObserver observer) throws RemoteException {
         try {
             waitingForResponse = true;
             out.writeObject(new JoinGameRequest(username));
+            lobbyObservers.add(observer);
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();
                 }
                 responseLock.notifyAll();
             }
-            lobbyObsevers.add(observer);
             return joinGameResult;
         } catch (IOException e) {
             e.printStackTrace();
@@ -94,7 +97,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
     }
 
     public void handle(JoinPlayerNotification response) {
-        for (LobbyObsever observer : lobbyObsevers) {
+        for (LobbyObserver observer : lobbyObservers) {
             try {
                 observer.onPlayerJoined(response.username, response.numOfPlayers);
             } catch (RemoteException e) {
@@ -102,6 +105,18 @@ public class SocketClientController implements RemoteController, ResponseHandler
             }
         }
     }
+
+    public void handle(TimerNotification response){
+        for(LobbyObserver observer : lobbyObservers){
+            try {
+                observer.onTimerChanges(response.timerStart, response.timerStatus);
+            } catch (RemoteException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 
 
     class ListeningThread extends Thread {

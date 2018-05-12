@@ -1,6 +1,11 @@
 package com.sagrada.ppp.utils;
 
 import com.sagrada.ppp.Color;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 
 public class StaticValues {
 
@@ -212,7 +217,15 @@ public class StaticValues {
 
     }
 
+    public static int getLobbyTimer(){
+        JSONTokener jsonTokener = null;
+        try {
+            jsonTokener = new JSONTokener(new FileReader("src/main/java/com/sagrada/ppp/utils/config.json"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
-
-
+        JSONObject jsonObject = new JSONObject(jsonTokener);
+        return jsonObject.getInt("lobby_timer");
+    }
 }
