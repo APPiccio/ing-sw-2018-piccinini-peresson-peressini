@@ -269,92 +269,20 @@ public class ToolCardTest {
 
     @Test
     public void card6(){
-        Game g = new Game("test");
-        g.joinGame("pinco");
-        g.joinGame("pallo");
-        g.joinGame("pallone");
-        g.joinGame("pallino");
-        g.init();
-
-
-        ToolCard toolCard6 = new ToolCard6();
-        CommandToolCard commandToolCard6 = new CommandToolCard6(g.getDraftPool(),g.getPlayer("pinco"),1);
-        toolCard6.use(commandToolCard6);
-
-        assertNotEquals(null,g.getPlayer("pinco").getActiveDice());
 
     }
 
     @Test
     public void card7 (){
-        Game g = new Game("test");
-        g.joinGame("pinco");
-        g.joinGame("pallo");
-        g.joinGame("pallone");
-        g.joinGame("pallino");
-        g.init();
-
-        ArrayList<Dice> result = g.getDraftPool();
-        ToolCard toolCard7 = new ToolCard7();
-        CommandToolCard commandToolCard = new CommandToolCard7(result);
-        toolCard7.use(commandToolCard);
-
-        for (Dice d: g.getDraftPool()
-                ) {
-            System.out.println(d.toString());
-        }
-        System.out.println("------------------------------------------------------");
-        for (Dice d: result
-             ) {
-            System.out.println(d.toString());
-        }
 
     }
     @Test
     public void card8(){
-        Game g = new Game("test");
-        g.joinGame("pinco");
-        g.joinGame("pallo");
-        g.joinGame("pallone");
-        g.joinGame("pallino");
-        g.init();
-
-
-        ToolCard toolCard8 = new ToolCard6();
-        CommandToolCard commandToolCard6 = new CommandToolCard8(g.getDraftPool(),g.getPlayer("pinco"),1);
-        toolCard8.use(commandToolCard6);
-
-        assertNotEquals(null,g.getPlayer("pinco").getActiveDice());
 
 
     }
     @Test
     public void card9(){
-        Game g = new Game("test");
-        g.joinGame("pinco");
-        g.joinGame("pallo");
-        g.joinGame("pallone");
-        g.joinGame("pallino");
-        g.init();
-        g.getPlayer("pinco").setPanel(TestPanels.toolCardPanel_X());
-        g.getPlayer("pinco").setActiveDice(new Dice(Color.GREEN,2));
-
-
-        ToolCard toolCard9 = new ToolCard9();
-        CommandToolCard commandToolCard9 = new CommandToolCard9(g.getPlayer("pinco"),5);
-        toolCard9.use(commandToolCard9);
-
-        assertNotEquals(null,g.getPlayer("pinco").getPanel().getCell(5).getDiceOn());
-
-        g.getPlayer("pinco").setActiveDice(new Dice(Color.PURPLE,5));
-        commandToolCard9 = new CommandToolCard9(g.getPlayer("pinco"),7);
-        toolCard9.use(commandToolCard9);
-
-        assertEquals(null,g.getPlayer("pinco").getPanel().getCell(7).getDiceOn());
-
-        g.getPlayer("pinco").setActiveDice(null);
-        commandToolCard9 = new CommandToolCard9(g.getPlayer("pinco"),7);
-        toolCard9.use(commandToolCard9);
 
     }
 

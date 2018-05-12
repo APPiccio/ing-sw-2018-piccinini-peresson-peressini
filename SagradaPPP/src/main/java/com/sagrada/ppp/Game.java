@@ -6,6 +6,8 @@ import com.sagrada.ppp.utils.StaticValues;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class Game implements Serializable{
     private ArrayList<Player> players;
@@ -30,7 +32,8 @@ public class Game implements Serializable{
         gameStatus = GameStatus.INIT;
         toolCards = new ArrayList<>();
         if(username != null) players.add(new Player(username));
-        lobbyObsevers = new ArrayList<>();
+        lobbyObsevers = new ArrayList<>() {
+        };
     }
 
     public void init(){
@@ -83,7 +86,7 @@ public class Game implements Serializable{
         }
         Player h = new Player(user);
         players.add(h);
-        notifyAllLobbyObservers(user,players.size());
+        notifyPlayerJoin(user,getUsernames(),players.size());
         return h.hashCode();
     }
 
@@ -113,7 +116,13 @@ public class Game implements Serializable{
         }
         return playersCopy;
     }
+    public int getActivePlayers(){
+        return (int) players.stream().filter(x -> x.getPlayerStatus()==PlayerStatus.ACTIVE).count();
+    }
 
+    public ArrayList<String> getUsernames(){
+        return this.getPlayers().stream().map(Player::getUsername).collect(Collectors.toCollection(ArrayList::new));
+    }
     public int getPrivateScore(Player activePlayer) {
         int score = 0;
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
@@ -131,6 +140,7 @@ public class Game implements Serializable{
         for(Player player : players){
             if (player.getUsername().equals(username)){
                 players.remove(player);
+                notifyPlayerLeave(username,getUsernames(),players.size());
                 return;
             }
         }
@@ -149,19 +159,28 @@ public class Game implements Serializable{
         lobbyObsevers.add(observer);
     }
 
-    public void detachLobbyObserver(LobbyObsever observer){
-        lobbyObsevers.remove(observer);
+    public void detachLobbyObserver(LobbyObsever obsever){
+        lobbyObsevers.remove(obsever);
     }
 
-    public void notifyAllLobbyObservers(String username, int numOfPlayers){
-        for (LobbyObsever observer : lobbyObsevers) {
+    public void notifyPlayerJoin(String username,ArrayList<String> players, int numOfPlayers){
+        for (LobbyObsever observer: lobbyObsevers) {
             try {
-                observer.onPlayerJoined(username , numOfPlayers);
+
+                observer.onPlayerJoined(username , players,numOfPlayers);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public void notifyPlayerLeave(String username,ArrayList<String> players,int numOfPlayers) {
+        for (LobbyObsever observer: lobbyObsevers) {
+            try {
+                observer.onPlayerLeave(username ,players, numOfPlayers);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }    }
 }
 

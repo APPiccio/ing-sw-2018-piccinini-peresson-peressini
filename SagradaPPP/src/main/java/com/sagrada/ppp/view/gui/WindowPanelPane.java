@@ -1,7 +1,6 @@
 package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.Cell;
-import com.sagrada.ppp.Color;
 import com.sagrada.ppp.WindowPanel;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -9,7 +8,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -78,18 +76,8 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
 
             }
             if(c.hasDiceOn()){
-                Button diceButton = new Button();
-                diceButton.setPrefSize(cellWidth*.80,cellHeight*.80);
-                diceButton.setAlignment(Pos.CENTER);
-                diceButton.setMouseTransparent(true);
-                diceButton.setBackground(
-                        new Background(
-                                new BackgroundImage(
-                                        new Image(getAssetUri(c.getDiceOn().getColor(),c.getDiceOn().getValue()),cellWidth*.80,cellHeight*.80,true,true),
-                                        BackgroundRepeat.NO_REPEAT,
-                                        BackgroundRepeat.NO_REPEAT,
-                                        BackgroundPosition.CENTER,
-                                        BackgroundSize.DEFAULT)));
+                DiceButton diceButton = new DiceButton(c.getDiceOn(),cellWidth*.80,cellHeight*.80);
+                diceButton.setMinSize(50,50);
                 cell.setCenter(diceButton);
 
 

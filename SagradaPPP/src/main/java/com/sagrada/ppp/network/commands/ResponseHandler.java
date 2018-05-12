@@ -4,5 +4,6 @@ public interface ResponseHandler {
 
     void handle(Response response);
     void handle(JoinGameResponse response);
-    void handle(JoinPlayerNotification response);
+    void handle(PlayerEventNotification response);
+    void handle(LeaveGameResponse response);
 }

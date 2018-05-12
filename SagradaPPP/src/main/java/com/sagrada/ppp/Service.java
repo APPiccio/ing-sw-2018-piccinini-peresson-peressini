@@ -8,7 +8,11 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 
 public class Service {
@@ -54,14 +58,25 @@ public class Service {
         return  games.get(gameHashCode).getPlayers();
     }
 
-    public void leaveLobby(int gameHashCode, String username){
+    public synchronized LeaveGameResult leaveLobby(int gameHashCode, String username,LobbyObsever obsever){
+        System.out.println(username + " is trying to leave....");
         Game game = games.get(gameHashCode);
+        LeaveGameResult leaveGameResult = new LeaveGameResult(gameHashCode,LeaveGameResultStatus.SUCCESS);
+        System.out.println(username + " has left.");
+        detachLobbyObserver(gameHashCode,obsever);
         if(game != null){
             game.leaveLobby(username);
             if(game.getPlayers().size() == 0){
+                leaveGameResult.setStatus(LeaveGameResultStatus.GAME_DELETED);
                 games.remove(gameHashCode);
+                System.out.println(username + " has left. Game: "+gameHashCode+ " has been deleted.");
             }
+        }else {
+            leaveGameResult.setStatus(LeaveGameResultStatus.FAIL);
         }
+
+        notifyAll();
+        return leaveGameResult;
     }
 
 
@@ -87,22 +102,22 @@ public class Service {
             joinGameResult.setPlayerHashCode(games.get(joinGameResult.getGameHashCode()).getPlayerHashCode(username));
             joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
         }
-        attachLobbyObserver(joinGameResult.getGameHashCode(), observer);
+        attachLobbyObserver(joinGameResult.getGameHashCode(),joinGameResult.getUsername(), observer);
         notifyAll();
         return joinGameResult;
     }
 
-    public void attachLobbyObserver(int gameHashCode, LobbyObsever observer){
+    public void attachLobbyObserver(int gameHashCode,String username, LobbyObsever observer){
         Game game = games.get(gameHashCode);
         if(game != null){
             game.attachLobbyObserver(observer);
         }
     }
 
-    public void detachLobbyObserver(int gameHashCode, LobbyObsever observer){
+    public void detachLobbyObserver(int gameHashCode,LobbyObsever obsever){
         Game game = games.get(gameHashCode);
         if(game != null){
-            game.detachLobbyObserver(observer);
+            game.detachLobbyObserver(obsever);
         }
     }
 

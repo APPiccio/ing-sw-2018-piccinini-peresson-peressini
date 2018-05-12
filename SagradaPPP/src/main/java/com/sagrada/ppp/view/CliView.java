@@ -1,8 +1,8 @@
 package com.sagrada.ppp.view;
 
 import com.sagrada.ppp.JoinGameResult;
+import com.sagrada.ppp.LeaveGameResult;
 import com.sagrada.ppp.LobbyObsever;
-import com.sagrada.ppp.Observer;
 import com.sagrada.ppp.Player;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
@@ -12,18 +12,18 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static com.sagrada.ppp.utils.StaticValues.*;
+
 public class CliView extends UnicastRemoteObject implements LobbyObsever {
     Scanner scanner;
     RemoteController controller;
     String username;
     int hashCode;
     int gameHashCode;
-    LobbyObsever thisLobby;
 
     public CliView(RemoteController controller) throws RemoteException{
         this.scanner = new Scanner(System.in);
         this.controller = controller;
-        this.thisLobby = this;
     }
 
 
@@ -130,20 +130,20 @@ public class CliView extends UnicastRemoteObject implements LobbyObsever {
 
     public void showCommandList(){
         System.out.println("COMMANDS:");
-        System.out.println("\t" + StaticValues.COMMAND_QUIT + "\t" + StaticValues.STRING_COMMAND_QUIT);
-        System.out.println("\t" + StaticValues.COMMAND_CREATE_GAME + "\t" + StaticValues.STRING_COMMAND_CREATE_GAME);
-        System.out.println("\t" + StaticValues.COMMAND_SHOW_GAMES + "\t" + StaticValues.STRING_COMMAND_SHOW_GAMES);
-        System.out.println("\t" + StaticValues.COMMAND_JOIN_GAME + "\t" + StaticValues.STRING_COMMAND_JOIN_GAME);
-        System.out.println("\t" + StaticValues.COMMAND_LEAVE_GAME + "\t" + StaticValues.STRING_COMMAND_LEAVE_GAME);
-        System.out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
+        System.out.println("\t" + COMMAND_QUIT + "\t" + STRING_COMMAND_QUIT);
+        System.out.println("\t" + COMMAND_CREATE_GAME + "\t" + STRING_COMMAND_CREATE_GAME);
+        System.out.println("\t" + COMMAND_SHOW_GAMES + "\t" + STRING_COMMAND_SHOW_GAMES);
+        System.out.println("\t" + COMMAND_JOIN_GAME + "\t" + STRING_COMMAND_JOIN_GAME);
+        System.out.println("\t" + COMMAND_LEAVE_GAME + "\t" + STRING_COMMAND_LEAVE_GAME);
+        System.out.println("\t" + COMMAND_HELP + "\t" + STRING_COMMAND_HELP);
     }
 
     public void showLobbyCommandList(){
         System.out.println("LOBBY COMMANDS:");
-        System.out.println("\t" + StaticValues.COMMAND_PLAYERS_IN_LOBBY + "\t" + StaticValues.STRING_COMMAND_PLAYERS_IN_LOBBY);
-        System.out.println("\t" + StaticValues.COMMAND_START_GAME + "\t" + StaticValues.STRING_COMMAND_START_GAME);
-        System.out.println("\t" + StaticValues.COMMAND_QUIT + "\t" + StaticValues.STRING_COMMAND_QUIT);
-        System.out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
+        System.out.println("\t" + COMMAND_PLAYERS_IN_LOBBY + "\t" + STRING_COMMAND_PLAYERS_IN_LOBBY);
+        System.out.println("\t" + COMMAND_START_GAME + "\t" + STRING_COMMAND_START_GAME);
+        System.out.println("\t" + COMMAND_QUIT + "\t" + STRING_COMMAND_QUIT);
+        System.out.println("\t" + COMMAND_HELP + "\t" + STRING_COMMAND_HELP);
     }
 
     public void inLobby() throws RemoteException {
@@ -152,22 +152,23 @@ public class CliView extends UnicastRemoteObject implements LobbyObsever {
         System.out.println("--> Your ID = " + hashCode + " as " + username);
         showLobbyCommandList();
         String command = scanner.nextLine();
-        while (!command.equals(StaticValues.COMMAND_QUIT)){
+        while (!command.equals(COMMAND_QUIT)){
             switch(command){
-                case StaticValues.COMMAND_PLAYERS_IN_LOBBY:
+                case COMMAND_PLAYERS_IN_LOBBY:
                     ArrayList<Player> players = controller.getPlayers(gameHashCode);
                     System.out.println("There are " + players.size() + "players in lobby");
                     for(Player player : players){
                         System.out.println("-> " + player.getUsername());
                     }
                     break;
-                case StaticValues.COMMAND_LEAVE_GAME:
-                    controller.leaveLobby(gameHashCode , username);
+                case COMMAND_LEAVE_GAME:
+                    LeaveGameResult leaveGameResult = controller.leaveLobby(gameHashCode , username,this);
+                    System.out.println(leaveGameResult.getStatus());
                     System.out.println("Back to main menu");
                     return;
-                case StaticValues.COMMAND_START_GAME:
+                case COMMAND_START_GAME:
                     break;
-                case StaticValues.COMMAND_HELP :
+                case COMMAND_HELP :
                     showLobbyCommandList();
                     break;
                 default:
@@ -186,13 +187,17 @@ public class CliView extends UnicastRemoteObject implements LobbyObsever {
     // 0 --> user join the lobby
     // 1 --> user leave the lobby
     // 2 --> game started
-    public void onPlayerJoined(String username, int numOfPlayers) throws RemoteException {
+    public void onPlayerJoined(String username,ArrayList<String> players, int numOfPlayers) throws RemoteException {
         System.out.println(username + " has joined the game!");
         System.out.println("There are " + numOfPlayers + " active players!");
     }
 
-    public void notifyJoinPlayer(String username) {
+    @Override
+    public void onPlayerLeave(String username,ArrayList<String> players, int numOfPlayers) throws RemoteException {
+        System.out.println(username + " has left the game!");
+        System.out.println("There are " + numOfPlayers + " active players!");
 
     }
+
 
 }
