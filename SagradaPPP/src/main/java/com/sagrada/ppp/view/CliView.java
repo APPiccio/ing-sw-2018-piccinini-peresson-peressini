@@ -6,9 +6,11 @@ import com.sagrada.ppp.TimerStatus;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
 
+import static com.sagrada.ppp.utils.StaticValues.*;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CliView extends UnicastRemoteObject implements LobbyObserver, Serializable {
@@ -17,13 +19,11 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     transient String username;
     transient int hashCode;
     transient int gameHashCode;
-    transient LobbyObserver thisLobby;
     transient long lobbyTimerStartTime;
 
     public CliView(RemoteController controller) throws RemoteException{
         this.scanner = new Scanner(System.in);
         this.controller = controller;
-        this.thisLobby = this;
     }
 
 
@@ -135,16 +135,15 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
 
     public void showCommandList(){
         System.out.println("COMMANDS:");
-        System.out.println("\t" + StaticValues.COMMAND_QUIT + "\t" + StaticValues.STRING_COMMAND_QUIT);
-        System.out.println("\t" + StaticValues.COMMAND_CREATE_GAME + "\t" + StaticValues.STRING_COMMAND_CREATE_GAME);
-        System.out.println("\t" + StaticValues.COMMAND_SHOW_GAMES + "\t" + StaticValues.STRING_COMMAND_SHOW_GAMES);
-        System.out.println("\t" + StaticValues.COMMAND_JOIN_GAME + "\t" + StaticValues.STRING_COMMAND_JOIN_GAME);
-        System.out.println("\t" + StaticValues.COMMAND_LEAVE_GAME + "\t" + StaticValues.STRING_COMMAND_LEAVE_GAME);
-        System.out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
+        System.out.println("\t" + COMMAND_QUIT + "\t" + STRING_COMMAND_QUIT);
+        System.out.println("\t" + COMMAND_CREATE_GAME + "\t" + STRING_COMMAND_CREATE_GAME);
+        System.out.println("\t" + COMMAND_SHOW_GAMES + "\t" + STRING_COMMAND_SHOW_GAMES);
+        System.out.println("\t" + COMMAND_JOIN_GAME + "\t" + STRING_COMMAND_JOIN_GAME);
+        System.out.println("\t" + COMMAND_LEAVE_GAME + "\t" + STRING_COMMAND_LEAVE_GAME);
+        System.out.println("\t" + COMMAND_HELP + "\t" + STRING_COMMAND_HELP);
     }
 
     public void showLobbyCommandList(){
-        System.out.println("LOBBY COMMANDS:");
         System.out.println("\t" + StaticValues.COMMAND_QUIT + "\t" + StaticValues.STRING_COMMAND_QUIT);
         System.out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
         System.out.println("\t" + StaticValues.COMMAND_LEAVE_GAME + "\t" + StaticValues.STRING_COMMAND_LEAVE_GAME);
@@ -158,7 +157,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         System.out.println("--> Your ID = " + hashCode + " as " + username + "\n");
         showLobbyCommandList();
         String command = scanner.nextLine();
-        while (!command.equals(StaticValues.COMMAND_QUIT)){
+        while (!command.equals(COMMAND_QUIT)){
             switch(command){
                 case StaticValues.COMMAND_LEAVE_GAME:
                     controller.leaveLobby(gameHashCode , username, this);
@@ -179,9 +178,20 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
 
 
     }
+    //UPDATE CODE
+    // 0 --> user join the lobby
+    // 1 --> user leave the lobby
+    // 2 --> game started
     public void onPlayerJoined(String username, int numOfPlayers) throws RemoteException {
-        System.out.println("--->" + username + " has joined the game!");
-        System.out.println("---> There are now " + numOfPlayers + " active players!");
+        System.out.println(username + " has joined the game!");
+        System.out.println("There are " + numOfPlayers + " active players!");
+    }
+
+    @Override
+    public void onPlayerLeave(String username, ArrayList<String> players, int numOfPlayers) throws RemoteException {
+        System.out.println(username + " has left the game!");
+        System.out.println("There are " + numOfPlayers + " active players!");
+
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.sagrada.ppp.network.commands;
 
-import com.sagrada.ppp.Observer;
 
 import java.io.Serializable;
 

@@ -208,100 +208,82 @@ public class ToolCardTest {
 
     }
 
+    /*@Test
+    public void card5v2() {
+
+        //Game Class emulation
+
+        RoundTrack roundTrack = new RoundTrack(10);
+
+        //supposed to be at the seventh round, 4 players participating at the game
+        for (int i = 1; i <= 7; i++) { //i indicate the round number
+            ArrayList<Dice> dices = new ArrayList<>();
+            Random rand = new Random();
+            int remainingDices = rand.nextInt(9) + 1; //random number between 1 and 9
+            for (int j = 0; j < remainingDices; j++) {
+                dices.add(new Dice());
+            }
+            roundTrack.setDicesOnTurn(i, dices);
+        }
+
+        ArrayList<Dice> dices = new ArrayList<>(); //extracted dices
+        for (int i = 0; i < 9; i++) {
+            dices.add(new Dice());
+        }
+
+        //Getting the two dices that will be swapped
+        int  draftPoolDiceIndex = new Random().nextInt(dices.size());
+        Dice draftPoolDice = dices.get(draftPoolDiceIndex);
+        int round = new Random().nextInt(7) + 1;
+        int roundIndex = new Random().nextInt(roundTrack.dicesOnRound(round));
+        Dice roundTrackDice = roundTrack.getDice(round, roundIndex);
+
+        //Starting real Game Class emulation
+
+        Dice draftPoolDiceCopy = new Dice(draftPoolDice);
+        Dice roundTrackDiceCopy = new Dice(roundTrackDice);
+
+        ToolCard toolCard5 = new ToolCard5();
+        toolCard5.use(new CommandToolCard5(roundTrackDiceCopy, draftPoolDiceCopy));
+
+        assertEquals(draftPoolDice.getValue(), roundTrackDiceCopy.getValue());
+        assertEquals(draftPoolDice.getColor(), roundTrackDiceCopy.getColor());
+        assertEquals(roundTrackDice.getValue(), draftPoolDiceCopy.getValue());
+        assertEquals(roundTrackDice.getColor(), draftPoolDiceCopy.getColor());
+        assertNotEquals(draftPoolDice.getValue(), draftPoolDiceCopy.getValue());
+        assertNotEquals(draftPoolDice.getColor(), draftPoolDiceCopy.getColor());
+        assertNotEquals(roundTrackDice.getValue(), roundTrackDiceCopy.getValue());
+        assertNotEquals(roundTrackDice.getColor(), roundTrackDiceCopy.getColor());
+
+        ArrayList<Dice> dicesCopy = new ArrayList<>(dices);
+        RoundTrack roundTrackCopy = new RoundTrack(roundTrack);
+
+        dicesCopy.set(draftPoolDiceIndex, draftPoolDiceCopy);
+        roundTrackCopy.setDice(round, roundIndex, roundTrackDiceCopy);
+
+        assertNotEquals(dices, dicesCopy);
+        assertNotEquals(roundTrack, roundTrackCopy);
+        assertNotEquals(dices.get(draftPoolDiceIndex), dicesCopy.get(draftPoolDiceIndex));
+
+    }*/
+
     @Test
     public void card6(){
-        /*
-        Game g = new Game("test");
-        g.joinGame("pinco");
-        g.joinGame("pallo");
-        g.joinGame("pallone");
-        g.joinGame("pallino");
-        g.init();
 
-
-        ToolCard toolCard6 = new ToolCard6();
-        CommandToolCard commandToolCard6 = new CommandToolCard6(g.getDraftPool(),g.getPlayer("pinco"),1);
-        toolCard6.use(commandToolCard6);
-
-        assertNotEquals(null,g.getPlayer("pinco").getActiveDice());
-*/
     }
 
     @Test
     public void card7 (){
-        /*
-        Game g = new Game("test");
-        g.joinGame("pinco");
-        g.joinGame("pallo");
-        g.joinGame("pallone");
-        g.joinGame("pallino");
-        g.init();
-
-        ArrayList<Dice> result = g.getDraftPool();
-        ToolCard toolCard7 = new ToolCard7();
-        CommandToolCard commandToolCard = new CommandToolCard7(result);
-        toolCard7.use(commandToolCard);
-
-        for (Dice d: g.getDraftPool()
-                ) {
-            System.out.println(d.toString());
-        }
-        System.out.println("------------------------------------------------------");
-        for (Dice d: result
-             ) {
-            System.out.println(d.toString());
-        }
-        */
 
     }
     @Test
     public void card8(){
-        /*
-        Game g = new Game("test");
-        g.joinGame("pinco");
-        g.joinGame("pallo");
-        g.joinGame("pallone");
-        g.joinGame("pallino");
-        g.init();
 
-
-        ToolCard toolCard8 = new ToolCard6();
-        CommandToolCard commandToolCard6 = new CommandToolCard8(g.getDraftPool(),g.getPlayer("pinco"),1);
-        toolCard8.use(commandToolCard6);
-
-        assertNotEquals(null,g.getPlayer("pinco").getActiveDice());
-*/
 
     }
     @Test
     public void card9(){
-        /*
-        Game g = new Game("test");
-        g.joinGame("pinco");
-        g.joinGame("pallo");
-        g.joinGame("pallone");
-        g.joinGame("pallino");
-        g.init();
-        g.getPlayer("pinco").setPanel(TestPanels.toolCardPanel_X());
-        g.getPlayer("pinco").setActiveDice(new Dice(Color.GREEN,2));
 
-
-        ToolCard toolCard9 = new ToolCard9();
-        CommandToolCard commandToolCard9 = new CommandToolCard9(g.getPlayer("pinco"),5);
-        toolCard9.use(commandToolCard9);
-
-        assertNotEquals(null,g.getPlayer("pinco").getPanel().getCell(5).getDiceOn());
-
-        g.getPlayer("pinco").setActiveDice(new Dice(Color.PURPLE,5));
-        commandToolCard9 = new CommandToolCard9(g.getPlayer("pinco"),7);
-        toolCard9.use(commandToolCard9);
-
-        assertEquals(null,g.getPlayer("pinco").getPanel().getCell(7).getDiceOn());
-
-        g.getPlayer("pinco").setActiveDice(null);
-        commandToolCard9 = new CommandToolCard9(g.getPlayer("pinco"),7);
-        toolCard9.use(commandToolCard9);
-        */
     }
 
     @Test

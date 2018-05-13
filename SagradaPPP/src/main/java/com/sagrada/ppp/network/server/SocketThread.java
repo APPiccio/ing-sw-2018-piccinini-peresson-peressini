@@ -1,13 +1,15 @@
 package com.sagrada.ppp.network.server;
 
 import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.LobbyObserver;
+import com.sagrada.ppp.LeaveGameResult;
+import com.sagrada.ppp.LobbyObsever;
 import com.sagrada.ppp.Service;
 import com.sagrada.ppp.TimerStatus;
 import com.sagrada.ppp.network.commands.*;
 import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 public class SocketThread extends Thread implements LobbyObserver, RequestHandler{
     private Socket socket;
@@ -15,6 +17,18 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private Response response;
+
+
+    @Override
+    public void onPlayerLeave(String username,ArrayList<String> players, int numOfPlayers) throws RemoteException {
+        try {
+            System.out.println("Sending notification to: "+out.toString());
+            out.writeObject(new PlayerEventNotification(numOfPlayers, username,players,PlayerEventType.LEAVE));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public SocketThread(Socket socket, Service service){
         this.socket = socket;
@@ -33,9 +47,10 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         while (true) {
             //DO SOCKET SERVER STUFF TO CLIENT
             try {
-                System.out.println("mi metto in attesa");
+                System.out.println("listening....");
                  response = ((Request) in.readObject()).handle(this);
                  if(response != null){
+                     System.out.println("Sending response to: "+out.toString());
                      out.writeObject(response);
                  }
 
@@ -49,9 +64,10 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onPlayerJoined(String username, int numOfPlayers) throws RemoteException {
+    public void onPlayerJoined(String username, ArrayList<String> players, int numOfPlayers) throws RemoteException {
         try {
-            out.writeObject(new JoinPlayerNotification(numOfPlayers, username));
+            System.out.println("Sending notification to: "+out.toString());
+            out.writeObject(new PlayerEventNotification(numOfPlayers, username,players,PlayerEventType.JOIN));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -75,9 +91,10 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         return new JoinGameResponse(joinGameResult);
     }
 
-    public Response handle(LeaveGameRequest request){
-        service.leaveLobby(request.gameHashCode, request.username, this);
-        return null;
+    @Override
+    public Response handle(LeaveGameRequest request) {
+        LeaveGameResult leaveGameResult = service.leaveLobby(request.gameHashCode,request.username,this);
+        return new LeaveGameResponse(leaveGameResult);
     }
 
 }

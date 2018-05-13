@@ -8,7 +8,11 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 
 public class Service {
@@ -55,14 +59,25 @@ public class Service {
         return  games.get(gameHashCode).getPlayers();
     }
 
-    public void leaveLobby(int gameHashCode, String username, LobbyObserver observer){
+    public synchronized LeaveGameResult leaveLobby(int gameHashCode, String username,LobbyObsever obsever){
+        System.out.println(username + " is trying to leave....");
         Game game = games.get(gameHashCode);
+        LeaveGameResult leaveGameResult = new LeaveGameResult(gameHashCode,LeaveGameResultStatus.SUCCESS);
+        System.out.println(username + " has left.");
+        detachLobbyObserver(gameHashCode,obsever);
         if(game != null){
             game.leaveLobby(username, observer);
             if(game.getPlayers().isEmpty()){
+                leaveGameResult.setStatus(LeaveGameResultStatus.GAME_DELETED);
                 games.remove(gameHashCode);
+                System.out.println(username + " has left. Game: "+gameHashCode+ " has been deleted.");
             }
+        }else {
+            leaveGameResult.setStatus(LeaveGameResultStatus.FAIL);
         }
+
+        notifyAll();
+        return leaveGameResult;
     }
 
 
@@ -90,6 +105,7 @@ public class Service {
             joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
             joinGameResult.setTimerStart(games.get(joinGameResult.getGameHashCode()).getLobbyTimerStartTime());
         }
+        notifyAll();
         return joinGameResult;
     }
 

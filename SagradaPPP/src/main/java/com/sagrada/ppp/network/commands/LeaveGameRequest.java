@@ -1,22 +1,19 @@
 package com.sagrada.ppp.network.commands;
 
-import com.sagrada.ppp.LobbyObserver;
-
 import java.io.Serializable;
 
-public class LeaveGameRequest implements Request, Serializable {
-
-    public int gameHashCode;
+public class LeaveGameRequest implements Request,Serializable {
     public String username;
+    public int gameHashCode;
 
-
-    public LeaveGameRequest(int gameHashCode, String username){
-        this.gameHashCode = gameHashCode;
+    public LeaveGameRequest(String username,int gameHashCode){
         this.username = username;
+        this.gameHashCode = gameHashCode;
     }
 
     @Override
-    public Response handle(RequestHandler handler) {
+    public Response handle(RequestHandler handler){
         return handler.handle(this);
     }
+
 }
