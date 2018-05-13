@@ -21,14 +21,15 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     private VBox vBoxEvents;
     private Button exit;
     private String username;
+    private int playerHashCode;
+    private int gameHashCode;
     private RemoteController controller;
-    private JoinGameResult player;
+    private JoinGameResult joinGameResult;
     private ArrayList<Bus> events;
     private ArrayList<String> playersUsername;
 
     public PlayersLobby(String username, RemoteController controller) throws RemoteException {
 
-        this.username = username;
         this.controller = controller;
         borderPane = new BorderPane();
         TabPane tabPane = new TabPane();
@@ -38,8 +39,11 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         vBoxEvents = new VBox();
         events = new ArrayList<>();
 
-        player = controller.joinGame(username, this);
-        playersUsername = player.getPlayersUsername();
+        joinGameResult = controller.joinGame(username, this);
+        playersUsername = joinGameResult.getPlayersUsername();
+        this.username = joinGameResult.getUsername();
+        this.gameHashCode = joinGameResult.getGameHashCode();
+        this.playerHashCode = joinGameResult.getPlayerHashCode();
         vBoxPlayers.getChildren().add(playerID());
         firstJoin();
 
@@ -69,15 +73,15 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     public void firstJoin() {
         int activePlayers = playersUsername.size();
         vBoxPlayers.getChildren().add(new Label("There is " + activePlayers + " active player!"));
-        for (String user : player.getPlayersUsername()) {
+        for (String user : playersUsername) {
             vBoxPlayers.getChildren().add(new Label("Username: " + user));
         }
     }
 
     public Label playerID() {
-        return new Label("Welcome " + player.getUsername() + "!\n" +
-                "You are participating at the game #" + player.getGameHashCode() +
-                "\nwith userID " + player.getPlayerHashCode() + "\n");
+        return new Label("Welcome " + username + "!\n" +
+                "You are participating at the game #" + gameHashCode +
+                "\nwith userID " + playerHashCode + "\n");
     }
 
     public void attach(Bus bus) {
@@ -115,8 +119,8 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     }
 
     @Override
-    public void onPlayerJoined(String username, ArrayList<String> Players, int numOfPlayers) {
-        playersUsername = Players;
+    public void onPlayerJoined(String username, ArrayList<String> players, int numOfPlayers) {
+        playersUsername = players;
         Platform.runLater(() -> {
             clearPlayers();
             setActivePlayers();
@@ -126,8 +130,8 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     }
 
     @Override
-    public void onPlayerLeave(String username, ArrayList<String> Players, int numOfPlayers) {
-        playersUsername = Players;
+    public void onPlayerLeave(String username, ArrayList<String> players, int numOfPlayers) {
+        playersUsername = players;
         Platform.runLater(() -> {
             clearPlayers();
             setActivePlayers();
@@ -155,7 +159,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
             ButtonType buttonType = alert.getResult();
             if (buttonType == ButtonType.OK) {
                 try {
-                    controller.leaveLobby(player.getGameHashCode(), username, this);
+                    controller.leaveLobby(gameHashCode, username, this);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }

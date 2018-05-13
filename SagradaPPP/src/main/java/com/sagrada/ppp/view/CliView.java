@@ -157,4 +157,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         System.out.println("\n");
     }
 
+
+
 }
