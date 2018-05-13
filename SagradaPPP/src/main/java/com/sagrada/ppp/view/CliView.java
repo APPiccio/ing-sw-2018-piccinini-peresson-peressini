@@ -182,10 +182,11 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     // 0 --> user join the lobby
     // 1 --> user leave the lobby
     // 2 --> game started
-    public void onPlayerJoined(String username, int numOfPlayers) throws RemoteException {
+    public void onPlayerJoined(String username,ArrayList<String> players ,int numOfPlayers) throws RemoteException {
         System.out.println(username + " has joined the game!");
         System.out.println("There are " + numOfPlayers + " active players!");
     }
+
 
     @Override
     public void onPlayerLeave(String username, ArrayList<String> players, int numOfPlayers) throws RemoteException {

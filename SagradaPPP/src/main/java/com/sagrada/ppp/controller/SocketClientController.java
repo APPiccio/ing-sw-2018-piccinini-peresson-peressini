@@ -3,11 +3,9 @@ package com.sagrada.ppp.controller;
 import com.sagrada.ppp.JoinGameResult;
 import com.sagrada.ppp.LobbyObserver;
 import com.sagrada.ppp.LeaveGameResult;
-import com.sagrada.ppp.LobbyObsever;
 import com.sagrada.ppp.Player;
 import com.sagrada.ppp.network.commands.*;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.view.View;
 
 import java.io.*;
 import java.net.Socket;
@@ -26,6 +24,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
     private transient JoinGameResult joinGameResult;
     private transient ListeningThread notificationThread;
     private transient Object responseLock;
+    private transient LeaveGameResult leaveGameResult;
 
     public SocketClientController() throws IOException {
         socket = new Socket(StaticValues.SERVER_ADDRESS, StaticValues.SOCKET_PORT);
@@ -47,7 +46,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
     }
 
     @Override
-    public LeaveGameResult leaveLobby(int gameHashCode, String username,LobbyObsever obsever) throws RemoteException {
+    public LeaveGameResult leaveLobby(int gameHashCode, String username,LobbyObserver observer) throws RemoteException {
         try {
             waitingForResponse = true;
             out.writeObject(new LeaveGameRequest(username, gameHashCode));
@@ -57,7 +56,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
                 }
                 responseLock.notifyAll();
             }
-            lobbyObsevers.remove(obsever);
+            lobbyObservers.remove(observer);
             return leaveGameResult;
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,7 +118,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
     }
 
     public void handle(PlayerEventNotification response) {
-        for (LobbyObsever observer : lobbyObsevers) {
+        for (LobbyObserver observer : lobbyObservers) {
             try {
                 switch (response.eventType) {
                     case JOIN:

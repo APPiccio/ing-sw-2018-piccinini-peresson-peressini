@@ -2,7 +2,7 @@ package com.sagrada.ppp.network.server;
 
 import com.sagrada.ppp.JoinGameResult;
 import com.sagrada.ppp.LeaveGameResult;
-import com.sagrada.ppp.LobbyObsever;
+import com.sagrada.ppp.LobbyObserver;
 import com.sagrada.ppp.Service;
 import com.sagrada.ppp.TimerStatus;
 import com.sagrada.ppp.network.commands.*;

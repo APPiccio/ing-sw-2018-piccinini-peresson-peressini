@@ -2,11 +2,11 @@ package com.sagrada.ppp;
 
 import com.sagrada.ppp.cards.ToolCards.CommandToolCard;
 import com.sagrada.ppp.utils.StaticValues;
+import com.sagrada.ppp.LobbyObserver;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class Game implements Serializable{
@@ -164,7 +164,8 @@ public class Game implements Serializable{
             if (player.getUsername().equals(username)){
                 players.remove(player);
                 detachLobbyObserver(observer);
-                notifyPlayerLeave(username,getUsernames(),players.size());                if(players.size() < 2){
+                notifyPlayerLeave(username,getUsernames(),players.size());
+                if(players.size() < 2){
                     if(lobbyTimer != null) {
                         lobbyTimer.interrupt();
                     }
@@ -193,8 +194,8 @@ public class Game implements Serializable{
         lobbyObservers.remove(observer);
     }
 
-    public void notifyTimerChanges(TimerStatus timerStatus){
-        for(LobbyObserver observer : lobbyObservers){
+    public void notifyTimerChanges(TimerStatus timerStatus) {
+        for (LobbyObserver observer : lobbyObservers) {
             try {
                 observer.onTimerChanges(lobbyTimerStartTime, timerStatus)
                 ;
@@ -202,27 +203,28 @@ public class Game implements Serializable{
                 e.printStackTrace();
             }
         }
+    }
 
-    public void notifyPlayerJoin(String username,ArrayList<String> players, int numOfPlayers){
-        for (LobbyObsever observer: lobbyObsevers) {
-            try {
 
-                observer.onPlayerJoined(username , players,numOfPlayers);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+    public void notifyPlayerJoin (String username,ArrayList<String> players, int numOfPlayers){
+            for (LobbyObserver observer: lobbyObservers) {
+                try {
+
+                    observer.onPlayerJoined(username , players,numOfPlayers);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
-        }
     }
 
     public void notifyPlayerLeave(String username,ArrayList<String> players,int numOfPlayers) {
-        for (LobbyObsever observer: lobbyObsevers) {
-            try {
-                observer.onPlayerLeave(username ,players, numOfPlayers);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+            for (LobbyObserver observer: lobbyObservers) {
+                try {
+                    observer.onPlayerLeave(username ,players, numOfPlayers);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
-    }
-
 }
 
