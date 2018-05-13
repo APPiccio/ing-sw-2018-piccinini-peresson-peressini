@@ -84,13 +84,14 @@ public class Service {
     public synchronized JoinGameResult joinGame(String username, LobbyObserver observer){
         System.out.println(username + "is trying to connect..");
         Game game = null;
-        JoinGameResult joinGameResult = new JoinGameResult(-1,-1, null);
+        JoinGameResult joinGameResult = new JoinGameResult(-1,-1, null, null);
         for(Game x : games.values()){
             if (x.isJoinable()) {
                     joinGameResult.setPlayerHashCode(x.joinGame(username, observer));
                     joinGameResult.setGameHashCode(x.hashCode());
                     joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
                     joinGameResult.setTimerStart(games.get(joinGameResult.getGameHashCode()).getLobbyTimerStartTime());
+                    joinGameResult.setPlayersUsername(games.get(joinGameResult.getGameHashCode()).getUsernames());
             }
             if(joinGameResult.getPlayerHashCode() != -1) break;
         }
@@ -100,6 +101,7 @@ public class Service {
             joinGameResult.setPlayerHashCode(games.get(joinGameResult.getGameHashCode()).getPlayerHashCode(username));
             joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
             joinGameResult.setTimerStart(games.get(joinGameResult.getGameHashCode()).getLobbyTimerStartTime());
+            joinGameResult.setPlayersUsername(games.get(joinGameResult.getGameHashCode()).getUsernames());
         }
         notifyAll();
         return joinGameResult;

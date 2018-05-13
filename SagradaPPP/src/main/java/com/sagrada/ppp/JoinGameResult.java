@@ -1,22 +1,25 @@
 package com.sagrada.ppp;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class JoinGameResult implements Serializable {
     private int playerHashCode;
     private int gameHashCode;
     private String username;
     private long timerStart;
+    private ArrayList<String> playersUsername;
 
-    public JoinGameResult(int playerHashCode, int gameHashCode, String username){
-        this(playerHashCode, gameHashCode,username, 0);
+    public JoinGameResult(int playerHashCode, int gameHashCode, String username, ArrayList<String> playersUsername){
+        this(playerHashCode, gameHashCode,username, 0,playersUsername );
     }
 
-    public JoinGameResult(int playerHashCode, int gameHashCode, String username, long timerStart){
+    public JoinGameResult(int playerHashCode, int gameHashCode, String username, long timerStart, ArrayList<String> playersUsername){
         this.playerHashCode = playerHashCode;
         this.gameHashCode = gameHashCode;
         this.username = username;
         this.timerStart = timerStart;
+        this.playersUsername = playersUsername;
     }
 
 
@@ -50,5 +53,13 @@ public class JoinGameResult implements Serializable {
 
     public void setTimerStart(long timerStart) {
         this.timerStart = timerStart;
+    }
+
+    public ArrayList<String> getPlayersUsername() {
+        return playersUsername;
+    }
+
+    public void setPlayersUsername(ArrayList<String> playersUsername) {
+        this.playersUsername = playersUsername;
     }
 }

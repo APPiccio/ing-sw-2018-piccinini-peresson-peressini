@@ -45,7 +45,7 @@ public class AppTest
         new WindowPanelTest();
         new RoundTrackTest();
         //new GameTest();
-        assertEquals(20, StaticValues.getLobbyTimer());
+        assertEquals(50000, StaticValues.getLobbyTimer());
         assertTrue( true);
 
     }
