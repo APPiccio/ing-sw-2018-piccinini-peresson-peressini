@@ -1,54 +1,52 @@
 package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.Client;
-import com.sagrada.ppp.WindowPanel;
 import com.sagrada.ppp.controller.RemoteController;
-import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.view.View;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
 import java.rmi.RemoteException;
 
-public class GuiView extends Application implements BusEventHandler, View {
+public class GuiView extends Application implements BusEventHandler, Bus {
 
     private Stage stage;
-    public RemoteController controller;
-
+    private RemoteController controller;
+    private Lobby lobby;
 
     @Override
-    public void start(Stage primaryStage) throws RemoteException {
-        controller = Client.getController();
-        stage = primaryStage;
+    public void start(Stage primaryStage) {
 
-        LobbyPane lobbyPane = new LobbyPane(200);
-        lobbyPane.attach(this);
+        stage = primaryStage;
+        controller = Client.getController();
+        lobby = new Lobby();
+        lobby.attach(this);
+
+        primaryStage.setTitle("Welcome to Sagrada");
         primaryStage.setMinHeight(300);
         primaryStage.setMinWidth(300* 1400/2500);
         primaryStage.setResizable(false);
-
-        primaryStage.setScene(new Scene(lobbyPane,700*1436/2156,700));
+        primaryStage.setScene(new Scene(lobby.getLobby(),700*1436/2156,700));
         primaryStage.show();
     }
 
-    public void attachController(RemoteController controller){
-        this.controller = controller;
-    }
-
-    public void show(){
-        launch();
+    @Override
+    public void onClose(String username) {
+        try {
+            PlayersLobby playersLobby = new PlayersLobby(username, controller);
+            playersLobby.attach(this);
+            stage.setTitle("Players Lobby");
+            stage.setScene(new Scene(playersLobby.getPlayersLobby(),700*1436/2156,700));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void onClose(Pane pane) {
-        stage.setScene(new Scene(new WindowPanelPane(
-                new WindowPanel(6, StaticValues.FRONT_SIDE),500,500)));
-        stage.setResizable(true);
+    public void onGameExit() {
+        lobby = new Lobby();
+        lobby.attach(this);
+        stage.setTitle("Welcome to Sagrada");
+        stage.setScene(new Scene(lobby.getLobby(), 700*1436/2156,700));
     }
 
-    @Override
-    public void notifyJoinPlayer(String username) {
-    }
 }
