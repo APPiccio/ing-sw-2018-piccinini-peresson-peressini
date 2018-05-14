@@ -101,8 +101,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         int activePlayers = playersUsername.size();
         if (playersUsername.size() > 1) {
             vBoxPlayers.getChildren().add(new Label("There are " + activePlayers + " active players!"));
-        }
-        else {
+        } else {
             vBoxPlayers.getChildren().add(new Label("There is " + activePlayers + " active player!"));
         }
         for (String user : playersUsername) {
@@ -122,10 +121,10 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     public void onPlayerJoined(String username, ArrayList<String> players, int numOfPlayers) {
         playersUsername = players;
         Platform.runLater(() -> {
-            clearPlayers();
-            setActivePlayers();
-            newPlayerEvent(username);
-        }
+                    clearPlayers();
+                    setActivePlayers();
+                    newPlayerEvent(username);
+                }
         );
     }
 
@@ -133,10 +132,10 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     public void onPlayerLeave(String username, ArrayList<String> players, int numOfPlayers) {
         playersUsername = players;
         Platform.runLater(() -> {
-            clearPlayers();
-            setActivePlayers();
-            oldPlayerEvent(username);
-        }
+                    clearPlayers();
+                    setActivePlayers();
+                    oldPlayerEvent(username);
+                }
         );
     }
 
@@ -163,11 +162,11 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
+
                 for (Bus bus : events) {
                     bus.onGameExit();
                 }
             }
         }
     }
-
 }
