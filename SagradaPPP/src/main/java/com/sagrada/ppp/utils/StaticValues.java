@@ -218,6 +218,9 @@ public class StaticValues {
     }
 
     public static int getLobbyTimer(){
+
+        return 50000;
+        /*
         JSONTokener jsonTokener = null;
         try {
             jsonTokener = new JSONTokener(new FileReader("src/main/java/com/sagrada/ppp/utils/config.json"));
@@ -227,5 +230,6 @@ public class StaticValues {
 
         JSONObject jsonObject = new JSONObject(jsonTokener);
         return jsonObject.getInt("lobby_timer");
+        */
     }
 }
