@@ -45,7 +45,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         this.gameHashCode = joinGameResult.getGameHashCode();
         this.playerHashCode = joinGameResult.getPlayerHashCode();
         vBoxPlayers.getChildren().add(playerID());
-        firstJoin();
+        setActivePlayers();
 
         exit = new Button();
         exit.setText("Exit");
@@ -55,12 +55,14 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         exit.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
         playersTab.setText("Players");
+        playersTab.setClosable(false);
         vBoxPlayers.setSpacing(5);
         vBoxPlayers.setPadding(new Insets(10, 0, 0, 10));
         playersTab.setContent(vBoxPlayers);
         tabPane.getTabs().add(playersTab);
 
         eventsTab.setText("Log");
+        eventsTab.setClosable(false);
         vBoxEvents.setSpacing(5);
         vBoxEvents.setPadding(new Insets(10, 0, 0, 10));
         eventsTab.setContent(vBoxEvents);
@@ -68,14 +70,6 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
         borderPane.setCenter(tabPane);
 
-    }
-
-    public void firstJoin() {
-        int activePlayers = playersUsername.size();
-        vBoxPlayers.getChildren().add(new Label("There is " + activePlayers + " active player!"));
-        for (String user : playersUsername) {
-            vBoxPlayers.getChildren().add(new Label("Username: " + user));
-        }
     }
 
     public Label playerID() {
