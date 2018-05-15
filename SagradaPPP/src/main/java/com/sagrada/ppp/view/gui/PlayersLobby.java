@@ -44,7 +44,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         vBoxPlayers = new VBox();
         vBoxEvents = new VBox();
 
-        JoinGameResult joinGameResult = controller.joinGame(username, this);
+        joinGameResult = controller.joinGame(username, this, null);
         playersUsername = joinGameResult.getPlayersUsername();
         this.username = joinGameResult.getUsername();
         this.gameHashCode = joinGameResult.getGameHashCode();

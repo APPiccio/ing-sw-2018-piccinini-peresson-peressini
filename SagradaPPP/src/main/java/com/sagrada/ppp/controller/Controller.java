@@ -23,8 +23,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
 
-    public JoinGameResult joinGame(String username, LobbyObserver observer) throws RemoteException{
-        return service.joinGame(username, observer);
+    public JoinGameResult joinGame(String username, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException{
+        return service.joinGame(username, lobbyObserver, gameObserver);
     }
 
     public String getUsername(int playerHashCode, int gameHashCode) throws RemoteException{
@@ -34,5 +34,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     @Override
     public int getNumPlayers(int gameHashCode) throws RemoteException {
         return service.getNumPlayers(gameHashCode);
+    }
+
+    @Override
+    public void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) throws RemoteException {
+        service.choosePanel(gameHashCode, playerHashCode, panelIndex);
     }
 }
