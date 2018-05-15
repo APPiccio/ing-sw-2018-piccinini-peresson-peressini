@@ -5,4 +5,5 @@ public interface RequestHandler {
     Response handle(Request request);
     Response handle(JoinGameRequest request);
     Response handle(LeaveGameRequest request);
+    Response handle(PanelChoiceRequest request);
 }

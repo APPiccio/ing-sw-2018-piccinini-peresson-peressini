@@ -20,6 +20,8 @@ public class StaticValues {
     public static final int NUMBER_OF_TURNS = 10;
     public static final int DICE_FACES = 6;
     public static final int MAX_USER_PER_GAME = 4;
+    public static int NUMBER_OF_CARDS = 12;
+    public static final long TURN_DURATION = 45000;
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
@@ -218,6 +220,9 @@ public class StaticValues {
     }
 
     public static int getLobbyTimer(){
+
+        return 5000;
+        /*
         JSONTokener jsonTokener = null;
         try {
             jsonTokener = new JSONTokener(new FileReader("src/main/java/com/sagrada/ppp/utils/config.json"));
@@ -227,5 +232,6 @@ public class StaticValues {
 
         JSONObject jsonObject = new JSONObject(jsonTokener);
         return jsonObject.getInt("lobby_timer");
+        */
     }
 }

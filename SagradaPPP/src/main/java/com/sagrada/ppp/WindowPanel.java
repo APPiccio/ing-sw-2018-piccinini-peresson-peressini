@@ -9,13 +9,14 @@ import org.json.JSONTokener;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
 /**
  * WindowPanel is used to implement methods and attributes o
  */
-public class WindowPanel {
+public class WindowPanel implements Serializable {
 
     private String panelName;
     private int favorTokens;

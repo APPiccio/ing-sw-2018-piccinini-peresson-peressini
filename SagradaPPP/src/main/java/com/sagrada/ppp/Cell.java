@@ -1,6 +1,8 @@
 package com.sagrada.ppp;
 
-public class Cell {
+import java.io.Serializable;
+
+public class Cell implements Serializable {
 
     private Color color;
     private Integer value;

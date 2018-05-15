@@ -1,8 +1,6 @@
 package com.sagrada.ppp.view;
 
-import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.LobbyObserver;
-import com.sagrada.ppp.TimerStatus;
+import com.sagrada.ppp.*;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
 
@@ -11,9 +9,10 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
-public class CliView extends UnicastRemoteObject implements LobbyObserver, Serializable {
+public class CliView extends UnicastRemoteObject implements LobbyObserver, Serializable, GameObserver {
     transient Scanner scanner;
     transient RemoteController controller;
     transient String username;
@@ -21,11 +20,17 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     transient int gameHashCode;
     transient long lobbyTimerStartTime;
     transient ArrayList<String> playersUsername;
+    transient boolean waitingForPanels;
+    transient ArrayList<WindowPanel> panels;
+    transient boolean gameReady;
+    transient WindowPanel myPanel;
 
     public CliView(RemoteController controller) throws RemoteException{
         this.scanner = new Scanner(System.in);
         this.controller = controller;
         playersUsername = new ArrayList<>();
+        waitingForPanels = true;
+        gameReady = false;
     }
 
 
@@ -38,10 +43,10 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             username = scanner.nextLine();
         }
 
-        JoinGameResult joinGameResult = controller.joinGame(username, this);
+        JoinGameResult joinGameResult = controller.joinGame(username, this, this);
         while (hashCode < 0){
             System.out.println("Join failed. Trying new attempt...");
-            joinGameResult = controller.joinGame(username, this);
+            joinGameResult = controller.joinGame(username, this, this);
         }
 
         gameHashCode = joinGameResult.getGameHashCode();
@@ -55,7 +60,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             long remainingTime = ((lobbyTimerStartTime + StaticValues.getLobbyTimer()) - System.currentTimeMillis())/1000;
             System.out.println("---> The game will start in " + remainingTime + " seconds");
         }
-        inLobby();
+       inLobby();
     }
 
     public void showCommandList(){
@@ -83,7 +88,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         printPlayersUsername();
         showLobbyCommandList();
         String command = scanner.nextLine();
-        while (!command.equals(COMMAND_QUIT)){
+        while (!command.equals(COMMAND_QUIT) && !(command.equals("0") || command.equals("1") || command.equals("2") || command.equals("3"))){
             switch(command){
                 case StaticValues.COMMAND_LEAVE_GAME:
                     controller.leaveLobby(gameHashCode , username, this);
@@ -100,9 +105,12 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             System.out.println("Insert command:");
             command = scanner.nextLine();
         }
-
-
-
+        if(!command.equals(COMMAND_QUIT)) {
+            //TODO handle response to server and panel choice
+            int panelIndex = Integer.parseInt(command);
+            myPanel = panels.get(panelIndex);
+            inGame(panelIndex);
+        }
     }
     //UPDATE CODE
     // 0 --> user join the lobby
@@ -135,19 +143,22 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             else {
                 if(timerStatus.equals(TimerStatus.FINISH)){
                     System.out.println("---> Countdown completed or full lobby. The game will start soon");
-                    inGame();
+                    gameReady = true;
                 }
             }
         }
     }
 
     //do stuff in game
-    private void inGame(){
+    public void inGame(int panelIndex) throws RemoteException {
         //do something
+        controller.choosePanel(gameHashCode,hashCode,panelIndex);
         System.out.println("------------> GAME STARTED! <------------");
-        printPlayersUsername();
-
+        //TODO wait for gamestartednotification!
+        System.out.println(scanner.nextLine());
     }
+
+
 
     public void printPlayersUsername(){
         System.out.println(playersUsername.size() + " ACTIVE PLAYERS IN GAME");
@@ -157,6 +168,26 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         System.out.println("\n");
     }
 
-
-
+    @Override
+    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen) throws RemoteException {
+        if(panelsAlreadyChosen.size() != 0){
+            System.out.println("PLAYERS PANELS:");
+            for(String u : panelsAlreadyChosen.keySet()){
+                System.out.println("---> " +u + "panel :");
+                System.out.println(panelsAlreadyChosen.get(u));
+            }
+        }
+        if(playerHashCode == hashCode){
+            waitingForPanels = false;
+            this.panels = panels;
+            System.out.println("Please choose your pattern card! (hint: type a number between 0 and 3 to choose the panel you like)");
+            for(int i = 0; i < panels.size() ; i++){
+                System.out.println("---> PANEL " + i);
+                System.out.println(panels.get(i).toString());
+            }
+            System.out.println("Enter now your choice:");
+        }
+    }
 }
+
+

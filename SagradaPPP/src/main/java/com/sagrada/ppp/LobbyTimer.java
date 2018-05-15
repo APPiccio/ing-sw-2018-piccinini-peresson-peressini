@@ -20,7 +20,11 @@ public class LobbyTimer extends Thread {
         }
         if(!isInterrupted()) {
             game.notifyTimerChanges(TimerStatus.FINISH);
-            game.init();
+            Runnable myrunnable = () -> {
+                game.init();
+            };
+            new Thread(myrunnable).start();
+
         }
     }
 }

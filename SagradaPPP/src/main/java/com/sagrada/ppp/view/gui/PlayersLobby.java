@@ -2,14 +2,19 @@ package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.*;
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.utils.StaticValues;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -23,13 +28,15 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     private String username;
     private int playerHashCode;
     private int gameHashCode;
-    private RemoteController controller;
+    transient RemoteController controller;
     private JoinGameResult joinGameResult;
-    private ArrayList<Bus> events;
     private ArrayList<String> playersUsername;
+    private Stage stage;
+    private static final String TIMER = "Timer";
 
-    public PlayersLobby(String username, RemoteController controller) throws RemoteException {
+    public PlayersLobby(String username, RemoteController controller, Stage stage) throws RemoteException {
 
+        this.stage = stage;
         this.controller = controller;
         borderPane = new BorderPane();
         TabPane tabPane = new TabPane();
@@ -37,15 +44,20 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         Tab eventsTab = new Tab();
         vBoxPlayers = new VBox();
         vBoxEvents = new VBox();
-        events = new ArrayList<>();
 
-        joinGameResult = controller.joinGame(username, this);
+        joinGameResult = controller.joinGame(username, this, null);
         playersUsername = joinGameResult.getPlayersUsername();
         this.username = joinGameResult.getUsername();
         this.gameHashCode = joinGameResult.getGameHashCode();
         this.playerHashCode = joinGameResult.getPlayerHashCode();
+        long lobbyTimerStartTime = joinGameResult.getTimerStart();
         vBoxPlayers.getChildren().add(playerID());
         setActivePlayers();
+
+        if (joinGameResult.getPlayersUsername().size() == 3) {
+            long remainingTime = ((lobbyTimerStartTime + StaticValues.getLobbyTimer()) - System.currentTimeMillis())/1000;
+            timerStarted(remainingTime);
+        }
 
         exit = new Button();
         exit.setText("Exit");
@@ -70,6 +82,10 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
         borderPane.setCenter(tabPane);
 
+        stage.setScene(new Scene(borderPane, 700*1436/2156,700));
+        stage.setTitle("Players Lobby");
+        stage.show();
+
     }
 
     public Label playerID() {
@@ -78,12 +94,56 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
                 "\nwith userID " + playerHashCode + "\n");
     }
 
-    public void attach(Bus bus) {
-        events.add(bus);
+    public void timerStarted(long remainingTime) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(TIMER);
+        alert.setHeaderText(null);
+        if (remainingTime == 1) {
+            alert.setContentText("Your game will start in " + remainingTime + " second!");
+            vBoxEvents.getChildren().add(
+                    new Label("Timer started! Game will start in " + remainingTime + " second.")
+            );
+        } else {
+            alert.setContentText("Your game will start in " + remainingTime + " seconds!");
+            vBoxEvents.getChildren().add(
+                    new Label("Timer started! Game will start in " + remainingTime + " seconds.")
+            );
+        }
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(stage);
+        Stage tmpStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        tmpStage.setAlwaysOnTop(true);
+        tmpStage.show();
     }
 
-    public BorderPane getPlayersLobby() {
-        return borderPane;
+    public void timerEnded() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(TIMER);
+        alert.setHeaderText(null);
+        alert.setContentText("Countdown completed or full lobby.\nYour game will start soon!");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(stage);
+        Stage tmpStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        tmpStage.setAlwaysOnTop(true);
+        tmpStage.show();
+        vBoxEvents.getChildren().add(
+                new Label("Countdown completed or full lobby. Game will start soon.")
+        );
+    }
+
+    public void timerInterrupted() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(TIMER);
+        alert.setHeaderText(null);
+        alert.setContentText("Timer interrupted. Waiting for other players...");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(stage);
+        Stage tmpStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        tmpStage.setAlwaysOnTop(true);
+        tmpStage.show();
+        vBoxEvents.getChildren().add(
+                new Label("Timer interrupted. Waiting for other players...")
+        );
     }
 
     public void clearPlayers() {
@@ -136,7 +196,18 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
     @Override
     public void onTimerChanges(long timerStart, TimerStatus timerStatus) {
-
+        long remainingTime = ((StaticValues.getLobbyTimer() + timerStart) - System.currentTimeMillis())/1000;
+        Platform.runLater(() -> {
+            if (timerStatus.equals(TimerStatus.START)) {
+                timerStarted(remainingTime);
+            }
+            else if (timerStatus.equals(TimerStatus.FINISH)) {
+                timerEnded();
+            }
+            else if (timerStatus.equals(TimerStatus.INTERRUPT)) {
+                timerInterrupted();
+            }
+        });
     }
 
     @Override
@@ -149,6 +220,8 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
             alert.setTitle("Exit");
             alert.setHeaderText("Warning! You will lose your position in this game.");
             alert.setContentText("Are you sure you want to exit?");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
             alert.showAndWait();
             ButtonType buttonType = alert.getResult();
             if (buttonType == ButtonType.OK) {
@@ -157,9 +230,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
-                for (Bus bus : events) {
-                    bus.onGameExit();
-                }
+                new Lobby(stage, controller);
             }
         }
     }
