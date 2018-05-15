@@ -2,11 +2,12 @@ package com.sagrada.ppp.network.commands;
 
 import com.sagrada.ppp.WindowPanel;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PanelChoiceNotification implements Response {
+public class PanelChoiceNotification implements Response, Serializable {
 
     public int playerHashCode;
     public ArrayList<WindowPanel> panels;

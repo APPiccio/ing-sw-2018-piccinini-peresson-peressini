@@ -62,12 +62,14 @@ public class Game implements Serializable{
                 usernameToPanelHashMap.put(getPlayerUsername(i), playersPanel.get(i));
             }
             notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap);
-            System.out.println("end of notify");
             PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(System.currentTimeMillis(), this);
             panelChoiceTimer.start();
             while(waitingForPanelChoice && !panelChoiceTimerExpired){
             }
-            System.out.println("Received choise from user");
+            System.out.println("Proceeding due to flag change.");
+            System.out.println("---> waitingForPanelChoice = " + waitingForPanelChoice);
+            System.out.println("---> panelChoiceTimerExpired = " + panelChoiceTimerExpired);
+            panelChoiceTimer.interrupt();
             if(chosenPanelIndex != null){
                 playersPanel.put(playerHashCode, panels.get(playerHashCode).get(chosenPanelIndex));
             }
@@ -77,6 +79,8 @@ public class Game implements Serializable{
         }
         roundTrack.setCurrentRound(1);
         draftPool.addAll(diceBag.extractDices(players.size() *2+1));
+        System.out.println("Game is starting.. notify users of that");
+        notifyGameStart();
     }
 
     public ArrayList<Dice> getDraftPool(){
@@ -277,6 +281,20 @@ public class Game implements Serializable{
                     e.printStackTrace();
                 }
             }
+    }
+
+    public void notifyGameStart(){
+        HashMap<String, WindowPanel> usernameToPanel = new HashMap<>();
+        for(Integer i : playersPanel.keySet()){
+            usernameToPanel.put(getPlayerUsername(i) , playersPanel.get(i));
+        }
+        for(GameObserver gameObserver : gameObservers){
+            try {
+                gameObserver.onGameStart(usernameToPanel);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void notifyPlayerLeave(String username,ArrayList<String> players,int numOfPlayers) {

@@ -1,7 +1,9 @@
 package com.sagrada.ppp.network.commands;
 
 
-public class PanelChoiceRequest implements Request {
+import java.io.Serializable;
+
+public class PanelChoiceRequest implements Request, Serializable {
 
     public int gameHashCode;
     public int playerHashCode;

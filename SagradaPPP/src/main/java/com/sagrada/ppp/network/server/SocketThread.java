@@ -108,4 +108,13 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onGameStart(HashMap<String, WindowPanel> chosenPanels) throws RemoteException {
+        try {
+            out.writeObject(new GameStartNotification(chosenPanels));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
