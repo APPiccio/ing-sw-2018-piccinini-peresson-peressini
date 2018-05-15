@@ -1,9 +1,7 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.Dice;
-import com.sagrada.ppp.GameObserver;
-import com.sagrada.ppp.RoundTrack;
-import com.sagrada.ppp.WindowPanel;
+import com.sagrada.ppp.*;
+import com.sagrada.ppp.controller.RemoteController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,7 +14,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 
 public class MainGamePane extends BorderPane implements GameObserver {
 
@@ -35,16 +32,18 @@ public class MainGamePane extends BorderPane implements GameObserver {
     VBox draftPoolContainer;
     FlowPane draftPoolPane;
 
+    Stage stage;
+    RemoteController controller;
+    com.sagrada.ppp.Color privateColor;
+    JoinGameResult joinGameResult;
+    HashMap<String, WindowPanel> panelsAlreadyChosen;
+
     public MainGamePane() {
         try {
             UnicastRemoteObject.exportObject(this);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        Stage stage = new Stage();
-        stage.setScene(new Scene(this));
-        stage.show();
-        //todo remove this
         draftPool = new ArrayList<>();
         for(int i = 0; i<5;i++){
             draftPool.add(new Dice());
@@ -111,15 +110,34 @@ public class MainGamePane extends BorderPane implements GameObserver {
         opponentsWindowPanelsPane.getChildren().add(new WindowPanelPane(new WindowPanel(1,1),240,200));
         opponentsWindowPanelsPane.getChildren().add(new WindowPanelPane(new WindowPanel(1,0),240,200));
         opponentsWindowPanelsPane.getChildren().add(new WindowPanelPane(new WindowPanel(9,1),240,200));
+
         this.setRight(opponentsWindowPanelsPane);
+
+        stage.setScene(new Scene(this, 600, 700));
+        stage.setTitle("Main game");
+        stage.setResizable(true);
+        stage.show();
+
     }
     //TODO add start game response as a parameter to set all attributes
-    public void init(){
+    public void init(com.sagrada.ppp.Color privateColor, JoinGameResult joinGameResult, HashMap<String, WindowPanel> panelsAlreadyChosen,
+                     RemoteController controller, Stage stage) {
+        this.controller = controller;
+        this.stage = stage;
+        this.privateColor = privateColor;
+        this.joinGameResult = joinGameResult;
+        this.panelsAlreadyChosen = panelsAlreadyChosen;
+
+        draw();
+    }
+
+    @Override
+    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, com.sagrada.ppp.Color playerPrivateColor) throws RemoteException {
 
     }
 
     @Override
-    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen) throws RemoteException {
+    public void onGameStart(HashMap<String, WindowPanel> chosenPanels) throws RemoteException {
 
     }
 }
