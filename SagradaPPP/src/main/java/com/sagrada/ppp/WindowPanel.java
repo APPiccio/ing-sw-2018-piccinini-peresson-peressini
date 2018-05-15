@@ -326,7 +326,7 @@ public class WindowPanel implements Serializable {
 
     /**
      * @param dice
-     * @return array of the indexes where the dice can be put withput breaking any rules
+     * @return array of the indexes where the dice can be put without breaking any rules
      */
     public ArrayList<Integer> getLegalPosition(Dice dice){
         ArrayList<Integer> h = new ArrayList<>();

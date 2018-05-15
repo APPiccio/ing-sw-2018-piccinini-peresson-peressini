@@ -28,6 +28,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         tokens = new Label("Tokens:" + panel.getFavorTokens());
         double cellHeight = height/4;
         double cellWidth = width/4;
+        this.setMinSize(width/2,height/2);
         this.setPadding(new Insets(height*.05));
         this.setHgap(height*.02);
         this.setVgap(width*.02);
