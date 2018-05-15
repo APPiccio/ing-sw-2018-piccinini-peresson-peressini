@@ -8,4 +8,5 @@ public interface ResponseHandler {
     void handle(PlayerEventNotification response);
     void handle(LeaveGameResponse response);
     void handle(PanelChoiceNotification response);
+    void handle(GameStartNotification response);
 }

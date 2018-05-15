@@ -1,10 +1,14 @@
 package com.sagrada.ppp.view;
 
 import com.sagrada.ppp.*;
+import com.sagrada.ppp.Color;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -24,6 +28,8 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     transient ArrayList<WindowPanel> panels;
     transient boolean gameReady;
     transient WindowPanel myPanel;
+    transient boolean keyboardPressed;
+    transient boolean doneByRobot;
 
     public CliView(RemoteController controller) throws RemoteException{
         this.scanner = new Scanner(System.in);
@@ -31,6 +37,8 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         playersUsername = new ArrayList<>();
         waitingForPanels = true;
         gameReady = false;
+        keyboardPressed = true;
+        doneByRobot = false;
     }
 
 
@@ -105,8 +113,11 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             System.out.println("Insert command:");
             command = scanner.nextLine();
         }
-        if(!command.equals(COMMAND_QUIT)) {
+        if(command.equals("0") || command.equals("1") || command.equals("2") || command.equals("3")) {
             //TODO handle response to server and panel choice
+            if(!doneByRobot) {
+                keyboardPressed = true;
+            }
             int panelIndex = Integer.parseInt(command);
             myPanel = panels.get(panelIndex);
             inGame(panelIndex);
@@ -152,7 +163,9 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     //do stuff in game
     public void inGame(int panelIndex) throws RemoteException {
         //do something
-        controller.choosePanel(gameHashCode,hashCode,panelIndex);
+        if(keyboardPressed) {
+            controller.choosePanel(gameHashCode, hashCode, panelIndex);
+        }
         System.out.println("------------> GAME STARTED! <------------");
         //TODO wait for gamestartednotification!
         System.out.println(scanner.nextLine());
@@ -169,15 +182,35 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     }
 
     @Override
-    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen) throws RemoteException {
+    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
+
+        if(playerHashCode == hashCode){
+            keyboardPressed = false;
+        }
+        else{
+            if(!keyboardPressed){
+                try {
+                    Robot robot = new Robot();
+                    robot.keyPress(KeyEvent.VK_0);
+                    robot.keyPress(KeyEvent.VK_ENTER);
+                    keyboardPressed = true;
+                } catch (AWTException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
         if(panelsAlreadyChosen.size() != 0){
-            System.out.println("PLAYERS PANELS:");
+            System.out.println("ALREADY CHOSEN PANEL:");
             for(String u : panelsAlreadyChosen.keySet()){
-                System.out.println("---> " +u + "panel :");
+                System.out.println("---> " +u + " panel :");
                 System.out.println(panelsAlreadyChosen.get(u));
             }
         }
         if(playerHashCode == hashCode){
+            System.out.println("WARNING --> Your Private Objective Color is " + color + "! Keep it in mind while choosing yout panel.");
+            keyboardPressed = false;
             waitingForPanels = false;
             this.panels = panels;
             System.out.println("Please choose your pattern card! (hint: type a number between 0 and 3 to choose the panel you like)");
@@ -186,6 +219,16 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                 System.out.println(panels.get(i).toString());
             }
             System.out.println("Enter now your choice:");
+        }
+    }
+
+    @Override
+    public void onGameStart(HashMap<String, WindowPanel> chosenPanels) throws RemoteException {
+        System.out.println("PLAYERS AND PANELS :");
+        for(String username : chosenPanels.keySet()){
+            System.out.println("PLAYER :" + username);
+            System.out.println(chosenPanels.get(username).toString() + "\n");
+
         }
     }
 }

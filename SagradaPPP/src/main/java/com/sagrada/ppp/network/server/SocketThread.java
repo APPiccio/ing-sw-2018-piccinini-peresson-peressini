@@ -101,9 +101,18 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen) throws RemoteException {
+    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
         try {
-            out.writeObject(new PanelChoiceNotification(playerHashCode, panels, panelsAlreadyChosen));
+            out.writeObject(new PanelChoiceNotification(playerHashCode, panels, panelsAlreadyChosen, color));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onGameStart(HashMap<String, WindowPanel> chosenPanels) throws RemoteException {
+        try {
+            out.writeObject(new GameStartNotification(chosenPanels));
         } catch (IOException e) {
             e.printStackTrace();
         }

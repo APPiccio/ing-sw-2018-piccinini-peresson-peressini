@@ -29,6 +29,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
         lobbyObservers = new ArrayList<>();
+        gameObservers = new ArrayList<>();
         response = null;
         notificationQueue = new ArrayList<>();
         waitingForResponse = false;
@@ -156,7 +157,18 @@ public class SocketClientController implements RemoteController, ResponseHandler
     public void handle(PanelChoiceNotification response) {
         for(GameObserver observer : gameObservers){
             try {
-                observer.onPanelChoice(response.playerHashCode, response.panels, response.panelAlreadyChosen);
+                observer.onPanelChoice(response.playerHashCode, response.panels, response.panelAlreadyChosen, response.color);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void handle(GameStartNotification response) {
+        for(GameObserver observer : gameObservers){
+            try {
+                observer.onGameStart(response.chosenPanels);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

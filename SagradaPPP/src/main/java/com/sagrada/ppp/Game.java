@@ -52,6 +52,7 @@ public class Game implements Serializable{
 
     public void init(){
         gameStatus = GameStatus.ACTIVE;
+        assignPrivateObjectiveColors();
         HashMap<Integer, ArrayList<WindowPanel>> panels = extractPanels();
         for(int playerHashCode : panels.keySet()){
             waitingForPanelChoice = true;
@@ -61,13 +62,15 @@ public class Game implements Serializable{
             for(Integer i : playersPanel.keySet()){
                 usernameToPanelHashMap.put(getPlayerUsername(i), playersPanel.get(i));
             }
-            notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap);
-            System.out.println("end of notify");
+            notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerPrivateColor(playerHashCode));
             PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(System.currentTimeMillis(), this);
             panelChoiceTimer.start();
             while(waitingForPanelChoice && !panelChoiceTimerExpired){
             }
-            System.out.println("Received choise from user");
+            System.out.println("Proceeding due to flag change.");
+            System.out.println("---> waitingForPanelChoice = " + waitingForPanelChoice);
+            System.out.println("---> panelChoiceTimerExpired = " + panelChoiceTimerExpired);
+            panelChoiceTimer.interrupt();
             if(chosenPanelIndex != null){
                 playersPanel.put(playerHashCode, panels.get(playerHashCode).get(chosenPanelIndex));
             }
@@ -77,6 +80,8 @@ public class Game implements Serializable{
         }
         roundTrack.setCurrentRound(1);
         draftPool.addAll(diceBag.extractDices(players.size() *2+1));
+        System.out.println("Game is starting.. notify users of that");
+        notifyGameStart();
     }
 
     public ArrayList<Dice> getDraftPool(){
@@ -178,7 +183,7 @@ public class Game implements Serializable{
         }
         return playersCopy;
     }
-    public int getActivePlayers(){
+    public int getActivePlayersNumber(){
         return (int) players.stream().filter(x -> x.getPlayerStatus()==PlayerStatus.ACTIVE).count();
     }
 
@@ -244,10 +249,10 @@ public class Game implements Serializable{
         lobbyObservers.remove(observer);
     }
 
-    public void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen){
+    public void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color){
         for(GameObserver observer : gameObservers){
             try {
-                observer.onPanelChoice(playerHashCode, panels, panelsAlreadyChosen);
+                observer.onPanelChoice(playerHashCode, panels, panelsAlreadyChosen, color);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -279,6 +284,20 @@ public class Game implements Serializable{
             }
     }
 
+    public void notifyGameStart(){
+        HashMap<String, WindowPanel> usernameToPanel = new HashMap<>();
+        for(Integer i : playersPanel.keySet()){
+            usernameToPanel.put(getPlayerUsername(i) , playersPanel.get(i));
+        }
+        for(GameObserver gameObserver : gameObservers){
+            try {
+                gameObserver.onGameStart(usernameToPanel);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void notifyPlayerLeave(String username,ArrayList<String> players,int numOfPlayers) {
         for (LobbyObserver observer: lobbyObservers) {
             try {
@@ -308,6 +327,34 @@ public class Game implements Serializable{
             temp.put(player.hashCode() , panels);
         }
         return temp;
+    }
+
+    public void assignPrivateObjectiveColors(){
+        ArrayList<Integer> notUsedColor = new ArrayList<>();
+        for(int i = 0; i < Color.values().length; i++){
+            notUsedColor.add(i);
+        }
+        for (Player player : players){
+            int index = ThreadLocalRandom.current().nextInt(0, notUsedColor.size());
+            notUsedColor.remove(index);
+            player.setPrivateColor(Color.values()[index]);
+        }
+    }
+
+
+    public Color getPlayerPrivateColor(int playerHashCode){
+        for(Player player : players){
+            if(player.hashCode() == playerHashCode) return player.getPrivateColor();
+        }
+        return null;
+    }
+
+    public HashMap<Integer, Color> getPrivateObjectiveColors(){
+        HashMap<Integer, Color> result = new HashMap<>();
+        for(Player player : players){
+            result.put(player.hashCode(), player.getPrivateColor());
+        }
+        return result;
     }
 
 

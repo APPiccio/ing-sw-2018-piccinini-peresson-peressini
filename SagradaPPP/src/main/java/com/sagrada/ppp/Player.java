@@ -62,6 +62,10 @@ public class Player implements Serializable {
         this.username = username;
     }
 
+    public void setPrivateColor(Color color){
+        this.privateColor = color;
+    }
+
     public Color getPrivateColor() {
         return privateColor;
     }
