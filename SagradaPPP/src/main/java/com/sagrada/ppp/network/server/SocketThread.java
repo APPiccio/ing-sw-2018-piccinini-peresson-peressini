@@ -1,17 +1,14 @@
 package com.sagrada.ppp.network.server;
 
-import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.LeaveGameResult;
-import com.sagrada.ppp.LobbyObserver;
-import com.sagrada.ppp.Service;
-import com.sagrada.ppp.TimerStatus;
+import com.sagrada.ppp.*;
 import com.sagrada.ppp.network.commands.*;
 import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class SocketThread extends Thread implements LobbyObserver, RequestHandler{
+public class SocketThread extends Thread implements LobbyObserver, RequestHandler, GameObserver {
     private Socket socket;
     private Service service;
     private ObjectOutputStream out;
@@ -87,7 +84,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     public Response handle(JoinGameRequest joinGameRequest){
-        JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this);
+        JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this, this);
         return new JoinGameResponse(joinGameResult);
     }
 
@@ -97,4 +94,18 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         return new LeaveGameResponse(leaveGameResult);
     }
 
+    @Override
+    public Response handle(PanelChoiceRequest request) {
+        service.choosePanel(request.gameHashCode, request.playerHashCode, request.panelIndex);
+        return null;
+    }
+
+    @Override
+    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen) throws RemoteException {
+        try {
+            out.writeObject(new PanelChoiceNotification(playerHashCode, panels, panelsAlreadyChosen));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

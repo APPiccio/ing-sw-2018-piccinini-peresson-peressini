@@ -35,7 +35,7 @@ public class Service {
      * @param username username of the player
      * @return the hashcode of the game right after the creation
      */
-    public int createGame(boolean multiplayer, String username, LobbyObserver observer){
+    public int createGame(boolean multiplayer, String username, LobbyObserver lobbyObserver, GameObserver gameObserver){
         Game game;
         if(multiplayer) {
             game = new Game(username);
@@ -47,7 +47,8 @@ public class Service {
             game = new Game(username);
         }
         games.put(game.hashCode(), game);
-        game.attachLobbyObserver(observer);
+        game.attachLobbyObserver(lobbyObserver);
+        game.attachGameObserver(gameObserver);
         return game.hashCode();
     }
 
@@ -81,13 +82,13 @@ public class Service {
      * @param username player username
      * @return game hashcode, player hashcode and player username
      */
-    public synchronized JoinGameResult joinGame(String username, LobbyObserver observer){
+    public synchronized JoinGameResult joinGame(String username, LobbyObserver lobbyObserver, GameObserver gameObserver){
         System.out.println(username + "is trying to connect..");
         Game game = null;
         JoinGameResult joinGameResult = new JoinGameResult(-1,-1, null, null);
         for(Game x : games.values()){
             if (x.isJoinable()) {
-                    joinGameResult.setPlayerHashCode(x.joinGame(username, observer));
+                    joinGameResult.setPlayerHashCode(x.joinGame(username, lobbyObserver, gameObserver));
                     joinGameResult.setGameHashCode(x.hashCode());
                     joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
                     joinGameResult.setTimerStart(games.get(joinGameResult.getGameHashCode()).getLobbyTimerStartTime());
@@ -97,7 +98,7 @@ public class Service {
         }
         if(joinGameResult.getPlayerHashCode() == -1){
             //no joinable game, let's create a new one
-            joinGameResult.setGameHashCode(createGame(true, username, observer));
+            joinGameResult.setGameHashCode(createGame(true, username, lobbyObserver, gameObserver));
             joinGameResult.setPlayerHashCode(games.get(joinGameResult.getGameHashCode()).getPlayerHashCode(username));
             joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
             joinGameResult.setTimerStart(games.get(joinGameResult.getGameHashCode()).getLobbyTimerStartTime());
@@ -134,5 +135,11 @@ public class Service {
         return -1;
     }
 
+
+    public void choosePanel(int gameHashCode, int playerHashCode, int panelIndex){
+        System.out.println("Recived choice for " + playerHashCode);
+        games.get(gameHashCode).pairPanelToPlayer(playerHashCode,panelIndex);
+        games.get(gameHashCode).waitingForPanelChoice = false;
+    }
 
 }

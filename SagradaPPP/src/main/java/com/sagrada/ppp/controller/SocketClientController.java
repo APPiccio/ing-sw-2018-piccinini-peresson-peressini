@@ -1,9 +1,6 @@
 package com.sagrada.ppp.controller;
 
-import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.LobbyObserver;
-import com.sagrada.ppp.LeaveGameResult;
-import com.sagrada.ppp.Player;
+import com.sagrada.ppp.*;
 import com.sagrada.ppp.network.commands.*;
 import com.sagrada.ppp.utils.StaticValues;
 
@@ -18,6 +15,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
     private transient ObjectOutputStream out;
     private transient ObjectInputStream in;
     private transient ArrayList<LobbyObserver> lobbyObservers;
+    private transient ArrayList<GameObserver> gameObservers;
     private transient Response response;
     private transient ArrayList<Response> notificationQueue;
     private transient boolean waitingForResponse;
@@ -67,11 +65,12 @@ public class SocketClientController implements RemoteController, ResponseHandler
     }
 
     @Override
-    public JoinGameResult joinGame(String username, LobbyObserver observer) throws RemoteException {
+    public JoinGameResult joinGame(String username, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException {
         try {
             waitingForResponse = true;
             out.writeObject(new JoinGameRequest(username));
-            lobbyObservers.add(observer);
+            lobbyObservers.add(lobbyObserver);
+            gameObservers.add(gameObserver);
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();
@@ -144,8 +143,25 @@ public class SocketClientController implements RemoteController, ResponseHandler
         }
     }
 
+    @Override
+    public void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) throws RemoteException {
+        try {
+            out.writeObject(new PanelChoiceRequest(gameHashCode,playerHashCode,panelIndex));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-
+    @Override
+    public void handle(PanelChoiceNotification response) {
+        for(GameObserver observer : gameObservers){
+            try {
+                observer.onPanelChoice(response.playerHashCode, response.panels, response.panelAlreadyChosen);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     class ListeningThread extends Thread {
 

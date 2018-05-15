@@ -1,9 +1,6 @@
 package com.sagrada.ppp.controller;
 
-import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.LeaveGameResult;
-import com.sagrada.ppp.LobbyObserver;
-import com.sagrada.ppp.Player;
+import com.sagrada.ppp.*;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -15,9 +12,11 @@ public interface RemoteController extends Remote {
 
     LeaveGameResult leaveLobby(int gameHashCode, String username,LobbyObserver observer) throws RemoteException;
 
-    JoinGameResult joinGame(String username, LobbyObserver observer) throws RemoteException;
+    JoinGameResult joinGame(String username, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException;
 
     String getUsername(int playerHashCode, int gameHashCode) throws RemoteException;
 
     int getNumPlayers(int gameHashCode) throws RemoteException;
+
+    void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) throws RemoteException;
 }

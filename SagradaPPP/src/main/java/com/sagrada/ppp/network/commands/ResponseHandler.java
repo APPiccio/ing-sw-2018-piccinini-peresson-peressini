@@ -7,4 +7,5 @@ public interface ResponseHandler {
     void handle(TimerNotification response);
     void handle(PlayerEventNotification response);
     void handle(LeaveGameResponse response);
+    void handle(PanelChoiceNotification response);
 }

@@ -7,6 +7,8 @@ import com.sagrada.ppp.LobbyObserver;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class Game implements Serializable{
@@ -21,10 +23,16 @@ public class Game implements Serializable{
     private ArrayList<LobbyObserver> lobbyObservers;
     private LobbyTimer lobbyTimer;
     private long lobbyTimerStartTime;
+    public volatile boolean waitingForPanelChoice;
+    private HashMap<Integer, WindowPanel> playersPanel;
+    public volatile boolean panelChoiceTimerExpired;
+    public Integer chosenPanelIndex;
+    public ArrayList<GameObserver> gameObservers;
 
-
-    //TODO: Add a method that given the username string returns the desired players
-    //TODO: Add overloading methods that take a Player as a parameter instead of a String
+    /*
+    TODO: Add a method that given the username string returns the desired players
+    TODO: Add overloading methods that take a Player as a parameter instead of a String
+    */
 
     public Game(String username){
         diceBag = new DiceBag();
@@ -35,13 +43,40 @@ public class Game implements Serializable{
         toolCards = new ArrayList<>();
         if(username != null) players.add(new Player(username));
         lobbyObservers = new ArrayList<>();
+        waitingForPanelChoice = false;
+        panelChoiceTimerExpired = false;
+        playersPanel = new HashMap<>();
+        chosenPanelIndex = null;
+        gameObservers = new ArrayList<>();
     }
 
     public void init(){
         gameStatus = GameStatus.ACTIVE;
+        HashMap<Integer, ArrayList<WindowPanel>> panels = extractPanels();
+        for(int playerHashCode : panels.keySet()){
+            waitingForPanelChoice = true;
+            panelChoiceTimerExpired = false;
+            System.out.println("Sending panels to " + playerHashCode);
+            HashMap<String, WindowPanel> usernameToPanelHashMap = new HashMap<>();
+            for(Integer i : playersPanel.keySet()){
+                usernameToPanelHashMap.put(getPlayerUsername(i), playersPanel.get(i));
+            }
+            notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap);
+            System.out.println("end of notify");
+            PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(System.currentTimeMillis(), this);
+            panelChoiceTimer.start();
+            while(waitingForPanelChoice && !panelChoiceTimerExpired){
+            }
+            System.out.println("Received choise from user");
+            if(chosenPanelIndex != null){
+                playersPanel.put(playerHashCode, panels.get(playerHashCode).get(chosenPanelIndex));
+            }
+            else{
+                playersPanel.put(playerHashCode, panels.get(playerHashCode).get(0));
+            }
+        }
         roundTrack.setCurrentRound(1);
         draftPool.addAll(diceBag.extractDices(players.size() *2+1));
-
     }
 
     public ArrayList<Dice> getDraftPool(){
@@ -83,7 +118,7 @@ public class Game implements Serializable{
         return lobbyTimerStartTime;
     }
 
-    public int joinGame(String username, LobbyObserver observer) {
+    public int joinGame(String username, LobbyObserver lobbyObserver, GameObserver gameObserver) {
         int i = 1;
         String user = username;
         while(isInMatch(user)){
@@ -93,7 +128,8 @@ public class Game implements Serializable{
         Player h = new Player(user);
         players.add(h);
         notifyPlayerJoin(user,getUsernames(),players.size());
-        attachLobbyObserver(observer);
+        attachLobbyObserver(lobbyObserver);
+        attachGameObserver(gameObserver);
         if(players.size() == 2){
             //start timer
             lobbyTimerStartTime = System.currentTimeMillis();
@@ -106,7 +142,10 @@ public class Game implements Serializable{
                 //starting game
                 lobbyTimer.interrupt();
                 notifyTimerChanges(TimerStatus.FINISH);
-                init();
+                Runnable myrunnable = () -> {
+                    init();
+                };
+                new Thread(myrunnable).start();
 
             }
         }
@@ -186,7 +225,18 @@ public class Game implements Serializable{
         return -1;
     }
 
+
+    public void attachGameObserver(GameObserver observer){
+        if(observer == null) return;
+        gameObservers.add(observer);
+    }
+
+    public void detachGameObserver(GameObserver observer){
+        lobbyObservers.remove(observer);
+    }
+
     public void attachLobbyObserver(LobbyObserver observer){
+        if(observer == null) return;
         lobbyObservers.add(observer);
     }
 
@@ -194,11 +244,23 @@ public class Game implements Serializable{
         lobbyObservers.remove(observer);
     }
 
+    public void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen){
+        for(GameObserver observer : gameObservers){
+            try {
+                observer.onPanelChoice(playerHashCode, panels, panelsAlreadyChosen);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
     public void notifyTimerChanges(TimerStatus timerStatus) {
         for (LobbyObserver observer : lobbyObservers) {
             try {
-                observer.onTimerChanges(lobbyTimerStartTime, timerStatus)
-                ;
+                System.out.println("I'm notifying a new LobbyTimerStatus = " + timerStatus);
+                observer.onTimerChanges(lobbyTimerStartTime, timerStatus);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -218,13 +280,40 @@ public class Game implements Serializable{
     }
 
     public void notifyPlayerLeave(String username,ArrayList<String> players,int numOfPlayers) {
-            for (LobbyObserver observer: lobbyObservers) {
-                try {
-                    observer.onPlayerLeave(username ,players, numOfPlayers);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+        for (LobbyObserver observer: lobbyObservers) {
+            try {
+                observer.onPlayerLeave(username ,players, numOfPlayers);
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         }
+    }
+
+    public HashMap<Integer, ArrayList<WindowPanel>> extractPanels() {
+        HashMap<Integer, ArrayList<WindowPanel>> temp = new HashMap<>();
+        ArrayList<Integer> notUsedPanel = new ArrayList<>();
+        for(int i = 1; i <= StaticValues.NUMBER_OF_CARDS; i++ ){
+            notUsedPanel.add(i);
+        }
+        for(Player player : players){
+            int randomNum = ThreadLocalRandom.current().nextInt(0, notUsedPanel.size());
+            ArrayList<WindowPanel> panels = new ArrayList<>();
+            panels.add(new WindowPanel(notUsedPanel.get(randomNum), 1));
+            panels.add(new WindowPanel(notUsedPanel.get(randomNum), 0));
+            notUsedPanel.remove(randomNum);
+            randomNum = ThreadLocalRandom.current().nextInt(0, notUsedPanel.size());
+            panels.add(new WindowPanel(notUsedPanel.get(randomNum), 1));
+            panels.add(new WindowPanel(notUsedPanel.get(randomNum), 0));
+            notUsedPanel.remove(randomNum);
+            temp.put(player.hashCode() , panels);
+        }
+        return temp;
+    }
+
+
+    public void pairPanelToPlayer(int playerHashCode, int panelIndex) {
+        chosenPanelIndex = panelIndex;
+    }
+
 }
 
