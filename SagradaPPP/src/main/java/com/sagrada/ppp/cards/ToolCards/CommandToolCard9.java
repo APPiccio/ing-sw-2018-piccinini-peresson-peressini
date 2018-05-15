@@ -11,7 +11,6 @@ public class CommandToolCard9 implements CommandToolCard {
     private int index;
 
     public CommandToolCard9(Player player, int index) {
-
         this.player = player;
         this.index = index;
     }
@@ -31,8 +30,10 @@ public class CommandToolCard9 implements CommandToolCard {
             } else {
                 throw new IllegalStateException("ERROR >>> TRYING TO USE A CARD WITH A PLAYER WITHOUT ACTIVE DICE!");
             }
-        }catch (IllegalStateException e){
+        } catch (IllegalStateException e) {
             e.printStackTrace();
+
+
         }
     }
 }

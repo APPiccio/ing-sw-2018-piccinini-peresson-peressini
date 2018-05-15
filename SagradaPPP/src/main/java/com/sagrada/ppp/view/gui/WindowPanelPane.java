@@ -43,7 +43,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
             cell.setId(Integer.toString(col) + Integer.toString(row));
             //cell.setPadding(new Insets(1));
             cell.setPrefSize(cellWidth,cellHeight);
-            cell.setMaxSize(height,width);
+            cell.setMaxSize(width,height);
 
            if(c.hasColorRestriction()){
                 cell.setBackground(

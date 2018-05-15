@@ -1,6 +1,7 @@
 package com.sagrada.ppp;
 
 import com.sagrada.ppp.cards.ToolCards.*;
+import com.sagrada.ppp.utils.PrinterFormatter;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.util.Pair;
 import org.junit.Test;
@@ -269,22 +270,80 @@ public class ToolCardTest {
 
     @Test
     public void card6(){
+    Player player =new Player("test");
+    assertNull(player.getActiveDice());
+    Dice dice = new Dice();
+    CommandToolCard commandToolCard = new CommandToolCard6(dice,player);
+    commandToolCard.useCard();
+    assertNotNull(player.getActiveDice());
 
     }
 
     @Test
     public void card7 (){
+        ArrayList<Dice> draftPool = new ArrayList<>();
+        draftPool.add(new Dice());
+        draftPool.add(new Dice());
+        draftPool.add(new Dice());
+        draftPool.add(new Dice());
+        draftPool.stream().forEach(x -> System.out.println(x));
+        CommandToolCard commandToolCard = new CommandToolCard7(draftPool);
+        commandToolCard.useCard();
+        draftPool.stream().forEach(x -> System.out.println(x));
 
+        //no actual test performed
     }
     @Test
     public void card8(){
-
+        Dice dice = new Dice();
+        Player player = new Player("test");
+        CommandToolCard commandToolCard = new CommandToolCard8(player,dice);
+        assertNull(player.getActiveDice());
+        commandToolCard.useCard();
+        assertEquals(player.getActiveDice(),dice);
 
     }
+    CommandToolCard commandToolCard9;
     @Test
     public void card9(){
+        Player player = new Player("test");
+        int index = 0;
+
+        WindowPanel panel = new WindowPanel(10, StaticValues.FRONT_SIDE);
+
+        panel.addDice(2, new Dice(Color.GREEN, 3));
+
+        panel.addDice(8,new Dice(Color.BLUE, 6));
+
+
+        commandToolCard9 = new CommandToolCard9(player,index);
+        Dice dice = new Dice();
+        player.setActiveDice(dice);
+        player.setPanel(panel);
+
+        commandToolCard9.useCard();
+
+        assertEquals(player.getPanel().getCell(index).getDiceOn(),dice);
+
+        testIllegalStateExceptionToolCard9_1();
+        player.setActiveDice(new Dice());
+        testIllegalStateExceptionToolCard9_2();
+
+
+
 
     }
+    @Test(expected = IllegalStateException.class)
+    public void testIllegalStateExceptionToolCard9_1(){
+        Player player = new Player("test");
+
+        new CommandToolCard9(player,19).useCard();
+    }
+    @Test(expected = IllegalStateException.class)
+    public void testIllegalStateExceptionToolCard9_2(){
+        commandToolCard9.useCard();
+    }
+
 
     @Test
     public void card10(){

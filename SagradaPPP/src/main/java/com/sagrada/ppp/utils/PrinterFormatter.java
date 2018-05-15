@@ -92,26 +92,6 @@ public class PrinterFormatter {
 
 
 
-
-    public static void main(String[] args) {
-        WindowPanel panel = new WindowPanel(3,0);
-        panel.addDice(0, new Dice());
-        panel.addDice(1, new Dice());
-        panel.addDice(2, new Dice());
-        panel.addDice(3, new Dice());
-        panel.addDice(4, new Dice());
-        panel.addDice(5, new Dice());
-        panel.addDice(6, new Dice());
-        panel.addDice(7, new Dice());
-        panel.addDice(8, new Dice());
-
-        System.out.println(printWindowPanelContent(panel));
-
-
-        panel = new WindowPanel(4,1);
-        System.out.println(printWindowPanelContent(panel));
-
-    }
     private static String getColoredString(Color color,String msg){
         switch (color){
             case GREEN:

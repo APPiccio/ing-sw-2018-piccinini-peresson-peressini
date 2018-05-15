@@ -20,7 +20,7 @@ public class GuiView extends Application implements BusEventHandler, Bus {
         controller = Client.getController();
         lobby = new Lobby();
         lobby.attach(this);
-
+        new MainGamePane().draw();
         primaryStage.setTitle("Welcome to Sagrada");
         primaryStage.setMinHeight(300);
         primaryStage.setMinWidth(300* 1400/2500);
