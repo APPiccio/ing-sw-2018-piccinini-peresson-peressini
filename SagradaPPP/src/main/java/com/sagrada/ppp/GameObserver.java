@@ -7,5 +7,5 @@ import java.util.HashMap;
 
 public interface GameObserver extends Remote {
     void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color playerPrivateColor) throws RemoteException;
-    void onGameStart(HashMap<String, WindowPanel> chosenPanels) throws RemoteException;
+    void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool) throws RemoteException;
 }

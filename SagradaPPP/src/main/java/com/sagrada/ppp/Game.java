@@ -1,19 +1,20 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.cards.ToolCards.CommandToolCard;
+import com.sagrada.ppp.cards.ToolCards.*;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.LobbyObserver;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class Game implements Serializable{
     private ArrayList<Player> players;
-    private ArrayList<CommandToolCard> toolCards;
     private Player activePlayer;
     private DiceBag diceBag;
     private ArrayList<WindowPanel> panels;
@@ -28,6 +29,7 @@ public class Game implements Serializable{
     public volatile boolean panelChoiceTimerExpired;
     public Integer chosenPanelIndex;
     public ArrayList<GameObserver> gameObservers;
+    private ArrayList<ToolCard> toolCards;
 
     /*
     TODO: Add a method that given the username string returns the desired players
@@ -40,7 +42,6 @@ public class Game implements Serializable{
         draftPool = new ArrayList<>();
         roundTrack = new RoundTrack(StaticValues.NUMBER_OF_TURNS);
         gameStatus = GameStatus.INIT;
-        toolCards = new ArrayList<>();
         if(username != null) players.add(new Player(username));
         lobbyObservers = new ArrayList<>();
         waitingForPanelChoice = false;
@@ -48,11 +49,13 @@ public class Game implements Serializable{
         playersPanel = new HashMap<>();
         chosenPanelIndex = null;
         gameObservers = new ArrayList<>();
+        toolCards = new ArrayList<>();
     }
 
     public void init(){
         gameStatus = GameStatus.ACTIVE;
         assignPrivateObjectiveColors();
+        Collections.shuffle(players);
         HashMap<Integer, ArrayList<WindowPanel>> panels = extractPanels();
         for(int playerHashCode : panels.keySet()){
             waitingForPanelChoice = true;
@@ -82,6 +85,11 @@ public class Game implements Serializable{
         draftPool.addAll(diceBag.extractDices(players.size() *2+1));
         System.out.println("Game is starting.. notify users of that");
         notifyGameStart();
+        gameHandler();
+    }
+
+    public void gameHandler(){
+        //TODO implement game logic
     }
 
     public ArrayList<Dice> getDraftPool(){
@@ -291,7 +299,7 @@ public class Game implements Serializable{
         }
         for(GameObserver gameObserver : gameObservers){
             try {
-                gameObserver.onGameStart(usernameToPanel);
+                gameObserver.onGameStart(usernameToPanel, draftPool);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -357,6 +365,25 @@ public class Game implements Serializable{
         return result;
     }
 
+    public void extractedToolCardIndex(){
+        Random r = new Random();
+        ArrayList<ToolCard> allToolCards = new ArrayList<>();
+
+        allToolCards.add(new ToolCard1());
+        allToolCards.add(new ToolCard2());
+        allToolCards.add(new ToolCard3());
+        allToolCards.add(new ToolCard4());
+        allToolCards.add(new ToolCard5());
+        allToolCards.add(new ToolCard6());
+        allToolCards.add(new ToolCard7());
+        allToolCards.add(new ToolCard8());
+        allToolCards.add(new ToolCard9());
+        allToolCards.add(new ToolCard10());
+
+        for(int i = 0; i < 3 ; i++){
+            toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
+        }
+    }
 
     public void pairPanelToPlayer(int playerHashCode, int panelIndex) {
         chosenPanelIndex = panelIndex;

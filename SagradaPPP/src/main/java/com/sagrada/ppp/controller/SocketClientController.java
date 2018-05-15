@@ -168,7 +168,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
     public void handle(GameStartNotification response) {
         for(GameObserver observer : gameObservers){
             try {
-                observer.onGameStart(response.chosenPanels);
+                observer.onGameStart(response.chosenPanels, response.draftpool);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

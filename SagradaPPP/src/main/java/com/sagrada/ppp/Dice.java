@@ -2,9 +2,10 @@ package com.sagrada.ppp;
 
 import com.sagrada.ppp.utils.IllegalDiceValueException;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Dice {
+public class Dice implements Serializable {
 
     private Color color;
     private int value;
