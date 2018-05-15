@@ -1,6 +1,7 @@
 package com.sagrada.ppp.view;
 
 import com.sagrada.ppp.*;
+import com.sagrada.ppp.Color;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
 
@@ -181,7 +182,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     }
 
     @Override
-    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen) throws RemoteException {
+    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
 
         if(playerHashCode == hashCode){
             keyboardPressed = false;
@@ -208,6 +209,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             }
         }
         if(playerHashCode == hashCode){
+            System.out.println("WARNING --> Your Private Objective Color is " + color + "! Keep it in mind while choosing yout panel.");
             keyboardPressed = false;
             waitingForPanels = false;
             this.panels = panels;

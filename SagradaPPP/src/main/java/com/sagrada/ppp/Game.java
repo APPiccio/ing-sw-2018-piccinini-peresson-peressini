@@ -52,6 +52,7 @@ public class Game implements Serializable{
 
     public void init(){
         gameStatus = GameStatus.ACTIVE;
+        assignPrivateObjectiveColors();
         HashMap<Integer, ArrayList<WindowPanel>> panels = extractPanels();
         for(int playerHashCode : panels.keySet()){
             waitingForPanelChoice = true;
@@ -61,7 +62,7 @@ public class Game implements Serializable{
             for(Integer i : playersPanel.keySet()){
                 usernameToPanelHashMap.put(getPlayerUsername(i), playersPanel.get(i));
             }
-            notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap);
+            notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerPrivateColor(playerHashCode));
             PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(System.currentTimeMillis(), this);
             panelChoiceTimer.start();
             while(waitingForPanelChoice && !panelChoiceTimerExpired){
@@ -182,7 +183,7 @@ public class Game implements Serializable{
         }
         return playersCopy;
     }
-    public int getActivePlayers(){
+    public int getActivePlayersNumber(){
         return (int) players.stream().filter(x -> x.getPlayerStatus()==PlayerStatus.ACTIVE).count();
     }
 
@@ -248,10 +249,10 @@ public class Game implements Serializable{
         lobbyObservers.remove(observer);
     }
 
-    public void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen){
+    public void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color){
         for(GameObserver observer : gameObservers){
             try {
-                observer.onPanelChoice(playerHashCode, panels, panelsAlreadyChosen);
+                observer.onPanelChoice(playerHashCode, panels, panelsAlreadyChosen, color);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -326,6 +327,34 @@ public class Game implements Serializable{
             temp.put(player.hashCode() , panels);
         }
         return temp;
+    }
+
+    public void assignPrivateObjectiveColors(){
+        ArrayList<Integer> notUsedColor = new ArrayList<>();
+        for(int i = 0; i < Color.values().length; i++){
+            notUsedColor.add(i);
+        }
+        for (Player player : players){
+            int index = ThreadLocalRandom.current().nextInt(0, notUsedColor.size());
+            notUsedColor.remove(index);
+            player.setPrivateColor(Color.values()[index]);
+        }
+    }
+
+
+    public Color getPlayerPrivateColor(int playerHashCode){
+        for(Player player : players){
+            if(player.hashCode() == playerHashCode) return player.getPrivateColor();
+        }
+        return null;
+    }
+
+    public HashMap<Integer, Color> getPrivateObjectiveColors(){
+        HashMap<Integer, Color> result = new HashMap<>();
+        for(Player player : players){
+            result.put(player.hashCode(), player.getPrivateColor());
+        }
+        return result;
     }
 
 
