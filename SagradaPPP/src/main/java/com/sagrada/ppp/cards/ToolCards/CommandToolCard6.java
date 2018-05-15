@@ -6,21 +6,18 @@ import java.util.ArrayList;
 
 public class CommandToolCard6 implements CommandToolCard{
 
-    private ArrayList<Dice> draftPool;
+    private Dice dice;
     private Player player;
-    private int index;
+    private int draftPoolIndex;
 
-    public CommandToolCard6(ArrayList<Dice> draftPool, Player player, int index) {
-        this.draftPool = draftPool;
+    public CommandToolCard6(Dice dice, Player player) {
+        this.dice = dice;
         this.player = player;
-        this.index = index;
     }
 
     @Override
     public void useCard() {
-        Dice dice = draftPool.get(index);
         dice.throwDice();
         player.setActiveDice(dice);
-        draftPool.remove(index);
     }
 }

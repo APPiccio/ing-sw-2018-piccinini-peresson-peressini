@@ -1,6 +1,7 @@
 package com.sagrada.ppp;
 
 import com.sagrada.ppp.utils.IllegalDiceValueException;
+import com.sagrada.ppp.utils.PrinterFormatter;
 import com.sagrada.ppp.utils.StaticValues;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -47,6 +48,7 @@ public class AppTest
         //new GameTest();
         assertEquals(50000, StaticValues.getLobbyTimer());
         assertTrue( true);
+
 
     }
 
