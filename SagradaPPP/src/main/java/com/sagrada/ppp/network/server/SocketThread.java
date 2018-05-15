@@ -110,9 +110,9 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onGameStart(HashMap<String, WindowPanel> chosenPanels) throws RemoteException {
+    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool) throws RemoteException {
         try {
-            out.writeObject(new GameStartNotification(chosenPanels));
+            out.writeObject(new GameStartNotification(chosenPanels, draftpool));
         } catch (IOException e) {
             e.printStackTrace();
         }

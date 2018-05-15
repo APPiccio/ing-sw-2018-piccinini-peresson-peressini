@@ -9,6 +9,7 @@ import static com.sagrada.ppp.utils.StaticValues.*;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.AreaAveragingScaleFilter;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -30,6 +31,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     transient WindowPanel myPanel;
     transient boolean keyboardPressed;
     transient boolean doneByRobot;
+    transient ArrayList<Dice> draftpool;
 
     public CliView(RemoteController controller) throws RemoteException{
         this.scanner = new Scanner(System.in);
@@ -167,6 +169,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             controller.choosePanel(gameHashCode, hashCode, panelIndex);
         }
         System.out.println("------------> GAME STARTED! <------------");
+
         //TODO wait for gamestartednotification!
         System.out.println(scanner.nextLine());
     }
@@ -223,12 +226,16 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     }
 
     @Override
-    public void onGameStart(HashMap<String, WindowPanel> chosenPanels) throws RemoteException {
+    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool) throws RemoteException {
+        this.draftpool = draftpool;
         System.out.println("PLAYERS AND PANELS :");
         for(String username : chosenPanels.keySet()){
             System.out.println("PLAYER :" + username);
             System.out.println(chosenPanels.get(username).toString() + "\n");
-
+        }
+        System.out.println("Draft pool: ");
+        for(Dice dice : draftpool){
+            System.out.println("---> " + dice.toString());
         }
     }
 }
