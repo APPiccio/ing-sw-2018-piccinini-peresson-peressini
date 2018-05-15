@@ -19,7 +19,6 @@ public class MainGamePane extends BorderPane implements GameObserver {
 
     RoundTrack roundTrack;
     ArrayList<WindowPanel> opponentsWindowPanels;
-    ArrayList<Dice> draftPool;
     WindowPanel playersWindowPanel;
     Double height,widht = 100d;
 
@@ -37,16 +36,13 @@ public class MainGamePane extends BorderPane implements GameObserver {
     com.sagrada.ppp.Color privateColor;
     JoinGameResult joinGameResult;
     HashMap<String, WindowPanel> panelsAlreadyChosen;
+    ArrayList<Dice> draftPool;
 
     public MainGamePane() {
         try {
             UnicastRemoteObject.exportObject(this);
         } catch (RemoteException e) {
             e.printStackTrace();
-        }
-        draftPool = new ArrayList<>();
-        for(int i = 0; i<5;i++){
-            draftPool.add(new Dice());
         }
     }
 
@@ -121,12 +117,13 @@ public class MainGamePane extends BorderPane implements GameObserver {
     }
     //TODO add start game response as a parameter to set all attributes
     public void init(com.sagrada.ppp.Color privateColor, JoinGameResult joinGameResult, HashMap<String, WindowPanel> panelsAlreadyChosen,
-                     RemoteController controller, Stage stage) {
+                     ArrayList<Dice> draftPool, RemoteController controller, Stage stage) {
         this.controller = controller;
         this.stage = stage;
         this.privateColor = privateColor;
         this.joinGameResult = joinGameResult;
         this.panelsAlreadyChosen = panelsAlreadyChosen;
+        this.draftPool = draftPool;
 
         draw();
     }
@@ -137,7 +134,8 @@ public class MainGamePane extends BorderPane implements GameObserver {
     }
 
     @Override
-    public void onGameStart(HashMap<String, WindowPanel> chosenPanels) throws RemoteException {
+    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool) throws RemoteException {
 
     }
+
 }

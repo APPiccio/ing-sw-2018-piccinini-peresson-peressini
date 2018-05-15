@@ -1,9 +1,6 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.Color;
-import com.sagrada.ppp.GameObserver;
-import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.WindowPanel;
+import com.sagrada.ppp.*;
 import com.sagrada.ppp.controller.RemoteController;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -123,10 +120,10 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
     }
 
     @Override
-    public void onGameStart(HashMap<String, WindowPanel> chosenPanels) {
+    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool) throws RemoteException {
         Platform.runLater(() -> {
-            MainGamePane mainGamePane = new MainGamePane();
-            mainGamePane.init(privateColor, joinGameResult, chosenPanels, controller, stage);
+                    MainGamePane mainGamePane = new MainGamePane();
+                    mainGamePane.init(privateColor, joinGameResult, chosenPanels, draftpool, controller, stage);
         }
         );
     }

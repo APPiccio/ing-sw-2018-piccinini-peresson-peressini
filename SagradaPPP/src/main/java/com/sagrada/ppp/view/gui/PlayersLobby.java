@@ -221,9 +221,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
     @Override
     public void handle(MouseEvent event) {
-
         Button clickedBtn = (Button) event.getSource();
-
         if (clickedBtn.equals(exit)) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Exit");
