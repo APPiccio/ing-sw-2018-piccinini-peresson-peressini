@@ -29,6 +29,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     private int playerHashCode;
     private int gameHashCode;
     transient RemoteController controller;
+    private JoinGameResult joinGameResult;
     private ArrayList<String> playersUsername;
     private Stage stage;
     private static final String TIMER = "Timer";
