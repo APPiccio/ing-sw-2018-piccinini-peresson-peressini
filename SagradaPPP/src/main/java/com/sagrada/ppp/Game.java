@@ -414,5 +414,17 @@ public class Game implements Serializable{
         chosenPanelIndex = panelIndex;
     }
 
+    public boolean disconnect(int playerHashCode, LobbyObserver lobbyObserver, GameObserver gameObserver){
+        for(Player player : players){
+            if(player.hashCode() == playerHashCode) {
+                detachLobbyObserver(lobbyObserver);
+                detachGameObserver(gameObserver);
+                player.setPlayerStatus(PlayerStatus.INACTIVE);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 

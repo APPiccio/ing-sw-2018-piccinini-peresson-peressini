@@ -23,6 +23,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
     private transient ListeningThread notificationThread;
     private transient Object responseLock;
     private transient LeaveGameResult leaveGameResult;
+    private transient boolean disconnectionResult;
 
     public SocketClientController() throws IOException {
         socket = new Socket(StaticValues.SERVER_ADDRESS, StaticValues.SOCKET_PORT);
@@ -175,6 +176,49 @@ public class SocketClientController implements RemoteController, ResponseHandler
         }
     }
 
+    @Override
+    public void handle(DisconnectionResponse response) {
+        synchronized (responseLock) {
+            waitingForResponse = false;
+            responseLock.notifyAll();
+        }
+        disconnectionResult = response.disconnectionResult;
+    }
+
+    @Override
+    public boolean disconnect(int gameHashCode, int playerHashCode, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException {
+        try{
+            waitingForResponse = true;
+            out.writeObject(new DisconnectionRequest(gameHashCode,playerHashCode));
+            lobbyObservers.remove(lobbyObserver);
+            gameObservers.remove(gameObserver);
+            synchronized (responseLock) {
+                while (waitingForResponse) {
+                    responseLock.wait();
+                }
+                responseLock.notifyAll();
+            }
+            closeConnection();
+            return disconnectionResult;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private void closeConnection(){
+        try {
+            in.close();
+            out.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     class ListeningThread extends Thread {
 
         ResponseHandler handler;
@@ -196,6 +240,5 @@ public class SocketClientController implements RemoteController, ResponseHandler
             }
         }
     }
-
 }
 

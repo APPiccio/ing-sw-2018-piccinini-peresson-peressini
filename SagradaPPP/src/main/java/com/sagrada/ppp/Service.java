@@ -3,6 +3,7 @@ package com.sagrada.ppp;
 import com.sagrada.ppp.network.server.ServerThread;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.controller.Controller;
+import com.sagrada.ppp.view.gui.Lobby;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -140,6 +141,10 @@ public class Service {
         System.out.println("Recived choice for " + playerHashCode);
         games.get(gameHashCode).pairPanelToPlayer(playerHashCode,panelIndex);
         games.get(gameHashCode).waitingForPanelChoice = false;
+    }
+
+    public boolean disconnect(int gameHashCode, int playerHashCode, LobbyObserver lobbyObserver, GameObserver gameObserver){
+        return games.get(gameHashCode).disconnect(playerHashCode, lobbyObserver, gameObserver);
     }
 
 }
