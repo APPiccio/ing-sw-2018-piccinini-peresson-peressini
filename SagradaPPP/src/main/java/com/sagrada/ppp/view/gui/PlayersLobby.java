@@ -18,10 +18,10 @@ import javafx.stage.Stage;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, EventHandler<MouseEvent> {
 
-    private BorderPane borderPane;
     private VBox vBoxPlayers;
     private VBox vBoxEvents;
     private Button exit;
@@ -29,23 +29,25 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     private int playerHashCode;
     private int gameHashCode;
     transient RemoteController controller;
-    private JoinGameResult joinGameResult;
     private ArrayList<String> playersUsername;
     private Stage stage;
     private static final String TIMER = "Timer";
+    private JoinGameResult joinGameResult;
+    private WindowsPanelSelection windowsPanelSelection;
 
     public PlayersLobby(String username, RemoteController controller, Stage stage) throws RemoteException {
 
+        this.windowsPanelSelection = new WindowsPanelSelection();
         this.stage = stage;
         this.controller = controller;
-        borderPane = new BorderPane();
+        BorderPane borderPane = new BorderPane();
         TabPane tabPane = new TabPane();
         Tab playersTab = new Tab();
         Tab eventsTab = new Tab();
         vBoxPlayers = new VBox();
         vBoxEvents = new VBox();
 
-        joinGameResult = controller.joinGame(username, this, null);
+        joinGameResult = controller.joinGame(username, this, windowsPanelSelection);
         playersUsername = joinGameResult.getPlayersUsername();
         this.username = joinGameResult.getUsername();
         this.gameHashCode = joinGameResult.getGameHashCode();
@@ -129,6 +131,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         vBoxEvents.getChildren().add(
                 new Label("Countdown completed or full lobby. Game will start soon.")
         );
+        windowsPanelSelection.init(controller, stage, joinGameResult);
     }
 
     public void timerInterrupted() {
@@ -172,6 +175,12 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         vBoxEvents.getChildren().add(new Label(username + " has left the game!"));
     }
 
+    public void chosenPanels(HashMap<String, WindowPanel> panels) {
+        for (String u : panels.keySet()) {
+            vBoxEvents.getChildren().add(new Label(u + " has chosen panel " + panels.get(u).getPanelName() + " !"));
+        }
+    }
+
     @Override
     public void onPlayerJoined(String username, ArrayList<String> players, int numOfPlayers) {
         playersUsername = players;
@@ -212,9 +221,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
     @Override
     public void handle(MouseEvent event) {
-
         Button clickedBtn = (Button) event.getSource();
-
         if (clickedBtn.equals(exit)) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Exit");
