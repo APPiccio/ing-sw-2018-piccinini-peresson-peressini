@@ -221,7 +221,7 @@ public class StaticValues {
 
     public static int getLobbyTimer(){
 
-        return 5000;
+        return 10000;
         /*
         JSONTokener jsonTokener = null;
         try {

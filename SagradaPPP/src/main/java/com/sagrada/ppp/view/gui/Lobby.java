@@ -4,7 +4,6 @@ import com.sagrada.ppp.controller.RemoteController;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -17,14 +16,14 @@ import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
 
-public class Lobby extends Parent implements EventHandler<MouseEvent> {
+public class Lobby implements EventHandler<MouseEvent> {
 
     private Button about;
     private Button play;
     private Stage stage;
-    private RemoteController controller;
+    private transient RemoteController controller;
 
-    public Lobby(Stage stage, RemoteController controller) {
+    Lobby(Stage stage, RemoteController controller) {
         this.stage = stage;
         this.controller = controller;
         BorderPane borderPane = new BorderPane();
@@ -42,38 +41,34 @@ public class Lobby extends Parent implements EventHandler<MouseEvent> {
                 )
         );
 
-        play = new Button();
-        play.setText("Play");
+        play = new Button("Play");
         borderPane.setCenter(play);
-        play.addEventHandler(MouseEvent.MOUSE_CLICKED,this);
+        play.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-        about = new Button();
-        about.setText("About");
+        about = new Button("About");
         borderPane.setBottom(about);
         BorderPane.setAlignment(about, Pos.BOTTOM_CENTER);
         BorderPane.setMargin(about, new Insets(10));
         about.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-        stage.setScene(new Scene(borderPane, 700*1436/2156,700));
+        stage.setScene(new Scene(borderPane, 700*1436/2156, 700));
         stage.setTitle("Welcome to Sagrada");
         stage.setMinHeight(300);
-        stage.setMinWidth(300* 1400/2500);
+        stage.setMinWidth(300*1400/2500);
         stage.setResizable(false);
         stage.show();
-
     }
 
     @Override
     public void handle(MouseEvent event) {
         Button clickedBtn = (Button) event.getSource();
-
         if (clickedBtn.equals(about)) {
             Alert aboutAlert = new Alert(Alert.AlertType.INFORMATION);
-            aboutAlert.initModality(Modality.APPLICATION_MODAL);
-            aboutAlert.initOwner(stage);
             aboutAlert.setTitle("About");
             aboutAlert.setHeaderText(null);
             aboutAlert.setContentText("Sagrada by PPP");
+            aboutAlert.initModality(Modality.APPLICATION_MODAL);
+            aboutAlert.initOwner(stage);
             aboutAlert.showAndWait();
         }
         else if (clickedBtn.equals(play)) {

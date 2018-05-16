@@ -103,6 +103,11 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
+    public Response handle(DisconnectionRequest request) {
+        return null;
+    }
+
+    @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
         try {
             out.writeObject(new PanelChoiceNotification(playerHashCode, panels, panelsAlreadyChosen, color));
