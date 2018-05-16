@@ -44,7 +44,6 @@ public class MainGamePane extends BorderPane implements GameObserver {
     com.sagrada.ppp.Color privateColor;
     JoinGameResult joinGameResult;
     HashMap<String, WindowPanel> panelsAlreadyChosen;
-    ArrayList<Dice> draftPool;
 
     public MainGamePane() {
         try {
