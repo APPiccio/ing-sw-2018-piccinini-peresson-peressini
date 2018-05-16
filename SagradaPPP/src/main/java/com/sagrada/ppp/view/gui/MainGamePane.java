@@ -4,6 +4,8 @@ import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.GameObserver;
 import com.sagrada.ppp.RoundTrack;
 import com.sagrada.ppp.WindowPanel;
+import com.sagrada.ppp.cards.PublicObjectiveCard;
+import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -119,7 +121,13 @@ public class MainGamePane extends BorderPane implements GameObserver {
     }
 
     @Override
-    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen) throws RemoteException {
+    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, com.sagrada.ppp.Color playerPrivateColor) throws RemoteException {
 
     }
+
+    @Override
+    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool, ArrayList<ToolCard> toolCards, ArrayList<PublicObjectiveCard> publicObjectiveCards) throws RemoteException {
+
+    }
+
 }

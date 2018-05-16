@@ -1,5 +1,6 @@
 package com.sagrada.ppp;
 
+import com.sagrada.ppp.cards.*;
 import com.sagrada.ppp.cards.ToolCards.*;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.LobbyObserver;
@@ -30,6 +31,7 @@ public class Game implements Serializable{
     public Integer chosenPanelIndex;
     public ArrayList<GameObserver> gameObservers;
     private ArrayList<ToolCard> toolCards;
+    private ArrayList<PublicObjectiveCard> publicObjectiveCards;
 
     /*
     TODO: Add a method that given the username string returns the desired players
@@ -50,6 +52,7 @@ public class Game implements Serializable{
         chosenPanelIndex = null;
         gameObservers = new ArrayList<>();
         toolCards = new ArrayList<>();
+        publicObjectiveCards = new ArrayList<>();
     }
 
     public void init(){
@@ -81,6 +84,8 @@ public class Game implements Serializable{
                 playersPanel.put(playerHashCode, panels.get(playerHashCode).get(0));
             }
         }
+        extractPublicObjCards();
+        extractToolCards();
         roundTrack.setCurrentRound(1);
         draftPool.addAll(diceBag.extractDices(players.size() *2+1));
         System.out.println("Game is starting.. notify users of that");
@@ -299,7 +304,7 @@ public class Game implements Serializable{
         }
         for(GameObserver gameObserver : gameObservers){
             try {
-                gameObserver.onGameStart(usernameToPanel, draftPool);
+                gameObserver.onGameStart(usernameToPanel, draftPool, toolCards, publicObjectiveCards);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -365,7 +370,7 @@ public class Game implements Serializable{
         return result;
     }
 
-    public void extractedToolCardIndex(){
+    public void extractToolCards(){
         Random r = new Random();
         ArrayList<ToolCard> allToolCards = new ArrayList<>();
 
@@ -382,6 +387,26 @@ public class Game implements Serializable{
 
         for(int i = 0; i < 3 ; i++){
             toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
+        }
+    }
+
+    public void extractPublicObjCards(){
+        Random r = new Random();
+        ArrayList<PublicObjectiveCard> allPubObjCards = new ArrayList<>();
+
+        allPubObjCards.add(new PublicObjectiveCard1());
+        allPubObjCards.add(new PublicObjectiveCard2());
+        allPubObjCards.add(new PublicObjectiveCard3());
+        allPubObjCards.add(new PublicObjectiveCard4());
+        allPubObjCards.add(new PublicObjectiveCard5());
+        allPubObjCards.add(new PublicObjectiveCard6());
+        allPubObjCards.add(new PublicObjectiveCard7());
+        allPubObjCards.add(new PublicObjectiveCard8());
+        allPubObjCards.add(new PublicObjectiveCard9());
+        allPubObjCards.add(new PublicObjectiveCard10());
+
+        for(int i = 0; i < 3 ; i++){
+            publicObjectiveCards.add(allPubObjCards.remove( r.nextInt(allPubObjCards.size()) ));
         }
     }
 

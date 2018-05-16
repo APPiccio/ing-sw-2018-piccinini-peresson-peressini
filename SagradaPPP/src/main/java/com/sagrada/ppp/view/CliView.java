@@ -2,6 +2,8 @@ package com.sagrada.ppp.view;
 
 import com.sagrada.ppp.*;
 import com.sagrada.ppp.Color;
+import com.sagrada.ppp.cards.PublicObjectiveCard;
+import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
 
@@ -226,7 +228,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     }
 
     @Override
-    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool) throws RemoteException {
+    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool, ArrayList<ToolCard> toolCards, ArrayList<PublicObjectiveCard> publicObjectiveCards) throws RemoteException {
         this.draftpool = draftpool;
         System.out.println("PLAYERS AND PANELS :");
         for(String username : chosenPanels.keySet()){
@@ -236,6 +238,14 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         System.out.println("Draft pool: ");
         for(Dice dice : draftpool){
             System.out.println("---> " + dice.toString());
+        }
+        System.out.println("Tool Cards:");
+        for(ToolCard toolCard : toolCards){
+            System.out.println(toolCard.toString());
+        }
+        System.out.println("Public Objective Cards:");
+        for(PublicObjectiveCard publicObjectiveCard : publicObjectiveCards){
+            System.out.println(publicObjectiveCard.toString());
         }
     }
 }

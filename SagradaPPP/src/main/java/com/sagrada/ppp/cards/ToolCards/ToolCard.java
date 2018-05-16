@@ -3,7 +3,9 @@ package com.sagrada.ppp.cards.ToolCards;
 import com.sagrada.ppp.Color;
 import com.sagrada.ppp.utils.StaticValues;
 
-public abstract class ToolCard{
+import java.io.Serializable;
+
+public abstract class ToolCard implements Serializable {
 
     private String name;
     private int id;
@@ -45,5 +47,8 @@ public abstract class ToolCard{
         return color;
     }
 
+    public String toString(){
+        return "TOOLCARD ---> Card ID: " + this.id + ", Card name : " + this.name;
+    }
 
 }

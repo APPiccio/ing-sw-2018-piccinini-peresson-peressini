@@ -1,6 +1,8 @@
 package com.sagrada.ppp.network.server;
 
 import com.sagrada.ppp.*;
+import com.sagrada.ppp.cards.PublicObjectiveCard;
+import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.network.commands.*;
 import java.io.*;
 import java.net.Socket;
@@ -110,9 +112,9 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool) throws RemoteException {
+    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool, ArrayList<ToolCard> toolCards, ArrayList<PublicObjectiveCard> publicObjectiveCards) throws RemoteException {
         try {
-            out.writeObject(new GameStartNotification(chosenPanels, draftpool));
+            out.writeObject(new GameStartNotification(chosenPanels, draftpool, toolCards, publicObjectiveCards));
         } catch (IOException e) {
             e.printStackTrace();
         }

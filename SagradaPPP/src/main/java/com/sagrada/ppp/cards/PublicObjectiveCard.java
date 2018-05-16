@@ -2,7 +2,9 @@ package com.sagrada.ppp.cards;
 
 import com.sagrada.ppp.WindowPanel;
 
-public abstract class PublicObjectiveCard {
+import java.io.Serializable;
+
+public abstract class PublicObjectiveCard implements Serializable {
 
     private String name;
     private int id;
@@ -43,5 +45,9 @@ public abstract class PublicObjectiveCard {
      * @return                  number of points obtained according to the PublicObjectiveCard#
      */
     public abstract int getScore(WindowPanel playerWindowPanel);
+
+    public String toString(){
+        return "PUB OBJ ---> Card ID = " + this.id + ", Card Name : " + this.name;
+    }
 
 }
