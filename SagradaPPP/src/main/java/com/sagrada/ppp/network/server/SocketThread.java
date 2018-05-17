@@ -16,6 +16,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private Response response;
+    private boolean isStopped;
 
 
     @Override
@@ -33,6 +34,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         this.socket = socket;
         this.service = service;
         this.response = null;
+        this.isStopped = false;
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -43,7 +45,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     public void run() {
-        while (true) {
+        while (true && !isStopped) {
             //DO SOCKET SERVER STUFF TO CLIENT
             try {
                 System.out.println("listening....");
@@ -59,6 +61,14 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
+        }
+        try{
+            in.close();
+            out.close();
+            socket.close();
+        }
+        catch (IOException e){
+            e.printStackTrace();
         }
     }
 
@@ -103,6 +113,12 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
+    public Response handle(DisconnectionRequest request) {
+        isStopped = true;
+        return new DisconnectionResponse(true);
+    }
+
+    @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
         try {
             out.writeObject(new PanelChoiceNotification(playerHashCode, panels, panelsAlreadyChosen, color));
@@ -119,4 +135,5 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
             e.printStackTrace();
         }
     }
+
 }

@@ -7,12 +7,16 @@ import com.sagrada.ppp.controller.RemoteController;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
@@ -22,7 +26,7 @@ import java.util.HashMap;
 
 public class WindowsPanelSelection extends UnicastRemoteObject implements GameObserver, EventHandler<MouseEvent> {
 
-    private RemoteController controller;
+    private transient RemoteController controller;
     private Stage stage;
     private HBox hBox1;
     private HBox hBox2;
@@ -33,17 +37,20 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
     private ArrayList<Button> buttons;
     private static final String SELECT = "Select";
 
-    public WindowsPanelSelection() throws RemoteException {
+    WindowsPanelSelection() throws RemoteException {
         super();
     }
 
-    public void init(RemoteController controller, Stage stage, JoinGameResult joinGameResult) {
-
+    void init(RemoteController controller, Stage stage, JoinGameResult joinGameResult) {
         this.controller = controller;
         this.stage = stage;
         this.joinGameResult = joinGameResult;
         this.hBox1 = new HBox();
+        hBox1.setSpacing(10);
         this.hBox2 = new HBox();
+        hBox2.setSpacing(10);
+        hBox1.getChildren().add(new Label("Waiting for the other players... " +
+                "You can see their choices on the \"Opponents' panels\" tab!"));
         BorderPane borderPane = new BorderPane();
         TabPane tabPane = new TabPane();
         Tab panelsTab = new Tab();
@@ -54,36 +61,53 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
         panelsTab.setText("Panels");
         panelsTab.setClosable(false);
         vBoxPanels.setSpacing(5);
-        vBoxPanels.setPadding(new Insets(10, 0, 0, 10));
+        vBoxPanels.setPadding(new Insets(10, 10, 0, 10));
         vBoxPanels.getChildren().add(hBox1);
         vBoxPanels.getChildren().add(hBox2);
         panelsTab.setContent(vBoxPanels);
         tabPane.getTabs().add(panelsTab);
 
-        eventsTab.setText("Log");
+        eventsTab.setText("Opponents' panels");
         eventsTab.setClosable(false);
         vBoxEvents.setSpacing(5);
         vBoxEvents.setPadding(new Insets(10, 0, 0, 10));
+        vBoxEvents.setFillWidth(false);
+        vBoxEvents.setAlignment(Pos.TOP_CENTER);
+        vBoxEvents.getChildren().add(new Label("Waiting for the first player's move..."));
         eventsTab.setContent(vBoxEvents);
         tabPane.getTabs().add(eventsTab);
 
         borderPane.setCenter(tabPane);
 
-        stage.setScene(new Scene(borderPane, 600, 700));
-        stage.setTitle("Panel selection window");
+        stage.setScene(new Scene(borderPane, 610, 670));
+        stage.setTitle("Panel selection");
         stage.show();
-
     }
 
-    public void createSelection() {
+    private void createSelection() {
 
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Private color");
+        alert.setHeaderText(null);
+        alert.setContentText("This is your Private Objective Card!\nChose your panel carefully!");
+        Image image = new Image("file:graphics/PrivateCards/private_" + privateColor + ".png");
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(230);
+        imageView.setFitHeight(313);
+        imageView.setPreserveRatio(true);
+        alert.setGraphic(imageView);
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(stage);
+        alert.showAndWait();
+
+        hBox1.getChildren().clear();
         ArrayList<VBox> selectionPanels = new ArrayList<>();
         buttons = new ArrayList<>();
 
         for (int i = 0; i < panelAvailable.size(); i++) {
             VBox vBox = new VBox();
             vBox.setSpacing(5);
-            vBox.setPadding(new Insets(10, 0, 0, 10));
+            vBox.setPadding(new Insets(10, 0, 0, 0));
             selectionPanels.add(vBox);
             if (i == 0 || i == 1) {
                 hBox1.getChildren().add(selectionPanels.get(i));
@@ -99,9 +123,11 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
 
     }
 
-    public void chosenPanels(HashMap<String, WindowPanel> panels) {
+    private void chosenPanels(HashMap<String, WindowPanel> panels) {
+        vBoxEvents.getChildren().clear();
         for (String u : panels.keySet()) {
-            vBoxEvents.getChildren().add(new Label(u + " has chosen panel " + panels.get(u).getPanelName() + " !"));
+            vBoxEvents.getChildren().add(new Label(u + " has chosen \"" + panels.get(u).getPanelName() + "\"!"));
+            vBoxEvents.getChildren().add(new WindowPanelPane(new WindowPanel(panels.get(u)), 175, 175));
         }
     }
 

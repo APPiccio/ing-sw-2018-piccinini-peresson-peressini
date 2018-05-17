@@ -19,4 +19,6 @@ public interface RemoteController extends Remote {
     int getNumPlayers(int gameHashCode) throws RemoteException;
 
     void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) throws RemoteException;
+
+    boolean disconnect(int gameHashCode, int playerHashCode, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException;
 }

@@ -40,4 +40,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     public void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) throws RemoteException {
         service.choosePanel(gameHashCode, playerHashCode, panelIndex);
     }
+
+    @Override
+    public boolean disconnect(int gameHashCode, int playerHashCode, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException {
+        return service.disconnect(gameHashCode, playerHashCode, lobbyObserver, gameObserver);
+    }
 }
