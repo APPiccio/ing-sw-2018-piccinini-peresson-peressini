@@ -9,10 +9,8 @@ import javafx.scene.layout.*;
 
 public class DiceButton extends Button {
 
-    public Dice getDice() {
-        return new Dice(dice);
-    }
 
+    private boolean selected = false;
     private Dice dice;
     public DiceButton(Dice dice,double diceWidth,double diceHeight) {
         this.dice = dice;
@@ -26,6 +24,18 @@ public class DiceButton extends Button {
                                 BackgroundRepeat.NO_REPEAT,
                                 BackgroundPosition.CENTER,
                                 BackgroundSize.DEFAULT)));
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public Dice getDice() {
+        return new Dice(dice);
     }
 }
 
