@@ -1,56 +1,76 @@
 package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.Cell;
+import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.WindowPanel;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-import java.util.ArrayList;
+
 
 import static com.sagrada.ppp.utils.StaticValues.*;
 
 public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent> {
     private WindowPanel panel;
-    private ArrayList<Button> cells;
     private Label name,tokens;
+    private WindowPanelEventBus eventBus;
+    private double width,height;
+
 
     public WindowPanelPane(WindowPanel panel,double height,double width) {
         this.panel = panel;
-        cells = new ArrayList<>();
-        name = new Label(panel.getPanelName());
-        tokens = new Label("Tokens:" + panel.getFavorTokens());
-        double cellHeight = height/4;
-        double cellWidth = width/4;
+
+        name = new Label();
+        tokens = new Label();
+        this.width = width;
+        this.height = height;
+
         this.setMinSize(width/2,height/2);
-        this.setPadding(new Insets(height*.05));
-        this.setHgap(height*.02);
-        this.setVgap(width*.02);
+        this.setPadding(new Insets(10));
+        this.setHgap(5);
+        this.setVgap(5);
         this.setAlignment(Pos.CENTER);
         this.setStyle("-fx-background-color: black;" +
                 "-fx-background-radius: 10px;");
 
+        draw();
 
+
+        //Adding labels on the bottom of the grid view
+        name.setStyle("-fx-text-fill: white;");
+        tokens.setStyle("-fx-text-fill: white;");
+        GridPane.setHalignment(tokens,HPos.CENTER);
+        GridPane.setHalignment(name,HPos.CENTER);
+        this.add(name,1,4,3,1);
+        this.add(tokens,4,4,1,1);
+
+
+    }
+
+    void draw(){
+        double cellHeight = height/4;
+        double cellWidth = width/4;
         int col = 0;
         int row = 0;
+        name.setText(panel.getPanelName());
+        tokens.setText("Tokens:" + panel.getFavorTokens());
         for (Cell c:panel.getCells()) {
-            BorderPane cell = new BorderPane();
-            cell.setId(Integer.toString(col) + Integer.toString(row));
-            //cell.setPadding(new Insets(1));
+            CellPane cell = new CellPane();
+            cell.setId(Integer.toString(col*(row-1)+col));
             cell.setPrefSize(cellWidth,cellHeight);
             cell.setMaxSize(width,height);
 
-           if(c.hasColorRestriction()){
+            if(c.hasColorRestriction()){
                 cell.setBackground(
                         new Background(
                                 new BackgroundImage(
-                                        new Image(getAssetUri(c.getColor()),cellWidth,cellHeight,false,true),
+                                        new Image(getAssetUri(c.getColor()),cellWidth,cellHeight,true,true),
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
@@ -59,7 +79,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
                 cell.setBackground(
                         new Background(
                                 new BackgroundImage(
-                                        new Image(getAssetUri(c.getValue()),cellWidth,cellHeight,false,true),
+                                        new Image(getAssetUri(c.getValue()),cellWidth,cellHeight,true,true),
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
@@ -68,7 +88,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
                 cell.setBackground(
                         new Background(
                                 new BackgroundImage(
-                                        new Image(FILE_URI_PREFIX + BLANK_CELL_ASSET,cellWidth,cellHeight,false,false),
+                                        new Image(FILE_URI_PREFIX + BLANK_CELL_ASSET,cellWidth,cellHeight,true,false),
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundRepeat.NO_REPEAT,
                                         BackgroundPosition.CENTER,
@@ -94,26 +114,36 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
                 row++;
             }
         }
-
-        //Adding labels on the bottom of the grid view
-        name.setStyle("-fx-text-fill: white;");
-        tokens.setStyle("-fx-text-fill: white;");
-        GridPane.setHalignment(tokens,HPos.CENTER);
-        GridPane.setHalignment(name,HPos.CENTER);
-        this.add(name,1,4,3,1);
-        this.add(tokens,4,4,1,1);
-
-
     }
 
+    public void setPanel(WindowPanel panel) {
+        this.panel = panel;
+        draw();
+    }
+    public void setObserver(WindowPanelEventBus windowPanelEventBus){
+        this.eventBus = windowPanelEventBus;
+    }
 
     /**
      * @implNote handling mouse event on a cell
      */
     @Override
     public void handle(MouseEvent event) {
+        CellPane cell = ((CellPane) event.getSource());
         System.out.println(event.getSource().toString());
+        eventBus.onCellClicked(Integer.valueOf(cell.getId()),cell.getCell());
     }
 
+    private class CellPane extends BorderPane{
+        private Cell cell;
 
+        public Cell getCell() {
+            return new Cell(cell);
+        }
+
+        public void setCell(Cell cell) {
+            this.cell = cell;
+        }
+    }
 }
+

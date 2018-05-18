@@ -15,6 +15,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class RoundTrackPane extends BorderPane {
+
+
     private RoundTrack roundTrack;
     private FlowPane mainPane;
     private double width,height;
@@ -25,15 +27,6 @@ public class RoundTrackPane extends BorderPane {
         this.roundTrack = roundTrack;
         this.width = width;
         this.height = height;
-
-
-
-    }
-    //initialization of the attributes
-    public void init(RoundTrack roundTrack,double width,double height){
-        this.roundTrack = roundTrack;
-        this.width = width;
-        this.height = height;
     }
 
     //TODO delete this, this is here only for testing purpose
@@ -41,21 +34,23 @@ public class RoundTrackPane extends BorderPane {
         height = 70;
         width = 70;
         RoundTrack r = new RoundTrack();
-        for(int i = 1;i<=10;i++){
+        for(int i = 1;i<=5;i++){
             for(int j = 0;j<9;j++){
                 if(!(i == 5 && j ==3 ))r.addDice(i,new Dice());
             }
         }
         roundTrack = r;
+        draw();
     }
     //sets all the layout parameters, call only after init or using the "complete" constructor
-    public void draw(){
+    private void draw(){
         mainPane = new FlowPane();
         this.setBackground(new Background(new BackgroundFill(Color.BLACK,new CornerRadii(5),new Insets(0))));
         this.setPadding(new Insets(10));
 
         for (int i = 1; i <= 10; i++) {
             Button roundIndicator = new Button();
+            roundIndicator.setId(Integer.toString(i));
             FlowPane.setMargin(roundIndicator,new Insets(1,5,1,5));
             roundIndicator.setMinSize(width,height);
             roundIndicator.setBackground(
@@ -66,10 +61,13 @@ public class RoundTrackPane extends BorderPane {
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundPosition.CENTER,
                                     BackgroundSize.DEFAULT)));
-            Tooltip roundToolTip = new Tooltip();
-            roundToolTip.setGraphic(new SelectDicePane(roundTrack.getDicesOnRound(i),width/1.5,height/1.5));
-            roundIndicator.setTooltip(roundToolTip);
 
+            if (i < roundTrack.getCurrentRound()) {
+                roundIndicator.setDisable(true);
+                Tooltip roundToolTip = new Tooltip();
+                roundToolTip.setGraphic(new SelectDicePane(roundTrack.getDicesOnRound(i),width/1.5,height/1.5));
+                roundIndicator.setTooltip(roundToolTip);
+            }
 
 
             mainPane.getChildren().add(roundIndicator);
@@ -80,5 +78,9 @@ public class RoundTrackPane extends BorderPane {
             this.setBottom(mainPane);
 
         }
+    }
+    public void setRoundTrack(RoundTrack roundTrack) {
+        this.roundTrack = roundTrack;
+        draw();
     }
 }

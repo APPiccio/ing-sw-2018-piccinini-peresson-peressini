@@ -35,6 +35,10 @@ public abstract class ToolCard implements Serializable {
         used = true;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public int getCost() {
         return used ? StaticValues.COST_USED_TOOLCARD : StaticValues.COST_UNUSED_TOOLCARD;
     }

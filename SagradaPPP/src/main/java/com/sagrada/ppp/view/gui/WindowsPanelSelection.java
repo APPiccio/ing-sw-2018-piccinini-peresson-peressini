@@ -134,13 +134,14 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
     @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels,
                               HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
-        privateColor = color;
+
         panelAvailable = panels;
         Platform.runLater(() -> {
             if (panelsAlreadyChosen.size() != 0) {
                 chosenPanels(panelsAlreadyChosen);
             }
             if (joinGameResult.getPlayerHashCode() == playerHashCode) {
+                privateColor = color;
                 createSelection();
             }
         }
@@ -150,8 +151,13 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
     @Override
     public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool, ArrayList<ToolCard> toolCards, ArrayList<PublicObjectiveCard> publicObjectiveCards) throws RemoteException {
         Platform.runLater(() -> {
-                    MainGamePane mainGamePane = new MainGamePane();
-                    mainGamePane.init(privateColor, joinGameResult, chosenPanels, draftpool, controller, stage);
+                    MainGamePane mainGamePane = null;
+                    try {
+                        mainGamePane = new MainGamePane();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    mainGamePane.init(privateColor, joinGameResult, chosenPanels, draftpool,toolCards,publicObjectiveCards, controller, stage);
         }
         );
     }
