@@ -114,7 +114,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver {
 
         ImageView privateCardImageView = new ImageView();
         FlowPane.setMargin(privateCardImageView,defInset);
-        privateCardImageView.setImage(new Image(StaticValues.FILE_URI_PREFIX + "graphics/Private Cards/private_"+privateColor.toString().toLowerCase()+".png",150,204,true,true));
+        privateCardImageView.setImage(new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_"+privateColor.toString().toLowerCase()+".png",150,204,true,true));
 
         bottomContainer.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(bottomContainer,Pos.BOTTOM_CENTER);
@@ -250,7 +250,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver {
             toolCardButton.setBackground(
                     new Background(
                             new BackgroundImage(
-                                    new Image(StaticValues.FILE_URI_PREFIX + "graphics/Tool Cards/tool_"+toolCard.getId()+".png",150,204,true,true),
+                                    new Image(StaticValues.FILE_URI_PREFIX + "graphics/ToolCards/tool_"+toolCard.getId()+".png",150,204,true,true),
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundPosition.CENTER,
@@ -272,7 +272,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver {
             publicObjectiveButton.setBackground(
                     new Background(
                             new BackgroundImage(
-                                    new Image(StaticValues.FILE_URI_PREFIX + "graphics/Public Cards/public_"+publicObjectiveCard.getId()+".png",150,204,true,true),
+                                    new Image(StaticValues.FILE_URI_PREFIX + "graphics/PublicCards/public_"+publicObjectiveCard.getId()+".png",150,204,true,true),
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundPosition.CENTER,

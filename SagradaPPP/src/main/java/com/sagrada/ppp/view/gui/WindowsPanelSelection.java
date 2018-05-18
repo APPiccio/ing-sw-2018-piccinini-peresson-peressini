@@ -134,13 +134,14 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
     @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels,
                               HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
-        privateColor = color;
+
         panelAvailable = panels;
         Platform.runLater(() -> {
             if (panelsAlreadyChosen.size() != 0) {
                 chosenPanels(panelsAlreadyChosen);
             }
             if (joinGameResult.getPlayerHashCode() == playerHashCode) {
+                privateColor = color;
                 createSelection();
             }
         }
