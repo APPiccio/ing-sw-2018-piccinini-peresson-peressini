@@ -32,6 +32,7 @@ public class Game implements Serializable{
     public ArrayList<GameObserver> gameObservers;
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
+    private int turn;
 
     /*
     TODO: Add a method that given the username string returns the desired players
@@ -59,6 +60,7 @@ public class Game implements Serializable{
         gameStatus = GameStatus.ACTIVE;
         assignPrivateObjectiveColors();
         Collections.shuffle(players);
+        turn = 1;
         HashMap<Integer, ArrayList<WindowPanel>> panels = extractPanels();
         for(int playerHashCode : panels.keySet()){
             waitingForPanelChoice = true;
@@ -118,7 +120,7 @@ public class Game implements Serializable{
         return players.stream().filter(x -> x.getUsername().equals(username)).findFirst().orElse(null);
     }
 
-    public void toNextTurn(){
+    public void toNextRound(){
         if (roundTrack.getCurrentRound() == 10){
             gameStatus = GameStatus.SCORE;
             System.out.println("WARNING --> 10 turns played");
@@ -424,6 +426,31 @@ public class Game implements Serializable{
             }
         }
         return false;
+    }
+
+    private void reorderPlayers(){
+
+        ArrayList<Player> h = new ArrayList<>();
+        players.add(players.get(0));
+        for(int i = 1; i < players.size() - 1; i++){
+            players.set(i-1, players.get(i));
+            h.add(players.get(i));
+        }
+        players.remove(players.size()-2);
+    }
+
+    public void setTurn(int turn){
+        this.turn = turn;
+    }
+
+
+    public int getCurrentPlayerIndex(){
+        if(turn > players.size()){
+            return (players.size()-1) - (turn - players.size() - 1);
+        }
+        else{
+            return turn - 1;
+        }
     }
 
 }
