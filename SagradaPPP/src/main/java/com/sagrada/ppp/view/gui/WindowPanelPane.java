@@ -1,6 +1,7 @@
 package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.Cell;
+import com.sagrada.ppp.Dice;
 import com.sagrada.ppp.WindowPanel;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -18,6 +19,7 @@ import static com.sagrada.ppp.utils.StaticValues.*;
 public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent> {
     private WindowPanel panel;
     private Label name,tokens;
+    private WindowPanelEventBus eventBus;
     private double width,height;
 
 
@@ -59,8 +61,8 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         name.setText(panel.getPanelName());
         tokens.setText("Tokens:" + panel.getFavorTokens());
         for (Cell c:panel.getCells()) {
-            BorderPane cell = new BorderPane();
-            cell.setId(Integer.toString(col) + Integer.toString(row));
+            CellPane cell = new CellPane();
+            cell.setId(Integer.toString(col*(row-1)+col));
             cell.setPrefSize(cellWidth,cellHeight);
             cell.setMaxSize(width,height);
 
@@ -118,14 +120,30 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         this.panel = panel;
         draw();
     }
+    public void setObserver(WindowPanelEventBus windowPanelEventBus){
+        this.eventBus = windowPanelEventBus;
+    }
 
     /**
      * @implNote handling mouse event on a cell
      */
     @Override
     public void handle(MouseEvent event) {
+        CellPane cell = ((CellPane) event.getSource());
         System.out.println(event.getSource().toString());
+        eventBus.onCellClicked(Integer.valueOf(cell.getId()),cell.getCell());
     }
 
+    private class CellPane extends BorderPane{
+        private Cell cell;
 
+        public Cell getCell() {
+            return new Cell(cell);
+        }
+
+        public void setCell(Cell cell) {
+            this.cell = cell;
+        }
+    }
 }
+

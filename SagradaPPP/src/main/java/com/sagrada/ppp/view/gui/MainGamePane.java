@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class MainGamePane extends UnicastRemoteObject implements GameObserver {
+public class MainGamePane extends UnicastRemoteObject implements GameObserver,WindowPanelEventBus {
 
     private RoundTrack roundTrack;
     private double height,widht = 100d;
@@ -48,7 +48,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver {
     private Insets defInset;
     private TabPane tabContainer;
     private Tab gameTab,settingsTab,logTab;
-
 
     private Stage stage;
     private RemoteController controller;
@@ -192,11 +191,12 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver {
         for (HashMap.Entry<String,WindowPanel> entry: panels.entrySet()) {
             if (entry.getKey().equals(joinGameResult.getUsername())) {
                 playerWindowPanel = new WindowPanelPane(entry.getValue(),330,300);
+                playerWindowPanel.setObserver(this);
                 centerContainer.getChildren().add(playerWindowPanel);
                 HBox.setHgrow(playerWindowPanel,Priority.ALWAYS);
                 HBox.setMargin(playerWindowPanel,defInset);
             }else {
-                Label username = new Label(entry.getKey());
+                Label username = new Label(entry.getKey() +"\t Remaining Tokens :change" );
                 username.setTextFill(Color.BLACK);
                 username.setAlignment(Pos.CENTER);
                 opponentsWindowPanelsPane.getChildren().add(username);
@@ -210,7 +210,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver {
         draftPoolPane.getChildren().clear();
 
 
-        EventHandler<MouseEvent> diceEventHandler = ((event -> {
+        EventHandler<MouseEvent> diceEventHandler = event -> {
             DiceButton clickedButton = ((DiceButton) event.getSource());
             if (clickedButton.isSelected()) {
                 clickedButton.setSelected(false);
@@ -229,7 +229,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver {
                 clickedButton.setSelected(true);
             }
 
-        }));
+        };
 
 
         for (Dice dice:draftPool) {
@@ -296,4 +296,13 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver {
     }
 
 
+    @Override
+    public void onCellClicked(int id, Cell cell) {
+
+    }
+
+    @Override
+    public void onDiceClicked(DiceButton diceButton, Dice dice) {
+
+    }
 }

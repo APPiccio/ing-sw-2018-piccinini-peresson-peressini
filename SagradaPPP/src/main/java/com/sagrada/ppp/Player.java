@@ -15,6 +15,8 @@ public class Player implements Serializable {
     private Color privateColor;
     private PlayerStatus status;
     private Dice activeDice;
+    private int favorTokens;
+
 
 
     public PlayerStatus getPlayerStatus() {
@@ -34,7 +36,9 @@ public class Player implements Serializable {
         this.status = player.status;
         this.username = player.username;
         this.privateColor = player.privateColor;
+        this.panel = player.panel;
         this.activeDice = player.activeDice;
+        this.favorTokens = player.favorTokens;
     }
     public Player(String username){
         this.status = PlayerStatus.ACTIVE;
@@ -52,7 +56,9 @@ public class Player implements Serializable {
         return new Dice(activeDice);
     }
 
-
+    public int getFavorTokens() {
+        return favorTokens;
+    }
 
     public String getUsername() {
         return username;
