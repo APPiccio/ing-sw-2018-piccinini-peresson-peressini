@@ -2,8 +2,8 @@ package com.sagrada.ppp;
 
 import com.sagrada.ppp.cards.*;
 import com.sagrada.ppp.cards.ToolCards.*;
+import com.sagrada.ppp.network.commands.PanelChoiceNotification;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.LobbyObserver;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -203,7 +203,14 @@ public class Game implements Serializable{
     }
 
     public ArrayList<String> getUsernames(){
-        return this.getPlayers().stream().map(Player::getUsername).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<String> playersUsername = new ArrayList<>();
+        for(Player player : players){
+            playersUsername.add(player.getUsername());
+        }
+        return playersUsername;
+        //Commented cause im not sure this keep the array ordered
+        //naive way doesn't fail
+        //return this.getPlayers().stream().map(Player::getUsername).collect(Collectors.toCollection(ArrayList::new));
     }
     public int getPrivateScore(Player activePlayer) {
         int score = 0;
@@ -306,7 +313,7 @@ public class Game implements Serializable{
         }
         for(GameObserver gameObserver : gameObservers){
             try {
-                gameObserver.onGameStart(usernameToPanel, draftPool, toolCards, publicObjectiveCards);
+                gameObserver.onGameStart(new GameStartMessage(usernameToPanel, draftPool, toolCards, publicObjectiveCards, getUsernames()));
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -451,6 +458,23 @@ public class Game implements Serializable{
         else{
             return turn - 1;
         }
+    }
+
+    public PlaceDiceResult placeDice(int playerHashCode, int diceIndex, int row, int col){
+        if(players.get(0).hashCode() != playerHashCode) return new PlaceDiceResult("Can't do game actions during others players turn", false,playersPanel.get(playerHashCode));
+
+        boolean result = playersPanel.get(playerHashCode).addDiceOnCellWithPosition(row, col, draftPool.get(diceIndex));
+        System.out.println("place dice result = " + result);
+        if(result) {
+            draftPool.remove(diceIndex);
+            return new PlaceDiceResult("risiko è meglio",true, playersPanel.get(playerHashCode));
+        }
+        else {
+            return new PlaceDiceResult("Invalid position, pay attention to game rules!" , false, playersPanel.get(playerHashCode));
+        }
+
+
+
     }
 
 }

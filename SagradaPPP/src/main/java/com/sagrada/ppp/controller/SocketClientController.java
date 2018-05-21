@@ -24,6 +24,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
     private transient Object responseLock;
     private transient LeaveGameResult leaveGameResult;
     private transient boolean disconnectionResult;
+    private transient PlaceDiceResult placeDiceResult;
 
     public SocketClientController() throws IOException {
         socket = new Socket(StaticValues.SERVER_ADDRESS, StaticValues.SOCKET_PORT);
@@ -105,17 +106,19 @@ public class SocketClientController implements RemoteController, ResponseHandler
     public void handle(JoinGameResponse response) {
         synchronized (responseLock) {
             waitingForResponse = false;
+            joinGameResult = response.joinGameResult;
             responseLock.notifyAll();
         }
-        joinGameResult = response.joinGameResult;
+
     }
 
     public void handle(LeaveGameResponse response) {
         synchronized (responseLock) {
             waitingForResponse = false;
+            leaveGameResult = response.leaveGameResult;
             responseLock.notifyAll();
         }
-        leaveGameResult = response.leaveGameResult;
+
     }
 
     public void handle(PlayerEventNotification response) {
@@ -169,7 +172,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
     public void handle(GameStartNotification response) {
         for(GameObserver observer : gameObservers){
             try {
-                observer.onGameStart(response.chosenPanels, response.draftpool, response.toolCards, response.publicObjectiveCards);
+                observer.onGameStart(response.gameStartMessage);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -180,9 +183,9 @@ public class SocketClientController implements RemoteController, ResponseHandler
     public void handle(DisconnectionResponse response) {
         synchronized (responseLock) {
             waitingForResponse = false;
+            disconnectionResult = response.disconnectionResult;
             responseLock.notifyAll();
         }
-        disconnectionResult = response.disconnectionResult;
     }
 
     @Override
@@ -206,6 +209,35 @@ public class SocketClientController implements RemoteController, ResponseHandler
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public PlaceDiceResult placeDice(int gameHashCode, int playerHashCode, int diceIndex, int row, int col) {
+        try {
+            waitingForResponse = true;
+            out.writeObject(new PlaceDiceRequest(gameHashCode, playerHashCode, diceIndex, row, col));
+            synchronized (responseLock) {
+                while (waitingForResponse) {
+                    responseLock.wait();
+                }
+                responseLock.notifyAll();
+            }
+            return placeDiceResult;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void handle(PlaceDiceResponse response) {
+        synchronized (responseLock) {
+            waitingForResponse = false;
+            placeDiceResult = response.placeDiceResult;
+            responseLock.notifyAll();
+        }
     }
 
     private void closeConnection(){

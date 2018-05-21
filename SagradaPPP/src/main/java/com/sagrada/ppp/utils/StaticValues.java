@@ -21,10 +21,11 @@ public class StaticValues {
     public static final int DICE_FACES = 6;
     public static final int MAX_USER_PER_GAME = 4;
     public static int NUMBER_OF_CARDS = 12;
-    public static final long TURN_DURATION = 45000;
+    public static final long TURN_DURATION = 15000;
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
+    public static int lobbyTimer = 0;
 
     //Connection static value
     public static final int RMI_PORT = 1099;
@@ -148,6 +149,8 @@ public class StaticValues {
     public static final String STRING_COMMAND_PLAYERS_IN_LOBBY = "show players connected to this lobby";
     public static final String STRING_COMMAND_START_GAME = "start game";
 
+    public static final String STRING_COMMAND_PLACE_DICE = ":dice <dice_index> <cell_row> <cell_col> place the chosen dice in the panel";
+
     // Cli View command
     public static final String COMMAND_QUIT = ":q";
     public static final String COMMAND_LOGIN = ":login";
@@ -158,6 +161,8 @@ public class StaticValues {
     public static final String COMMAND_HELP = ":help";
     public static final String COMMAND_PLAYERS_IN_LOBBY = ":players";
     public static final String COMMAND_START_GAME = ":start";
+
+    public static final String COMMAND_PLACE_DICE = ":dice";
 
 
     //AssetUrl
@@ -221,17 +226,15 @@ public class StaticValues {
 
     public static int getLobbyTimer(){
 
-        return 10000;
-        /*
+        if(lobbyTimer != 0) return lobbyTimer;
         JSONTokener jsonTokener = null;
         try {
             jsonTokener = new JSONTokener(new FileReader("src/main/java/com/sagrada/ppp/utils/config.json"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
         JSONObject jsonObject = new JSONObject(jsonTokener);
-        return jsonObject.getInt("lobby_timer");
-        */
+        lobbyTimer = jsonObject.getInt("lobby_timer");
+        return lobbyTimer;
     }
 }

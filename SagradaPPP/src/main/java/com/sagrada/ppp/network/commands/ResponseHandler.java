@@ -10,4 +10,5 @@ public interface ResponseHandler {
     void handle(PanelChoiceNotification response);
     void handle(GameStartNotification response);
     void handle(DisconnectionResponse response);
+    void handle(PlaceDiceResponse response);
 }

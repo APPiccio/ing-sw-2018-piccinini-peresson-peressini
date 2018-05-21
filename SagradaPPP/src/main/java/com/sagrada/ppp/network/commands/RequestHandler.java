@@ -7,4 +7,5 @@ public interface RequestHandler {
     Response handle(LeaveGameRequest request);
     Response handle(PanelChoiceRequest request);
     Response handle(DisconnectionRequest request);
+    Response handle(PlaceDiceRequest request);
 }

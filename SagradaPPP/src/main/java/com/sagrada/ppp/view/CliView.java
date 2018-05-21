@@ -34,6 +34,9 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     transient boolean keyboardPressed;
     transient boolean doneByRobot;
     transient ArrayList<Dice> draftpool;
+    transient ArrayList<String> orderedPlayersUsername;
+    transient boolean isGameStarted;
+    transient HashMap<String, WindowPanel> playersPanel;
 
     public CliView(RemoteController controller) throws RemoteException{
         this.scanner = new Scanner(System.in);
@@ -43,6 +46,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         gameReady = false;
         keyboardPressed = true;
         doneByRobot = false;
+        isGameStarted = false;
     }
 
 
@@ -91,6 +95,11 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         System.out.println("\t" + StaticValues.COMMAND_LEAVE_GAME + "\t" + StaticValues.STRING_COMMAND_LEAVE_GAME);
     }
 
+    public void showInGameCommandList(){
+        System.out.println("\t" + StaticValues.COMMAND_PLACE_DICE + "\t" + StaticValues.STRING_COMMAND_PLACE_DICE);
+    }
+
+
 
     //TODO add show list of active players when someone join the lobby
     public void inLobby() throws RemoteException {
@@ -100,7 +109,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         printPlayersUsername();
         showLobbyCommandList();
         String command = scanner.nextLine();
-        while (!command.equals(COMMAND_QUIT) && !(command.equals("0") || command.equals("1") || command.equals("2") || command.equals("3"))){
+        while (!command.equals(COMMAND_QUIT) && !(command.equals("0") || command.equals("1") || command.equals("2") || command.equals("3")) && !isGameStarted){
             switch(command){
                 case StaticValues.COMMAND_LEAVE_GAME:
                     controller.leaveLobby(gameHashCode , username, this);
@@ -117,20 +126,23 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             System.out.println("Insert command:");
             command = scanner.nextLine();
         }
-        if(command.equals("0") || command.equals("1") || command.equals("2") || command.equals("3")) {
+        if(command.equals("0") || command.equals("1") || command.equals("2") || command.equals("3") && !isGameStarted) {
             //TODO handle response to server and panel choice
             if(!doneByRobot) {
                 keyboardPressed = true;
             }
             int panelIndex = Integer.parseInt(command);
             myPanel = panels.get(panelIndex);
-            inGame(panelIndex);
+            inGame(panelIndex, null);
+        }
+        else{
+            if(isGameStarted){
+
+                inGame(0, command);
+            }
         }
     }
-    //UPDATE CODE
-    // 0 --> user join the lobby
-    // 1 --> user leave the lobby
-    // 2 --> game started
+
     public void onPlayerJoined(String username,ArrayList<String> players ,int numOfPlayers) throws RemoteException {
         playersUsername = players;
         System.out.println(username + " has joined the game!\n");
@@ -165,17 +177,60 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     }
 
     //do stuff in game
-    public void inGame(int panelIndex) throws RemoteException {
+    public void inGame(int panelIndex, String cmd) throws RemoteException {
         //do something
-        if(keyboardPressed) {
+        if(!doneByRobot) {
             controller.choosePanel(gameHashCode, hashCode, panelIndex);
         }
         System.out.println("------------> GAME STARTED! <------------");
+        String command;
+        if(cmd == null) {
+            command = scanner.nextLine();
+        }
+        else{
+            command = cmd;
+        }
+        while (!isGameStarted){
+            System.out.println("Invalid command, waiting for other players panel choice.");
+            command = scanner.nextLine();
+        }
+        String[] param = command.split(" ");
+        command = param[0];
+        while (!command.equals(StaticValues.COMMAND_QUIT)){
+            switch (command){
+                case StaticValues.COMMAND_PLACE_DICE:
+                    if (param.length != 4){
+                        System.out.println("ERROR --> Unknown command!");
+                    }
+                    else {
+                        PlaceDiceResult result = controller.placeDice(gameHashCode, hashCode, Integer.parseInt(param[1]), Integer.parseInt(param[2]), Integer.parseInt(param[3]));
+                        if(result.status){
+                            playersPanel.remove(username);
+                            playersPanel.put(username, result.panel);
+                            draftpool.remove(Integer.parseInt(param[1]));
+                            System.out.println("Dice placed correctly. Panel updated :");
+                            System.out.println(playersPanel.get(username));
+                            System.out.println("----------------------------------------");
+                            System.out.println("Draft pool: ");
+                            for(int i = 0; i < draftpool.size(); i++){
+                                System.out.println("ID = " + i + " ---> " + draftpool.get(i).toString());
+                            }
+                        }
+                        else {
+                            System.out.println("ERROR --> DICE NOT PLACED (" +result.status + ")");
+                        }
+                    }
+                    break;
+                default:
+                    System.out.println("Command not found : "+command);
+                    break;
+            }
+            command = scanner.nextLine();
+            param = command.split(" ");
+            command = param[0];
+        }
 
-        //TODO wait for gamestartednotification!
-        System.out.println(scanner.nextLine());
     }
-
 
 
     public void printPlayersUsername(){
@@ -189,22 +244,9 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
 
-        if(playerHashCode == hashCode){
-            keyboardPressed = false;
+        if(!keyboardPressed && playerHashCode != hashCode){
+            fakeInput();
         }
-        else{
-            if(!keyboardPressed){
-                try {
-                    Robot robot = new Robot();
-                    robot.keyPress(KeyEvent.VK_0);
-                    robot.keyPress(KeyEvent.VK_ENTER);
-                    keyboardPressed = true;
-                } catch (AWTException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
 
         if(panelsAlreadyChosen.size() != 0){
             System.out.println("ALREADY CHOSEN PANEL:");
@@ -214,8 +256,8 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             }
         }
         if(playerHashCode == hashCode){
-            System.out.println("WARNING --> Your Private Objective Color is " + color + "! Keep it in mind while choosing yout panel.");
             keyboardPressed = false;
+            System.out.println("WARNING --> Your Private Objective Color is " + color + "! Keep it in mind while choosing yout panel.");
             waitingForPanels = false;
             this.panels = panels;
             System.out.println("Please choose your pattern card! (hint: type a number between 0 and 3 to choose the panel you like)");
@@ -228,25 +270,60 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     }
 
     @Override
-    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool, ArrayList<ToolCard> toolCards, ArrayList<PublicObjectiveCard> publicObjectiveCards) throws RemoteException {
-        this.draftpool = draftpool;
+    public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
+
+        if(!keyboardPressed){
+            fakeInput();
+        }
+
+        isGameStarted = true;
+        this.playersPanel = gameStartMessage.chosenPanels;
+        this.draftpool = gameStartMessage.draftpool;
+        System.out.println("----------------------------------------");
+        System.out.println("ROUND 1 - TURN 1");
         System.out.println("PLAYERS AND PANELS :");
-        for(String username : chosenPanels.keySet()){
+        for(String username : gameStartMessage.chosenPanels.keySet()){
             System.out.println("PLAYER :" + username);
-            System.out.println(chosenPanels.get(username).toString() + "\n");
+            System.out.println(gameStartMessage.chosenPanels.get(username).toString() + "\n");
         }
+        System.out.println("----------------------------------------");
         System.out.println("Draft pool: ");
-        for(Dice dice : draftpool){
-            System.out.println("---> " + dice.toString());
+        for(int i = 0; i < draftpool.size(); i++){
+            System.out.println("ID = " + i + " ---> " + draftpool.get(i).toString());
         }
+
+        System.out.println("----------------------------------------");
         System.out.println("Tool Cards:");
-        for(ToolCard toolCard : toolCards){
+        for(ToolCard toolCard : gameStartMessage.toolCards){
             System.out.println(toolCard.toString());
         }
+        System.out.println("----------------------------------------");
         System.out.println("Public Objective Cards:");
-        for(PublicObjectiveCard publicObjectiveCard : publicObjectiveCards){
+        for(PublicObjectiveCard publicObjectiveCard : gameStartMessage.publicObjectiveCards){
             System.out.println(publicObjectiveCard.toString());
         }
+        orderedPlayersUsername = playersUsername;
+        System.out.println("----------------------------------------");
+        if(gameStartMessage.playersUsername.get(0).equals(username)){
+            System.out.println("It's your turn!");
+        }
+        else {
+            System.out.println("It's " + gameStartMessage.playersUsername.get(0) + "'s turn!");
+        }
+    }
+
+    public void fakeInput(){
+        return;
+/*        try {
+            System.out.println("fake input needed to go ahead");
+            doneByRobot = true;
+            Robot robot = new Robot();
+            robot.keyPress(KeyEvent.VK_0);
+            robot.keyPress(KeyEvent.VK_ENTER);
+            keyboardPressed = true;
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }*/
     }
 }
 

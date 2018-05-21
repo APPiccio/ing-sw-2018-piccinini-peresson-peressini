@@ -147,4 +147,9 @@ public class Service {
         return games.get(gameHashCode).disconnect(playerHashCode, lobbyObserver, gameObserver);
     }
 
+    public PlaceDiceResult placeDice(int gameHashCode, int playerHashCode, int diceIndex, int row, int col){
+        System.out.println("Chiamata al service");
+        return games.get(gameHashCode).placeDice(playerHashCode, diceIndex, row , col);
+    }
+
 }

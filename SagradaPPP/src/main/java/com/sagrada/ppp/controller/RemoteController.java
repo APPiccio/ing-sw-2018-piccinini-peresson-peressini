@@ -21,4 +21,6 @@ public interface RemoteController extends Remote {
     void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) throws RemoteException;
 
     boolean disconnect(int gameHashCode, int playerHashCode, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException;
+
+    PlaceDiceResult placeDice(int gameHashCode, int playerHashCode, int diceIndex, int row, int col) throws RemoteException;
 }

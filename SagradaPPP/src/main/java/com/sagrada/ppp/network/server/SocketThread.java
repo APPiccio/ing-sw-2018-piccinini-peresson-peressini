@@ -119,6 +119,11 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
+    public Response handle(PlaceDiceRequest request) {
+        return new PlaceDiceResponse(service.placeDice(request.gameHashCode, request.playerHashCode, request.diceIndex, request.row, request.col));
+    }
+
+    @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
         try {
             out.writeObject(new PanelChoiceNotification(playerHashCode, panels, panelsAlreadyChosen, color));
@@ -127,13 +132,13 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         }
     }
 
+
     @Override
-    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool, ArrayList<ToolCard> toolCards, ArrayList<PublicObjectiveCard> publicObjectiveCards) throws RemoteException {
+    public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
         try {
-            out.writeObject(new GameStartNotification(chosenPanels, draftpool, toolCards, publicObjectiveCards));
+            out.writeObject(new GameStartNotification(gameStartMessage));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }

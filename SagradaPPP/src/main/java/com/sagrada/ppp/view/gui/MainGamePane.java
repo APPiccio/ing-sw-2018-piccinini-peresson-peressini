@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class MainGamePane extends UnicastRemoteObject implements GameObserver,WindowPanelEventBus {
+public class MainGamePane extends UnicastRemoteObject implements GameObserver, WindowPanelEventBus {
 
     private RoundTrack roundTrack;
     private double height,widht = 100d;
@@ -290,10 +290,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver,Wi
             //Do nothing here
     }
 
-    @Override
-    public void onGameStart(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool, ArrayList<ToolCard> toolCards, ArrayList<PublicObjectiveCard> publicObjectiveCards) throws RemoteException {
 
-    }
+
 
 
     @Override
@@ -303,6 +301,11 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver,Wi
 
     @Override
     public void onDiceClicked(DiceButton diceButton, Dice dice) {
+
+    }
+
+    @Override
+    public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
 
     }
 }

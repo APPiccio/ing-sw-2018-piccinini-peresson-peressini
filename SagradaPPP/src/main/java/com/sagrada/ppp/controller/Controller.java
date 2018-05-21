@@ -45,4 +45,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     public boolean disconnect(int gameHashCode, int playerHashCode, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException {
         return service.disconnect(gameHashCode, playerHashCode, lobbyObserver, gameObserver);
     }
+
+    @Override
+    public PlaceDiceResult placeDice(int gameHashCode, int playerHashCode, int diceIndex, int row, int col) throws RemoteException {
+        System.out.println("chiamata passa al controller");
+        return service.placeDice(gameHashCode, playerHashCode, diceIndex, row, col);
+    }
 }
