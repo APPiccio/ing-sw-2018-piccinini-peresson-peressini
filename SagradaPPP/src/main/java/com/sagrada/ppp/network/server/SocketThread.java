@@ -52,6 +52,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
                  response = ((Request) in.readObject()).handle(this);
                  if(response != null){
                      System.out.println("Sending response to: "+out.toString());
+                     out.reset();
                      out.writeObject(response);
                  }
 
@@ -120,7 +121,9 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
 
     @Override
     public Response handle(PlaceDiceRequest request) {
-        return new PlaceDiceResponse(service.placeDice(request.gameHashCode, request.playerHashCode, request.diceIndex, request.row, request.col));
+        PlaceDiceResult result = service.placeDice(request.gameHashCode, request.playerHashCode, request.diceIndex, request.row, request.col);
+        System.out.println(result.panel);
+        return new PlaceDiceResponse(result);
     }
 
     @Override

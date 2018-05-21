@@ -9,9 +9,6 @@ import com.sagrada.ppp.utils.StaticValues;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.image.AreaAveragingScaleFilter;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -32,7 +29,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     transient boolean gameReady;
     transient WindowPanel myPanel;
     transient boolean keyboardPressed;
-    transient boolean doneByRobot;
     transient ArrayList<Dice> draftpool;
     transient ArrayList<String> orderedPlayersUsername;
     transient boolean isGameStarted;
@@ -45,7 +41,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         waitingForPanels = true;
         gameReady = false;
         keyboardPressed = true;
-        doneByRobot = false;
         isGameStarted = false;
     }
 
@@ -128,16 +123,12 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         }
         if(command.equals("0") || command.equals("1") || command.equals("2") || command.equals("3") && !isGameStarted) {
             //TODO handle response to server and panel choice
-            if(!doneByRobot) {
-                keyboardPressed = true;
-            }
             int panelIndex = Integer.parseInt(command);
             myPanel = panels.get(panelIndex);
             inGame(panelIndex, null);
         }
         else{
             if(isGameStarted){
-
                 inGame(0, command);
             }
         }
@@ -179,10 +170,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     //do stuff in game
     public void inGame(int panelIndex, String cmd) throws RemoteException {
         //do something
-        if(!doneByRobot) {
-            controller.choosePanel(gameHashCode, hashCode, panelIndex);
-        }
-        System.out.println("------------> GAME STARTED! <------------");
         String command;
         if(cmd == null) {
             command = scanner.nextLine();
@@ -244,10 +231,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
 
-        if(!keyboardPressed && playerHashCode != hashCode){
-            fakeInput();
-        }
-
         if(panelsAlreadyChosen.size() != 0){
             System.out.println("ALREADY CHOSEN PANEL:");
             for(String u : panelsAlreadyChosen.keySet()){
@@ -272,13 +255,10 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     @Override
     public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
 
-        if(!keyboardPressed){
-            fakeInput();
-        }
-
         isGameStarted = true;
         this.playersPanel = gameStartMessage.chosenPanels;
         this.draftpool = gameStartMessage.draftpool;
+        System.out.println("GAME STARTED");
         System.out.println("----------------------------------------");
         System.out.println("ROUND 1 - TURN 1");
         System.out.println("PLAYERS AND PANELS :");
@@ -310,20 +290,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         else {
             System.out.println("It's " + gameStartMessage.playersUsername.get(0) + "'s turn!");
         }
-    }
-
-    public void fakeInput(){
-        return;
-/*        try {
-            System.out.println("fake input needed to go ahead");
-            doneByRobot = true;
-            Robot robot = new Robot();
-            robot.keyPress(KeyEvent.VK_0);
-            robot.keyPress(KeyEvent.VK_ENTER);
-            keyboardPressed = true;
-        } catch (AWTException e) {
-            e.printStackTrace();
-        }*/
     }
 }
 

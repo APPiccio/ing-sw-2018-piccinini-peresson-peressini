@@ -9,7 +9,7 @@ public class PlaceDiceResponse implements Serializable, Response {
     public PlaceDiceResult placeDiceResult;
 
     public PlaceDiceResponse(PlaceDiceResult placeDiceResult){
-        this.placeDiceResult = placeDiceResult;
+        this.placeDiceResult = new PlaceDiceResult(placeDiceResult.message, placeDiceResult.status, placeDiceResult.panel);
     }
 
     @Override
