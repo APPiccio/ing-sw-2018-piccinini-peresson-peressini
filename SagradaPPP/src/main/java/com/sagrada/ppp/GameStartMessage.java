@@ -13,13 +13,16 @@ public class GameStartMessage implements Serializable {
     public ArrayList<ToolCard> toolCards;
     public ArrayList<PublicObjectiveCard> publicObjectiveCards;
     public ArrayList<String> playersUsername;
+    public ArrayList<Player> players;
 
-    public GameStartMessage(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool, ArrayList<ToolCard> toolCards, ArrayList<PublicObjectiveCard> publicObjectiveCards, ArrayList<String> playersUsername){
+    public GameStartMessage(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool, ArrayList<ToolCard> toolCards, ArrayList<PublicObjectiveCard> publicObjectiveCards,
+                            ArrayList<String> playersUsername,ArrayList<Player> players){
         this.chosenPanels = chosenPanels;
         this.draftpool = draftpool;
         this.toolCards = toolCards;
         this.publicObjectiveCards = publicObjectiveCards;
         this.playersUsername = playersUsername;
+        this.players = players;
     }
 
 }

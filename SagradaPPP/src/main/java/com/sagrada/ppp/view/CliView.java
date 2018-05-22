@@ -318,7 +318,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
 
     @Override
     public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
-
+        System.out.println(dicePlacedMessage.username + "placed a dice (notification)");
     }
 
     @Override

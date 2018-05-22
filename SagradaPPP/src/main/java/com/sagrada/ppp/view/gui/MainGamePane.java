@@ -18,6 +18,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
@@ -33,29 +35,34 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     private GridPane mainGamePane;
     private VBox opponentsWindowPanelsPane;
-    private FlowPane bottomContainer;
+    private HBox bottomContainer;
     private RoundTrackPane roundTrackPane;
     private FlowPane centerContainer;
     private VBox draftPoolContainer;
     private FlowPane draftPoolPane;
     private WindowPanelPane playerWindowPanel;
-    private GridPane toolCardsContainer,publicCardsContainer;
+    private GridPane toolCardsContainer;
+    private GridPane publicCardsContainer;
     private HBox topContainer;
     private Insets defInset;
     private TabPane tabContainer;
+    private Button skipButton;
     private Tab gameTab,settingsTab,logTab;
 
+    private String currentPlayerUser;
     private Stage stage;
     private RemoteController controller;
     private com.sagrada.ppp.Color privateColor;
     private JoinGameResult joinGameResult;
     private HashMap<String, WindowPanel> panels;
     private ArrayList<Dice> draftPool;
+    private ArrayList<Player> players;
     private ArrayList<DiceButton> draftPoolDiceButtons;
     private ArrayList<Button> toolCardButtons,publicCardButtons;
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private EventHandler<MouseEvent> draftPoolDiceEventHandler;
+    private Label gameStatus;
 
     public MainGamePane() throws RemoteException {
 
@@ -69,7 +76,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         toolCardButtons = new ArrayList<>();
         publicCardButtons = new ArrayList<>();
         opponentsWindowPanelsPane = new VBox();
-        bottomContainer = new FlowPane();
+        bottomContainer = new HBox();
         roundTrackPane = new RoundTrackPane();
         centerContainer = new FlowPane();
         draftPoolContainer = new VBox();
@@ -78,8 +85,10 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         toolCardsContainer = new GridPane();
         publicCardsContainer = new GridPane();
         topContainer = new HBox();
+        skipButton = new Button();
         draftPoolDiceButtons = new ArrayList<>();
-
+        gameStatus = new Label();
+        //creating all Listeners
         createListeners();
 
     }
@@ -96,6 +105,14 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         publicCardsContainer.setHgap(5);
         publicCardsContainer.setPadding(defInset);
         publicCardsContainer.add(publicObjectiveCardsTitle,0,0,2,1);
+
+        skipButton.setText("Skip Turn");
+        skipButton.setPadding(defInset);
+        skipButton.setDisable(true);
+        VBox.setMargin(skipButton,defInset);
+        skipButton.setAlignment(Pos.CENTER);
+
+
         mainGamePane.add(opponentsWindowPanelsPane,1,0,1,3);
         drawToolCards();
         drawPublicObjectiveCards();
@@ -110,12 +127,21 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         mainGamePane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,new CornerRadii(5),new Insets(0))));
 
         ImageView privateCardImageView = new ImageView();
-        FlowPane.setMargin(privateCardImageView,defInset);
+        HBox.setMargin(privateCardImageView,defInset);
+        HBox.setHgrow(privateCardImageView,Priority.ALWAYS);
         privateCardImageView.setImage(new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_"+privateColor.toString().toLowerCase()+".png",150,204,true,true));
 
+
+
+        HBox.setMargin(gameStatus,defInset);
         bottomContainer.setAlignment(Pos.CENTER);
         GridPane.setHalignment(bottomContainer,HPos.CENTER);
-        bottomContainer.getChildren().addAll(privateCardImageView,roundTrackPane);
+        gameStatus.setFont(Font.font("Courier New",FontWeight.BOLD,20));
+        gameStatus.setAlignment(Pos.BASELINE_LEFT);
+        gameStatus.setStyle("-fx-font-family: \"Courier New\"; "
+        );
+        HBox.setHgrow(roundTrackPane,Priority.ALWAYS);
+        bottomContainer.getChildren().addAll(gameStatus,privateCardImageView,roundTrackPane);
         bottomContainer.setPadding(defInset);
         mainGamePane.add(bottomContainer,0,2,1,1);
 
@@ -143,12 +169,11 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         centerContainer.setPadding(defInset);
         mainGamePane.add(centerContainer,0,1,1,1);
 
-        opponentsWindowPanelsPane.setFillWidth(false);
         opponentsWindowPanelsPane.setAlignment(Pos.CENTER);
         opponentsWindowPanelsPane.setSpacing(5);
-        opponentsWindowPanelsPane.getChildren().add(new Label("OpponentsPanels:"));
 
         //drawing All Window Panels
+        GridPane.setFillWidth(mainGamePane,true);
         GridPane.setFillWidth(centerContainer,true);
         centerContainer.getChildren().add(playerWindowPanel);
         playerWindowPanel.setObserver(this);
@@ -170,25 +195,31 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         logTab.setText("LogTab");
 
         tabContainer.getTabs().addAll(gameTab,settingsTab,logTab);
-        //creating all Listeners
 
-        stage.setScene(new Scene(tabContainer, 700, 1270));
+        Scene scene = new Scene(tabContainer, 700, 1270);
+        stage.setScene(scene);
         stage.setTitle("Main game");
         stage.setResizable(true);
         stage.show();
+        if (currentPlayerUser.equals(joinGameResult.getUsername())){
+            skipButton.setDisable(false);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn");
+            alert.show();
+        }
 
     }
 
-    public void init(com.sagrada.ppp.Color privateColor, JoinGameResult joinGameResult, HashMap<String, WindowPanel> panelsAlreadyChosen,
-                     ArrayList<Dice> draftPool,ArrayList<ToolCard> toolCards,ArrayList<PublicObjectiveCard> publicObjectiveCards, RemoteController controller, Stage stage) {
+    public void init(com.sagrada.ppp.Color privateColor, JoinGameResult joinGameResult, GameStartMessage gameStartMessage, RemoteController controller, Stage stage) {
         this.controller = controller;
         this.stage = stage;
         this.privateColor = privateColor;
         this.joinGameResult = joinGameResult;
-        this.panels = panelsAlreadyChosen;
-        this.draftPool = draftPool;
-        this.toolCards = toolCards;
-        this.publicObjectiveCards = publicObjectiveCards;
+        this.panels = gameStartMessage.chosenPanels;
+        this.draftPool = gameStartMessage.draftpool;
+        this.toolCards = gameStartMessage.toolCards;
+        this.players = gameStartMessage.players;
+        this.publicObjectiveCards = gameStartMessage.publicObjectiveCards;
+        this.currentPlayerUser = gameStartMessage.players.get(0).getUsername();
         try {
             this.controller.attachGameObserver(this.joinGameResult.getGameHashCode(),this);
         } catch (RemoteException e) {
@@ -201,22 +232,30 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     private void drawWindowPanels(){
         opponentsWindowPanelsPane.getChildren().clear();
-        for (HashMap.Entry<String,WindowPanel> entry: panels.entrySet()) {
-            if (entry.getKey().equals(joinGameResult.getUsername())) {
+        opponentsWindowPanelsPane.getChildren().add(new Label("OpponentsPanels:"));
+        for (Player player : players) {
+            if (player.getUsername().equals(joinGameResult.getUsername())) {
+                if(currentPlayerUser.equals(player.getUsername())) {
+                    gameStatus.setText("User: " + player.getUsername() + "\n>>>Favor Tokens Remaining: " + player.getFavorTokens() + "\n>>>It's your turn!");
+                }else {
+                    gameStatus.setText("User: " + player.getUsername() + "\n>>>Favor Tokens Remaining: " + player.getFavorTokens() + "\n>>>Wait your turn");
+                }
                 if(playerWindowPanel == null) {
-                    playerWindowPanel = new WindowPanelPane(entry.getValue(), 330, 300);
+                    playerWindowPanel = new WindowPanelPane(player.getPanel(), 330, 300);
 
                 }else {
-                    playerWindowPanel.setPanel(entry.getValue());
+                    playerWindowPanel.setPanel(player.getPanel());
                 }
             }else {
-                Label username = new Label(entry.getKey() +"\t Remaining Tokens :change" );
+                //TODO: once possible update with remaining tokens
+                Label username = new Label("#" + players.indexOf(player) + " " + player.getUsername() +"\t Remaining Tokens : " + player.getFavorTokens() );
                 username.setTextFill(Color.BLACK);
                 username.setAlignment(Pos.CENTER);
                 opponentsWindowPanelsPane.getChildren().add(username);
-                opponentsWindowPanelsPane.getChildren().add(new WindowPanelPane(entry.getValue(),200,170));
+                opponentsWindowPanelsPane.getChildren().add(new WindowPanelPane(player.getPanel(),200,170));
             }
         }
+        opponentsWindowPanelsPane.getChildren().add(skipButton);
 
     }
     private void drawDraftPool(){
@@ -352,9 +391,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     @Override
     public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
         Platform.runLater(()->{
-            if(dicePlacedMessage.username != joinGameResult.getUsername()) {
-                panels.put(dicePlacedMessage.username, dicePlacedMessage.panel);
-                draftPool = dicePlacedMessage.draftPool;
+            if(!dicePlacedMessage.username.equals(joinGameResult.getUsername())) {
+                players.stream().filter(x -> x.getUsername().equals(dicePlacedMessage.username)).findFirst().orElse(null).setPanel(dicePlacedMessage.panel);
                 drawDraftPool();
                 drawWindowPanels();
             }

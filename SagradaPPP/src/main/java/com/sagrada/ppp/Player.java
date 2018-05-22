@@ -29,6 +29,9 @@ public class Player implements Serializable {
 
 
     public void setPanel(WindowPanel panel) {
+        if(this.panel == null){
+            this.favorTokens = panel.getFavorTokens();
+        }
         this.panel = panel;
     }
 
@@ -42,6 +45,7 @@ public class Player implements Serializable {
     }
     public Player(String username){
         this.status = PlayerStatus.ACTIVE;
+        this.panel = null;
         this.username = username;
     }
 
