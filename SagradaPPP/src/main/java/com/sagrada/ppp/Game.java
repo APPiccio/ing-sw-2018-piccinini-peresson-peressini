@@ -26,7 +26,6 @@ public class Game implements Serializable{
     private LobbyTimer lobbyTimer;
     private long lobbyTimerStartTime;
     public volatile boolean waitingForPanelChoice;
-    private HashMap<Integer, WindowPanel> playersPanel;
     public volatile boolean panelChoiceTimerExpired;
     public Integer chosenPanelIndex;
     public ArrayList<GameObserver> gameObservers;
@@ -49,7 +48,6 @@ public class Game implements Serializable{
         lobbyObservers = new ArrayList<>();
         waitingForPanelChoice = false;
         panelChoiceTimerExpired = false;
-        playersPanel = new HashMap<>();
         chosenPanelIndex = null;
         gameObservers = new ArrayList<>();
         toolCards = new ArrayList<>();
@@ -67,8 +65,8 @@ public class Game implements Serializable{
             panelChoiceTimerExpired = false;
             System.out.println("Sending panels to " + playerHashCode);
             HashMap<String, WindowPanel> usernameToPanelHashMap = new HashMap<>();
-            for(Integer i : playersPanel.keySet()){
-                usernameToPanelHashMap.put(getPlayerUsername(i), playersPanel.get(i));
+            for(Player player : players){
+                usernameToPanelHashMap.put(player.getUsername(),player.getPanel());
             }
             notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerPrivateColor(playerHashCode));
             PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(System.currentTimeMillis(), this);
@@ -79,12 +77,9 @@ public class Game implements Serializable{
             System.out.println("---> waitingForPanelChoice = " + waitingForPanelChoice);
             System.out.println("---> panelChoiceTimerExpired = " + panelChoiceTimerExpired);
             panelChoiceTimer.interrupt();
-            if(chosenPanelIndex != null){
-                playersPanel.put(playerHashCode, panels.get(playerHashCode).get(chosenPanelIndex));
-            }
-            else{
-                playersPanel.put(playerHashCode, panels.get(playerHashCode).get(0));
-            }
+            if(chosenPanelIndex == null) chosenPanelIndex = 0;
+            getPlayerByHashcode(playerHashCode).setPanel(panels.get(playerHashCode).get(chosenPanelIndex));
+
         }
         extractPublicObjCards();
         extractToolCards();
@@ -308,8 +303,8 @@ public class Game implements Serializable{
 
     public void notifyGameStart(){
         HashMap<String, WindowPanel> usernameToPanel = new HashMap<>();
-        for(Integer i : playersPanel.keySet()){
-            usernameToPanel.put(getPlayerUsername(i) , playersPanel.get(i));
+        for(Player player : players){
+            usernameToPanel.put(player.getUsername(), player.getPanel());
         }
         for(GameObserver gameObserver : gameObservers){
             try {
@@ -461,20 +456,25 @@ public class Game implements Serializable{
     }
 
     public PlaceDiceResult placeDice(int playerHashCode, int diceIndex, int row, int col){
-        if(players.get(0).hashCode() != playerHashCode) return new PlaceDiceResult("Can't do game actions during others players turn", false,playersPanel.get(playerHashCode));
+        Player currentPlayer = getPlayerByHashcode(playerHashCode);
+        if(players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult("Can't do game actions during others players turn", false,currentPlayer.getPanel());
 
-        boolean result = playersPanel.get(playerHashCode).addDiceOnCellWithPosition(row, col, draftPool.get(diceIndex));
+        boolean result = currentPlayer.getPanel().addDiceOnCellWithPosition(row, col, draftPool.get(diceIndex));
         System.out.println("place dice result = " + result);
         if(result) {
             draftPool.remove(diceIndex);
-            return new PlaceDiceResult("risiko è meglio",true, playersPanel.get(playerHashCode));
+            return new PlaceDiceResult("risiko è meglio",true,new WindowPanel(currentPlayer.getPanel()));
         }
         else {
-            return new PlaceDiceResult("Invalid position, pay attention to game rules!" , false, playersPanel.get(playerHashCode));
+            return new PlaceDiceResult("Invalid position, pay attention to game rules!" , false, new WindowPanel(currentPlayer.getPanel()));
         }
+    }
 
-
-
+    private Player getPlayerByHashcode(int hashCode){
+        for(Player player : players){
+            if(player.hashCode() == hashCode) return player;
+        }
+        return null;
     }
 
 }

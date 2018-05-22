@@ -76,7 +76,5 @@ public class Player implements Serializable {
         return privateColor;
     }
 
-    public WindowPanel getPanel() {
-        return new WindowPanel(panel);
-    }
+    public WindowPanel getPanel(){return panel;}
 }
