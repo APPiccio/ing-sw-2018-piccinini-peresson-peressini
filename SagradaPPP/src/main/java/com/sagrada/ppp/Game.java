@@ -120,7 +120,7 @@ public class Game implements Serializable{
                                 System.out.println("TURN TIMEOUT!");
                                 turnTimeout = true;
                             }
-                        }, 1*1000);
+                        }, StaticValues.TURN_DURATION);
                 while (!endTurn && !(dicePlaced && usedToolCard && !isSpecialTurn) && !turnTimeout){
                     //wait for user action
                 }
@@ -170,7 +170,7 @@ public class Game implements Serializable{
         }
         else{
             roundTrack.setDicesOnTurn(roundTrack.getCurrentRound(), getDraftPool());
-            roundTrack.setCurrentRound(roundTrack.getCurrentRound() + 1);
+            roundTrack.nextRound();
             draftPool.clear();
             draftPool.addAll(diceBag.extractDices(players.size() *2 + 1));
             reorderPlayers();
