@@ -108,6 +108,12 @@ public class Service {
         notifyAll();
         return joinGameResult;
     }
+    public void attachGameObserver(int gameHashCode,GameObserver observer){
+        Game game = games.get(gameHashCode);
+        if (game!= null){
+            game.attachGameObserver(observer);
+        }
+    }
 
     public void attachLobbyObserver(int gameHashCode, LobbyObserver observer){
         Game game = games.get(gameHashCode);

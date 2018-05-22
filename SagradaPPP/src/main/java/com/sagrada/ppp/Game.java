@@ -460,16 +460,25 @@ public class Game implements Serializable{
         }
     }
 
-    public PlaceDiceResult placeDice(int playerHashCode, int diceIndex, int row, int col){
+    public synchronized PlaceDiceResult placeDice(int playerHashCode, int diceIndex, int row, int col){
         if(players.get(0).hashCode() != playerHashCode) return new PlaceDiceResult("Can't do game actions during others players turn", false,playersPanel.get(playerHashCode));
 
         boolean result = playersPanel.get(playerHashCode).addDiceOnCellWithPosition(row, col, draftPool.get(diceIndex));
         System.out.println("place dice result = " + result);
         if(result) {
             draftPool.remove(diceIndex);
+            gameObservers.forEach(x -> {
+                try {
+                    x.onDicePlaced(new DicePlacedMessage(getPlayerUsername(playerHashCode),playersPanel.get(playerHashCode),new ArrayList<>(draftPool)));
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            });
+            notifyAll();
             return new PlaceDiceResult("risiko è meglio",true, playersPanel.get(playerHashCode));
         }
         else {
+            notifyAll();
             return new PlaceDiceResult("Invalid position, pay attention to game rules!" , false, playersPanel.get(playerHashCode));
         }
 

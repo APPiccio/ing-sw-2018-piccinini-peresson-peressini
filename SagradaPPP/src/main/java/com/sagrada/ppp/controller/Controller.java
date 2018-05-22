@@ -32,6 +32,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
     @Override
+    public void attachGameObserver(int gameHashCode,GameObserver gameObserver) throws RemoteException {
+        service.attachGameObserver(gameHashCode, gameObserver);
+    }
+
+    @Override
     public int getNumPlayers(int gameHashCode) throws RemoteException {
         return service.getNumPlayers(gameHashCode);
     }

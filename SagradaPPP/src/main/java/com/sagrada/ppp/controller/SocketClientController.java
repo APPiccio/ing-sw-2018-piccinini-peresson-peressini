@@ -40,7 +40,6 @@ public class SocketClientController implements RemoteController, ResponseHandler
         responseLock = new Object();
     }
 
-
     @Override
     public ArrayList<Player> getPlayers(int gameHashCode) throws RemoteException {
         return null;
@@ -65,6 +64,11 @@ public class SocketClientController implements RemoteController, ResponseHandler
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void attachGameObserver(int gameHashCode ,GameObserver gameObserver) throws RemoteException {
+        gameObservers.add(gameObserver);
     }
 
     @Override
@@ -222,6 +226,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
                 }
                 responseLock.notifyAll();
             }
+            out.reset();
             return placeDiceResult;
         } catch (IOException e) {
             e.printStackTrace();
@@ -237,6 +242,17 @@ public class SocketClientController implements RemoteController, ResponseHandler
             waitingForResponse = false;
             placeDiceResult = response.placeDiceResult;
             responseLock.notifyAll();
+        }
+    }
+
+    @Override
+    public void handle(DicePlacedNotification response) {
+        for(GameObserver observer : gameObservers){
+            try {
+                observer.onDicePlaced(response.dicePlacedMessage);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
     }
 
