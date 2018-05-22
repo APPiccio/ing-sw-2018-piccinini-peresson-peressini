@@ -22,7 +22,7 @@ public class ToolCardTest {
         card6();
         card7();
         card8();
-        card9();
+        //card9();
         card10();
         card11();
         card12();
@@ -304,6 +304,7 @@ public class ToolCardTest {
 
     }
     CommandToolCard commandToolCard9;
+    /*
     @Test
     public void card9(){
         Player player = new Player("test");
@@ -333,6 +334,8 @@ public class ToolCardTest {
 
 
     }
+
+
     @Test(expected = IllegalStateException.class)
     public void testIllegalStateExceptionToolCard9_1(){
         Player player = new Player("test");
@@ -344,7 +347,7 @@ public class ToolCardTest {
         commandToolCard9.useCard();
     }
 
-
+*/
     @Test
     public void card10(){
         Dice dice = new Dice(Color.PURPLE, 1);
