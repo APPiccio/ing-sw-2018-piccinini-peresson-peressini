@@ -75,7 +75,7 @@ public class RoundTrackPane extends BorderPane {
             title.setTextFill(Color.WHITE);
             title.setPadding(new Insets(0,0,5,0));
             this.setTop(title);
-            this.setBottom(mainPane);
+            this.setCenter(mainPane);
 
         }
     }

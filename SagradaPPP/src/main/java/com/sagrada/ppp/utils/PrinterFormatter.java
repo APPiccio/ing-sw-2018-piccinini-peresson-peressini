@@ -26,11 +26,11 @@ public class PrinterFormatter {
         if(panel == null){
             return "This WindowPanel is Null!\n";
         }else {
-            String verticalDivider = BLACK_BOLD_BRIGHT + VERTICAL + RESET;
-            String top = BLACK_BOLD_BRIGHT + TOP_LEFT + "%1$9s" + TOP_CENTER + "%2$9s"+ TOP_CENTER + "%3$9s" + TOP_CENTER + "%4$9s" + TOP_CENTER + "%5$9s"+TOP_RIGHT+ RESET +"\n";
-            String mid = BLACK_BOLD_BRIGHT + MID_LEFT + "%1$9s" + MID_CENTER + "%2$9s"+ MID_CENTER + "%3$9s" + MID_CENTER + "%4$9s" + MID_CENTER + "%5$9s"+MID_RIGHT+ RESET +"\n";
-            String bottom = BLACK_BOLD_BRIGHT + BOTTOM_LEFT + "%1$9s" + BOTTOM_CENTER + "%2$9s"+ BOTTOM_CENTER + "%3$9s" + BOTTOM_CENTER + "%4$9s" + BOTTOM_CENTER + "%5$9s"+ BOTTOM_RIGHT+RESET +"\n";
-            String format = verticalDivider+"%1$20s"+verticalDivider+"%2$20s"+verticalDivider+"%3$20s"+verticalDivider+"%4$20s"+verticalDivider+"%5$20s"+verticalDivider+"\n";
+            final String verticalDivider = BLACK_BOLD_BRIGHT + VERTICAL + RESET;
+            final String top = BLACK_BOLD_BRIGHT + TOP_LEFT + "%1$9s" + TOP_CENTER + "%2$9s"+ TOP_CENTER + "%3$9s" + TOP_CENTER + "%4$9s" + TOP_CENTER + "%5$9s"+TOP_RIGHT+ RESET +"\n";
+            final String mid = BLACK_BOLD_BRIGHT + MID_LEFT + "%1$9s" + MID_CENTER + "%2$9s"+ MID_CENTER + "%3$9s" + MID_CENTER + "%4$9s" + MID_CENTER + "%5$9s"+MID_RIGHT+ RESET +"\n";
+            final String bottom = BLACK_BOLD_BRIGHT + BOTTOM_LEFT + "%1$9s" + BOTTOM_CENTER + "%2$9s"+ BOTTOM_CENTER + "%3$9s" + BOTTOM_CENTER + "%4$9s" + BOTTOM_CENTER + "%5$9s"+ BOTTOM_RIGHT+RESET +"\n";
+            final String format = verticalDivider+"%1$20s"+verticalDivider+"%2$20s"+verticalDivider+"%3$20s"+verticalDivider+"%4$20s"+verticalDivider+"%5$20s"+verticalDivider+"\n";
 
             //insert title
             result.append("Panel Name: ");
@@ -46,7 +46,7 @@ public class PrinterFormatter {
 
             String[] rowValue = new String[5];
             String[] rowColor = new String[5];
-            String[] horizontalRow = {
+            final String[] horizontalRow = {
                     HORIZONTAL, HORIZONTAL, HORIZONTAL, HORIZONTAL, HORIZONTAL
             };
 

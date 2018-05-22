@@ -312,7 +312,7 @@ public class Game implements Serializable{
         }
         for(GameObserver gameObserver : gameObservers){
             try {
-                gameObserver.onGameStart(new GameStartMessage(usernameToPanel, draftPool, toolCards, publicObjectiveCards, getUsernames()));
+                gameObserver.onGameStart(new GameStartMessage(usernameToPanel, draftPool, toolCards, publicObjectiveCards, getUsernames(),players));
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -467,9 +467,18 @@ public class Game implements Serializable{
         System.out.println("place dice result = " + result);
         if(result) {
             draftPool.remove(diceIndex);
+            gameObservers.forEach(x -> {
+                try {
+                    x.onDicePlaced(new DicePlacedMessage(currentPlayer.getUsername(),new WindowPanel(currentPlayer.getPanel()),draftPool));
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            });
+            notifyAll();
             return new PlaceDiceResult("risiko è meglio",true,new WindowPanel(currentPlayer.getPanel()));
         }
         else {
+            notifyAll();
             return new PlaceDiceResult("Invalid position, pay attention to game rules!" , false, new WindowPanel(currentPlayer.getPanel()));
         }
     }
