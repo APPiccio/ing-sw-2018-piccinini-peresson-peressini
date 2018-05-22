@@ -52,6 +52,7 @@ public class Game implements Serializable{
         gameObservers = new ArrayList<>();
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
+        chosenPanelIndex = -1;
     }
 
     public void init(){
@@ -61,12 +62,15 @@ public class Game implements Serializable{
         turn = 1;
         HashMap<Integer, ArrayList<WindowPanel>> panels = extractPanels();
         for(int playerHashCode : panels.keySet()){
+            chosenPanelIndex = -1;
             waitingForPanelChoice = true;
             panelChoiceTimerExpired = false;
             System.out.println("Sending panels to " + playerHashCode);
             HashMap<String, WindowPanel> usernameToPanelHashMap = new HashMap<>();
             for(Player player : players){
-                usernameToPanelHashMap.put(player.getUsername(),player.getPanel());
+                if(player.getPanel() != null) {
+                    usernameToPanelHashMap.put(player.getUsername(), player.getPanel());
+                }
             }
             notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerPrivateColor(playerHashCode));
             PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(System.currentTimeMillis(), this);
@@ -77,9 +81,9 @@ public class Game implements Serializable{
             System.out.println("---> waitingForPanelChoice = " + waitingForPanelChoice);
             System.out.println("---> panelChoiceTimerExpired = " + panelChoiceTimerExpired);
             panelChoiceTimer.interrupt();
-            if(chosenPanelIndex == null) chosenPanelIndex = 0;
+            if(chosenPanelIndex == -1) chosenPanelIndex = 0;
+            System.out.println("panel index assigned = " + chosenPanelIndex);
             getPlayerByHashcode(playerHashCode).setPanel(panels.get(playerHashCode).get(chosenPanelIndex));
-
         }
         extractPublicObjCards();
         extractToolCards();

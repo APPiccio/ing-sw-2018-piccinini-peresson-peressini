@@ -125,7 +125,9 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             //TODO handle response to server and panel choice
             int panelIndex = Integer.parseInt(command);
             myPanel = panels.get(panelIndex);
+            controller.choosePanel(gameHashCode, hashCode, panelIndex);
             inGame(panelIndex, null);
+
         }
         else{
             if(isGameStarted){
