@@ -35,6 +35,8 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
     private JoinGameResult joinGameResult;
     private ArrayList<WindowPanel> panelAvailable;
     private ArrayList<Button> buttons;
+    private boolean receivedMyPanels;
+    private boolean userHasChosen;
     private static final String SELECT = "Select";
 
     WindowsPanelSelection() throws RemoteException {
@@ -42,6 +44,8 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
     }
 
     void init(RemoteController controller, Stage stage, JoinGameResult joinGameResult) {
+        receivedMyPanels = false;
+        userHasChosen = false;
         this.controller = controller;
         this.stage = stage;
         this.joinGameResult = joinGameResult;
@@ -98,7 +102,7 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
         alert.setGraphic(imageView);
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(stage);
-        alert.showAndWait();
+        alert.show();
 
         hBox1.getChildren().clear();
         ArrayList<VBox> selectionPanels = new ArrayList<>();
@@ -140,7 +144,14 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
             if (panelsAlreadyChosen.size() != 0) {
                 chosenPanels(panelsAlreadyChosen);
             }
+            if(!userHasChosen && receivedMyPanels){
+                        //disable buttons due to exceeded timer
+                        //auto panel assignment to panel 0
+                        disableButtons();
+                        showAlertTimeout();
+            }
             if (joinGameResult.getPlayerHashCode() == playerHashCode) {
+                receivedMyPanels = true;
                 privateColor = color;
                 createSelection();
             }
@@ -151,6 +162,10 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
     @Override
     public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
         Platform.runLater(() -> {
+                    if(!userHasChosen){
+                        disableButtons();
+                        showAlertTimeout();
+                    }
                     MainGamePane mainGamePane = null;
                     try {
                         mainGamePane = new MainGamePane();
@@ -162,14 +177,19 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
         );
     }
 
-    @Override
-    public void handle(MouseEvent event) {
-        Button clickedBtn = (Button) event.getSource();
+    private void disableButtons(){
         for (Button button : buttons) {
             button.setDisable(true);
         }
+    }
+
+    @Override
+    public void handle(MouseEvent event) {
+        Button clickedBtn = (Button) event.getSource();
+        disableButtons();
         int gameHash = joinGameResult.getGameHashCode();
         int playerHash = joinGameResult.getPlayerHashCode();
+        userHasChosen = true;
         try {
             if (clickedBtn.equals(buttons.get(0))) {
                 controller.choosePanel(gameHash, playerHash, 0);
@@ -187,6 +207,14 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void showAlertTimeout(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Panel choice timer timeout");
+        alert.setHeaderText(null);
+        alert.setContentText("Timer timeout, skip choice");
+        alert.show();
     }
 
 }
