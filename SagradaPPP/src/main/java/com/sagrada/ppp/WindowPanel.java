@@ -244,10 +244,10 @@ public class WindowPanel implements Serializable {
      * @return true if the cell i is in the edge of the panel
      */
     private boolean borderPosition(int i){
-        int row = i / StaticValues.PATTERN_ROW;
+        int row = i / StaticValues.PATTERN_COL;
         int col = i - row*StaticValues.PATTERN_COL;
 
-        return row == 0 || row == StaticValues.PATTERN_ROW || col == 0 || col == StaticValues.PATTERN_COL;
+        return row == 0 || row == StaticValues.PATTERN_ROW-1 || col == 0 || col == StaticValues.PATTERN_COL-1;
     }
 
     /**

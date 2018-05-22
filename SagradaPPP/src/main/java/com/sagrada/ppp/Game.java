@@ -34,6 +34,7 @@ public class Game implements Serializable{
     private volatile boolean isSpecialTurn;
     private volatile boolean endTurn;
     private volatile boolean turnTimeout;
+    private MyTimerTask currentTimerTask;
 
     /*
     TODO: Add a method that given the username string returns the desired players
@@ -114,14 +115,8 @@ public class Game implements Serializable{
                 isSpecialTurn = false;
                 turnTimeout = false;
                 Timer turnTimer = new Timer();
-                turnTimer.schedule(
-                        new TimerTask() {
-                            @Override
-                            public void run() {
-                                System.out.println("TURN TIMEOUT!");
-                                turnTimeout = true;
-                            }
-                        }, StaticValues.TURN_DURATION);
+                currentTimerTask = new MyTimerTask();
+                turnTimer.schedule(currentTimerTask, StaticValues.TURN_DURATION);
                 while (!endTurn && !(dicePlaced && usedToolCard && !isSpecialTurn) && !turnTimeout){
                     //wait for user action
                 }
@@ -525,9 +520,10 @@ public class Game implements Serializable{
 
     public synchronized PlaceDiceResult placeDice(int playerHashCode, int diceIndex, int row, int col){
         Player currentPlayer = getPlayerByHashcode(playerHashCode);
+        if (dicePlaced) return new PlaceDiceResult("Can't place two dice in the same turn!", false,currentPlayer.getPanel());
         if(players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult("Can't do game actions during others players turn", false,currentPlayer.getPanel());
-
-        boolean result = currentPlayer.getPanel().addDiceOnCellWithPosition(row, col, draftPool.get(diceIndex));
+        int index = (row * StaticValues.PATTERN_COL) + col;
+        boolean result = currentPlayer.getPanel().addDice(index,draftPool.get(diceIndex));
         System.out.println("place dice result = " + result);
         if(result) {
             dicePlaced = true;
@@ -558,6 +554,7 @@ public class Game implements Serializable{
     public void setEndTurn(int playerHashCode){
         if(players.get(getCurrentPlayerIndex()).hashCode() == playerHashCode){
             endTurn = true;
+            currentTimerTask.isValid = false;
         }
     }
 
@@ -576,5 +573,26 @@ public class Game implements Serializable{
         playerScore.calculateTotalPoints();
         return playerScore;
     }
+
+    private class MyTimerTask extends TimerTask{
+
+        public volatile boolean isValid;
+
+        public MyTimerTask(){
+            isValid = true;
+        }
+
+        @Override
+        public void run() {
+            if(isValid){
+                System.out.println("TURN TIMEOUT");
+                turnTimeout = true;
+            }
+            else{
+                System.out.println("TIMEOUT ALREADY ENDED TASK --> DO NOTHING");
+            }
+        }
+    }
+
 }
 

@@ -13,7 +13,19 @@ public class WindowPanelTest {
     @Test
     public void testDicePositioning() {
 
-        WindowPanel panel = new WindowPanel(1,1);
+        WindowPanel panel = new WindowPanel(0,0);
+        assertTrue(panel.addDice(4, new Dice()));
+        panel = new WindowPanel(0,0);
+        assertTrue(panel.addDice(9, new Dice()));
+        panel = new WindowPanel(0,0);
+        assertTrue(panel.addDice(14, new Dice()));
+        panel = new WindowPanel(0,0);
+        assertTrue(panel.addDice(19, new Dice()));
+
+
+
+
+        panel = new WindowPanel(1,1);
 
         //first dice in a non border position
         assertFalse(panel.addDice(8, new Dice()));
