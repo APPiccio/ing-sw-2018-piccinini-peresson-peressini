@@ -268,6 +268,17 @@ public class SocketClientController implements RemoteController, ResponseHandler
     }
 
     @Override
+    public void handle(EndGameNotification response) {
+        for (GameObserver observer : gameObservers) {
+            try {
+                observer.onEndGame(response.playersScore);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public void endTurn(int gameHashCode, int playerHashCode) throws RemoteException {
         try {
             out.writeObject(new EndTurnRequest(gameHashCode, playerHashCode));

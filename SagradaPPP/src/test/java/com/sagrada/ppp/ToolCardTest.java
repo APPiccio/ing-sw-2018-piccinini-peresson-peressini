@@ -22,7 +22,7 @@ public class ToolCardTest {
         card6();
         card7();
         card8();
-        //card9();
+        card9();
         card10();
         card11();
         card12();
@@ -303,10 +303,10 @@ public class ToolCardTest {
         assertEquals(player.getActiveDice(),dice);
 
     }
-    CommandToolCard commandToolCard9;
-    /*
+
     @Test
     public void card9(){
+        CommandToolCard commandToolCard9;
         Player player = new Player("test");
         int index = 0;
 
@@ -327,27 +327,65 @@ public class ToolCardTest {
         assertEquals(player.getPanel().getCell(index).getDiceOn(),dice);
 
         testIllegalStateExceptionToolCard9_1();
-        player.setActiveDice(new Dice());
+
         testIllegalStateExceptionToolCard9_2();
 
 
 
 
     }
-
-
     @Test(expected = IllegalStateException.class)
     public void testIllegalStateExceptionToolCard9_1(){
+        CommandToolCard commandToolCard9;
         Player player = new Player("test");
+        int index = 0;
+
+        WindowPanel panel = new WindowPanel(10, StaticValues.FRONT_SIDE);
+
+        panel.addDice(2, new Dice(Color.GREEN, 3));
+
+        panel.addDice(8,new Dice(Color.BLUE, 6));
+
+
+        commandToolCard9 = new CommandToolCard9(player,index);
+        Dice dice = new Dice();
+        player.setActiveDice(dice);
+        player.setPanel(panel);
+
+        commandToolCard9.useCard();
+
+        assertEquals(player.getPanel().getCell(index).getDiceOn(),dice);
 
         new CommandToolCard9(player,19).useCard();
     }
     @Test(expected = IllegalStateException.class)
     public void testIllegalStateExceptionToolCard9_2(){
+        CommandToolCard commandToolCard9;
+        Player player = new Player("test");
+        int index = 0;
+
+        WindowPanel panel = new WindowPanel(10, StaticValues.FRONT_SIDE);
+
+        panel.addDice(2, new Dice(Color.GREEN, 3));
+
+        panel.addDice(8,new Dice(Color.BLUE, 6));
+
+
+        commandToolCard9 = new CommandToolCard9(player,index);
+        Dice dice = new Dice();
+        player.setActiveDice(dice);
+        player.setPanel(panel);
+
         commandToolCard9.useCard();
+
+        assertEquals(player.getPanel().getCell(index).getDiceOn(),dice);
+
+        commandToolCard9.useCard();
+
+        player.setActiveDice(new Dice());
     }
 
-*/
+
     @Test
     public void card10(){
         Dice dice = new Dice(Color.PURPLE, 1);

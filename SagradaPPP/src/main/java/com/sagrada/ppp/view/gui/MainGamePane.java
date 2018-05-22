@@ -20,6 +20,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
@@ -62,6 +63,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private EventHandler<MouseEvent> draftPoolDiceEventHandler;
+    private EventHandler<MouseEvent> skipButtonEventHandler;
     private Label gameStatus;
 
     public MainGamePane() throws RemoteException {
@@ -109,6 +111,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         skipButton.setText("Skip Turn");
         skipButton.setPadding(defInset);
         skipButton.setDisable(true);
+        skipButton.addEventHandler(MouseEvent.MOUSE_CLICKED,skipButtonEventHandler);
         VBox.setMargin(skipButton,defInset);
         skipButton.setAlignment(Pos.CENTER);
 
@@ -122,8 +125,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         GridPane.setHalignment(topContainer,HPos.CENTER);
         topContainer.setPadding(defInset);
         mainGamePane.add(topContainer,0,0,1,1);
-
-        roundTrackPane.init();
         mainGamePane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,new CornerRadii(5),new Insets(0))));
 
         ImageView privateCardImageView = new ImageView();
@@ -153,6 +154,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         draftPoolContainer.setPadding(defInset);
         draftPoolContainer.getChildren().addAll(draftPoolTitle, draftPoolPane);
 
+        roundTrackPane.init();
         draftPoolPane.setHgap(2);
         draftPoolPane.setVgap(2);
         draftPoolPane.setPrefWrapLength(190);
@@ -203,7 +205,10 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         stage.show();
         if (currentPlayerUser.equals(joinGameResult.getUsername())){
             skipButton.setDisable(false);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn!");
+            alert.setHeaderText(null);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
             alert.show();
         }
 
@@ -247,7 +252,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
                     playerWindowPanel.setPanel(player.getPanel());
                 }
             }else {
-                //TODO: once possible update with remaining tokens
                 Label username = new Label("#" + players.indexOf(player) + " " + player.getUsername() +"\t Remaining Tokens : " + player.getFavorTokens() );
                 username.setTextFill(Color.BLACK);
                 username.setAlignment(Pos.CENTER);
@@ -338,6 +342,13 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
             }
 
         };
+        skipButtonEventHandler = event -> {
+            try {
+                controller.endTurn(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        };
     }
 
     @Override
@@ -362,6 +373,9 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
                                 drawDraftPool();
                             }else{
                                 Alert alert = new Alert(Alert.AlertType.ERROR,result.message);
+                                alert.setHeaderText(null);
+                                alert.initModality(Modality.APPLICATION_MODAL);
+                                alert.initOwner(stage);
                                 alert.showAndWait();
                             }
 
@@ -373,6 +387,9 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
         }else {
             Alert alert = new Alert(Alert.AlertType.ERROR,"Please Select a dice and THEN click on a panel cell!");
+            alert.setHeaderText(null);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
             alert.showAndWait();
         }
 
@@ -392,6 +409,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
         Platform.runLater(()->{
             if(!dicePlacedMessage.username.equals(joinGameResult.getUsername())) {
+                draftPool = dicePlacedMessage.draftPool;
                 players.stream().filter(x -> x.getUsername().equals(dicePlacedMessage.username)).findFirst().orElse(null).setPanel(dicePlacedMessage.panel);
                 drawDraftPool();
                 drawWindowPanels();
@@ -402,6 +420,41 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     @Override
     public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+       Platform.runLater(()->{
+            roundTrack = endTurnMessage.roundTrack;
+            roundTrackPane.setRoundTrack(roundTrack);
+            draftPool = endTurnMessage.draftpool;
+            currentPlayerUser = endTurnMessage.currentPlayer.getUsername();
+            players = endTurnMessage.players;
+            drawDraftPool();
+            drawWindowPanels();
 
+            if(endTurnMessage.currentPlayer.getUsername().equals(joinGameResult.getUsername())){
+                skipButton.setDisable(false);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn!");
+                alert.setHeaderText(null);
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.initOwner(stage);
+                alert.show();
+            }else if(endTurnMessage.previousPlayer.getUsername().equals(joinGameResult.getUsername())){
+                skipButton.setDisable(true);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION,"Your turn is ended!");
+                alert.setHeaderText(null);
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.initOwner(stage);
+                alert.show();
+            }
+        });
+    }
+
+    @Override
+    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+        Platform.runLater(() -> {
+            try {
+                new ResultPane(playersScore, publicObjectiveCards, controller, stage);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

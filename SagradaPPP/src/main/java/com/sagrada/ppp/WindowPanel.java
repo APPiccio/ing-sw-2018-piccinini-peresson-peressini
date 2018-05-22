@@ -398,4 +398,15 @@ public class WindowPanel implements Serializable {
         return false;
     }
 
+    public int getEmptyCells() {
+        return (int) cells.stream().filter(x -> !x.hasDiceOn()).count();
+    }
+
+    public int getPrivateScore(Color color) {
+        return cells.stream().filter(Cell::hasDiceOn)
+                .filter(x -> x.getDiceOn().getColor().equals(color))
+                .map(x -> x.getDiceOn().getValue())
+                .reduce(0,(x,y) -> x + y);
+    }
+
 }

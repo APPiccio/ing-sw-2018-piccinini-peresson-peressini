@@ -171,4 +171,15 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+        try {
+            out.writeObject(new EndGameNotification(playersScore));
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

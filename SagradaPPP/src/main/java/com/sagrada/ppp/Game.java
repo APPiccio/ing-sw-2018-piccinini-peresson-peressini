@@ -92,6 +92,7 @@ public class Game implements Serializable{
             if(chosenPanelIndex == -1) chosenPanelIndex = 0;
             System.out.println("panel index assigned = " + chosenPanelIndex);
             getPlayerByHashcode(playerHashCode).setPanel(panels.get(playerHashCode).get(chosenPanelIndex));
+            getPlayerByHashcode(playerHashCode).setFavorTokens(getPlayerByHashcode(playerHashCode).getPanel().getFavorTokens());
         }
         extractPublicObjCards();
         extractToolCards();
@@ -120,7 +121,7 @@ public class Game implements Serializable{
                                 System.out.println("TURN TIMEOUT!");
                                 turnTimeout = true;
                             }
-                        }, 1*1000);
+                        }, StaticValues.TURN_DURATION);
                 while (!endTurn && !(dicePlaced && usedToolCard && !isSpecialTurn) && !turnTimeout){
                     //wait for user action
                 }
@@ -138,8 +139,14 @@ public class Game implements Serializable{
             setTurn(1);
             if(i != 10) notifyEndTurn(justPlayedPlayer, players.get(getCurrentPlayerIndex()));
         }
-        //TODO score calculation code with notification of game completed
+        ArrayList<PlayerScore> playersScore = new ArrayList<>();
+        for (Player player : players) {
+            playersScore.add(getPlayerScore(player));
+        }
+        notifyEndGame(playersScore);
     }
+
+
 
     public ArrayList<Dice> getDraftPool(){
         ArrayList<Dice> h = new ArrayList<>();
@@ -170,7 +177,7 @@ public class Game implements Serializable{
         }
         else{
             roundTrack.setDicesOnTurn(roundTrack.getCurrentRound(), getDraftPool());
-            roundTrack.setCurrentRound(roundTrack.getCurrentRound() + 1);
+            roundTrack.nextRound();
             draftPool.clear();
             draftPool.addAll(diceBag.extractDices(players.size() *2 + 1));
             reorderPlayers();
@@ -254,18 +261,6 @@ public class Game implements Serializable{
         //Commented cause im not sure this keep the array ordered
         //naive way doesn't fail
         //return this.getPlayers().stream().map(Player::getUsername).collect(Collectors.toCollection(ArrayList::new));
-    }
-    public int getPrivateScore(Player activePlayer) {
-        int score = 0;
-        for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
-            Dice tempDice = activePlayer.getPanel().getCell(i).getDiceOn();
-            if (tempDice != null) {
-                if (tempDice.getColor() == activePlayer.getPrivateColor()) {
-                    score += tempDice.getValue();
-                }
-            }
-        }
-        return score;
     }
 
     public void leaveLobby(String username, LobbyObserver observer){
@@ -384,6 +379,16 @@ public class Game implements Serializable{
         }
     }
 
+    private void notifyEndGame(ArrayList<PlayerScore> playersScore) {
+        for(GameObserver gameObserver : gameObservers){
+            try {
+                gameObserver.onEndGame(playersScore);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public HashMap<Integer, ArrayList<WindowPanel>> extractPanels() {
         HashMap<Integer, ArrayList<WindowPanel>> temp = new HashMap<>();
         ArrayList<Integer> notUsedPanel = new ArrayList<>();
@@ -412,8 +417,7 @@ public class Game implements Serializable{
         }
         for (Player player : players){
             int index = ThreadLocalRandom.current().nextInt(0, notUsedColor.size());
-            notUsedColor.remove(index);
-            player.setPrivateColor(Color.values()[index]);
+            player.setPrivateColor(Color.values()[notUsedColor.remove(index)]);
         }
     }
 
@@ -557,7 +561,20 @@ public class Game implements Serializable{
         }
     }
 
-
-
+    private PlayerScore getPlayerScore(Player player) {
+        PlayerScore playerScore = new PlayerScore();
+        playerScore.setUsername(player.getUsername());
+        playerScore.setPlayerHashCode(player.hashCode());
+        playerScore.setPrivateColor(player.getPrivateColor());
+        playerScore.setWindowPanel(player.getPanel());
+        playerScore.setFavorTokenPoints(player.getFavorTokens());
+        playerScore.setEmptyCellsPoints(player.getPanel().getEmptyCells());
+        playerScore.setPublicObjectiveCard1Points(publicObjectiveCards.get(0).getScore(player.getPanel()));
+        playerScore.setPublicObjectiveCard2Points(publicObjectiveCards.get(1).getScore(player.getPanel()));
+        playerScore.setPublicObjectiveCard3Points(publicObjectiveCards.get(2).getScore(player.getPanel()));
+        playerScore.setPrivateObjectiveCardPoints(player.getPanel().getPrivateScore(player.getPrivateColor()));
+        playerScore.calculateTotalPoints();
+        return playerScore;
+    }
 }
 
