@@ -361,4 +361,9 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         });
 
     }
+
+    @Override
+    public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+
+    }
 }

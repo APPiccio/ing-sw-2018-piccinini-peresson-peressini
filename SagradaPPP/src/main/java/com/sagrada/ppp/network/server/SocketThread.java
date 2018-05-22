@@ -127,6 +127,12 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
+    public Response handle(EndTurnRequest request) {
+        service.endTurn(request.gameHashCode, request.playerHashCode);
+        return null;
+    }
+
+    @Override
     public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
         try {
             out.writeObject(new DicePlacedNotification(dicePlacedMessage));
@@ -150,6 +156,17 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
         try {
             out.writeObject(new GameStartNotification(gameStartMessage));
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+        try {
+            out.writeObject(new EndTurnNotification(endTurnMessage));
+            out.reset();
         } catch (IOException e) {
             e.printStackTrace();
         }

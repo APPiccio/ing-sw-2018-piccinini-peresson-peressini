@@ -223,4 +223,8 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
         alert.show();
     }
 
+    @Override
+    public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+
+    }
 }

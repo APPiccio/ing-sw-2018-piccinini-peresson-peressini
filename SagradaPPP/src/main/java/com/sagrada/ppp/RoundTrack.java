@@ -1,8 +1,9 @@
 package com.sagrada.ppp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class RoundTrack {
+public class RoundTrack implements Serializable {
 
     private ArrayList<ArrayList<Dice>> dicesOnTrack;
     private int rounds;
@@ -145,5 +146,18 @@ public class RoundTrack {
         }else {
             throw new IllegalStateException("trying to increment round over its upper bound");
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for(int  i = 0; i < 10; i++){
+            sb.append("ROUND " + (i+1) + "DICE:\n");
+            for (Dice dice : getDicesOnRound(i+1)){
+                sb.append("--> " + dice.toString() + "\n" );
+            }
+            sb.append("------\n");
+        }
+        return sb.toString();
     }
 }

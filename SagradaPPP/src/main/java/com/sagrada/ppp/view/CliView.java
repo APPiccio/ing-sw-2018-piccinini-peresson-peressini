@@ -33,6 +33,14 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     transient ArrayList<String> orderedPlayersUsername;
     transient boolean isGameStarted;
     transient HashMap<String, WindowPanel> playersPanel;
+    transient ArrayList<Player> players;
+    transient ArrayList<ToolCard> toolCards;
+    transient ArrayList<PublicObjectiveCard> publicObjectiveCards;
+    transient RoundTrack roundTrack;
+    transient Player currentPlayer;
+    transient boolean usedToolCard;
+    transient boolean placedDice;
+    transient boolean specialTurn;
 
     public CliView(RemoteController controller) throws RemoteException{
         this.scanner = new Scanner(System.in);
@@ -42,6 +50,9 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         gameReady = false;
         keyboardPressed = true;
         isGameStarted = false;
+        specialTurn = false;
+        placedDice = false;
+        usedToolCard = false;
     }
 
 
@@ -188,12 +199,21 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         while (!command.equals(StaticValues.COMMAND_QUIT)){
             switch (command){
                 case StaticValues.COMMAND_PLACE_DICE:
+                    if(!currentPlayer.getUsername().equals(username)){
+                        System.out.println("Permission denied, it's not your turn!");
+                        break;
+                    }
+
+                    if(placedDice){
+                        System.out.println("Permission denied, you have already placed a dice in this turn!");
+                    }
                     if (param.length != 4){
                         System.out.println("ERROR --> Unknown command!");
                     }
                     else {
                         PlaceDiceResult result = controller.placeDice(gameHashCode, hashCode, Integer.parseInt(param[1]), Integer.parseInt(param[2]), Integer.parseInt(param[3]));
                         if(result.status){
+                            placedDice = true;
                             playersPanel.remove(username);
                             playersPanel.put(username, result.panel);
                             draftpool.remove(Integer.parseInt(param[1]));
@@ -260,6 +280,8 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         isGameStarted = true;
         this.playersPanel = gameStartMessage.chosenPanels;
         this.draftpool = gameStartMessage.draftpool;
+        this.publicObjectiveCards = gameStartMessage.publicObjectiveCards;
+        this.toolCards = gameStartMessage.toolCards;
         System.out.println("GAME STARTED");
         System.out.println("----------------------------------------");
         System.out.println("ROUND 1 - TURN 1");
@@ -297,6 +319,59 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     @Override
     public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
 
+    }
+
+    @Override
+    public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+        placedDice = false;
+        usedToolCard = false;
+        specialTurn = false;
+        this.draftpool = endTurnMessage.draftpool;
+        this.players = endTurnMessage.players;
+        this.roundTrack = endTurnMessage.roundTrack;
+        this.currentPlayer = endTurnMessage.currentPlayer;
+        if(endTurnMessage.previousPlayer.getUsername().equals(username)){
+            System.out.println("Your turn is ended!");
+        }
+        else{
+            System.out.println(endTurnMessage.previousPlayer.getUsername() + "'s turn is ended! Player status:");
+            //showPlayerStatus(endTurnMessage.previousPlayer);
+        }
+        System.out.println("----------------------------------------");
+        System.out.println("NOW STARTING --> ROUND = " + endTurnMessage.roundTrack.getCurrentRound() + " - TURN = " + endTurnMessage.turn);
+        //showGameStatus();
+        if(endTurnMessage.currentPlayer.getUsername().equals(username)) {
+            System.out.println("It's your turn!");
+        }
+        else {
+            System.out.println("It's " + endTurnMessage.currentPlayer.getUsername() + "'s turn!");
+        }
+    }
+
+    private void showPlayerStatus(Player player){
+        System.out.println(player.getPanel());
+        System.out.println(player.getFavorTokens());
+    }
+
+    private void showGameStatus(){
+        System.out.println("----------------------------------------");
+        System.out.println("Draft pool: ");
+        for(int i = 0; i < draftpool.size(); i++){
+            System.out.println("ID = " + i + " ---> " + draftpool.get(i).toString());
+        }
+        System.out.println("----------------------------------------");
+        System.out.println("Round Track: ");
+        System.out.println(roundTrack.toString());
+        System.out.println("----------------------------------------");
+        System.out.println("Tool Cards:");
+        for(ToolCard toolCard : toolCards){
+            System.out.println(toolCard.toString());
+        }
+        System.out.println("----------------------------------------");
+        System.out.println("Public Objective Cards:");
+        for(PublicObjectiveCard publicObjectiveCard : publicObjectiveCards){
+            System.out.println(publicObjectiveCard.toString());
+        }
     }
 }
 

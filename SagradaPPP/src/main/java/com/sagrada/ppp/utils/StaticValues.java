@@ -6,6 +6,7 @@ import org.json.JSONTokener;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.invoke.StringConcatFactory;
 
 public class StaticValues {
 
@@ -149,7 +150,8 @@ public class StaticValues {
     public static final String STRING_COMMAND_PLAYERS_IN_LOBBY = "show players connected to this lobby";
     public static final String STRING_COMMAND_START_GAME = "start game";
 
-    public static final String STRING_COMMAND_PLACE_DICE = ":dice <dice_index> <cell_row> <cell_col> place the chosen dice in the panel";
+    public static final String STRING_COMMAND_PLACE_DICE = "<dice_index> <cell_row> <cell_col> place the chosen dice in the panel";
+    public static final String STRING_COMMAND_END_TURN = "end your current turn";
 
     // Cli View command
     public static final String COMMAND_QUIT = ":q";
@@ -163,6 +165,7 @@ public class StaticValues {
     public static final String COMMAND_START_GAME = ":start";
 
     public static final String COMMAND_PLACE_DICE = ":dice";
+    public static final String COMMAND_END_TURN = ":end";
 
 
     //AssetUrl

@@ -158,4 +158,8 @@ public class Service {
         return games.get(gameHashCode).placeDice(playerHashCode, diceIndex, row , col);
     }
 
+    public void endTurn(int gameHashCode, int playerHashCode){
+        games.get(gameHashCode).setEndTurn(playerHashCode);
+    }
+
 }

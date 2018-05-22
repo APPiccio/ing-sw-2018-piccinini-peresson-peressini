@@ -1,5 +1,7 @@
 package com.sagrada.ppp.network.commands;
 
+import com.sagrada.ppp.EndTurnNotification;
+
 public interface ResponseHandler {
 
     void handle(Response response);
@@ -12,4 +14,5 @@ public interface ResponseHandler {
     void handle(DisconnectionResponse response);
     void handle(PlaceDiceResponse response);
     void handle(DicePlacedNotification response);
+    void handle(EndTurnNotification response);
 }

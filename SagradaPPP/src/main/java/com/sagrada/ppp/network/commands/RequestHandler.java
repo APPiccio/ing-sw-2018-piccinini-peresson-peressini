@@ -8,4 +8,5 @@ public interface RequestHandler {
     Response handle(PanelChoiceRequest request);
     Response handle(DisconnectionRequest request);
     Response handle(PlaceDiceRequest request);
+    Response handle(EndTurnRequest request);
 }

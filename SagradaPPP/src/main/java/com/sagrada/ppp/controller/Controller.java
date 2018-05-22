@@ -56,4 +56,9 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         System.out.println("chiamata passa al controller");
         return service.placeDice(gameHashCode, playerHashCode, diceIndex, row, col);
     }
+
+    @Override
+    public void endTurn(int gameHashCode, int playerHashCode) throws RemoteException {
+        service.endTurn(gameHashCode,playerHashCode);
+    }
 }

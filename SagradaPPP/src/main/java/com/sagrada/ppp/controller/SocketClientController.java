@@ -256,6 +256,17 @@ public class SocketClientController implements RemoteController, ResponseHandler
         }
     }
 
+    @Override
+    public void handle(EndTurnNotification response) {
+        for(GameObserver observer : gameObservers){
+            try {
+                observer.onEndTurn(response.endTurnMessage);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void closeConnection(){
         try {
             in.close();

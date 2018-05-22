@@ -2,7 +2,8 @@ package com.sagrada.ppp;
 
 import com.sagrada.ppp.utils.StaticValues;
 
-public class PanelChoiceTimer extends Thread {
+public class
+PanelChoiceTimer extends Thread {
     long startTime;
     Game game;
 

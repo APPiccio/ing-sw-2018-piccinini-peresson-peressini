@@ -7,10 +7,7 @@ import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -32,6 +29,11 @@ public class Game implements Serializable{
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private int turn;
+    private volatile boolean dicePlaced;
+    private volatile boolean usedToolCard;
+    private volatile boolean isSpecialTurn;
+    private volatile boolean endTurn;
+    private volatile boolean turnTimeout;
 
     /*
     TODO: Add a method that given the username string returns the desired players
@@ -53,6 +55,11 @@ public class Game implements Serializable{
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
         chosenPanelIndex = -1;
+        dicePlaced = false;
+        usedToolCard = false;
+        isSpecialTurn = false;
+        endTurn = false;
+        turnTimeout = false;
     }
 
     public void init(){
@@ -72,6 +79,7 @@ public class Game implements Serializable{
                     usernameToPanelHashMap.put(player.getUsername(), player.getPanel());
                 }
             }
+            //TODO change getPrivateColor with getPlayerByHashCode.getPrivateColor
             notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerPrivateColor(playerHashCode));
             PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(System.currentTimeMillis(), this);
             panelChoiceTimer.start();
@@ -95,7 +103,42 @@ public class Game implements Serializable{
     }
 
     public void gameHandler(){
-        //TODO implement game logic
+        Player justPlayedPlayer = null;
+        for(int i = 1; i <= 10; i++){
+            for(int j = 1; j <= players.size()*2; j++){
+                System.out.println("BEGIN TURN = " + j + ", ROUND = " + i);
+                endTurn = false;
+                dicePlaced = false;
+                usedToolCard = false;
+                isSpecialTurn = false;
+                turnTimeout = false;
+                Timer turnTimer = new Timer();
+                turnTimer.schedule(
+                        new TimerTask() {
+                            @Override
+                            public void run() {
+                                System.out.println("TURN TIMEOUT!");
+                                turnTimeout = true;
+                            }
+                        }, 1*1000);
+                while (!endTurn && !(dicePlaced && usedToolCard && !isSpecialTurn) && !turnTimeout){
+                    //wait for user action
+                }
+                System.out.println("END TURN = " + j + ", ROUND = " + i);
+                System.out.println("turn ended by user = " + endTurn);
+                System.out.println("dice placed= " + dicePlaced);
+                System.out.println("used toolcard = " + usedToolCard);
+                System.out.println("is special turn = " + isSpecialTurn);
+                System.out.println("turn timeout" + turnTimeout);
+                justPlayedPlayer = players.get(getCurrentPlayerIndex());
+                toNextTurn();
+                if(j != players.size()*2) notifyEndTurn(justPlayedPlayer , players.get(getCurrentPlayerIndex()));
+            }
+            toNextRound();
+            setTurn(1);
+            if(i != 10) notifyEndTurn(justPlayedPlayer, players.get(getCurrentPlayerIndex()));
+        }
+        //TODO score calculation code with notification of game completed
     }
 
     public ArrayList<Dice> getDraftPool(){
@@ -130,6 +173,7 @@ public class Game implements Serializable{
             roundTrack.setCurrentRound(roundTrack.getCurrentRound() + 1);
             draftPool.clear();
             draftPool.addAll(diceBag.extractDices(players.size() *2 + 1));
+            reorderPlayers();
         }
     }
 
@@ -329,6 +373,17 @@ public class Game implements Serializable{
         }
     }
 
+    public void notifyEndTurn(Player previousPlayer, Player currentPlayer){
+        EndTurnMessage endTurnMessage = new EndTurnMessage(previousPlayer, currentPlayer, players, turn, draftPool, roundTrack);
+        for(GameObserver gameObserver : gameObservers){
+            try {
+                gameObserver.onEndTurn(endTurnMessage);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public HashMap<Integer, ArrayList<WindowPanel>> extractPanels() {
         HashMap<Integer, ArrayList<WindowPanel>> temp = new HashMap<>();
         ArrayList<Integer> notUsedPanel = new ArrayList<>();
@@ -434,6 +489,11 @@ public class Game implements Serializable{
         return false;
     }
 
+    private void toNextTurn(){
+        setTurn(turn + 1);
+        //reorderPlayers();
+    }
+
     private void reorderPlayers(){
 
         ArrayList<Player> h = new ArrayList<>();
@@ -466,6 +526,7 @@ public class Game implements Serializable{
         boolean result = currentPlayer.getPanel().addDiceOnCellWithPosition(row, col, draftPool.get(diceIndex));
         System.out.println("place dice result = " + result);
         if(result) {
+            dicePlaced = true;
             draftPool.remove(diceIndex);
             return new PlaceDiceResult("risiko è meglio",true,new WindowPanel(currentPlayer.getPanel()));
         }
@@ -480,6 +541,14 @@ public class Game implements Serializable{
         }
         return null;
     }
+
+    public void setEndTurn(int playerHashCode){
+        if(players.get(getCurrentPlayerIndex()).hashCode() == playerHashCode){
+            endTurn = true;
+        }
+    }
+
+
 
 }
 
