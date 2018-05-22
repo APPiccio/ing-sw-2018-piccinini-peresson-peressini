@@ -11,6 +11,7 @@ public class DiceButton extends Button {
 
 
     private boolean selected = false;
+    private int index;
     private Dice dice;
     public DiceButton(Dice dice,double diceWidth,double diceHeight) {
         this.dice = dice;
@@ -32,6 +33,14 @@ public class DiceButton extends Button {
 
     public boolean isSelected() {
         return selected;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public Dice getDice() {

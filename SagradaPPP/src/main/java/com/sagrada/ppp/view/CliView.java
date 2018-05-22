@@ -293,6 +293,11 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             System.out.println("It's " + gameStartMessage.playersUsername.get(0) + "'s turn!");
         }
     }
+
+    @Override
+    public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
+
+    }
 }
 
 

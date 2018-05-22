@@ -17,7 +17,7 @@ public class PrinterFormatter {
     private static final char BOTTOM_RIGHT = (int) '┘';
     private static final char BOTTOM_CENTER = (int) '┴';
     private static final char BOTTOM_LEFT = (int) '└';
-    private static final String HORIZZONTAL = "─────────";
+    private static final String HORIZONTAL = "─────────";
     private static final char VERTICAL = (int) '│';
 
 
@@ -47,7 +47,7 @@ public class PrinterFormatter {
             String[] rowValue = new String[5];
             String[] rowColor = new String[5];
             String[] horizontalRow = {
-                    HORIZZONTAL,HORIZZONTAL,HORIZZONTAL,HORIZZONTAL,HORIZZONTAL
+                    HORIZONTAL, HORIZONTAL, HORIZONTAL, HORIZONTAL, HORIZONTAL
             };
 
             //add top table row

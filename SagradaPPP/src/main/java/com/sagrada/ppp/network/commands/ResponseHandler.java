@@ -11,4 +11,5 @@ public interface ResponseHandler {
     void handle(GameStartNotification response);
     void handle(DisconnectionResponse response);
     void handle(PlaceDiceResponse response);
+    void handle(DicePlacedNotification response);
 }

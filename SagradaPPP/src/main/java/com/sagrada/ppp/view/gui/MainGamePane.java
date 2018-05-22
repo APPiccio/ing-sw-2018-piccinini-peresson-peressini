@@ -1,28 +1,24 @@
 package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.*;
+import com.sagrada.ppp.Cell;
 import com.sagrada.ppp.cards.PublicObjectiveCard;
 import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
-import javafx.animation.ScaleTransition;
-import javafx.event.Event;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -35,7 +31,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     private RoundTrack roundTrack;
     private double height,widht = 100d;
 
-    private BorderPane mainGamePane;
+    private GridPane mainGamePane;
     private VBox opponentsWindowPanelsPane;
     private FlowPane bottomContainer;
     private RoundTrackPane roundTrackPane;
@@ -59,6 +55,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     private ArrayList<Button> toolCardButtons,publicCardButtons;
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
+    private EventHandler<MouseEvent> draftPoolDiceEventHandler;
 
     public MainGamePane() throws RemoteException {
 
@@ -68,7 +65,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         gameTab = new Tab();
         settingsTab = new Tab();
         logTab = new Tab();
-        mainGamePane = new BorderPane();
+        mainGamePane = new GridPane();
         toolCardButtons = new ArrayList<>();
         publicCardButtons = new ArrayList<>();
         opponentsWindowPanelsPane = new VBox();
@@ -83,6 +80,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         topContainer = new HBox();
         draftPoolDiceButtons = new ArrayList<>();
 
+        createListeners();
 
     }
 
@@ -98,15 +96,15 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         publicCardsContainer.setHgap(5);
         publicCardsContainer.setPadding(defInset);
         publicCardsContainer.add(publicObjectiveCardsTitle,0,0,2,1);
-
+        mainGamePane.add(opponentsWindowPanelsPane,1,0,1,3);
         drawToolCards();
         drawPublicObjectiveCards();
 
         topContainer.getChildren().addAll(toolCardsContainer,publicCardsContainer);
         topContainer.setAlignment(Pos.CENTER);
-        BorderPane.setAlignment(topContainer,Pos.CENTER);
+        GridPane.setHalignment(topContainer,HPos.CENTER);
         topContainer.setPadding(defInset);
-        mainGamePane.setTop(topContainer);
+        mainGamePane.add(topContainer,0,0,1,1);
 
         roundTrackPane.init();
         mainGamePane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,new CornerRadii(5),new Insets(0))));
@@ -116,10 +114,10 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         privateCardImageView.setImage(new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_"+privateColor.toString().toLowerCase()+".png",150,204,true,true));
 
         bottomContainer.setAlignment(Pos.CENTER);
-        BorderPane.setAlignment(bottomContainer,Pos.BOTTOM_CENTER);
+        GridPane.setHalignment(bottomContainer,HPos.CENTER);
         bottomContainer.getChildren().addAll(privateCardImageView,roundTrackPane);
         bottomContainer.setPadding(defInset);
-        mainGamePane.setBottom(bottomContainer);
+        mainGamePane.add(bottomContainer,0,2,1,1);
 
         Label draftPoolTitle = new Label("DraftPool");
         draftPoolTitle.setTextFill(Color.BLACK);
@@ -143,17 +141,24 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         centerContainer.getChildren().add(draftPoolContainer);
         centerContainer.setAlignment(Pos.CENTER);
         centerContainer.setPadding(defInset);
-        mainGamePane.setCenter(centerContainer);
+        mainGamePane.add(centerContainer,0,1,1,1);
 
         opponentsWindowPanelsPane.setFillWidth(false);
         opponentsWindowPanelsPane.setAlignment(Pos.CENTER);
         opponentsWindowPanelsPane.setSpacing(5);
         opponentsWindowPanelsPane.getChildren().add(new Label("OpponentsPanels:"));
 
+        //drawing All Window Panels
+        GridPane.setFillWidth(centerContainer,true);
+        centerContainer.getChildren().add(playerWindowPanel);
+        playerWindowPanel.setObserver(this);
+        HBox.setHgrow(playerWindowPanel,Priority.ALWAYS);
+        HBox.setMargin(playerWindowPanel,defInset);
         drawWindowPanels();
         opponentsWindowPanelsPane.setPadding(defInset);
-        mainGamePane.setRight(opponentsWindowPanelsPane);
 
+
+        //setting up all tabs
         gameTab.setContent(mainGamePane);
         gameTab.setText("Game Tab");
         gameTab.setClosable(false);
@@ -165,6 +170,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         logTab.setText("LogTab");
 
         tabContainer.getTabs().addAll(gameTab,settingsTab,logTab);
+        //creating all Listeners
+
         stage.setScene(new Scene(tabContainer, 700, 1270));
         stage.setTitle("Main game");
         stage.setResizable(true);
@@ -182,19 +189,26 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         this.draftPool = draftPool;
         this.toolCards = toolCards;
         this.publicObjectiveCards = publicObjectiveCards;
+        try {
+            this.controller.attachGameObserver(this.joinGameResult.getGameHashCode(),this);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
 
 
         draw();
     }
 
     private void drawWindowPanels(){
+        opponentsWindowPanelsPane.getChildren().clear();
         for (HashMap.Entry<String,WindowPanel> entry: panels.entrySet()) {
             if (entry.getKey().equals(joinGameResult.getUsername())) {
-                playerWindowPanel = new WindowPanelPane(entry.getValue(),330,300);
-                playerWindowPanel.setObserver(this);
-                centerContainer.getChildren().add(playerWindowPanel);
-                HBox.setHgrow(playerWindowPanel,Priority.ALWAYS);
-                HBox.setMargin(playerWindowPanel,defInset);
+                if(playerWindowPanel == null) {
+                    playerWindowPanel = new WindowPanelPane(entry.getValue(), 330, 300);
+
+                }else {
+                    playerWindowPanel.setPanel(entry.getValue());
+                }
             }else {
                 Label username = new Label(entry.getKey() +"\t Remaining Tokens :change" );
                 username.setTextFill(Color.BLACK);
@@ -209,34 +223,14 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         draftPoolDiceButtons.clear();
         draftPoolPane.getChildren().clear();
 
-
-        EventHandler<MouseEvent> diceEventHandler = event -> {
-            DiceButton clickedButton = ((DiceButton) event.getSource());
-            if (clickedButton.isSelected()) {
-                clickedButton.setSelected(false);
-                clickedButton.setScaleY(1);
-                clickedButton.setScaleX(1);
-            }else {
-                for (DiceButton diceButton : draftPoolDiceButtons) {
-                    if (diceButton.isSelected()) {
-                        diceButton.setSelected(false);
-                        diceButton.setScaleX(1);
-                        diceButton.setScaleY(1);
-                    }
-                }
-                clickedButton.setScaleX(1.2);
-                clickedButton.setScaleY(1.2);
-                clickedButton.setSelected(true);
-            }
-
-        };
-
-
+        int index = 0;
         for (Dice dice:draftPool) {
             DiceButton diceButton = new DiceButton(dice,70,70);
+            diceButton.setIndex(index);
             FlowPane.setMargin(diceButton,new Insets(10));
-            diceButton.addEventHandler(MouseEvent.MOUSE_CLICKED,diceEventHandler);
+            diceButton.addEventHandler(MouseEvent.MOUSE_CLICKED, draftPoolDiceEventHandler);
             draftPoolDiceButtons.add(diceButton);
+            index++;
         }
         draftPoolPane.getChildren().addAll(draftPoolDiceButtons);
     }
@@ -284,6 +278,28 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
             count++;
         }
     }
+    private void createListeners(){
+        draftPoolDiceEventHandler = event -> {
+            DiceButton clickedButton = ((DiceButton) event.getSource());
+            if (clickedButton.isSelected()) {
+                clickedButton.setSelected(false);
+                clickedButton.setScaleY(1);
+                clickedButton.setScaleX(1);
+            }else {
+                for (DiceButton diceButton : draftPoolDiceButtons) {
+                    if (diceButton.isSelected()) {
+                        diceButton.setSelected(false);
+                        diceButton.setScaleX(1);
+                        diceButton.setScaleY(1);
+                    }
+                }
+                clickedButton.setScaleX(1.2);
+                clickedButton.setScaleY(1.2);
+                clickedButton.setSelected(true);
+            }
+
+        };
+    }
 
     @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, com.sagrada.ppp.Color playerPrivateColor) throws RemoteException {
@@ -295,7 +311,31 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
 
     @Override
-    public void onCellClicked(int id, Cell cell) {
+    public void onCellClicked(int x,int y) {
+        DiceButton diceButtonSelected = draftPoolDiceButtons.stream().filter(DiceButton::isSelected).findFirst().orElse(null);
+        if(diceButtonSelected != null){
+            Platform.runLater(()-> {
+                        try {
+                            PlaceDiceResult result = controller.placeDice(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode(),draftPoolDiceButtons.indexOf(diceButtonSelected),y,x);
+                            if(result.status){
+                                playerWindowPanel.setPanel(result.panel);
+                                draftPool.remove(draftPoolDiceButtons.indexOf(diceButtonSelected));
+                                drawDraftPool();
+                            }else{
+                                Alert alert = new Alert(Alert.AlertType.ERROR,result.message);
+                                alert.showAndWait();
+                            }
+
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+            );
+
+        }else {
+            Alert alert = new Alert(Alert.AlertType.ERROR,"Please Select a dice and THEN click on a panel cell!");
+            alert.showAndWait();
+        }
 
     }
 
@@ -306,6 +346,19 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     @Override
     public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
+
+    }
+
+    @Override
+    public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
+        Platform.runLater(()->{
+            if(dicePlacedMessage.username != joinGameResult.getUsername()) {
+                panels.put(dicePlacedMessage.username, dicePlacedMessage.panel);
+                draftPool = dicePlacedMessage.draftPool;
+                drawDraftPool();
+                drawWindowPanels();
+            }
+        });
 
     }
 }

@@ -14,6 +14,8 @@ public interface RemoteController extends Remote {
 
     JoinGameResult joinGame(String username, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException;
 
+    void attachGameObserver(int gameHashCode, GameObserver gameObserver) throws RemoteException;
+
     String getUsername(int playerHashCode, int gameHashCode) throws RemoteException;
 
     int getNumPlayers(int gameHashCode) throws RemoteException;

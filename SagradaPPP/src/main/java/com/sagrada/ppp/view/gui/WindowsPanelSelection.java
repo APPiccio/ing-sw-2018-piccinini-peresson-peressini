@@ -177,6 +177,12 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
         );
     }
 
+    @Override
+    public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
+        //do nothing
+    }
+
+
     private void disableButtons(){
         for (Button button : buttons) {
             button.setDisable(true);

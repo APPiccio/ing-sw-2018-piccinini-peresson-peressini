@@ -459,7 +459,7 @@ public class Game implements Serializable{
         }
     }
 
-    public PlaceDiceResult placeDice(int playerHashCode, int diceIndex, int row, int col){
+    public synchronized PlaceDiceResult placeDice(int playerHashCode, int diceIndex, int row, int col){
         Player currentPlayer = getPlayerByHashcode(playerHashCode);
         if(players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult("Can't do game actions during others players turn", false,currentPlayer.getPanel());
 
