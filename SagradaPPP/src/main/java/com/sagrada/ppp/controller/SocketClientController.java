@@ -267,6 +267,16 @@ public class SocketClientController implements RemoteController, ResponseHandler
         }
     }
 
+    @Override
+    public void endTurn(int gameHashCode, int playerHashCode) throws RemoteException {
+        try {
+            out.writeObject(new EndTurnRequest(gameHashCode, playerHashCode));
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void closeConnection(){
         try {
             in.close();
