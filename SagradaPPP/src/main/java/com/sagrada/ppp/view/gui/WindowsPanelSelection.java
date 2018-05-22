@@ -227,4 +227,9 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
     public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
 
     }
+
+    @Override
+    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+
+    }
 }

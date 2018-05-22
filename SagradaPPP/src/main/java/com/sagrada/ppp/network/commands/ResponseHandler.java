@@ -15,4 +15,5 @@ public interface ResponseHandler {
     void handle(PlaceDiceResponse response);
     void handle(DicePlacedNotification response);
     void handle(EndTurnNotification response);
+    void handle(EndGameNotification response);
 }

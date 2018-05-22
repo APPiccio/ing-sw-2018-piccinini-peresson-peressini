@@ -93,6 +93,11 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     }
 
+    @Override
+    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+        //TODO
+    }
+
     public void draw(){
 
         Label toolCardsTitle = new Label("Tool Cards");

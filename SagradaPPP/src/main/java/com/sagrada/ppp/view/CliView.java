@@ -12,9 +12,7 @@ import static com.sagrada.ppp.utils.StaticValues.*;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class CliView extends UnicastRemoteObject implements LobbyObserver, Serializable, GameObserver {
     transient Scanner scanner;
@@ -162,6 +160,25 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     }
 
     @Override
+    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+        playersScore.sort(Comparator.comparingInt(PlayerScore::getTotalPoints));
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("USERNAME\t\tTOTAL\t\tTOKENS\t\tEMPTY CELLS\t\tPRIVATE\t\tPUB1\t\tPUB2\t\tPUB3\n");
+        stringBuilder.append("--------------------------------------------------------------------------------------------------\n");
+        for (PlayerScore playerScore : playersScore) {
+            stringBuilder.append(playerScore.getUsername() + "\t\t");
+            stringBuilder.append(playerScore.getTotalPoints() + "\t\t");
+            stringBuilder.append(playerScore.getFavorTokenPoints() + "\t\t");
+            stringBuilder.append("-" + playerScore.getEmptyCellsPoints() + "\t\t");
+            stringBuilder.append(playerScore.getPrivateObjectiveCardPoints() + "\t\t");
+            stringBuilder.append(playerScore.getPublicObjectiveCard1Points() + "\t\t");
+            stringBuilder.append(playerScore.getPublicObjectiveCard2Points() + "\t\t");
+            stringBuilder.append(playerScore.getPublicObjectiveCard3Points() + "\n\n");
+        }
+        System.out.println(stringBuilder.toString());
+    }
+
+    @Override
     public void onTimerChanges(long timerStart, TimerStatus timerStatus) throws RemoteException {
         long duration = ((StaticValues.getLobbyTimer() + timerStart) - System.currentTimeMillis())/1000;
         if(timerStatus.equals(TimerStatus.START)){
@@ -276,7 +293,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
 
     @Override
     public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
-
+        currentPlayer = gameStartMessage.players.get(0);
         isGameStarted = true;
         this.playersPanel = gameStartMessage.chosenPanels;
         this.draftpool = gameStartMessage.draftpool;

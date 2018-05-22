@@ -10,4 +10,5 @@ public interface GameObserver extends Remote {
     void onGameStart(GameStartMessage gameStartMessage) throws RemoteException;
     void onDicePlaced(DicePlacedMessage dicePlacedMessage)throws RemoteException;
     void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException;
+    void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException;
 }

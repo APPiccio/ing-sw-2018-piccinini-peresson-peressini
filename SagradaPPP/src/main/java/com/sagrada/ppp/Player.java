@@ -10,14 +10,15 @@ enum PlayerStatus {
 public class Player implements Serializable {
 
     private String username;
-    private String url;
     private WindowPanel panel;
     private Color privateColor;
     private PlayerStatus status;
     private Dice activeDice;
     private int favorTokens;
 
-
+    public void setFavorTokens(int favorTokens) {
+        this.favorTokens = favorTokens;
+    }
 
     public PlayerStatus getPlayerStatus() {
         return status;
