@@ -83,7 +83,7 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
 
         borderPane.setCenter(tabPane);
 
-        stage.setScene(new Scene(borderPane, 610, 670));
+        stage.setScene(new Scene(borderPane, 625, 670));
         stage.setTitle("Panel selection");
         stage.show();
     }
@@ -112,6 +112,7 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
             VBox vBox = new VBox();
             vBox.setSpacing(5);
             vBox.setPadding(new Insets(10, 0, 0, 0));
+            vBox.setAlignment(Pos.CENTER);
             selectionPanels.add(vBox);
             if (i == 0 || i == 1) {
                 hBox1.getChildren().add(selectionPanels.get(i));

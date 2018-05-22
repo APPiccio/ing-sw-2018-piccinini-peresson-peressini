@@ -44,9 +44,11 @@ public class ResultPane extends UnicastRemoteObject {
 
         leftVBox = new VBox();
         leftVBox.setSpacing(10);
+        leftVBox.setAlignment(Pos.CENTER);
 
         rightVBox = new VBox();
         rightVBox.setSpacing(10);
+        rightVBox.setAlignment(Pos.CENTER);
 
         topVBox = new VBox();
         topVBox.setSpacing(10);
@@ -82,9 +84,7 @@ public class ResultPane extends UnicastRemoteObject {
             imageView.setFitHeight(150);
             imageView.setPreserveRatio(true);
             WindowPanelPane windowPanelPane = new WindowPanelPane(playerScore.getWindowPanel(), 150, 150);
-            windowPanelPane.setAlignment(Pos.CENTER);
             Label label = new Label(playerScore.getUsername() + "'s panel");
-            label.setAlignment(Pos.CENTER);
             if (playersScore.size() == 2) {
                 if (i == 0) {
                     leftVBox.getChildren().addAll(imageView, windowPanelPane, label);

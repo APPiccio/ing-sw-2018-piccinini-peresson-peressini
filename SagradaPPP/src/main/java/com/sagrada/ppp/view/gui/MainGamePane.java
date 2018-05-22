@@ -20,6 +20,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
@@ -92,11 +93,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         //creating all Listeners
         createListeners();
 
-    }
-
-    @Override
-    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
-        //TODO
     }
 
     public void draw(){
@@ -209,7 +205,10 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         stage.show();
         if (currentPlayerUser.equals(joinGameResult.getUsername())){
             skipButton.setDisable(false);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn!");
+            alert.setHeaderText(null);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
             alert.show();
         }
 
@@ -374,6 +373,9 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
                                 drawDraftPool();
                             }else{
                                 Alert alert = new Alert(Alert.AlertType.ERROR,result.message);
+                                alert.setHeaderText(null);
+                                alert.initModality(Modality.APPLICATION_MODAL);
+                                alert.initOwner(stage);
                                 alert.showAndWait();
                             }
 
@@ -385,6 +387,9 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
         }else {
             Alert alert = new Alert(Alert.AlertType.ERROR,"Please Select a dice and THEN click on a panel cell!");
+            alert.setHeaderText(null);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
             alert.showAndWait();
         }
 
@@ -426,12 +431,29 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
             if(endTurnMessage.currentPlayer.getUsername().equals(joinGameResult.getUsername())){
                 skipButton.setDisable(false);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn!!");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn!");
+                alert.setHeaderText(null);
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.initOwner(stage);
                 alert.show();
             }else if(endTurnMessage.previousPlayer.getUsername().equals(joinGameResult.getUsername())){
                 skipButton.setDisable(true);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION,"Your turn is ended!");
+                alert.setHeaderText(null);
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.initOwner(stage);
                 alert.show();
+            }
+        });
+    }
+
+    @Override
+    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+        Platform.runLater(() -> {
+            try {
+                new ResultPane(playersScore, publicObjectiveCards, controller, stage);
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         });
     }

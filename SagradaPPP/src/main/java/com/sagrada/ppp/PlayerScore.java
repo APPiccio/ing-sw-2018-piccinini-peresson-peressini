@@ -122,12 +122,8 @@ public class PlayerScore implements Serializable {
     }
 
     public void calculateTotalPoints(){
-        totalPoints =  favorTokenPoints + privateObjectiveCardPoints + publicObjectiveCard1Points + publicObjectiveCard2Points +
-                publicObjectiveCard3Points - emptyCellsPoints;
-    }
-
-    public void setTotalPoints(int totalPoints) {
-        this.totalPoints = totalPoints;
+        totalPoints =  favorTokenPoints + privateObjectiveCardPoints + publicObjectiveCard1Points +
+                publicObjectiveCard2Points + publicObjectiveCard3Points - emptyCellsPoints;
     }
 
 }
