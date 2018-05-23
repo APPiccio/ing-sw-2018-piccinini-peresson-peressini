@@ -20,9 +20,9 @@ public class GameTest {
     @Before
     public void init(){
         game = new Game("user1");
-        game.joinGame("user2", null , null);
-        game.joinGame("user3" , null, null);
-        game.joinGame("user4" , null, null);
+        game.joinGame("user2", null );
+        game.joinGame("user3" , null);
+        game.joinGame("user4" , null);
         game.setTurn(1);
     }
 
