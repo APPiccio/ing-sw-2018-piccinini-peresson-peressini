@@ -72,6 +72,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
         stage.setScene(new Scene(borderPane, 700*1436/2156, 700));
         stage.setTitle("Players Lobby");
+        stage.centerOnScreen();
         stage.show();
     }
 

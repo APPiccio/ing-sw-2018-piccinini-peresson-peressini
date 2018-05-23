@@ -86,6 +86,7 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
 
         this.stage.setScene(new Scene(borderPane, 625, 670));
         this.stage.setTitle("Panel selection");
+        this.stage.centerOnScreen();
         this.stage.show();
     }
 
@@ -203,18 +204,7 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         userHasChosen = true;
         //TODO: change this with more elegant code. use -> index of
         try {
-            if (clickedBtn.equals(buttons.get(0))) {
-                controller.choosePanel(gameHash, playerHash, 0);
-            }
-            else if (clickedBtn.equals(buttons.get(1))) {
-                controller.choosePanel(gameHash, playerHash, 1);
-            }
-            else if (clickedBtn.equals(buttons.get(2))) {
-                controller.choosePanel(gameHash, playerHash, 2);
-            }
-            else if (clickedBtn.equals(buttons.get(3))) {
-                controller.choosePanel(gameHash, playerHash, 3);
-            }
+            controller.choosePanel(gameHash,playerHash,buttons.indexOf(clickedBtn));
         }
         catch (Exception e) {
             e.printStackTrace();
