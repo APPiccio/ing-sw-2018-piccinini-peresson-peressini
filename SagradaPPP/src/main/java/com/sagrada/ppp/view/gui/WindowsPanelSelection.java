@@ -85,6 +85,7 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
 
         stage.setScene(new Scene(borderPane, 625, 670));
         stage.setTitle("Panel selection");
+        stage.centerOnScreen();
         stage.show();
     }
 
