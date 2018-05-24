@@ -1,6 +1,6 @@
 package com.sagrada.ppp.network.commands;
 
-import com.sagrada.ppp.PlaceDiceResult;
+import com.sagrada.ppp.model.PlaceDiceResult;
 
 import java.io.Serializable;
 

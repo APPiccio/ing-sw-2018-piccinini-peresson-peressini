@@ -1,11 +1,8 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.controller.Controller;
-import com.sagrada.ppp.utils.PrinterFormatter;
-import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.view.CliView;
+import com.sagrada.ppp.model.Game;
+import com.sagrada.ppp.model.WindowPanel;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;

@@ -1,6 +1,5 @@
 package com.sagrada.ppp.network.server;
 
-import com.sagrada.ppp.Service;
 import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.IOException;

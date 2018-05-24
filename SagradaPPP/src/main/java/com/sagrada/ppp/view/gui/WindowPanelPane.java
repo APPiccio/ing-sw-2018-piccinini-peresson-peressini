@@ -1,9 +1,7 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.Cell;
-import com.sagrada.ppp.Dice;
-import com.sagrada.ppp.WindowPanel;
-import com.sagrada.ppp.utils.StaticValues;
+import com.sagrada.ppp.model.Cell;
+import com.sagrada.ppp.model.WindowPanel;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -24,7 +22,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
     private double width,height;
 
 
-    public WindowPanelPane(WindowPanel panel,double height,double width) {
+    public WindowPanelPane(WindowPanel panel, double height, double width) {
         this.panel = panel;
 
         name = new Label();

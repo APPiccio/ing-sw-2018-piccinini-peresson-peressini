@@ -1,7 +1,9 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.*;
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.model.JoinGameResult;
+import com.sagrada.ppp.model.LobbyObserver;
+import com.sagrada.ppp.model.TimerStatus;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.application.Platform;
 import javafx.event.EventHandler;

@@ -1,6 +1,6 @@
 package com.sagrada.ppp.network.commands;
 
-import com.sagrada.ppp.PlayerScore;
+import com.sagrada.ppp.model.PlayerScore;
 
 import java.io.Serializable;
 import java.util.ArrayList;

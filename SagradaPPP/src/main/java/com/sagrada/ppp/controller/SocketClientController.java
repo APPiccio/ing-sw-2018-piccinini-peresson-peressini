@@ -1,6 +1,6 @@
 package com.sagrada.ppp.controller;
 
-import com.sagrada.ppp.*;
+import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
 import com.sagrada.ppp.utils.StaticValues;
 

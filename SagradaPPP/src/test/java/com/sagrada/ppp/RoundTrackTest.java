@@ -1,5 +1,8 @@
 package com.sagrada.ppp;
 
+import com.sagrada.ppp.model.Color;
+import com.sagrada.ppp.model.Dice;
+import com.sagrada.ppp.model.RoundTrack;
 import org.junit.Test;
 
 import java.util.ArrayList;

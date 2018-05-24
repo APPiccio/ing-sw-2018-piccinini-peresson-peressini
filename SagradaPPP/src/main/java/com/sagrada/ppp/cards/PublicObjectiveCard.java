@@ -1,6 +1,6 @@
 package com.sagrada.ppp.cards;
 
-import com.sagrada.ppp.WindowPanel;
+import com.sagrada.ppp.model.WindowPanel;
 
 import java.io.Serializable;
 

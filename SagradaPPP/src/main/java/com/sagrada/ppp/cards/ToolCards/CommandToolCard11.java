@@ -1,7 +1,7 @@
 package com.sagrada.ppp.cards.ToolCards;
 
-import com.sagrada.ppp.Dice;
-import com.sagrada.ppp.DiceBag;
+import com.sagrada.ppp.model.Dice;
+import com.sagrada.ppp.model.DiceBag;
 
 public class CommandToolCard11 implements CommandToolCard {
 

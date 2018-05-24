@@ -1,7 +1,7 @@
 package com.sagrada.ppp.view;
 
-import com.sagrada.ppp.*;
-import com.sagrada.ppp.Color;
+import com.sagrada.ppp.model.Dice;
+import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.cards.PublicObjectiveCard;
 import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;

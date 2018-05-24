@@ -2,8 +2,7 @@ package com.sagrada.ppp.network.commands;
 
 
 
-import com.sagrada.ppp.JoinGameResult;
-import com.sagrada.ppp.LeaveGameResult;
+import com.sagrada.ppp.model.LeaveGameResult;
 
 import java.io.Serializable;
 

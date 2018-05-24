@@ -1,6 +1,10 @@
 package com.sagrada.ppp.utils;
 
 import com.sagrada.ppp.*;
+import com.sagrada.ppp.model.Cell;
+import com.sagrada.ppp.model.Color;
+import com.sagrada.ppp.model.Dice;
+import com.sagrada.ppp.model.WindowPanel;
 
 import java.util.ArrayList;
 
@@ -92,7 +96,7 @@ public class PrinterFormatter {
 
 
 
-    private static String getColoredString(Color color,String msg){
+    private static String getColoredString(Color color, String msg){
         switch (color){
             case GREEN:
                 return GREEN_BOLD + msg + RESET;

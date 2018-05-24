@@ -1,10 +1,9 @@
 package com.sagrada.ppp.network.commands;
 
-import com.sagrada.ppp.Color;
-import com.sagrada.ppp.WindowPanel;
+import com.sagrada.ppp.model.Color;
+import com.sagrada.ppp.model.WindowPanel;
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 

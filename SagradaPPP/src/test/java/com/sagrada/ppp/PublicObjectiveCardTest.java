@@ -4,6 +4,7 @@ import com.sagrada.ppp.cards.*;
 
 import static org.junit.Assert.assertEquals;
 
+import com.sagrada.ppp.model.WindowPanel;
 import org.junit.After;
 import org.junit.Test;
 

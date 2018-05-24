@@ -1,6 +1,7 @@
 package com.sagrada.ppp.controller;
 
-import com.sagrada.ppp.*;
+import com.sagrada.ppp.model.*;
+import com.sagrada.ppp.network.server.Service;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -18,7 +19,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         return service.getPlayers(gameHashCode);
     }
 
-    public LeaveGameResult leaveLobby(int gameHashCode, String username,LobbyObserver observer) throws RemoteException{
+    public LeaveGameResult leaveLobby(int gameHashCode, String username, LobbyObserver observer) throws RemoteException{
         return service.leaveLobby(gameHashCode,username,observer);
     }
 

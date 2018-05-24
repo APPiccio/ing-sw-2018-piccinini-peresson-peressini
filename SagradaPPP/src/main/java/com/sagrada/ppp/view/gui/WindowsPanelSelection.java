@@ -1,9 +1,7 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.*;
-import com.sagrada.ppp.cards.PublicObjectiveCard;
-import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.model.*;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

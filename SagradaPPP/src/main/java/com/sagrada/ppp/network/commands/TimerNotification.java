@@ -1,6 +1,6 @@
 package com.sagrada.ppp.network.commands;
 
-import com.sagrada.ppp.TimerStatus;
+import com.sagrada.ppp.model.TimerStatus;
 
 import java.io.Serializable;
 

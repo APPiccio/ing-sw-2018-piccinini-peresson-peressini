@@ -1,5 +1,8 @@
 package com.sagrada.ppp;
 
+import com.sagrada.ppp.model.Color;
+import com.sagrada.ppp.model.Dice;
+import com.sagrada.ppp.model.DiceBag;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
