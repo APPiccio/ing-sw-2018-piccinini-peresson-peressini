@@ -202,6 +202,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         stage.setScene(scene);
         stage.setTitle("Main game");
         stage.setResizable(true);
+        stage.centerOnScreen();
         stage.show();
         if (currentPlayerUser.equals(joinGameResult.getUsername())){
             skipButton.setDisable(false);
@@ -344,6 +345,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         };
         skipButtonEventHandler = event -> {
             try {
+                skipButton.setDisable(true);
                 controller.endTurn(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
             } catch (RemoteException e) {
                 e.printStackTrace();

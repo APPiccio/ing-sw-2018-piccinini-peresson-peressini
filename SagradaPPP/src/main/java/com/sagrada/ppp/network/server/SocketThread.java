@@ -95,13 +95,13 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     public Response handle(JoinGameRequest joinGameRequest){
-        JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this, this);
+        JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this,this);
         return new JoinGameResponse(joinGameResult);
     }
 
     @Override
     public Response handle(LeaveGameRequest request) {
-        LeaveGameResult leaveGameResult = service.leaveLobby(request.gameHashCode,request.username,this);
+        LeaveGameResult leaveGameResult = service.leaveLobby(request.gameHashCode,request.username,this,this);
         return new LeaveGameResponse(leaveGameResult);
     }
 

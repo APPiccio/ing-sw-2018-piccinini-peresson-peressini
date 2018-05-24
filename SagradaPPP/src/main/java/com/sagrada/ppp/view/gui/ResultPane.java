@@ -41,14 +41,17 @@ public class ResultPane extends UnicastRemoteObject {
         this.stage = stage;
         BorderPane borderPane = new BorderPane();
         borderPane.setPadding(new Insets(10, 10, 10, 10));
+        borderPane.autosize();
 
         leftVBox = new VBox();
         leftVBox.setSpacing(10);
         leftVBox.setAlignment(Pos.CENTER);
+        BorderPane.setMargin(leftVBox, new Insets(10));
 
         rightVBox = new VBox();
         rightVBox.setSpacing(10);
         rightVBox.setAlignment(Pos.CENTER);
+        BorderPane.setMargin(rightVBox, new Insets(10));
 
         topVBox = new VBox();
         topVBox.setSpacing(10);
@@ -58,7 +61,8 @@ public class ResultPane extends UnicastRemoteObject {
         publicObjectiveCardsHBox.setAlignment(Pos.TOP_CENTER);
 
         tableView = new TableView<>();
-        tableView.setEditable(true);
+        tableView.setEditable(false);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         drawWindowPanels(playersScore);
         borderPane.setLeft(leftVBox);
@@ -68,8 +72,9 @@ public class ResultPane extends UnicastRemoteObject {
         drawResultTable(playersScore, publicObjectiveCards);
         borderPane.setCenter(topVBox);
 
-        stage.setScene(new Scene(borderPane, 3000, 700));
-        stage.setTitle("Result");
+        stage.setScene(new Scene(borderPane, 1280, 720));
+        stage.setTitle("Results");
+        stage.centerOnScreen();
         stage.show();
 
     }
@@ -83,7 +88,7 @@ public class ResultPane extends UnicastRemoteObject {
             imageView.setFitWidth(100);
             imageView.setFitHeight(150);
             imageView.setPreserveRatio(true);
-            WindowPanelPane windowPanelPane = new WindowPanelPane(playerScore.getWindowPanel(), 150, 150);
+            WindowPanelPane windowPanelPane = new WindowPanelPane(playerScore.getWindowPanel(), 135, 135);
             Label label = new Label(playerScore.getUsername() + "'s panel");
             if (playersScore.size() == 2) {
                 if (i == 0) {
@@ -119,8 +124,8 @@ public class ResultPane extends UnicastRemoteObject {
     private void drawResultTable(ArrayList<PlayerScore> playersScore, ArrayList<PublicObjectiveCard> publicObjectiveCards) {
         //Create column Username
         TableColumn<PlayerScore, String> usernameCol = new TableColumn<>("Username");
-        //Create column UserID
-        TableColumn<PlayerScore, Integer> userIDCol = new TableColumn<>("UserID");
+        //Create column TotalPoints
+        TableColumn<PlayerScore, Integer> totalPointsCol = new TableColumn<>("Total Points");
         //Create column Favor Token
         TableColumn<PlayerScore, Integer> favorTokenCol = new TableColumn<>("Favor Token");
         //Create column Empty Cell
@@ -129,39 +134,35 @@ public class ResultPane extends UnicastRemoteObject {
         TableColumn<PlayerScore, Integer> privateObjectiveCardCol = new TableColumn<>("Private Objective Card Points");
         //Create column PublicObjectiveCard
         TableColumn<PlayerScore, Integer> publicObjectiveCardCol = new TableColumn<>("Public Objective Cards Points");
-        //Create sub-columns for PublicObjectiveCard (PublicObjectiveCard1)
+        //Create sub-column for PublicObjectiveCardCol (PublicObjectiveCard1)
         TableColumn<PlayerScore, Integer> publicObjectiveCard1Col = new TableColumn<>(publicObjectiveCards.get(0).getName());
-        //Create sub-columns for PublicObjectiveCard (PublicObjectiveCard2)
+        //Create sub-column for PublicObjectiveCardCol (PublicObjectiveCard2)
         TableColumn<PlayerScore, Integer> publicObjectiveCard2Col = new TableColumn<>(publicObjectiveCards.get(1).getName());
-        //Create sub-columns for PublicObjectiveCard (PublicObjectiveCard3)
+        //Create sub-column for PublicObjectiveCardCol (PublicObjectiveCard3)
         TableColumn<PlayerScore, Integer> publicObjectiveCard3Col = new TableColumn<>(publicObjectiveCards.get(2).getName());
         //Adding sub-columns to PublicObjectiveCardCol
         publicObjectiveCardCol.getColumns().add(publicObjectiveCard1Col);
         publicObjectiveCardCol.getColumns().add(publicObjectiveCard2Col);
         publicObjectiveCardCol.getColumns().add(publicObjectiveCard3Col);
-        //Create column TotalPoints
-        TableColumn<PlayerScore, Integer> totalPointsCol = new TableColumn<>("Total Points");
 
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
-        userIDCol.setCellValueFactory(new PropertyValueFactory<>("playerHashCode"));
+        totalPointsCol.setCellValueFactory(new PropertyValueFactory<>("totalPoints"));
         favorTokenCol.setCellValueFactory(new PropertyValueFactory<>("favorTokenPoints"));
         emptyCellsCol.setCellValueFactory(new PropertyValueFactory<>("emptyCellsPoints"));
         privateObjectiveCardCol.setCellValueFactory(new PropertyValueFactory<>("privateObjectiveCardPoints"));
         publicObjectiveCard1Col.setCellValueFactory(new PropertyValueFactory<>("publicObjectiveCard1Points"));
         publicObjectiveCard2Col.setCellValueFactory(new PropertyValueFactory<>("publicObjectiveCard2Points"));
         publicObjectiveCard3Col.setCellValueFactory(new PropertyValueFactory<>("publicObjectiveCard3Points"));
-        totalPointsCol.setCellValueFactory(new PropertyValueFactory<>("totalPoints"));
 
         ObservableList<PlayerScore> list = getList(playersScore);
         tableView.setItems(list);
 
         tableView.getColumns().add(usernameCol);
-        tableView.getColumns().add(userIDCol);
+        tableView.getColumns().add(totalPointsCol);
         tableView.getColumns().add(favorTokenCol);
         tableView.getColumns().add(emptyCellsCol);
         tableView.getColumns().add(privateObjectiveCardCol);
         tableView.getColumns().add(publicObjectiveCardCol);
-        tableView.getColumns().add(totalPointsCol);
 
         topVBox.getChildren().add(tableView);
     }

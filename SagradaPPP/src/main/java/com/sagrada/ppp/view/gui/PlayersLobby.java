@@ -26,21 +26,21 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     private VBox vBoxPlayers;
     private VBox vBoxEventsTab;
     private JoinGameResult joinGameResult;
-    private WindowsPanelSelection windowsPanelSelection;
+    private WindowPanelsSelection windowPanelsSelection;
     private transient RemoteController controller;
     private Stage stage;
 
     PlayersLobby(String username, RemoteController controller, Stage stage) throws RemoteException {
         vBoxPlayers = new VBox();
         vBoxEventsTab = new VBox();
-        windowsPanelSelection = new WindowsPanelSelection();
+        windowPanelsSelection = new WindowPanelsSelection();
         this.controller = controller;
         this.stage = stage;
         BorderPane borderPane = new BorderPane();
         TabPane tabPane = new TabPane();
         VBox vBoxPlayersTab = new VBox();
 
-        joinGameResult = controller.joinGame(username, this, windowsPanelSelection);
+        joinGameResult = this.controller.joinGame(username, this);
         vBoxPlayersTab.getChildren().addAll(playerID(), vBoxPlayers);
         setActivePlayers(joinGameResult.getPlayersUsername(), joinGameResult.getPlayersUsername().size());
 
@@ -74,6 +74,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
         stage.setScene(new Scene(borderPane, 700*1436/2156, 700));
         stage.setTitle("Players Lobby");
+        stage.centerOnScreen();
         stage.show();
     }
 
@@ -104,7 +105,12 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     }
 
     private void timerEnded() {
-        windowsPanelSelection.init(controller, stage, joinGameResult);
+        try {
+            controller.attachGameObserver(joinGameResult.getGameHashCode(),windowPanelsSelection);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        windowPanelsSelection.init(controller, stage, joinGameResult);
     }
 
     private void timerInterrupted() {

@@ -56,6 +56,7 @@ public class Lobby implements EventHandler<MouseEvent> {
         stage.setMinHeight(300);
         stage.setMinWidth(300*1400/2500);
         stage.setResizable(false);
+        stage.centerOnScreen();
         stage.show();
     }
 

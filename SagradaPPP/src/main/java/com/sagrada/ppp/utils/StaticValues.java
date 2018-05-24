@@ -21,7 +21,7 @@ public class StaticValues {
     public static final int DICE_FACES = 6;
     public static final int MAX_USER_PER_GAME = 4;
     public static int NUMBER_OF_CARDS = 12;
-    public static final long TURN_DURATION = 120000;
+    public static final long TURN_DURATION = 10000;
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
@@ -50,7 +50,7 @@ public class StaticValues {
     public static final String PUBLICOBJECTIVECARD1_NAME = "Row Color Variety";
     public static final String PUBLICOBJECTIVECARD2_NAME = "Column Color Variety";
     public static final String PUBLICOBJECTIVECARD3_NAME = "Row Shade Variety";
-    public static final String PUBLICOBJECTIVECARD4_NAME = "Colum Shade Variety";
+    public static final String PUBLICOBJECTIVECARD4_NAME = "Column Shade Variety";
     public static final String PUBLICOBJECTIVECARD5_NAME = "Light Shades";
     public static final String PUBLICOBJECTIVECARD6_NAME = "Medium Shades";
     public static final String PUBLICOBJECTIVECARD7_NAME = "Deep Shades";

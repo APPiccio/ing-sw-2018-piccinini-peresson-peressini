@@ -129,7 +129,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
     public void handle(MouseEvent event) {
         CellPane cell = ((CellPane) event.getSource());
         System.out.println("col: "+cell.col + " row: " +cell.row);
-        eventBus.onCellClicked(cell.col,cell.row);
+        if (eventBus != null) eventBus.onCellClicked(cell.col,cell.row);
     }
 
     private class CellPane extends BorderPane{
