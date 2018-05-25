@@ -63,13 +63,11 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             username = scanner.nextLine();
         }
 
-        JoinGameResult joinGameResult = controller.joinGame(username, this);
+        JoinGameResult joinGameResult = controller.joinGame(username, this, this);
         while (hashCode < 0){
             System.out.println("Join failed. Trying new attempt...");
-            joinGameResult = controller.joinGame(username, this);
+            joinGameResult = controller.joinGame(username, this, this);
         }
-
-        controller.attachGameObserver(joinGameResult.getGameHashCode(),this);
 
         gameHashCode = joinGameResult.getGameHashCode();
         hashCode = joinGameResult.getPlayerHashCode();
