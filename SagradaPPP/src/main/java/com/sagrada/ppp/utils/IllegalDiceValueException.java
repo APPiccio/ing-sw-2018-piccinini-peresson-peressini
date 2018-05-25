@@ -1,6 +1,6 @@
 package com.sagrada.ppp.utils;
 
-import com.sagrada.ppp.Dice;
+import com.sagrada.ppp.model.Dice;
 
 public class IllegalDiceValueException extends Exception{
 

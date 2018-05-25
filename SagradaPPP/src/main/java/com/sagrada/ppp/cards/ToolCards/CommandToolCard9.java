@@ -1,8 +1,8 @@
 package com.sagrada.ppp.cards.ToolCards;
 
-import com.sagrada.ppp.Dice;
-import com.sagrada.ppp.Player;
-import com.sagrada.ppp.WindowPanel;
+import com.sagrada.ppp.model.Dice;
+import com.sagrada.ppp.model.Player;
+import com.sagrada.ppp.model.WindowPanel;
 
 
 public class CommandToolCard9 implements CommandToolCard {

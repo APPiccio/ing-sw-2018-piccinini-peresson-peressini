@@ -1,6 +1,6 @@
 package com.sagrada.ppp.cards.ToolCards;
 
-import com.sagrada.ppp.*;
+import com.sagrada.ppp.model.Color;
 import com.sagrada.ppp.utils.StaticValues;
 
 public class ToolCard3 extends ToolCard {

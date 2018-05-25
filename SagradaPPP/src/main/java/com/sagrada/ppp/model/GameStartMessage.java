@@ -1,4 +1,4 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.model;
 
 import com.sagrada.ppp.cards.PublicObjectiveCard;
 import com.sagrada.ppp.cards.ToolCards.ToolCard;
@@ -16,7 +16,7 @@ public class GameStartMessage implements Serializable {
     public ArrayList<Player> players;
 
     public GameStartMessage(HashMap<String, WindowPanel> chosenPanels, ArrayList<Dice> draftpool, ArrayList<ToolCard> toolCards, ArrayList<PublicObjectiveCard> publicObjectiveCards,
-                            ArrayList<String> playersUsername,ArrayList<Player> players){
+                            ArrayList<String> playersUsername, ArrayList<Player> players){
         this.chosenPanels = chosenPanels;
         this.draftpool = draftpool;
         this.toolCards = toolCards;

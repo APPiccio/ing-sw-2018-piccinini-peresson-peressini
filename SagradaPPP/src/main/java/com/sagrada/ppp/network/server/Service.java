@@ -1,9 +1,9 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.network.server;
 
+import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.server.ServerThread;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.controller.Controller;
-import com.sagrada.ppp.view.gui.Lobby;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -36,7 +36,7 @@ public class Service {
      * @param username username of the player
      * @return the hashcode of the game right after the creation
      */
-    public int createGame(boolean multiplayer, String username, LobbyObserver lobbyObserver){
+    public int createGame(boolean multiplayer, String username, LobbyObserver lobbyObserver, GameObserver gameObserver){
         Game game;
         if(multiplayer) {
             game = new Game(username);
@@ -49,6 +49,7 @@ public class Service {
         }
         games.put(game.hashCode(), game);
         game.attachLobbyObserver(lobbyObserver);
+        game.attachGameObserver(gameObserver);
         return game.hashCode();
     }
 
@@ -56,13 +57,12 @@ public class Service {
         return  games.get(gameHashCode).getPlayers();
     }
 
-    public synchronized LeaveGameResult leaveLobby(int gameHashCode, String username,LobbyObserver observer,GameObserver gameObserver){
+    public synchronized LeaveGameResult leaveLobby(int gameHashCode, String username,LobbyObserver observer){
         System.out.println(username + " is trying to leave....");
         Game game = games.get(gameHashCode);
         LeaveGameResult leaveGameResult = new LeaveGameResult(gameHashCode,LeaveGameResultStatus.SUCCESS);
         System.out.println(username + " has left.");
         detachLobbyObserver(gameHashCode,observer);
-        game.detachGameObserver(gameObserver);
         if(game != null){
             game.leaveLobby(username, observer);
             if(game.getPlayers().isEmpty()){
@@ -89,8 +89,7 @@ public class Service {
         JoinGameResult joinGameResult = new JoinGameResult(-1,-1, null, null);
         for(Game x : games.values()){
             if (x.isJoinable()) {
-                    joinGameResult.setPlayerHashCode(x.joinGame(username, lobbyObserver));
-                    x.attachGameObserver(gameObserver);
+                    joinGameResult.setPlayerHashCode(x.joinGame(username, lobbyObserver, gameObserver));
                     joinGameResult.setGameHashCode(x.hashCode());
                     joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
                     joinGameResult.setTimerStart(games.get(joinGameResult.getGameHashCode()).getLobbyTimerStartTime());
@@ -100,8 +99,7 @@ public class Service {
         }
         if(joinGameResult.getPlayerHashCode() == -1){
             //no joinable game, let's create a new one
-            joinGameResult.setGameHashCode(createGame(true, username, lobbyObserver));
-            games.get(joinGameResult.getGameHashCode()).attachGameObserver(gameObserver);
+            joinGameResult.setGameHashCode(createGame(true, username, lobbyObserver, gameObserver));
             joinGameResult.setPlayerHashCode(games.get(joinGameResult.getGameHashCode()).getPlayerHashCode(username));
             joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
             joinGameResult.setTimerStart(games.get(joinGameResult.getGameHashCode()).getLobbyTimerStartTime());

@@ -1,6 +1,6 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.Dice;
+import com.sagrada.ppp.model.Dice;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;

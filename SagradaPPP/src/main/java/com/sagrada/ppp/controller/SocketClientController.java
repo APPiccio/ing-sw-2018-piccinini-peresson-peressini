@@ -1,6 +1,6 @@
 package com.sagrada.ppp.controller;
 
-import com.sagrada.ppp.*;
+import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
 import com.sagrada.ppp.utils.StaticValues;
 
@@ -72,11 +72,12 @@ public class SocketClientController implements RemoteController, ResponseHandler
     }
 
     @Override
-    public JoinGameResult joinGame(String username, LobbyObserver lobbyObserver) throws RemoteException {
+    public JoinGameResult joinGame(String username, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException {
         try {
             waitingForResponse = true;
             out.writeObject(new JoinGameRequest(username));
             lobbyObservers.add(lobbyObserver);
+            gameObservers.add(gameObserver);
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();

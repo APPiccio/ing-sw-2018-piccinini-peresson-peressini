@@ -1,4 +1,4 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

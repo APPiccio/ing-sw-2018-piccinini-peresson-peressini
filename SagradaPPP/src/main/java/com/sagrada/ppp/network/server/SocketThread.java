@@ -1,8 +1,6 @@
 package com.sagrada.ppp.network.server;
 
-import com.sagrada.ppp.*;
-import com.sagrada.ppp.cards.PublicObjectiveCard;
-import com.sagrada.ppp.cards.ToolCards.ToolCard;
+import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
 import java.io.*;
 import java.net.Socket;
@@ -97,13 +95,13 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     public Response handle(JoinGameRequest joinGameRequest){
-        JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this,this);
+        JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this, this);
         return new JoinGameResponse(joinGameResult);
     }
 
     @Override
     public Response handle(LeaveGameRequest request) {
-        LeaveGameResult leaveGameResult = service.leaveLobby(request.gameHashCode,request.username,this,this);
+        LeaveGameResult leaveGameResult = service.leaveLobby(request.gameHashCode,request.username,this);
         return new LeaveGameResponse(leaveGameResult);
     }
 

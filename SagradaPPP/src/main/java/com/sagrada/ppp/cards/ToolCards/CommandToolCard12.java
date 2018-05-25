@@ -1,6 +1,7 @@
 package com.sagrada.ppp.cards.ToolCards;
 
-import com.sagrada.ppp.WindowPanel;
+import com.sagrada.ppp.model.WindowPanel;
+
 import java.util.LinkedHashMap;
 
 public class CommandToolCard12 implements CommandToolCard {

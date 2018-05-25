@@ -1,12 +1,11 @@
 package com.sagrada.ppp.utils;
 
-import com.sagrada.ppp.Color;
+import com.sagrada.ppp.model.Color;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.lang.invoke.StringConcatFactory;
 
 public class StaticValues {
 

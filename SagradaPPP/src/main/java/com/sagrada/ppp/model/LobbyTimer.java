@@ -1,8 +1,6 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.model;
 
 import com.sagrada.ppp.utils.StaticValues;
-
-import java.util.ArrayList;
 
 public class LobbyTimer extends Thread {
 

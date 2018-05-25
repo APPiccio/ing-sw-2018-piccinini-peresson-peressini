@@ -1,15 +1,13 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.model;
 
 import com.sagrada.ppp.cards.*;
 import com.sagrada.ppp.cards.ToolCards.*;
-import com.sagrada.ppp.network.commands.PanelChoiceNotification;
 import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
 public class Game implements Serializable{
     private ArrayList<Player> players;
@@ -183,7 +181,7 @@ public class Game implements Serializable{
         return lobbyTimerStartTime;
     }
 
-    public int joinGame(String username, LobbyObserver lobbyObserver) {
+    public int joinGame(String username, LobbyObserver lobbyObserver, GameObserver gameObserver) {
         int i = 1;
         String user = username;
         while(isInMatch(user)){
@@ -194,6 +192,7 @@ public class Game implements Serializable{
         players.add(h);
         notifyPlayerJoin(user,getUsernames(),players.size());
         attachLobbyObserver(lobbyObserver);
+        attachGameObserver(gameObserver);
         if(players.size() == 2){
             //start timer
             lobbyTimerStartTime = System.currentTimeMillis();

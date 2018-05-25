@@ -1,6 +1,6 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.Client;
+import com.sagrada.ppp.network.client.Client;
 import com.sagrada.ppp.controller.RemoteController;
 import javafx.application.Application;
 import javafx.stage.Stage;

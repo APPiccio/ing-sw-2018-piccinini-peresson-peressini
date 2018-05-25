@@ -1,9 +1,7 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.*;
-import com.sagrada.ppp.cards.PublicObjectiveCard;
-import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.model.*;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -24,7 +22,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WindowPanelsSelection extends UnicastRemoteObject implements GameObserver, EventHandler<MouseEvent> {
+public class WindowsPanelSelection extends UnicastRemoteObject implements GameObserver, EventHandler<MouseEvent> {
 
     private transient RemoteController controller;
     private Stage stage;
@@ -32,17 +30,15 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
     private HBox hBox2;
     private VBox vBoxEvents;
     private Color privateColor;
-    private static JoinGameResult joinGameResult;
+    private JoinGameResult joinGameResult;
     private ArrayList<WindowPanel> panelAvailable;
     private ArrayList<Button> buttons;
     private boolean receivedMyPanels;
     private boolean userHasChosen;
     private static final String SELECT = "Select";
 
-    WindowPanelsSelection() throws RemoteException {
-        this.hBox2 = new HBox();
-        this.hBox1 = new HBox();
-        this.vBoxEvents = new VBox();
+    WindowsPanelSelection() throws RemoteException {
+        super();
     }
 
     void init(RemoteController controller, Stage stage, JoinGameResult joinGameResult) {
@@ -50,18 +46,19 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         userHasChosen = false;
         this.controller = controller;
         this.stage = stage;
-        WindowPanelsSelection.joinGameResult = new JoinGameResult(joinGameResult);
-
+        this.joinGameResult = joinGameResult;
+        this.hBox1 = new HBox();
         hBox1.setSpacing(10);
+        this.hBox2 = new HBox();
         hBox2.setSpacing(10);
         hBox1.getChildren().add(new Label("Waiting for the other players... " +
                 "You can see their choices on the \"Opponents' panels\" tab!"));
-
         BorderPane borderPane = new BorderPane();
         TabPane tabPane = new TabPane();
         Tab panelsTab = new Tab();
         Tab eventsTab = new Tab();
         VBox vBoxPanels = new VBox();
+        vBoxEvents = new VBox();
 
         panelsTab.setText("Panels");
         panelsTab.setClosable(false);
@@ -83,7 +80,6 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         tabPane.getTabs().add(eventsTab);
 
         borderPane.setCenter(tabPane);
-
         this.stage.setScene(new Scene(borderPane, 625, 670));
         this.stage.setTitle("Panel selection");
         this.stage.centerOnScreen();
@@ -110,8 +106,6 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         ArrayList<VBox> selectionPanels = new ArrayList<>();
         buttons = new ArrayList<>();
 
-        hBox1.getChildren().clear();
-        hBox2.getChildren().clear();
         for (int i = 0; i < panelAvailable.size(); i++) {
             VBox vBox = new VBox();
             vBox.setSpacing(5);
@@ -144,9 +138,8 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels,
                               HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
 
-
+        panelAvailable = panels;
         Platform.runLater(() -> {
-            panelAvailable = panels;
             if (panelsAlreadyChosen.size() != 0) {
                 chosenPanels(panelsAlreadyChosen);
             }
@@ -202,7 +195,6 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         int gameHash = joinGameResult.getGameHashCode();
         int playerHash = joinGameResult.getPlayerHashCode();
         userHasChosen = true;
-        //TODO: change this with more elegant code. use -> index of
         try {
             controller.choosePanel(gameHash,playerHash,buttons.indexOf(clickedBtn));
         }

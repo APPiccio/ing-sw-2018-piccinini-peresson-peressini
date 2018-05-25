@@ -1,7 +1,7 @@
 package com.sagrada.ppp;
 
 import com.sagrada.ppp.cards.ToolCards.*;
-import com.sagrada.ppp.utils.PrinterFormatter;
+import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.util.Pair;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 package com.sagrada.ppp.network.commands;
 
-import com.sagrada.ppp.DicePlacedMessage;
+import com.sagrada.ppp.model.DicePlacedMessage;
 
 import java.io.Serializable;
 

@@ -1,5 +1,9 @@
 package com.sagrada.ppp;
 
+import com.sagrada.ppp.model.Cell;
+import com.sagrada.ppp.model.Color;
+import com.sagrada.ppp.model.Dice;
+import com.sagrada.ppp.model.WindowPanel;
 import com.sagrada.ppp.utils.StaticValues;
 import org.junit.Test;
 import static org.junit.Assert.*;

@@ -1,10 +1,10 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.*;
-import com.sagrada.ppp.Cell;
+import com.sagrada.ppp.model.Dice;
 import com.sagrada.ppp.cards.PublicObjectiveCard;
 import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -53,7 +53,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     private String currentPlayerUser;
     private Stage stage;
     private RemoteController controller;
-    private com.sagrada.ppp.Color privateColor;
+    private com.sagrada.ppp.model.Color privateColor;
     private JoinGameResult joinGameResult;
     private HashMap<String, WindowPanel> panels;
     private ArrayList<Dice> draftPool;
@@ -216,7 +216,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     }
 
-    public void init(com.sagrada.ppp.Color privateColor, JoinGameResult joinGameResult, GameStartMessage gameStartMessage, RemoteController controller, Stage stage) {
+    public void init(com.sagrada.ppp.model.Color privateColor, JoinGameResult joinGameResult, GameStartMessage gameStartMessage, RemoteController controller, Stage stage) {
         this.controller = controller;
         this.stage = stage;
         this.privateColor = privateColor;
@@ -355,7 +355,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     }
 
     @Override
-    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, com.sagrada.ppp.Color playerPrivateColor) throws RemoteException {
+    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, com.sagrada.ppp.model.Color playerPrivateColor) throws RemoteException {
             //Do nothing here
     }
 

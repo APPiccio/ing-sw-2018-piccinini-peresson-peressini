@@ -1,6 +1,6 @@
 package com.sagrada.ppp.network.commands;
 
-import com.sagrada.ppp.JoinGameResult;
+import com.sagrada.ppp.model.JoinGameResult;
 
 import java.io.Serializable;
 

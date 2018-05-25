@@ -1,6 +1,6 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.PlayerScore;
+import com.sagrada.ppp.model.PlayerScore;
 import com.sagrada.ppp.cards.PublicObjectiveCard;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;

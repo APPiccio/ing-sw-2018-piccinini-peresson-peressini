@@ -1,6 +1,7 @@
 package com.sagrada.ppp.cards.ToolCards;
 
 import com.sagrada.ppp.*;
+import com.sagrada.ppp.model.WindowPanel;
 import javafx.util.Pair;
 
 //Move any one die in your window ignoring color restriction

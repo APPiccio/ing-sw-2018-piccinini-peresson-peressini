@@ -1,7 +1,9 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.*;
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.model.JoinGameResult;
+import com.sagrada.ppp.model.LobbyObserver;
+import com.sagrada.ppp.model.TimerStatus;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -24,21 +26,21 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     private VBox vBoxPlayers;
     private VBox vBoxEventsTab;
     private JoinGameResult joinGameResult;
-    private WindowPanelsSelection windowPanelsSelection;
+    private WindowsPanelSelection windowsPanelSelection;
     private transient RemoteController controller;
     private Stage stage;
 
     PlayersLobby(String username, RemoteController controller, Stage stage) throws RemoteException {
         vBoxPlayers = new VBox();
         vBoxEventsTab = new VBox();
-        windowPanelsSelection = new WindowPanelsSelection();
+        windowsPanelSelection = new WindowsPanelSelection();
         this.controller = controller;
         this.stage = stage;
         BorderPane borderPane = new BorderPane();
         TabPane tabPane = new TabPane();
         VBox vBoxPlayersTab = new VBox();
 
-        joinGameResult = this.controller.joinGame(username, this);
+        joinGameResult = controller.joinGame(username, this, windowsPanelSelection);
         vBoxPlayersTab.getChildren().addAll(playerID(), vBoxPlayers);
         setActivePlayers(joinGameResult.getPlayersUsername(), joinGameResult.getPlayersUsername().size());
 
@@ -103,12 +105,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     }
 
     private void timerEnded() {
-        try {
-            controller.attachGameObserver(joinGameResult.getGameHashCode(),windowPanelsSelection);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        windowPanelsSelection.init(controller, stage, joinGameResult);
+        windowsPanelSelection.init(controller, stage, joinGameResult);
     }
 
     private void timerInterrupted() {

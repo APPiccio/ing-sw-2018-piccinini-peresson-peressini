@@ -1,4 +1,4 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,13 +12,6 @@ public class JoinGameResult implements Serializable {
 
     public JoinGameResult(int playerHashCode, int gameHashCode, String username, ArrayList<String> playersUsername){
         this(playerHashCode, gameHashCode,username, 0,playersUsername );
-    }
-    public JoinGameResult(JoinGameResult joinGameResult){
-        this.playerHashCode = joinGameResult.playerHashCode;
-        this.gameHashCode = joinGameResult.gameHashCode;
-        this.username = joinGameResult.username;
-        this.timerStart = joinGameResult.timerStart;
-        this.playersUsername = joinGameResult.playersUsername;
     }
 
     public JoinGameResult(int playerHashCode, int gameHashCode, String username, long timerStart, ArrayList<String> playersUsername){

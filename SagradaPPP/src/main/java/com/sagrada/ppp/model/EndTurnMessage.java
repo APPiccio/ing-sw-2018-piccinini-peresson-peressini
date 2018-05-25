@@ -1,4 +1,4 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class EndTurnMessage implements Serializable {
     public ArrayList<Dice> draftpool;
     public RoundTrack roundTrack;
 
-    public EndTurnMessage(Player previousPlayer, Player currentPlayer, ArrayList<Player> players,int turn, ArrayList<Dice> draftpool, RoundTrack roundTrack){
+    public EndTurnMessage(Player previousPlayer, Player currentPlayer, ArrayList<Player> players, int turn, ArrayList<Dice> draftpool, RoundTrack roundTrack){
         this.previousPlayer = previousPlayer;
         this.currentPlayer = currentPlayer;
         this.players = players;

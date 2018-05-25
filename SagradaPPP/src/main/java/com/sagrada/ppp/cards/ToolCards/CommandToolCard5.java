@@ -1,6 +1,6 @@
 package com.sagrada.ppp.cards.ToolCards;
 
-import com.sagrada.ppp.*;
+import com.sagrada.ppp.model.Dice;
 
 public class CommandToolCard5 implements CommandToolCard {
 

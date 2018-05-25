@@ -1,5 +1,6 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.network.commands;
 
+import com.sagrada.ppp.model.EndTurnMessage;
 import com.sagrada.ppp.network.commands.Response;
 import com.sagrada.ppp.network.commands.ResponseHandler;
 

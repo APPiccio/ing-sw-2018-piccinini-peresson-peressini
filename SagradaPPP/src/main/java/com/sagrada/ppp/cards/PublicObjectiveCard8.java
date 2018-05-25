@@ -1,8 +1,9 @@
 package com.sagrada.ppp.cards;
 
-import com.sagrada.ppp.Dice;
+import com.sagrada.ppp.model.Dice;
+import com.sagrada.ppp.model.WindowPanel;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.WindowPanel;
+
 import java.util.HashMap;
 
 /**

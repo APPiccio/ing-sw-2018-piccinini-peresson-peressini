@@ -1,10 +1,7 @@
 package com.sagrada.ppp.cards.ToolCards;
 
-import com.sagrada.ppp.Dice;
-import com.sagrada.ppp.Player;
-import com.sagrada.ppp.WindowPanel;
-
-import java.util.ArrayList;
+import com.sagrada.ppp.model.Dice;
+import com.sagrada.ppp.model.Player;
 
 public class CommandToolCard8 implements CommandToolCard {
 

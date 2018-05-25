@@ -1,11 +1,8 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.controller.Controller;
-import com.sagrada.ppp.utils.PrinterFormatter;
-import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.view.CliView;
+import com.sagrada.ppp.model.Game;
+import com.sagrada.ppp.model.WindowPanel;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -20,9 +17,9 @@ public class GameTest {
     @Before
     public void init(){
         game = new Game("user1");
-        game.joinGame("user2", null );
-        game.joinGame("user3" , null);
-        game.joinGame("user4" , null);
+        game.joinGame("user2", null , null);
+        game.joinGame("user3" , null, null);
+        game.joinGame("user4" , null, null);
         game.setTurn(1);
     }
 
