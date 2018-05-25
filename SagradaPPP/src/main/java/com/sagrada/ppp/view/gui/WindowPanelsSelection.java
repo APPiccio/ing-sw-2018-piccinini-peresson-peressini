@@ -1,5 +1,8 @@
 package com.sagrada.ppp.view.gui;
 
+import com.sagrada.ppp.*;
+import com.sagrada.ppp.cards.PublicObjectiveCard;
+import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
 import javafx.application.Platform;
@@ -22,7 +25,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WindowsPanelSelection extends UnicastRemoteObject implements GameObserver, EventHandler<MouseEvent> {
+public class WindowPanelsSelection extends UnicastRemoteObject implements GameObserver, EventHandler<MouseEvent> {
 
     private transient RemoteController controller;
     private Stage stage;
@@ -30,15 +33,17 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
     private HBox hBox2;
     private VBox vBoxEvents;
     private Color privateColor;
-    private JoinGameResult joinGameResult;
+    private static JoinGameResult joinGameResult;
     private ArrayList<WindowPanel> panelAvailable;
     private ArrayList<Button> buttons;
     private boolean receivedMyPanels;
     private boolean userHasChosen;
     private static final String SELECT = "Select";
 
-    WindowsPanelSelection() throws RemoteException {
-        super();
+    WindowPanelsSelection() throws RemoteException {
+        this.hBox2 = new HBox();
+        this.hBox1 = new HBox();
+        this.vBoxEvents = new VBox();
     }
 
     void init(RemoteController controller, Stage stage, JoinGameResult joinGameResult) {
@@ -46,19 +51,18 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
         userHasChosen = false;
         this.controller = controller;
         this.stage = stage;
-        this.joinGameResult = joinGameResult;
-        this.hBox1 = new HBox();
+        WindowPanelsSelection.joinGameResult = new JoinGameResult(joinGameResult);
+
         hBox1.setSpacing(10);
-        this.hBox2 = new HBox();
         hBox2.setSpacing(10);
         hBox1.getChildren().add(new Label("Waiting for the other players... " +
                 "You can see their choices on the \"Opponents' panels\" tab!"));
+
         BorderPane borderPane = new BorderPane();
         TabPane tabPane = new TabPane();
         Tab panelsTab = new Tab();
         Tab eventsTab = new Tab();
         VBox vBoxPanels = new VBox();
-        vBoxEvents = new VBox();
 
         panelsTab.setText("Panels");
         panelsTab.setClosable(false);
@@ -80,9 +84,9 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
         tabPane.getTabs().add(eventsTab);
 
         borderPane.setCenter(tabPane);
+
         this.stage.setScene(new Scene(borderPane, 625, 670));
         this.stage.setTitle("Panel selection");
-        this.stage.centerOnScreen();
         this.stage.show();
     }
 
@@ -106,6 +110,8 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
         ArrayList<VBox> selectionPanels = new ArrayList<>();
         buttons = new ArrayList<>();
 
+        hBox1.getChildren().clear();
+        hBox2.getChildren().clear();
         for (int i = 0; i < panelAvailable.size(); i++) {
             VBox vBox = new VBox();
             vBox.setSpacing(5);
@@ -138,23 +144,24 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels,
                               HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
 
-        panelAvailable = panels;
+
         Platform.runLater(() -> {
-            if (panelsAlreadyChosen.size() != 0) {
-                chosenPanels(panelsAlreadyChosen);
-            }
-            if(!userHasChosen && receivedMyPanels){
+                    panelAvailable = panels;
+                    if (panelsAlreadyChosen.size() != 0) {
+                        chosenPanels(panelsAlreadyChosen);
+                    }
+                    if(!userHasChosen && receivedMyPanels){
                         //disable buttons due to exceeded timer
                         //auto panel assignment to panel 0
                         disableButtons();
                         showAlertTimeout();
-            }
-            if (joinGameResult.getPlayerHashCode() == playerHashCode) {
-                receivedMyPanels = true;
-                privateColor = color;
-                createSelection();
-            }
-        }
+                    }
+                    if (joinGameResult.getPlayerHashCode() == playerHashCode) {
+                        receivedMyPanels = true;
+                        privateColor = color;
+                        createSelection();
+                    }
+                }
         );
     }
 
@@ -163,7 +170,7 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
         Platform.runLater(() -> {
                     if(!userHasChosen){
                         disableButtons();
-                        showAlertTimeout();
+                        //showAlertTimeout();
                     }
                     MainGamePane mainGamePane = null;
                     try {
@@ -172,7 +179,7 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
                         e.printStackTrace();
                     }
                     mainGamePane.init(privateColor, joinGameResult, gameStartMessage, controller, stage);
-        }
+                }
         );
     }
 
@@ -195,8 +202,9 @@ public class WindowsPanelSelection extends UnicastRemoteObject implements GameOb
         int gameHash = joinGameResult.getGameHashCode();
         int playerHash = joinGameResult.getPlayerHashCode();
         userHasChosen = true;
+        //TODO: change this with more elegant code. use -> index of
         try {
-            controller.choosePanel(gameHash,playerHash,buttons.indexOf(clickedBtn));
+           controller.choosePanel(gameHash,playerHash,buttons.indexOf(clickedBtn));
         }
         catch (Exception e) {
             e.printStackTrace();

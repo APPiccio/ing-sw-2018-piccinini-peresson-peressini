@@ -1,10 +1,8 @@
 package com.sagrada.ppp.view;
-
-import com.sagrada.ppp.model.Dice;
-import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.cards.PublicObjectiveCard;
 import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.utils.StaticValues;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
@@ -63,11 +61,13 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             username = scanner.nextLine();
         }
 
-        JoinGameResult joinGameResult = controller.joinGame(username, this, this);
+        JoinGameResult joinGameResult = controller.joinGame(username, this);
         while (hashCode < 0){
             System.out.println("Join failed. Trying new attempt...");
-            joinGameResult = controller.joinGame(username, this, this);
+            joinGameResult = controller.joinGame(username, this);
         }
+
+        controller.attachGameObserver(joinGameResult.getGameHashCode(),this);
 
         gameHashCode = joinGameResult.getGameHashCode();
         hashCode = joinGameResult.getPlayerHashCode();
@@ -80,7 +80,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             long remainingTime = ((lobbyTimerStartTime + StaticValues.getLobbyTimer()) - System.currentTimeMillis())/1000;
             System.out.println("---> The game will start in " + remainingTime + " seconds");
         }
-       inLobby();
+        inLobby();
     }
 
     public void showCommandList(){
@@ -391,5 +391,4 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         }
     }
 }
-
 

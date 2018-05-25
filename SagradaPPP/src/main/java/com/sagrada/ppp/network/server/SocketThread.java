@@ -1,5 +1,8 @@
 package com.sagrada.ppp.network.server;
 
+import com.sagrada.ppp.*;
+import com.sagrada.ppp.cards.PublicObjectiveCard;
+import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
 import java.io.*;
@@ -47,12 +50,12 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
             //DO SOCKET SERVER STUFF TO CLIENT
             try {
                 System.out.println("listening....");
-                 response = ((Request) in.readObject()).handle(this);
-                 if(response != null){
-                     System.out.println("Sending response to: "+out.toString());
-                     out.reset();
-                     out.writeObject(response);
-                 }
+                response = ((Request) in.readObject()).handle(this);
+                if(response != null){
+                    System.out.println("Sending response to: "+out.toString());
+                    out.reset();
+                    out.writeObject(response);
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -95,13 +98,13 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     public Response handle(JoinGameRequest joinGameRequest){
-        JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this, this);
+        JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this,this);
         return new JoinGameResponse(joinGameResult);
     }
 
     @Override
     public Response handle(LeaveGameRequest request) {
-        LeaveGameResult leaveGameResult = service.leaveLobby(request.gameHashCode,request.username,this);
+        LeaveGameResult leaveGameResult = service.leaveLobby(request.gameHashCode,request.username,this,this);
         return new LeaveGameResponse(leaveGameResult);
     }
 

@@ -181,7 +181,7 @@ public class Game implements Serializable{
         return lobbyTimerStartTime;
     }
 
-    public int joinGame(String username, LobbyObserver lobbyObserver, GameObserver gameObserver) {
+    public int joinGame(String username, LobbyObserver lobbyObserver) {
         int i = 1;
         String user = username;
         while(isInMatch(user)){
@@ -192,7 +192,6 @@ public class Game implements Serializable{
         players.add(h);
         notifyPlayerJoin(user,getUsernames(),players.size());
         attachLobbyObserver(lobbyObserver);
-        attachGameObserver(gameObserver);
         if(players.size() == 2){
             //start timer
             lobbyTimerStartTime = System.currentTimeMillis();
@@ -327,14 +326,14 @@ public class Game implements Serializable{
 
 
     public void notifyPlayerJoin (String username,ArrayList<String> players, int numOfPlayers){
-            for (LobbyObserver observer: lobbyObservers) {
-                try {
+        for (LobbyObserver observer: lobbyObservers) {
+            try {
 
-                    observer.onPlayerJoined(username , players,numOfPlayers);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                observer.onPlayerJoined(username , players,numOfPlayers);
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
+        }
     }
 
     public void notifyGameStart(){
@@ -593,4 +592,3 @@ public class Game implements Serializable{
     }
 
 }
-
