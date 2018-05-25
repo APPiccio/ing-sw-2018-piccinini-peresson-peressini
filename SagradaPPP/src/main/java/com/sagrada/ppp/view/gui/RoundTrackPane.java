@@ -21,37 +21,33 @@ public class RoundTrackPane extends BorderPane {
 
 
     private RoundTrack roundTrack;
-    private FlowPane mainPane;
+    private GridPane mainPane;
     private double width,height;
     public RoundTrackPane(){
-        mainPane = new FlowPane();
+        height = 70;
+        width = 70;
+        mainPane = new GridPane();
         roundTrack = new RoundTrack();
+
+        this.setBackground(new Background(new BackgroundFill(Color.BLACK,new CornerRadii(5),new Insets(0))));
+        this.setPadding(new Insets(10));
+
         draw();
     }
     public RoundTrackPane(RoundTrack roundTrack,double width,double height) {
+        this();
         this.roundTrack = roundTrack;
         this.width = width;
         this.height = height;
     }
-
-    //TODO delete this, this is here only for testing purpose
-    public void init(){
-        height = 70;
-        width = 70;
-        RoundTrack r = new RoundTrack();
-        for(int i = 1;i<=5;i++){
-            for(int j = 0;j<9;j++){
-                if(!(i == 5 && j ==3 ))r.addDice(i,new Dice());
-            }
-        }
-        roundTrack = r;
-        draw();
-    }
     //sets all the layout parameters, call only after init or using the "complete" constructor
     private void draw(){
         mainPane.getChildren().clear();
-        this.setBackground(new Background(new BackgroundFill(Color.BLACK,new CornerRadii(5),new Insets(0))));
-        this.setPadding(new Insets(10));
+        mainPane.setHgap(5);
+        mainPane.setVgap(5);
+        mainPane.setAlignment(Pos.CENTER);
+        BorderPane.setAlignment(mainPane,Pos.CENTER);
+        this.setMaxSize(width * 6, height * 2.5);
 
         for (int i = 1; i <= 10; i++) {
             RoundButton roundIndicator = new RoundButton(i);
@@ -65,12 +61,14 @@ public class RoundTrackPane extends BorderPane {
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundPosition.CENTER,
                                     BackgroundSize.DEFAULT)));
-            roundIndicator.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 
+
+            roundIndicator.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setGraphic(new SelectDicePane(roundTrack.getDicesOnRound(((RoundButton) event.getSource()).round),70,70));
                 alert.show();
             });
+
             if (i > roundTrack.getCurrentRound()) {
                 roundIndicator.setDisable(true);
                 Tooltip roundToolTip = new Tooltip();
@@ -79,7 +77,7 @@ public class RoundTrackPane extends BorderPane {
             }
 
 
-            mainPane.getChildren().add(roundIndicator);
+            mainPane.add(roundIndicator,(i-1)%5,(i-1)/5);
             Label title = new Label("RoundTrack");
             title.setTextFill(Color.WHITE);
             title.setPadding(new Insets(0,0,5,0));

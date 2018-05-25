@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 
 
@@ -37,8 +38,10 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         this.setHgap(5);
         this.setVgap(5);
         this.setAlignment(Pos.CENTER);
-        this.setStyle("-fx-background-color: black;" +
-                "-fx-background-radius: 10px;");
+        this.setBackground(new Background(
+                new BackgroundFill(Color.BLACK,new CornerRadii(10), new Insets(0))
+        ));
+        this.autosize();
 
         draw();
 
@@ -64,7 +67,6 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         for (Cell c:panel.getCells()) {
             CellPane cell = new CellPane(row,col);
             cell.setPrefSize(cellWidth,cellHeight);
-            cell.setMaxSize(width,height);
 
             if(c.hasColorRestriction()){
                 cell.setBackground(

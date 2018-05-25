@@ -116,6 +116,11 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         skipButton.setAlignment(Pos.CENTER);
 
 
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setHgrow(Priority.ALWAYS);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setHgrow(Priority.NEVER);
+        mainGamePane.getColumnConstraints().addAll(col1,col2);
         mainGamePane.add(opponentsWindowPanelsPane,1,0,1,3);
         drawToolCards();
         drawPublicObjectiveCards();
@@ -139,8 +144,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         GridPane.setHalignment(bottomContainer,HPos.CENTER);
         gameStatus.setFont(Font.font("Courier New",FontWeight.BOLD,20));
         gameStatus.setAlignment(Pos.BASELINE_LEFT);
-        gameStatus.setStyle("-fx-font-family: \"Courier New\"; "
-        );
         HBox.setHgrow(roundTrackPane,Priority.ALWAYS);
         bottomContainer.getChildren().addAll(gameStatus,privateCardImageView,roundTrackPane);
         bottomContainer.setPadding(defInset);
@@ -154,7 +157,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         draftPoolContainer.setPadding(defInset);
         draftPoolContainer.getChildren().addAll(draftPoolTitle, draftPoolPane);
 
-        roundTrackPane.init();
         draftPoolPane.setHgap(2);
         draftPoolPane.setVgap(2);
         draftPoolPane.setPrefWrapLength(190);
@@ -202,7 +204,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         stage.setScene(scene);
         stage.setTitle("Main game");
         stage.setResizable(true);
-        stage.centerOnScreen();
         stage.show();
         if (currentPlayerUser.equals(joinGameResult.getUsername())){
             skipButton.setDisable(false);

@@ -22,7 +22,7 @@ public class StaticValues {
     public static final int DICE_FACES = 6;
     public static final int MAX_USER_PER_GAME = 4;
     public static int NUMBER_OF_CARDS = 12;
-    public static final long TURN_DURATION = 10000;
+    public static final long TURN_DURATION = 120000;
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
