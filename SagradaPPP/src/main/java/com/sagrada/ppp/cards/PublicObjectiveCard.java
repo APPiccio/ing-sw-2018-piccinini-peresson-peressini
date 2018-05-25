@@ -1,6 +1,7 @@
 package com.sagrada.ppp.cards;
 
 import com.sagrada.ppp.model.WindowPanel;
+import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.Serializable;
 
@@ -8,6 +9,7 @@ public abstract class PublicObjectiveCard implements Serializable {
 
     private String name;
     private int id;
+    private String description;
 
     public PublicObjectiveCard() {
         this.name = null;
@@ -22,6 +24,7 @@ public abstract class PublicObjectiveCard implements Serializable {
     protected PublicObjectiveCard(String name, int id) {
         this.name = name;
         this.id = id;
+        this.description = StaticValues.getPublicObjectiveCardDescription(id);
     }
 
     public int getId() {
@@ -47,7 +50,7 @@ public abstract class PublicObjectiveCard implements Serializable {
     public abstract int getScore(WindowPanel playerWindowPanel);
 
     public String toString(){
-        return "PUB OBJ ---> Card ID = " + this.id + ", Card Name : " + this.name;
+        return "PUB OBJ ---> Card ID = " + this.id + ", Card Name : " + this.name + ", Description: " + this.description;
     }
 
 }

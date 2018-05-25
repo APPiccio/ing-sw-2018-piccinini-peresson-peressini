@@ -151,6 +151,9 @@ public class StaticValues {
 
     public static final String STRING_COMMAND_PLACE_DICE = "<dice_index> <cell_row> <cell_col> place the chosen dice in the panel";
     public static final String STRING_COMMAND_END_TURN = "end your current turn";
+    public static final String STRING_COMMAND_USE_TOOLCARD = "<tool card index> use a tool card";
+    public static final String STRING_COMMAND_SHOW = "shows public objective cards, draft pool and tool cards";
+
 
     // Cli View command
     public static final String COMMAND_QUIT = ":q";
@@ -165,6 +168,8 @@ public class StaticValues {
 
     public static final String COMMAND_PLACE_DICE = ":dice";
     public static final String COMMAND_END_TURN = ":end";
+    public static final String COMMAND_USE_TOOLCARD = ":toolcard";
+    public static final String COMMAND_SHOW = ":show";
 
 
     //AssetUrl
@@ -239,4 +244,60 @@ public class StaticValues {
         lobbyTimer = jsonObject.getInt("lobby_timer");
         return lobbyTimer;
     }
+
+    public static String getPublicObjectiveCardDescription(int id){
+        switch (id){
+            case 1:
+                return "6pts x Row with no repeated colors";
+            case 2:
+                return "5pts x Column with no repeated colors";
+            case 3:
+                return "5pts x Row with no repeated values";
+            case 4:
+                return "4pts x Column with no repeated values";
+            case 5:
+                return "2pts x Set of 1 & 2 values anywhere";
+            case 6:
+                return "2pts x Set of 3 & 4 values anywhere";
+            case 7:
+                return "2pts x Set of 5 & 6 values anywhere";
+            case 8:
+                return "5pts x Set of one of each value anywhere";
+            case 9:
+                return "1pt x Count of diagonally adjacent same color dice";
+            case 10:
+                return "4pts x Set of one of each color anywhere";
+            default:
+                return "CARD ID UNKNOWN";
+        }
+    }
+
+    public static String getToolCardDescription(int id){
+        switch (id){
+            case 1:
+                return "After drafting, increase or decrease the value of the drafted die by 1 (you may not change 1 to 6, or 6 to 1)";
+            case 2:
+                return "Move any one die in your window ignoring the color restrictions (you must obey all other placement restrictions";
+            case 3:
+                return "Move any one die in your window ignoring shade restriction (you must obey all other placement restriction)";
+            case 4:
+                return "Move exactly two dice, obeying all placement restrictions";
+            case 5:
+                return "After drafting, swap the drafted die with a die from the Round Track";
+            case 6:
+                return "After drafting re-roll the drafted die. If it cannot be placed, return it to the Draft Pool";
+            case 7:
+                return "Re-roll all dice in the Draft Pool. This may only be used on your second turn before drafting";
+            case 8:
+                return "After your first turn, immediately draft a die. Skip your next turn this round";
+            case 9:
+                return "After drafting, place the die in a sport that is not adjacent to another die (you must obey all other placement restrictions)";
+            case 10:
+                return "After drafting, flip the die to its opposite side (6 to 1, 5 to 2, 4 to 3, etc.)";
+            default:
+                return "CARD ID UNKNOWN";
+        }
+    }
+
+
 }

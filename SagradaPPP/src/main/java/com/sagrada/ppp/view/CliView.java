@@ -66,7 +66,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             System.out.println("Join failed. Trying new attempt...");
             joinGameResult = controller.joinGame(username, this);
         }
-
         controller.attachGameObserver(joinGameResult.getGameHashCode(),this);
 
         gameHashCode = joinGameResult.getGameHashCode();
@@ -101,6 +100,9 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
 
     public void showInGameCommandList(){
         System.out.println("\t" + StaticValues.COMMAND_PLACE_DICE + "\t" + StaticValues.STRING_COMMAND_PLACE_DICE);
+        System.out.println("\t" + COMMAND_END_TURN + "\t" + StaticValues.STRING_COMMAND_END_TURN);
+        System.out.println("\t" + StaticValues.COMMAND_USE_TOOLCARD + "\t" + StaticValues.STRING_COMMAND_USE_TOOLCARD);
+        System.out.println("\t" + StaticValues.COMMAND_SHOW + "\t" + StaticValues.STRING_COMMAND_SHOW);
     }
 
 
@@ -247,6 +249,18 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                         }
                     }
                     break;
+                case StaticValues.COMMAND_USE_TOOLCARD:
+                    break;
+                case StaticValues.COMMAND_END_TURN:
+                    if(!currentPlayer.getUsername().equals(username)){
+                        System.out.println("Permission denied, it's not your turn!");
+                        break;
+                    }
+                    controller.endTurn(gameHashCode, hashCode);
+                    break;
+                case StaticValues.COMMAND_SHOW:
+                    showGameSecondaryStuff();
+                    break;
                 default:
                     System.out.println("Command not found : "+command);
                     break;
@@ -299,6 +313,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         this.draftpool = gameStartMessage.draftpool;
         this.publicObjectiveCards = gameStartMessage.publicObjectiveCards;
         this.toolCards = gameStartMessage.toolCards;
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         System.out.println("GAME STARTED");
         System.out.println("----------------------------------------");
         System.out.println("ROUND 1 - TURN 1");
@@ -356,9 +371,10 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         }
         System.out.println("----------------------------------------");
         System.out.println("NOW STARTING --> ROUND = " + endTurnMessage.roundTrack.getCurrentRound() + " - TURN = " + endTurnMessage.turn);
-        //showGameStatus();
+        showGameStatus();
         if(endTurnMessage.currentPlayer.getUsername().equals(username)) {
             System.out.println("It's your turn!");
+            showInGameCommandList();
         }
         else {
             System.out.println("It's " + endTurnMessage.currentPlayer.getUsername() + "'s turn!");
@@ -366,16 +382,35 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     }
 
     private void showPlayerStatus(Player player){
+        if(player.getUsername() == username){
+            System.out.println("Your's status:");
+        }
+        else {
+            System.out.println(player.getUsername() + "'s status:");
+        }
         System.out.println(player.getPanel());
         System.out.println(player.getFavorTokens());
+        System.out.println("----------------------------------------");
+
     }
 
     private void showGameStatus(){
+        System.out.println("----------------------------------------");
+        for(Player player : players){
+            showPlayerStatus(player);
+        }
+        System.out.println("----------------------------------------");
+        System.out.println("Draft pool: ");
+
         System.out.println("----------------------------------------");
         System.out.println("Draft pool: ");
         for(int i = 0; i < draftpool.size(); i++){
             System.out.println("ID = " + i + " ---> " + draftpool.get(i).toString());
         }
+        showGameSecondaryStuff();
+    }
+
+    private void showGameSecondaryStuff(){
         System.out.println("----------------------------------------");
         System.out.println("Round Track: ");
         System.out.println(roundTrack.toString());

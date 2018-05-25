@@ -11,6 +11,7 @@ public abstract class ToolCard implements Serializable {
     private int id;
     private Color color;
     private boolean used;
+    private String description;
 
     public ToolCard() {
         name = null;
@@ -24,6 +25,7 @@ public abstract class ToolCard implements Serializable {
         this.id = id;
         this.color = color;
         this.used = false;
+        this.description = StaticValues.getToolCardDescription(id);
     }
 
     public void use(CommandToolCard commandToolCard){
@@ -52,7 +54,7 @@ public abstract class ToolCard implements Serializable {
     }
 
     public String toString(){
-        return "TOOLCARD ---> Card ID: " + this.id + ", Card name : " + this.name;
+        return "TOOLCARD ---> Card ID: " + this.id + ", Card name : " + this.name + ", Action: " + description;
     }
 
 }
