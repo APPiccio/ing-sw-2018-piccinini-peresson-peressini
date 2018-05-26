@@ -9,4 +9,6 @@ public interface RequestHandler {
     Response handle(DisconnectionRequest request);
     Response handle(PlaceDiceRequest request);
     Response handle(EndTurnRequest request);
+    Response handle(CloseSocketRequest request);
+    Response handle(DetachGameObserverRequest request);
 }

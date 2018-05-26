@@ -116,8 +116,15 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
 
     @Override
     public Response handle(DisconnectionRequest request) {
+        //TODO detach observer and notify game of that
         isStopped = true;
         return new DisconnectionResponse(true);
+    }
+
+    @Override
+    public Response handle(CloseSocketRequest request) {
+        isStopped = true;
+        return null;
     }
 
     @Override
@@ -130,6 +137,13 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     @Override
     public Response handle(EndTurnRequest request) {
         service.endTurn(request.gameHashCode, request.playerHashCode);
+        return null;
+    }
+
+    @Override
+    public Response handle(DetachGameObserverRequest request) {
+        service.detachGameObserver(request.gameHashCode, request.gameObserver);
+        isStopped = true;
         return null;
     }
 

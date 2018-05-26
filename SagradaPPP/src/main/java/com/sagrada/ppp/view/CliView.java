@@ -3,6 +3,10 @@ import com.sagrada.ppp.cards.PublicObjectiveCard;
 import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
+import com.sagrada.ppp.network.client.Client;
+import com.sagrada.ppp.network.client.ConnectionHandler;
+import com.sagrada.ppp.network.client.ConnectionMode;
+import com.sagrada.ppp.network.client.ConnectionModeEnum;
 import com.sagrada.ppp.utils.StaticValues;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
@@ -37,8 +41,10 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     transient boolean usedToolCard;
     transient boolean placedDice;
     transient boolean specialTurn;
+    transient ConnectionHandler connectionHandler;
+    transient ConnectionModeEnum connectionModeEnum;
 
-    public CliView(RemoteController controller) throws RemoteException{
+    public CliView(RemoteController controller, ConnectionModeEnum connectionModeEnum) throws RemoteException{
         this.scanner = new Scanner(System.in);
         this.controller = controller;
         playersUsername = new ArrayList<>();
@@ -49,6 +55,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         specialTurn = false;
         placedDice = false;
         usedToolCard = false;
+        this.connectionModeEnum = connectionModeEnum;
     }
 
 
@@ -261,6 +268,22 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                 case StaticValues.COMMAND_SHOW:
                     showGameSecondaryStuff();
                     break;
+                case StaticValues.COMMAND_CONNECTION:
+                    if(param.length == 2){
+                        if(param[1].equals("rmi")){
+                            changeConnectionMode(ConnectionModeEnum.RMI);
+                        }
+                        else if(param[1].equals("socket")){
+                            changeConnectionMode(ConnectionModeEnum.SOCKET);
+                        }
+                        else{
+                            System.out.println("Unknown command!");
+                        }
+                    }
+                    else{
+                        System.out.println("Unknown command!");
+                    }
+                    break;
                 default:
                     System.out.println("Command not found : "+command);
                     break;
@@ -401,9 +424,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         }
         System.out.println("----------------------------------------");
         System.out.println("Draft pool: ");
-
-        System.out.println("----------------------------------------");
-        System.out.println("Draft pool: ");
         for(int i = 0; i < draftpool.size(); i++){
             System.out.println("ID = " + i + " ---> " + draftpool.get(i).toString());
         }
@@ -423,6 +443,27 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         System.out.println("Public Objective Cards:");
         for(PublicObjectiveCard publicObjectiveCard : publicObjectiveCards){
             System.out.println(publicObjectiveCard.toString());
+        }
+    }
+
+    private void changeConnectionMode(ConnectionModeEnum connectionModeEnum){
+        if(this.connectionModeEnum.equals(connectionModeEnum)) return;
+        this.connectionModeEnum = connectionModeEnum;
+        if(connectionModeEnum.equals(ConnectionModeEnum.RMI)){
+            //if you are here, it means that you want to change socket -> rmi
+            //close socket connection before changing connection mode
+            try {
+                controller.detachGameObserver(gameHashCode,this);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        ConnectionHandler connectionHandler = new ConnectionHandler(connectionModeEnum);
+        controller = connectionHandler.getController();
+        try {
+            controller.attachGameObserver(gameHashCode, this);
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
     }
 }
