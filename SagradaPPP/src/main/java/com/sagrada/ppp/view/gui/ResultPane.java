@@ -41,7 +41,6 @@ public class ResultPane extends UnicastRemoteObject {
         this.stage = stage;
         BorderPane borderPane = new BorderPane();
         borderPane.setPadding(new Insets(10, 10, 10, 10));
-        borderPane.autosize();
 
         leftVBox = new VBox();
         leftVBox.setSpacing(10);

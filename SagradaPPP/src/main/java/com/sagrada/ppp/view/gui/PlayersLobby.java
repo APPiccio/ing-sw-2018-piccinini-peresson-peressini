@@ -37,6 +37,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         this.controller = controller;
         this.stage = stage;
         BorderPane borderPane = new BorderPane();
+        ScrollPane scrollPane = new ScrollPane();
         TabPane tabPane = new TabPane();
         VBox vBoxPlayersTab = new VBox();
 
@@ -67,7 +68,8 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         eventsTab.setClosable(false);
         vBoxEventsTab.setSpacing(5);
         vBoxEventsTab.setPadding(new Insets(10, 0, 0, 10));
-        eventsTab.setContent(vBoxEventsTab);
+        eventsTab.setContent(scrollPane);
+        scrollPane.setContent(vBoxEventsTab);
         tabPane.getTabs().add(eventsTab);
 
         borderPane.setCenter(tabPane);

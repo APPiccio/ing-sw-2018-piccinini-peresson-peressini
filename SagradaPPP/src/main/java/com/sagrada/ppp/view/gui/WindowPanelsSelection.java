@@ -1,8 +1,5 @@
 package com.sagrada.ppp.view.gui;
 
-import com.sagrada.ppp.*;
-import com.sagrada.ppp.cards.PublicObjectiveCard;
-import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
 import javafx.application.Platform;
@@ -62,6 +59,8 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         TabPane tabPane = new TabPane();
         Tab panelsTab = new Tab();
         Tab eventsTab = new Tab();
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPadding(new Insets(5, 0, 5, 0));
         VBox vBoxPanels = new VBox();
 
         panelsTab.setText("Panels");
@@ -77,10 +76,10 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         eventsTab.setClosable(false);
         vBoxEvents.setSpacing(5);
         vBoxEvents.setPadding(new Insets(10, 0, 0, 10));
-        vBoxEvents.setFillWidth(false);
-        vBoxEvents.setAlignment(Pos.TOP_CENTER);
+        vBoxEvents.setAlignment(Pos.CENTER);
         vBoxEvents.getChildren().add(new Label("Waiting for the first player's move..."));
-        eventsTab.setContent(vBoxEvents);
+        eventsTab.setContent(scrollPane);
+        scrollPane.setContent(vBoxEvents);
         tabPane.getTabs().add(eventsTab);
 
         borderPane.setCenter(tabPane);
@@ -136,7 +135,7 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         vBoxEvents.getChildren().clear();
         for (String u : panels.keySet()) {
             vBoxEvents.getChildren().add(new Label(u + " has chosen \"" + panels.get(u).getPanelName() + "\"!"));
-            vBoxEvents.getChildren().add(new WindowPanelPane(new WindowPanel(panels.get(u)), 175, 175));
+            vBoxEvents.getChildren().add(new WindowPanelPane(new WindowPanel(panels.get(u)), 200, 200));
         }
     }
 
@@ -228,4 +227,5 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
     public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
 
     }
+
 }
