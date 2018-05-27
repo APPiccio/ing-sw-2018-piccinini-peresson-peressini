@@ -312,12 +312,15 @@ public class SocketClientController implements RemoteController, ResponseHandler
 
     @Override
     public void detachGameObserver(int gameHashCode, GameObserver gameObserver) throws RemoteException {
-        try {
-            out.writeObject(new DetachGameObserverRequest(gameHashCode, gameObserver));
-            gameObservers.remove(gameObserver);
-            notificationThread.interrupt();
-        } catch (IOException e) {
-            e.printStackTrace();
+        gameObservers.remove(gameObserver);
+        if(gameObservers.size() == 0) {
+            try {
+                out.writeObject(new DetachGameObserverRequest(gameHashCode));
+                gameObservers.remove(gameObserver);
+                notificationThread.interrupt();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

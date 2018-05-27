@@ -142,7 +142,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
 
     @Override
     public Response handle(DetachGameObserverRequest request) {
-        service.detachGameObserver(request.gameHashCode, request.gameObserver);
+        service.detachGameObserver(request.gameHashCode, this);
         isStopped = true;
         return null;
     }

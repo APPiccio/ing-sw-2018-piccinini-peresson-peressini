@@ -7,11 +7,9 @@ import java.io.Serializable;
 public class DetachGameObserverRequest implements Request, Serializable {
 
     public int gameHashCode;
-    public GameObserver gameObserver;
 
-    public DetachGameObserverRequest(int gameHashCode, GameObserver gameObserver){
+    public DetachGameObserverRequest(int gameHashCode){
         this.gameHashCode = gameHashCode;
-        this.gameObserver = gameObserver;
     }
 
     @Override
