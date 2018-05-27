@@ -16,6 +16,8 @@ public interface RemoteController extends Remote {
 
     void attachGameObserver(int gameHashCode, GameObserver gameObserver) throws RemoteException;
 
+    void detachGameObserver(int gameHashCode, GameObserver gameObserver) throws RemoteException;
+
     String getUsername(int playerHashCode, int gameHashCode) throws RemoteException;
 
     int getNumPlayers(int gameHashCode) throws RemoteException;
@@ -27,4 +29,6 @@ public interface RemoteController extends Remote {
     PlaceDiceResult placeDice(int gameHashCode, int playerHashCode, int diceIndex, int row, int col) throws RemoteException;
 
     void endTurn(int gameHashCode, int playerHashCode) throws RemoteException;
+
+    void closeSocket() throws RemoteException;
 }

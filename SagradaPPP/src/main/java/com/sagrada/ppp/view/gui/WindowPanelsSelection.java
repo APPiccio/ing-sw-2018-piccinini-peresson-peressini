@@ -30,7 +30,7 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
     private HBox hBox2;
     private VBox vBoxEvents;
     private Color privateColor;
-    private static JoinGameResult joinGameResult;
+    private JoinGameResult joinGameResult;
     private ArrayList<WindowPanel> panelAvailable;
     private ArrayList<Button> buttons;
     private boolean receivedMyPanels;
@@ -48,7 +48,7 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         userHasChosen = false;
         this.controller = controller;
         this.stage = stage;
-        WindowPanelsSelection.joinGameResult = new JoinGameResult(joinGameResult);
+        this.joinGameResult = new JoinGameResult(joinGameResult);
 
         hBox1.setSpacing(10);
         hBox2.setSpacing(10);
@@ -152,6 +152,7 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
                     if(!userHasChosen && receivedMyPanels){
                         //disable buttons due to exceeded timer
                         //auto panel assignment to panel 0
+                        userHasChosen = true;
                         disableButtons();
                         showAlertTimeout();
                     }
@@ -169,7 +170,7 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         Platform.runLater(() -> {
                     if(!userHasChosen){
                         disableButtons();
-                        //showAlertTimeout();
+                        showAlertTimeout();
                     }
                     MainGamePane mainGamePane = null;
                     try {

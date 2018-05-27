@@ -38,6 +38,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
     @Override
+    public void detachGameObserver(int gameHashCode, GameObserver gameObserver) throws RemoteException {
+        service.detachGameObserver(gameHashCode, gameObserver);
+    }
+
+    @Override
     public int getNumPlayers(int gameHashCode) throws RemoteException {
         return service.getNumPlayers(gameHashCode);
     }
@@ -61,5 +66,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     @Override
     public void endTurn(int gameHashCode, int playerHashCode) throws RemoteException {
         service.endTurn(gameHashCode,playerHashCode);
+    }
+
+
+    //here only to keep heritage
+    @Override
+    public void closeSocket() throws RemoteException {
+
     }
 }

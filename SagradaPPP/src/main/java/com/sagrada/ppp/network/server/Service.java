@@ -162,4 +162,8 @@ public class Service {
         games.get(gameHashCode).setEndTurn(playerHashCode);
     }
 
+    public void detachGameObserver(int gameHashCode, GameObserver gameObserver){
+        games.get(gameHashCode).detachGameObserver(gameObserver);
+    }
+
 }

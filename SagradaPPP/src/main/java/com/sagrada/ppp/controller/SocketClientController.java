@@ -288,6 +288,17 @@ public class SocketClientController implements RemoteController, ResponseHandler
         }
     }
 
+    @Override
+    public void closeSocket(){
+        try {
+            out.writeObject(new CloseSocketRequest());
+            closeConnection();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void closeConnection(){
         try {
             in.close();
@@ -297,6 +308,20 @@ public class SocketClientController implements RemoteController, ResponseHandler
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void detachGameObserver(int gameHashCode, GameObserver gameObserver) throws RemoteException {
+        gameObservers.remove(gameObserver);
+        if(gameObservers.size() == 0) {
+            try {
+                out.writeObject(new DetachGameObserverRequest(gameHashCode));
+                gameObservers.remove(gameObserver);
+                notificationThread.interrupt();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     class ListeningThread extends Thread {
@@ -309,15 +334,21 @@ public class SocketClientController implements RemoteController, ResponseHandler
 
         @Override
         public void run() {
-            while (true) {
+            while (!isInterrupted()) {
                 try {
-                    ((Response) in.readObject()).handle(handler);
-                } catch (IOException e) {
+                    Response response = ((Response) in.readObject());
+                    if (response != null) {
+                        response.handle(handler);
+                    }
+                }catch (EOFException e){
+                    System.out.println("Closing client socket");
+                }catch (IOException e) {
                     e.printStackTrace();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
+            closeConnection();
         }
     }
 }

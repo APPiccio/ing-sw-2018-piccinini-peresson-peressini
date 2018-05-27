@@ -21,7 +21,7 @@ public class StaticValues {
     public static final int DICE_FACES = 6;
     public static final int MAX_USER_PER_GAME = 4;
     public static int NUMBER_OF_CARDS = 12;
-    public static final long TURN_DURATION = 120000;
+    public static final long TURN_DURATION = 50000;
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
@@ -153,6 +153,7 @@ public class StaticValues {
     public static final String STRING_COMMAND_END_TURN = "end your current turn";
     public static final String STRING_COMMAND_USE_TOOLCARD = "<tool card index> use a tool card";
     public static final String STRING_COMMAND_SHOW = "shows public objective cards, draft pool and tool cards";
+    public static final String STRING_COMMAND_CONNECTION = "<rmi/socket> change connection mode";
 
 
     // Cli View command
@@ -170,6 +171,7 @@ public class StaticValues {
     public static final String COMMAND_END_TURN = ":end";
     public static final String COMMAND_USE_TOOLCARD = ":toolcard";
     public static final String COMMAND_SHOW = ":show";
+    public static final String COMMAND_CONNECTION = ":cmode";
 
 
     //AssetUrl

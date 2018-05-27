@@ -11,6 +11,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.rmi.RemoteException;
+import java.sql.Connection;
 import java.util.Scanner;
 
 /**
@@ -20,6 +21,7 @@ import java.util.Scanner;
 public class Client
 {
     static RemoteController controller;
+    static ConnectionModeEnum connectionModeEnum;
 
 
     public static RemoteController getController(){
@@ -31,7 +33,6 @@ public class Client
         System.out.println("--> Connetting...");
         controller = null;
         Scanner scanner = new Scanner(System.in);
-        ConnectionModeEnum connectionModeEnum;
         //TODO : make server able to reach client on socket and rmi simultaneously. Until that this code is useless
         System.out.println("Choose connection mode. Type rmi or socket");
         String connectionChoice = scanner.nextLine();
@@ -66,7 +67,7 @@ public class Client
         }
 
         if(viewMode.equals("cli")){
-            CliView view = new CliView(controller);
+            CliView view = new CliView(controller, connectionModeEnum);
             view.start();
         }
         else{
@@ -79,7 +80,6 @@ public class Client
 
     public void login(RemoteController controller){
         System.out.println("Insert username: ");
-
-
     }
+
 }
