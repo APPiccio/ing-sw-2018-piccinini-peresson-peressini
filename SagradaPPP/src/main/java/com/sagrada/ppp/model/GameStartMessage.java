@@ -1,7 +1,7 @@
 package com.sagrada.ppp.model;
 
-import com.sagrada.ppp.cards.PublicObjectiveCard;
-import com.sagrada.ppp.cards.ToolCards.ToolCard;
+import com.sagrada.ppp.cards.publicobjectivecards.PublicObjectiveCard;
+import com.sagrada.ppp.cards.toolcards.ToolCard;
 
 import java.io.Serializable;
 import java.util.ArrayList;

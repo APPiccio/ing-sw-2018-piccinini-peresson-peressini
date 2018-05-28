@@ -1,6 +1,6 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.cards.ToolCards.*;
+import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.util.Pair;

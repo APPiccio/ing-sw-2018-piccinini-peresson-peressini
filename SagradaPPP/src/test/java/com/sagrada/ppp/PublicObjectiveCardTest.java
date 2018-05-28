@@ -1,11 +1,9 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.cards.*;
-
 import static org.junit.Assert.assertEquals;
 
+import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.model.WindowPanel;
-import org.junit.After;
 import org.junit.Test;
 
 public class PublicObjectiveCardTest {

@@ -1,11 +1,9 @@
 package com.sagrada.ppp.view;
-import com.sagrada.ppp.cards.PublicObjectiveCard;
-import com.sagrada.ppp.cards.ToolCards.ToolCard;
+import com.sagrada.ppp.cards.publicobjectivecards.PublicObjectiveCard;
+import com.sagrada.ppp.cards.toolcards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
-import com.sagrada.ppp.network.client.Client;
 import com.sagrada.ppp.network.client.ConnectionHandler;
-import com.sagrada.ppp.network.client.ConnectionMode;
 import com.sagrada.ppp.network.client.ConnectionModeEnum;
 import com.sagrada.ppp.utils.StaticValues;
 

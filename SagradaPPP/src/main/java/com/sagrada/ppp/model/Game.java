@@ -1,7 +1,7 @@
 package com.sagrada.ppp.model;
 
-import com.sagrada.ppp.cards.*;
-import com.sagrada.ppp.cards.ToolCards.*;
+import com.sagrada.ppp.cards.publicobjectivecards.*;
+import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.Serializable;

@@ -1,8 +1,5 @@
 package com.sagrada.ppp.network.server;
 
-import com.sagrada.ppp.*;
-import com.sagrada.ppp.cards.PublicObjectiveCard;
-import com.sagrada.ppp.cards.ToolCards.ToolCard;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
 import java.io.*;
