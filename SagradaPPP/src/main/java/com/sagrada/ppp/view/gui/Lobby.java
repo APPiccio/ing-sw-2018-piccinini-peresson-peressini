@@ -1,12 +1,14 @@
 package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.controller.RemoteController;
+import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -60,6 +62,55 @@ public class Lobby implements EventHandler<MouseEvent> {
         stage.show();
     }
 
+
+    /**
+     * Create and display a TextInputDialog for the user's name.
+     * <p>
+     * This method handle the possibility of entering in the TextField
+     * an empty String or a String containing whitespaces.
+     */
+    private void createTextInputDialog() {
+        String username;
+        do {
+            TextInputDialog usernameDialog = new TextInputDialog(null);
+            usernameDialog.setTitle("Username");
+            usernameDialog.setHeaderText(null);
+            usernameDialog.setContentText("Please enter your username!\nThis cannot be empty or contain spaces.");
+            Button button = (Button) usernameDialog.getDialogPane().lookupButton(ButtonType.OK);
+            button.disableProperty().bind(Bindings.isEmpty(usernameDialog.getEditor().textProperty()));
+            usernameDialog.initModality(Modality.APPLICATION_MODAL);
+            usernameDialog.initOwner(stage);
+            if (usernameDialog.showAndWait().isPresent()) {
+                username = usernameDialog.getResult();
+                if (username.contains(" ")) {
+                    username = null;
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Error! Username cannot contain spaces.\nPlease try again!");
+                    alert.initModality(Modality.APPLICATION_MODAL);
+                    alert.initOwner(stage);
+                    alert.showAndWait();
+                }
+                else {
+                    try {
+                        new PlayersLobby(username, controller, stage);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else {
+                break;
+            }
+        } while (username == null);
+    }
+
+    /**
+     * Handles the mouse-click
+     *
+     * @param event Mouse-clicked event
+     */
     @Override
     public void handle(MouseEvent event) {
         Button clickedBtn = (Button) event.getSource();
@@ -73,38 +124,7 @@ public class Lobby implements EventHandler<MouseEvent> {
             aboutAlert.showAndWait();
         }
         else if (clickedBtn.equals(play)) {
-            String username;
-            do {
-                TextInputDialog usernameDialog = new TextInputDialog(null);
-                usernameDialog.setTitle("Username");
-                usernameDialog.setHeaderText(null);
-                usernameDialog.setContentText("Please enter your username!\nThis cannot be empty or contain spaces.");
-                usernameDialog.initModality(Modality.APPLICATION_MODAL);
-                usernameDialog.initOwner(stage);
-                if (usernameDialog.showAndWait().isPresent()) {
-                    username = usernameDialog.getResult();
-                    if (username.contains(" ")) {
-                        username = null;
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error!");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Error! Username cannot be empty or contain spaces.\nPlease try again!");
-                        alert.initModality(Modality.APPLICATION_MODAL);
-                        alert.initOwner(stage);
-                        alert.showAndWait();
-                    }
-                    else {
-                        try {
-                            new PlayersLobby(username, controller, stage);
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                else {
-                    break;
-                }
-            } while (username == null);
+            createTextInputDialog();
         }
     }
 
