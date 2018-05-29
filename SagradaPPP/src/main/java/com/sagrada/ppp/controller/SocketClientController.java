@@ -1,31 +1,27 @@
 package com.sagrada.ppp.controller;
 
-import com.sagrada.ppp.*;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
-import com.sagrada.ppp.network.server.Service;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.view.CliView;
 import com.sagrada.ppp.view.ToolCardHandler;
 
 import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class SocketClientController implements RemoteController, ResponseHandler, Serializable {
+public class SocketClientController extends UnicastRemoteObject implements RemoteController, ResponseHandler, Serializable {
 
     private transient Socket socket;
     private transient ObjectOutputStream out;
     private transient ObjectInputStream in;
     private transient ArrayList<LobbyObserver> lobbyObservers;
     private transient ArrayList<GameObserver> gameObservers;
-    private transient Response response;
-    private transient ArrayList<Response> notificationQueue;
     private transient volatile boolean waitingForResponse;
     private transient JoinGameResult joinGameResult;
     private transient ListeningThread notificationThread;
-    private transient volatile Object responseLock;
+    private final transient Object responseLock;
     private transient LeaveGameResult leaveGameResult;
     private transient boolean disconnectionResult;
     private transient PlaceDiceResult placeDiceResult;
@@ -40,8 +36,6 @@ public class SocketClientController implements RemoteController, ResponseHandler
         in = new ObjectInputStream(socket.getInputStream());
         lobbyObservers = new ArrayList<>();
         gameObservers = new ArrayList<>();
-        response = null;
-        notificationQueue = new ArrayList<>();
         waitingForResponse = false;
         notificationThread = new ListeningThread(this);
         notificationThread.start();
@@ -67,9 +61,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
             }
             lobbyObservers.remove(observer);
             return leaveGameResult;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;
@@ -93,9 +85,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
                 responseLock.notifyAll();
             }
             return joinGameResult;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;
@@ -112,7 +102,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
     }
 
     public void handle(Response response) {
-        return;
+        //do nothing
     }
 
     public void handle(JoinGameResponse response) {
@@ -215,9 +205,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
             }
             closeConnection();
             return disconnectionResult;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return false;
@@ -236,9 +224,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
             }
             out.reset();
             return placeDiceResult;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;
@@ -368,9 +354,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
                     }
                 }catch (EOFException e){
                     System.out.println("Closing client socket");
-                }catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
+                }catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
@@ -391,9 +375,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
             }
             toolCardThread = new ToolCardThreadController(isToolCardUsableResult, view, gameHashCode, playerHashCode, toolCardIndex, in, out);
             toolCardThread.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -405,17 +387,18 @@ public class SocketClientController implements RemoteController, ResponseHandler
 
     @Override
     public void setRoundTrackDiceIndex(int playerHashCode, int diceIndex, int roundIndex) throws RemoteException {
-
+        toolCardThread.toolCardParameters.roundTrackDiceIndex = diceIndex;
+        toolCardThread.toolCardParameters.roundTrackRoundIndex = roundIndex;
     }
 
     @Override
     public void setPanelDiceIndex(int playerHashCode, int diceIndex) throws RemoteException {
-
+        toolCardThread.toolCardParameters.panelDiceIndex = diceIndex;
     }
 
     @Override
     public void setPanelCellIndex(int playerHashCode, int cellIndex) throws RemoteException {
-
+        toolCardThread.toolCardParameters.panelCellIndex = cellIndex;
     }
 
     @Override
@@ -450,13 +433,15 @@ public class SocketClientController implements RemoteController, ResponseHandler
         public void run() {
             try {
                 view.isToolCardUsable(result);
-                toolCardParameters.toolCardID = toolCardID;
                 switch (toolCardID) {
                     case 1:
                         useToolCard1();
                         break;
                     case 2:
+                        useToolCard2();
                         break;
+                    case 3:
+                        useToolCard3();
                     default:
                         break;
                 }
@@ -467,10 +452,36 @@ public class SocketClientController implements RemoteController, ResponseHandler
         }
 
         private void useToolCard1() throws RemoteException{
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
             view.draftPoolDiceIndexRequired();
             while (toolCardParameters.draftPoolDiceIndex == null) ;
             view.actionSignRequired();
             while (toolCardParameters.actionSign == null) ;
+            sendToolCardRequest();
+        }
+
+        private void useToolCard2() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.panelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+            sendToolCardRequest();
+        }
+
+        private void useToolCard3() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.panelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+            sendToolCardRequest();
+        }
+
+        private void sendToolCardRequest(){
             try {
                 waitingForResponse = true;
                 out.writeObject(new UseToolCardRequest(gameHashCode, playerHashCode, toolCardParameters));
@@ -481,9 +492,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
                     responseLock.notifyAll();
                 }
                 view.notifyUsageCompleted(useToolCardResult);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }

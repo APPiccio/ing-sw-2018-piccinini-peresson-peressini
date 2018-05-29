@@ -1,6 +1,4 @@
 package com.sagrada.ppp.network.server;
-import com.sagrada.ppp.cards.toolcards.ToolCard;
-import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.controller.Controller;
@@ -14,7 +12,7 @@ import java.util.HashMap;
 
 public class Service {
 
-    HashMap<Integer , Game> games;
+    private HashMap<Integer , Game> games;
 
     public Service(){
         games = new HashMap<>();

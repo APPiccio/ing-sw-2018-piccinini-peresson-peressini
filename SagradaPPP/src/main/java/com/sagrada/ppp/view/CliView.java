@@ -288,6 +288,8 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                             controller.isToolCardUsable(gameHashCode, hashCode ,toolCardIndex , this);
                             while (!isEndedTurn && !isToolCardActionEnded && isToolCardUsableFlag){
                                 //richiedi valori
+
+
                                 if(toolCardFlags.isDraftPoolDiceRequired){
                                     System.out.println("Select a dice from draft pool!");
                                     command = scanner.nextLine();
@@ -310,11 +312,95 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                                     toolCardFlags.isDraftPoolDiceRequired = false;
                                     controller.setDraftPoolDiceIndex(hashCode, requiredIndex);
                                 }
+
+
+
                                 if(toolCardFlags.isPanelCellRequired){
+                                    System.out.println("Chose a Cell from your panel!");
+                                    System.out.println("Insert row index: ");
+                                    command = scanner.nextLine();
+                                    if (isEndedTurn) break;
+                                    int rowIndex;
+                                    try {
+                                        rowIndex = Integer.parseInt(command.split(" ")[0]);
+                                    }   catch (NumberFormatException e){
+                                        rowIndex = -1;
+                                    }
+                                    while(command.split(" ").length != 1 && !(rowIndex >= 0 && rowIndex < StaticValues.PATTERN_ROW)){
+                                        System.out.println("Index not valid. Try again:");
+                                        command = scanner.nextLine();
+                                        try {
+                                            rowIndex = Integer.parseInt(command.split(" ")[0]);
+                                        }   catch (NumberFormatException e){
+                                            rowIndex = -1;
+                                        }
+                                    }
 
+                                    System.out.println("Insert column index: ");
+                                    command = scanner.nextLine();
+                                    if (isEndedTurn) break;
+                                    int columnIndex;
+                                    try {
+                                        columnIndex = Integer.parseInt(command.split(" ")[0]);
+                                    }   catch (NumberFormatException e){
+                                        columnIndex = -1;
+                                    }
+                                    while(command.split(" ").length != 1 && !(columnIndex >= 0 && columnIndex < StaticValues.PATTERN_COL)){
+                                        System.out.println("Index not valid. Try again:");
+                                        command = scanner.nextLine();
+                                        try {
+                                            columnIndex = Integer.parseInt(command.split(" ")[0]);
+                                        }   catch (NumberFormatException e){
+                                            columnIndex = -1;
+                                        }
+                                    }
+                                    toolCardFlags.isPanelCellRequired = false;
+                                    controller.setPanelCellIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
                                 }
-                                if(toolCardFlags.isPanelDiceRequired){
 
+
+
+                                if(toolCardFlags.isPanelDiceRequired){
+                                    System.out.println("Chose a Dice from your panel!");
+                                    System.out.println("Insert row index: ");
+                                    command = scanner.nextLine();
+                                    if (isEndedTurn) break;
+                                    int rowIndex;
+                                    try {
+                                        rowIndex = Integer.parseInt(command.split(" ")[0]);
+                                    }   catch (NumberFormatException e){
+                                        rowIndex = -1;
+                                    }
+                                    while(command.split(" ").length != 1 && !(rowIndex >= 0 && rowIndex < StaticValues.PATTERN_ROW)){
+                                        System.out.println("Index not valid. Try again:");
+                                        command = scanner.nextLine();
+                                        try {
+                                            rowIndex = Integer.parseInt(command.split(" ")[0]);
+                                        }   catch (NumberFormatException e){
+                                            rowIndex = -1;
+                                        }
+                                    }
+
+                                    System.out.println("Insert column index: ");
+                                    command = scanner.nextLine();
+                                    if (isEndedTurn) break;
+                                    int columnIndex;
+                                    try {
+                                        columnIndex = Integer.parseInt(command.split(" ")[0]);
+                                    }   catch (NumberFormatException e){
+                                        columnIndex = -1;
+                                    }
+                                    while(command.split(" ").length != 1 && !(columnIndex >= 0 && columnIndex < StaticValues.PATTERN_COL)){
+                                        System.out.println("Index not valid. Try again:");
+                                        command = scanner.nextLine();
+                                        try {
+                                            columnIndex = Integer.parseInt(command.split(" ")[0]);
+                                        }   catch (NumberFormatException e){
+                                            columnIndex = -1;
+                                        }
+                                    }
+                                    toolCardFlags.isPanelDiceRequired = false;
+                                    controller.setPanelDiceIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
                                 }
                                 if(toolCardFlags.isDraftPoolDiceRequired){
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public interface RemoteController extends Remote {
 
+    //TODO remove this
     ArrayList<Player> getPlayers(int gameHashCode) throws RemoteException;
 
     LeaveGameResult leaveLobby(int gameHashCode, String username, LobbyObserver observer) throws RemoteException;
@@ -20,7 +21,7 @@ public interface RemoteController extends Remote {
     void detachGameObserver(int gameHashCode, GameObserver gameObserver) throws RemoteException;
 
     String getUsername(int playerHashCode, int gameHashCode) throws RemoteException;
-
+    //TODO remove this
     int getNumPlayers(int gameHashCode) throws RemoteException;
 
     void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) throws RemoteException;

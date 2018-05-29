@@ -97,17 +97,18 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     @Override
     public void setRoundTrackDiceIndex(int playerHashCode, int diceIndex, int roundIndex) throws RemoteException {
-
+        toolCardThreads.get(playerHashCode).toolCardParameters.roundTrackDiceIndex = diceIndex;
+        toolCardThreads.get(playerHashCode).toolCardParameters.roundTrackRoundIndex = roundIndex;
     }
 
     @Override
     public void setPanelDiceIndex(int playerHashCode, int diceIndex) throws RemoteException {
-
+        toolCardThreads.get(playerHashCode).toolCardParameters.panelDiceIndex = diceIndex;
     }
 
     @Override
     public void setPanelCellIndex(int playerHashCode, int cellIndex) throws RemoteException {
-
+        toolCardThreads.get(playerHashCode).toolCardParameters.panelCellIndex = cellIndex;
     }
 
     class ToolCardThreadController extends Thread {
@@ -135,9 +136,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         public void run() {
             try {
                 view.isToolCardUsable(result);
-                toolCardParameters.toolCardID = toolCardID;
+
                 switch (toolCardID) {
                     case 1:
+                        toolCardParameters.reset();
+                        toolCardParameters.toolCardID = toolCardID;
                         view.draftPoolDiceIndexRequired();
                         while (toolCardParameters.draftPoolDiceIndex == null) ;
                         view.actionSignRequired();
@@ -146,13 +149,39 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         view.notifyUsageCompleted(useToolCardResult);
                         break;
                     case 2:
+                        useToolCard2();
                         break;
+                    case 3:
+                        useToolCard3();
                     default:
+
                         break;
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+        }
+
+        private void useToolCard3() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.panelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+            view.notifyUsageCompleted(useToolCardResult);
+        }
+
+        private void useToolCard2() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.panelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+            view.notifyUsageCompleted(useToolCardResult);
         }
     }
 
