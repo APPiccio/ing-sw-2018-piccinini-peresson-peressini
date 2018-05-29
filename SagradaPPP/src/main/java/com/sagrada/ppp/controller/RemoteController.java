@@ -1,6 +1,7 @@
 package com.sagrada.ppp.controller;
 
 import com.sagrada.ppp.model.*;
+import com.sagrada.ppp.view.ToolCardHandler;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -31,4 +32,17 @@ public interface RemoteController extends Remote {
     void endTurn(int gameHashCode, int playerHashCode) throws RemoteException;
 
     void closeSocket() throws RemoteException;
+
+    void isToolCardUsable(int gameHashCode, int playerHashCode, int toolCardIndex, ToolCardHandler view) throws RemoteException;
+
+    void setDraftPoolDiceIndex(int playerHashCode, int diceIndex) throws RemoteException;
+
+    void setRoundTrackDiceIndex(int playerHashCode, int diceIndex, int roundIndex) throws RemoteException;
+
+    void setPanelDiceIndex(int playerHashCode, int diceIndex) throws RemoteException;
+
+    void setPanelCellIndex(int playerHashCode, int cellIndex) throws RemoteException;
+
+    void setActionSign(int playerHashCode, int addend) throws RemoteException;
+
 }

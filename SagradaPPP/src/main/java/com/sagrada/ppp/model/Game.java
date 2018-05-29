@@ -2,6 +2,7 @@ package com.sagrada.ppp.model;
 
 import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
+import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.Serializable;
@@ -432,7 +433,7 @@ public class Game implements Serializable{
     public void extractToolCards(){
         Random r = new Random();
         ArrayList<ToolCard> allToolCards = new ArrayList<>();
-
+/*
         allToolCards.add(new ToolCard1());
         allToolCards.add(new ToolCard2());
         allToolCards.add(new ToolCard3());
@@ -443,7 +444,12 @@ public class Game implements Serializable{
         allToolCards.add(new ToolCard8());
         allToolCards.add(new ToolCard9());
         allToolCards.add(new ToolCard10());
-
+        allToolCards.add(new ToolCard11());
+        allToolCards.add(new ToolCard12());
+*/
+        allToolCards.add(new ToolCard1());
+        allToolCards.add(new ToolCard1());
+        allToolCards.add(new ToolCard1());
         for(int i = 0; i < 3 ; i++){
             toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
         }
@@ -570,6 +576,52 @@ public class Game implements Serializable{
         playerScore.calculateTotalPoints();
         return playerScore;
     }
+
+
+    public boolean isToolCardUsable(int playerHashCode, int toolCardIndex){
+        ToolCard toolCard = toolCards.get(toolCardIndex);
+        Player player = getPlayerByHashcode(playerHashCode);
+        if(toolCard != null && player != null){
+            return player.getFavorTokens() >= toolCard.getCost();
+        }
+        return false;
+    }
+
+    public int getToolCardID(int toolCardIndex){
+        return toolCards.get(toolCardIndex).getId();
+    }
+
+    public UseToolCardResult useToolCard(int playerHashCode, ToolCardParameters toolCardParameters) {
+        if(players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new UseToolCardResult(false, draftPool , roundTrack , players);
+        ToolCard toolCard = toolCards.stream().filter( x -> x.getId() == toolCardParameters.toolCardID).findFirst().orElse(null);
+        if(toolCard != null){
+
+            System.out.println(getPlayerByHashcode(playerHashCode).getUsername() + " is using toolcard ID = " + toolCard.getId());
+            getPlayerByHashcode(playerHashCode).setFavorTokens(getPlayerByHashcode(playerHashCode).getFavorTokens() - toolCard.getCost());
+            usedToolCard = true;
+            switch (toolCard.getId()){
+                case 1:
+                    if(!toolCard1ParamsOk(toolCardParameters)){
+                        usedToolCard = false;
+                        return new UseToolCardResult(false, draftPool, roundTrack, players);
+                    }
+                    toolCard.use(new CommandToolCard1(draftPool.get(toolCardParameters.draftPoolDiceIndex), toolCardParameters.actionSign));
+                    return new UseToolCardResult(true, draftPool, roundTrack, players);
+                default:
+                    break;
+            }
+        }
+        return new UseToolCardResult(false, draftPool , roundTrack , players);
+    }
+
+    private boolean toolCard1ParamsOk(ToolCardParameters toolCardParameters){
+        Dice dice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
+        if (dice == null) return false;
+        if (dice.getValue() == 1 && toolCardParameters.actionSign == -1) return false;
+        if (dice.getValue() == 6 && toolCardParameters.actionSign == +1) return false;
+        return true;
+    }
+
 
     private class MyTimerTask extends TimerTask{
 

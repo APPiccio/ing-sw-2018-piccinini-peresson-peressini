@@ -11,4 +11,6 @@ public interface RequestHandler {
     Response handle(EndTurnRequest request);
     Response handle(CloseSocketRequest request);
     Response handle(DetachGameObserverRequest request);
+    Response handle(IsToolCardUsableRequest request);
+    Response handle(UseToolCardRequest request);
 }

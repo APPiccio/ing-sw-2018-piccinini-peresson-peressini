@@ -3,7 +3,10 @@ package com.sagrada.ppp.controller;
 import com.sagrada.ppp.*;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
+import com.sagrada.ppp.network.server.Service;
 import com.sagrada.ppp.utils.StaticValues;
+import com.sagrada.ppp.view.CliView;
+import com.sagrada.ppp.view.ToolCardHandler;
 
 import java.io.*;
 import java.net.Socket;
@@ -19,13 +22,17 @@ public class SocketClientController implements RemoteController, ResponseHandler
     private transient ArrayList<GameObserver> gameObservers;
     private transient Response response;
     private transient ArrayList<Response> notificationQueue;
-    private transient boolean waitingForResponse;
+    private transient volatile boolean waitingForResponse;
     private transient JoinGameResult joinGameResult;
     private transient ListeningThread notificationThread;
-    private transient Object responseLock;
+    private transient volatile Object responseLock;
     private transient LeaveGameResult leaveGameResult;
     private transient boolean disconnectionResult;
     private transient PlaceDiceResult placeDiceResult;
+    private transient volatile ToolCardParameters toolCardParameters;
+    private transient ToolCardThreadController toolCardThread;
+    private transient volatile IsToolCardUsableResult isToolCardUsableResult;
+    private transient volatile UseToolCardResult useToolCardResult;
 
     public SocketClientController() throws IOException {
         socket = new Socket(StaticValues.SERVER_ADDRESS, StaticValues.SOCKET_PORT);
@@ -39,6 +46,7 @@ public class SocketClientController implements RemoteController, ResponseHandler
         notificationThread = new ListeningThread(this);
         notificationThread.start();
         responseLock = new Object();
+        toolCardParameters = new ToolCardParameters();
     }
 
     @Override
@@ -237,6 +245,15 @@ public class SocketClientController implements RemoteController, ResponseHandler
     }
 
     @Override
+    public void handle(UseToolCardResponse response) {
+        synchronized (responseLock) {
+            waitingForResponse = false;
+            useToolCardResult = response.useToolCardResult;
+            responseLock.notifyAll();
+        }
+    }
+
+    @Override
     public void handle(PlaceDiceResponse response) {
         synchronized (responseLock) {
             waitingForResponse = false;
@@ -275,6 +292,15 @@ public class SocketClientController implements RemoteController, ResponseHandler
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void handle(IsToolCardUsableResponse response) {
+        synchronized (responseLock) {
+            waitingForResponse = false;
+            isToolCardUsableResult = response.isToolCardUsableResult;
+            responseLock.notifyAll();
         }
     }
 
@@ -349,6 +375,117 @@ public class SocketClientController implements RemoteController, ResponseHandler
                 }
             }
             closeConnection();
+        }
+    }
+
+    @Override
+    public void isToolCardUsable(int gameHashCode, int playerHashCode, int toolCardIndex, ToolCardHandler view) throws RemoteException {
+        try {
+            waitingForResponse = true;
+            out.writeObject(new IsToolCardUsableRequest(gameHashCode, playerHashCode, toolCardIndex));
+            synchronized (responseLock) {
+                while (waitingForResponse) {
+                    responseLock.wait();
+                }
+                responseLock.notifyAll();
+            }
+            toolCardThread = new ToolCardThreadController(isToolCardUsableResult, view, gameHashCode, playerHashCode, toolCardIndex, in, out);
+            toolCardThread.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setDraftPoolDiceIndex(int playerHashCode, int diceIndex) throws RemoteException {
+        toolCardThread.toolCardParameters.draftPoolDiceIndex = diceIndex;
+    }
+
+    @Override
+    public void setRoundTrackDiceIndex(int playerHashCode, int diceIndex, int roundIndex) throws RemoteException {
+
+    }
+
+    @Override
+    public void setPanelDiceIndex(int playerHashCode, int diceIndex) throws RemoteException {
+
+    }
+
+    @Override
+    public void setPanelCellIndex(int playerHashCode, int cellIndex) throws RemoteException {
+
+    }
+
+    @Override
+    public void setActionSign(int playerHashCode, int addend) throws RemoteException {
+        toolCardThread.toolCardParameters.actionSign = addend;
+    }
+
+    class ToolCardThreadController extends Thread {
+
+        int gameHashCode;
+        boolean result;
+        ToolCardHandler view;
+        ObjectInputStream in;
+        ObjectOutputStream out;
+        int toolCardIndex;
+        ToolCardParameters toolCardParameters;
+        int playerHashCode;
+        int toolCardID;
+
+        ToolCardThreadController(IsToolCardUsableResult isToolCardUsableResult, ToolCardHandler view, int gameHashCode, int playerHashCode, int toolCardIndex, ObjectInputStream in, ObjectOutputStream out){
+            this.result = isToolCardUsableResult.result;
+            this.toolCardID = isToolCardUsableResult.toolCardID;
+            this.view = view;
+            this.gameHashCode = gameHashCode;
+            this.toolCardIndex = toolCardIndex;
+            this.toolCardParameters = new ToolCardParameters();
+            this.playerHashCode = playerHashCode;
+            this.in = in;
+            this.out = out;
+        }
+        @Override
+        public void run() {
+            try {
+                view.isToolCardUsable(result);
+                toolCardParameters.toolCardID = toolCardID;
+                switch (toolCardID) {
+                    case 1:
+                        useToolCard1();
+                        break;
+                    case 2:
+                        break;
+                    default:
+                        break;
+                }
+
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void useToolCard1() throws RemoteException{
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null) ;
+            view.actionSignRequired();
+            while (toolCardParameters.actionSign == null) ;
+            try {
+                waitingForResponse = true;
+                out.writeObject(new UseToolCardRequest(gameHashCode, playerHashCode, toolCardParameters));
+                synchronized (responseLock) {
+                    while (waitingForResponse) {
+                        responseLock.wait();
+                    }
+                    responseLock.notifyAll();
+                }
+                view.notifyUsageCompleted(useToolCardResult);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

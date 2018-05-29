@@ -94,6 +94,11 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         return null;
     }
 
+    @Override
+    public Response handle(UseToolCardRequest request) {
+        return new UseToolCardResponse(service.useToolCard(request.gameHashCode, request.playerHashCode, request.toolCardParameters));
+    }
+
     public Response handle(JoinGameRequest joinGameRequest){
         JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this,this);
         return new JoinGameResponse(joinGameResult);
@@ -142,6 +147,11 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         service.detachGameObserver(request.gameHashCode, this);
         isStopped = true;
         return null;
+    }
+
+    @Override
+    public Response handle(IsToolCardUsableRequest request) {
+        return new IsToolCardUsableResponse(service.isToolCardUsable(request.gameHashCode, request.playerHashCode, request.toolCardIndex));
     }
 
     @Override

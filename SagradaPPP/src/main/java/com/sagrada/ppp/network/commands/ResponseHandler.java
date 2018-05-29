@@ -14,4 +14,6 @@ public interface ResponseHandler {
     void handle(DicePlacedNotification response);
     void handle(EndTurnNotification response);
     void handle(EndGameNotification response);
+    void handle(IsToolCardUsableResponse response);
+    void handle(UseToolCardResponse response);
 }

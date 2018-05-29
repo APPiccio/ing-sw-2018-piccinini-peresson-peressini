@@ -277,7 +277,7 @@ public class StaticValues {
     public static String getToolCardDescription(int id){
         switch (id){
             case 1:
-                return "After drafting, increase or decrease the value of the drafted die by 1 (you may not change 1 to 6, or 6 to 1)";
+                return "After drafting, increase or decrease the value of the drafted die by 1 (1 may not change to 6, or 6 to 1)";
             case 2:
                 return "Move any one die in your window ignoring the color restrictions (you must obey all other placement restrictions";
             case 3:

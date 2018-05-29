@@ -10,11 +10,12 @@ import com.sagrada.ppp.utils.StaticValues;
 import static com.sagrada.ppp.utils.StaticValues.*;
 
 import java.io.Serializable;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
-public class CliView extends UnicastRemoteObject implements LobbyObserver, Serializable, GameObserver {
+public class CliView extends UnicastRemoteObject implements LobbyObserver, Serializable, GameObserver, ToolCardHandler{
     transient Scanner scanner;
     transient RemoteController controller;
     transient String username;
@@ -41,6 +42,13 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     transient boolean specialTurn;
     transient ConnectionHandler connectionHandler;
     transient ConnectionModeEnum connectionModeEnum;
+    transient volatile boolean isToolCardActionEnded;
+    transient volatile boolean isEndedTurn;
+    transient volatile boolean isToolCardUsableFlag;
+    transient volatile ToolCardFlags toolCardFlags;
+    transient UseToolCardResult useToolCardResult;
+
+
 
     public CliView(RemoteController controller, ConnectionModeEnum connectionModeEnum) throws RemoteException{
         this.scanner = new Scanner(System.in);
@@ -54,6 +62,10 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         placedDice = false;
         usedToolCard = false;
         this.connectionModeEnum = connectionModeEnum;
+        isToolCardActionEnded = false;
+        isEndedTurn = false;
+        isToolCardUsableFlag = true;
+        toolCardFlags = new ToolCardFlags();
     }
 
 
@@ -255,6 +267,97 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                     }
                     break;
                 case StaticValues.COMMAND_USE_TOOLCARD:
+                    if(!currentPlayer.getUsername().equals(username)){
+                        System.out.println("Permission denied, it's not your turn!");
+                        break;
+                    }
+                    if(usedToolCard) {
+                        System.out.println("Already used tool card in this turn! Unable to do it again");
+                        break;
+                    }
+                    if(param.length == 2){
+                        int toolCardIndex = -1;
+                        try {
+                            toolCardIndex = Integer.parseInt(param[1]);
+                        } catch (NumberFormatException e){
+                            toolCardIndex = -1;
+                        }
+                        if(toolCardIndex >= 0 && toolCardIndex <= 2){
+                            System.out.println("TOOL CARD " + toolCardIndex + " USAGE:");
+                            usedToolCard = true;
+                            controller.isToolCardUsable(gameHashCode, hashCode ,toolCardIndex , this);
+                            while (!isEndedTurn && !isToolCardActionEnded && isToolCardUsableFlag){
+                                //richiedi valori
+                                if(toolCardFlags.isDraftPoolDiceRequired){
+                                    System.out.println("Select a dice from draft pool!");
+                                    command = scanner.nextLine();
+                                    if(isEndedTurn) break;
+                                    int requiredIndex = -1;
+                                    try {
+                                        requiredIndex = Integer.parseInt(command.split(" ")[0]);
+                                    }   catch (NumberFormatException e){
+                                        requiredIndex = -1;
+                                    }
+                                    while(command.split(" ").length != 1 && !(requiredIndex >= 0 && requiredIndex < draftpool.size())){
+                                        System.out.println("Index not valid. Try again:");
+                                        command = scanner.nextLine();
+                                        try {
+                                            requiredIndex = Integer.parseInt(command.split(" ")[0]);
+                                        }   catch (NumberFormatException e){
+                                            requiredIndex = -1;
+                                        }
+                                    }
+                                    toolCardFlags.isDraftPoolDiceRequired = false;
+                                    controller.setDraftPoolDiceIndex(hashCode, requiredIndex);
+                                }
+                                if(toolCardFlags.isPanelCellRequired){
+
+                                }
+                                if(toolCardFlags.isPanelDiceRequired){
+
+                                }
+                                if(toolCardFlags.isDraftPoolDiceRequired){
+
+                                }
+                                if(toolCardFlags.isActionSignRequired){
+                                    System.out.println("You want to decrease or increase the dice value?");
+                                    System.out.println("type \t'-' -> -1");
+                                    System.out.println("type \t'+' -> +1");
+                                    command = scanner.nextLine();
+                                    while(!(command.equals("+") || command.equals("-"))){
+                                        System.out.println("Unknown command, please retry");
+                                        command = scanner.nextLine();
+                                    }
+                                    toolCardFlags.isActionSignRequired = false;
+                                    if(command.equals("+")){
+                                        controller.setActionSign(hashCode, 1);
+                                    }
+                                    else if(command.equals("-")){
+                                        controller.setActionSign(hashCode, -1);
+                                    }
+                                }
+                            }
+                            if(isToolCardActionEnded){
+                                isToolCardActionEnded = false;
+                                if(useToolCardResult.result){
+                                    System.out.println("Tool card used successfully! This is the update game status:");
+                                    showGameStatus();
+                                }
+                                else{
+                                    System.out.println("Unable to use tool card. Game status unchanged");
+                                    usedToolCard = false;
+                                }
+                            }
+                            //codice di ritorno alle normale istruzioni
+                            //check su comandi ricevuti dal while precendete
+                        }
+                        else{
+                            System.out.println("UNKNOWN COMMAND");
+                        }
+                    }
+                    else{
+                        System.out.println("UNKNOWN COMMAND!");
+                    }
                     break;
                 case StaticValues.COMMAND_END_TURN:
                     if(!currentPlayer.getUsername().equals(username)){
@@ -328,6 +431,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
 
     @Override
     public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
+        players = gameStartMessage.players;
         currentPlayer = gameStartMessage.players.get(0);
         isGameStarted = true;
         this.playersPanel = gameStartMessage.chosenPanels;
@@ -463,6 +567,52 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void isToolCardUsable(boolean result) {
+        isToolCardUsableFlag = result;
+    }
+
+    @Override
+    public void draftPoolDiceIndexRequired() {
+        toolCardFlags.reset();
+        toolCardFlags.isDraftPoolDiceRequired = true;
+    }
+
+    @Override
+    public void roundTrackDiceIndexRequired() {
+        toolCardFlags.reset();
+        toolCardFlags.isRoundTrackDiceRequired = true;
+    }
+
+    @Override
+    public void panelDiceIndexRequired() {
+        toolCardFlags.reset();
+        toolCardFlags.isPanelDiceRequired = true;
+    }
+
+    @Override
+    public void panelCellIndexRequired() {
+        toolCardFlags.reset();
+        toolCardFlags.isPanelCellRequired = true;
+    }
+
+    @Override
+    public void actionSignRequired() {
+        toolCardFlags.reset();
+        toolCardFlags.isActionSignRequired = true;
+    }
+
+    @Override
+    public void notifyUsageCompleted(UseToolCardResult useToolCardResult) {
+        this.useToolCardResult = useToolCardResult;
+        this.players = useToolCardResult.players;
+        this.draftpool = useToolCardResult.draftpool;
+        this.roundTrack = useToolCardResult.roundTrack;
+        toolCardFlags.reset();
+        isToolCardActionEnded = true;
+        usedToolCard = true;
     }
 }
 

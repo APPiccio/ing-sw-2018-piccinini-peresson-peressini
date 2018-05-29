@@ -2,17 +2,21 @@ package com.sagrada.ppp.controller;
 
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.server.Service;
-
+import com.sagrada.ppp.view.CliView;
+import com.sagrada.ppp.view.ToolCardHandler;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Controller extends UnicastRemoteObject implements RemoteController {
 
     private Service service;
+    private HashMap<Integer, ToolCardThreadController> toolCardThreads;
 
     public Controller(Service service) throws RemoteException {
         this.service = service;
+        toolCardThreads = new HashMap<>();
     }
 
     public ArrayList<Player> getPlayers(int gameHashCode) throws RemoteException{
@@ -59,7 +63,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
 
     @Override
     public PlaceDiceResult placeDice(int gameHashCode, int playerHashCode, int diceIndex, int row, int col) throws RemoteException {
-        System.out.println("chiamata passa al controller");
         return service.placeDice(gameHashCode, playerHashCode, diceIndex, row, col);
     }
 
@@ -68,10 +71,89 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         service.endTurn(gameHashCode,playerHashCode);
     }
 
+    @Override
+    public void isToolCardUsable(int gameHashCode, int playerHashCode, int toolCardIndex, ToolCardHandler view) throws RemoteException {
+        IsToolCardUsableResult isToolCardUsableResult = service.isToolCardUsable(gameHashCode, playerHashCode, toolCardIndex);
+        ToolCardThreadController toolCardThread = new ToolCardThreadController(isToolCardUsableResult.result, view, service, gameHashCode, playerHashCode, toolCardIndex, isToolCardUsableResult.toolCardID);
+        toolCardThreads.put(playerHashCode, toolCardThread);
+        toolCardThread.start();
+    }
 
-    //here only to keep heritage
+    //here only to keep inheritance
     @Override
     public void closeSocket() throws RemoteException {
 
     }
+
+    @Override
+    public void setActionSign(int playerHashCode, int addend) throws RemoteException {
+        toolCardThreads.get(playerHashCode).toolCardParameters.actionSign = addend;
+    }
+
+    @Override
+    public void setDraftPoolDiceIndex(int playerHashCode, int diceIndex) throws RemoteException {
+        toolCardThreads.get(playerHashCode).toolCardParameters.draftPoolDiceIndex = diceIndex;
+    }
+
+    @Override
+    public void setRoundTrackDiceIndex(int playerHashCode, int diceIndex, int roundIndex) throws RemoteException {
+
+    }
+
+    @Override
+    public void setPanelDiceIndex(int playerHashCode, int diceIndex) throws RemoteException {
+
+    }
+
+    @Override
+    public void setPanelCellIndex(int playerHashCode, int cellIndex) throws RemoteException {
+
+    }
+
+    class ToolCardThreadController extends Thread {
+
+        int gameHashCode;
+        boolean result;
+        ToolCardHandler view;
+        Service service;
+        int toolCardIndex;
+        ToolCardParameters toolCardParameters;
+        int playerHashCode;
+        int toolCardID;
+
+        ToolCardThreadController(boolean result, ToolCardHandler view, Service service, int gameHashCode, int playerHashCode, int toolCardIndex, int toolCardID){
+            this.result = result;
+            this.view = view;
+            this.service = service;
+            this.gameHashCode = gameHashCode;
+            this.toolCardIndex = toolCardIndex;
+            this.toolCardParameters = new ToolCardParameters();
+            this.playerHashCode = playerHashCode;
+            this.toolCardID = toolCardID;
+        }
+        @Override
+        public void run() {
+            try {
+                view.isToolCardUsable(result);
+                toolCardParameters.toolCardID = toolCardID;
+                switch (toolCardID) {
+                    case 1:
+                        view.draftPoolDiceIndexRequired();
+                        while (toolCardParameters.draftPoolDiceIndex == null) ;
+                        view.actionSignRequired();
+                        while (toolCardParameters.actionSign == null) ;
+                        UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+                        view.notifyUsageCompleted(useToolCardResult);
+                        break;
+                    case 2:
+                        break;
+                    default:
+                        break;
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

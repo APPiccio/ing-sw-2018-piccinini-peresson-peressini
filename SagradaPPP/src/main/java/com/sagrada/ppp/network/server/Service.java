@@ -1,4 +1,6 @@
 package com.sagrada.ppp.network.server;
+import com.sagrada.ppp.cards.toolcards.ToolCard;
+import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.controller.Controller;
@@ -164,6 +166,22 @@ public class Service {
 
     public void detachGameObserver(int gameHashCode, GameObserver gameObserver){
         games.get(gameHashCode).detachGameObserver(gameObserver);
+    }
+
+    public IsToolCardUsableResult isToolCardUsable(int gameHashCode, int playerHashCode, int toolCardIndex){
+        Game game = games.get(gameHashCode);
+        if(game != null){
+            return new IsToolCardUsableResult(game.isToolCardUsable(playerHashCode, toolCardIndex), game.getToolCardID(toolCardIndex));
+        }
+        return new IsToolCardUsableResult(false, -1);
+    }
+
+    public UseToolCardResult useToolCard(int gameHashCode, int playerHashCode, ToolCardParameters toolCardParameters){
+        return games.get(gameHashCode).useToolCard(playerHashCode, toolCardParameters);
+    }
+
+    public int getToolCardID(int gameHashCode, int toolCardIndex){
+        return games.get(gameHashCode).getToolCardID(toolCardIndex);
     }
 
 }
