@@ -294,21 +294,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                                     System.out.println("Select a dice from draft pool!");
                                     command = scanner.nextLine();
                                     if(isEndedTurn) break;
-                                    int requiredIndex = -1;
-                                    try {
-                                        requiredIndex = Integer.parseInt(command.split(" ")[0]);
-                                    }   catch (NumberFormatException e){
-                                        requiredIndex = -1;
-                                    }
-                                    while(command.split(" ").length != 1 && !(requiredIndex >= 0 && requiredIndex < draftpool.size())){
-                                        System.out.println("Index not valid. Try again:");
-                                        command = scanner.nextLine();
-                                        try {
-                                            requiredIndex = Integer.parseInt(command.split(" ")[0]);
-                                        }   catch (NumberFormatException e){
-                                            requiredIndex = -1;
-                                        }
-                                    }
+                                    int requiredIndex = checkCommandRange(0,draftpool.size(),command);
                                     toolCardFlags.isDraftPoolDiceRequired = false;
                                     controller.setDraftPoolDiceIndex(hashCode, requiredIndex);
                                 }
@@ -320,40 +306,12 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                                     System.out.println("Insert row index: ");
                                     command = scanner.nextLine();
                                     if (isEndedTurn) break;
-                                    int rowIndex;
-                                    try {
-                                        rowIndex = Integer.parseInt(command.split(" ")[0]);
-                                    }   catch (NumberFormatException e){
-                                        rowIndex = -1;
-                                    }
-                                    while(command.split(" ").length != 1 && !(rowIndex >= 0 && rowIndex < StaticValues.PATTERN_ROW)){
-                                        System.out.println("Index not valid. Try again:");
-                                        command = scanner.nextLine();
-                                        try {
-                                            rowIndex = Integer.parseInt(command.split(" ")[0]);
-                                        }   catch (NumberFormatException e){
-                                            rowIndex = -1;
-                                        }
-                                    }
+                                    int rowIndex = checkCommandRange(0,StaticValues.PATTERN_ROW, command);
 
                                     System.out.println("Insert column index: ");
                                     command = scanner.nextLine();
                                     if (isEndedTurn) break;
-                                    int columnIndex;
-                                    try {
-                                        columnIndex = Integer.parseInt(command.split(" ")[0]);
-                                    }   catch (NumberFormatException e){
-                                        columnIndex = -1;
-                                    }
-                                    while(command.split(" ").length != 1 && !(columnIndex >= 0 && columnIndex < StaticValues.PATTERN_COL)){
-                                        System.out.println("Index not valid. Try again:");
-                                        command = scanner.nextLine();
-                                        try {
-                                            columnIndex = Integer.parseInt(command.split(" ")[0]);
-                                        }   catch (NumberFormatException e){
-                                            columnIndex = -1;
-                                        }
-                                    }
+                                    int columnIndex = checkCommandRange(0, StaticValues.PATTERN_COL,command);
                                     toolCardFlags.isPanelCellRequired = false;
                                     controller.setPanelCellIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
                                 }
@@ -361,44 +319,17 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
 
 
                                 if(toolCardFlags.isPanelDiceRequired){
+
                                     System.out.println("Chose a Dice from your panel!");
                                     System.out.println("Insert row index: ");
                                     command = scanner.nextLine();
                                     if (isEndedTurn) break;
-                                    int rowIndex;
-                                    try {
-                                        rowIndex = Integer.parseInt(command.split(" ")[0]);
-                                    }   catch (NumberFormatException e){
-                                        rowIndex = -1;
-                                    }
-                                    while(command.split(" ").length != 1 && !(rowIndex >= 0 && rowIndex < StaticValues.PATTERN_ROW)){
-                                        System.out.println("Index not valid. Try again:");
-                                        command = scanner.nextLine();
-                                        try {
-                                            rowIndex = Integer.parseInt(command.split(" ")[0]);
-                                        }   catch (NumberFormatException e){
-                                            rowIndex = -1;
-                                        }
-                                    }
+                                    int rowIndex = checkCommandRange(0, StaticValues.PATTERN_ROW,command);
 
                                     System.out.println("Insert column index: ");
                                     command = scanner.nextLine();
                                     if (isEndedTurn) break;
-                                    int columnIndex;
-                                    try {
-                                        columnIndex = Integer.parseInt(command.split(" ")[0]);
-                                    }   catch (NumberFormatException e){
-                                        columnIndex = -1;
-                                    }
-                                    while(command.split(" ").length != 1 && !(columnIndex >= 0 && columnIndex < StaticValues.PATTERN_COL)){
-                                        System.out.println("Index not valid. Try again:");
-                                        command = scanner.nextLine();
-                                        try {
-                                            columnIndex = Integer.parseInt(command.split(" ")[0]);
-                                        }   catch (NumberFormatException e){
-                                            columnIndex = -1;
-                                        }
-                                    }
+                                    int columnIndex = checkCommandRange(0, StaticValues.PATTERN_COL,command);
                                     toolCardFlags.isPanelDiceRequired = false;
                                     controller.setPanelDiceIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
                                 }
@@ -421,6 +352,34 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                                     else if(command.equals("-")){
                                         controller.setActionSign(hashCode, -1);
                                     }
+                                }
+                                if(toolCardFlags.isSecondPanelDiceRequired){
+                                    System.out.println("Chose a Dice from your panel!");
+                                    System.out.println("Insert row index: ");
+                                    command = scanner.nextLine();
+                                    if (isEndedTurn) break;
+                                    int rowIndex = checkCommandRange(0,StaticValues.PATTERN_ROW, command);
+
+                                    System.out.println("Insert column index: ");
+                                    command = scanner.nextLine();
+                                    if (isEndedTurn) break;
+                                    int columnIndex = checkCommandRange(0, StaticValues.PATTERN_COL,command);
+                                    toolCardFlags.isSecondPanelDiceRequired = false;
+                                    controller.setSecondPanelDiceIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
+                                }
+                                if(toolCardFlags.isSecondPanelCellRequired){
+                                    System.out.println("Chose a Cell from your panel!");
+                                    System.out.println("Insert row index: ");
+                                    command = scanner.nextLine();
+                                    if (isEndedTurn) break;
+                                    int rowIndex = checkCommandRange(0,StaticValues.PATTERN_ROW, command);
+
+                                    System.out.println("Insert column index: ");
+                                    command = scanner.nextLine();
+                                    if (isEndedTurn) break;
+                                    int columnIndex = checkCommandRange(0, StaticValues.PATTERN_COL,command);
+                                    toolCardFlags.isSecondPanelCellRequired = false;
+                                    controller.setSecondPanelCellIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
                                 }
                             }
                             if(isToolCardActionEnded){
@@ -480,6 +439,25 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             command = param[0];
         }
 
+    }
+
+    private int checkCommandRange(int i, int patternRow,String command) {
+        int index;
+        try {
+            index = Integer.parseInt(command.split(" ")[0]);
+        }   catch (NumberFormatException e){
+            index = -1;
+        }
+        while(command.split(" ").length != 1 && !(index >= 0 && index < StaticValues.PATTERN_ROW)){
+            System.out.println("Index not valid. Try again:");
+            command = scanner.nextLine();
+            try {
+                index = Integer.parseInt(command.split(" ")[0]);
+            }   catch (NumberFormatException e){
+                index = -1;
+            }
+        }
+        return index;
     }
 
 
@@ -699,6 +677,18 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         toolCardFlags.reset();
         isToolCardActionEnded = true;
         usedToolCard = true;
+    }
+
+    @Override
+    public void secondPanelDiceIndexRequired() throws RemoteException {
+        toolCardFlags.reset();
+        toolCardFlags.isSecondPanelDiceRequired = true;
+    }
+
+    @Override
+    public void secondPanelCellIndexRequired() throws RemoteException {
+        toolCardFlags.reset();
+        toolCardFlags.isSecondPanelCellRequired = true;
     }
 }
 
