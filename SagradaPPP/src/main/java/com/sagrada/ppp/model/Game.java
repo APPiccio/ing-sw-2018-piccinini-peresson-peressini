@@ -675,9 +675,7 @@ public class Game implements Serializable{
                         System.out.println("Using toolCard7: re-rolling draft pool dices");
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard7(draftPool));
-                        return new UseToolCardResult(true, draftPool, roundTrack, players);
-
-                    break;
+                        return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 8:
                         break;
                     case 9:
@@ -685,14 +683,13 @@ public class Game implements Serializable{
                         System.out.println("Using toolcard9 Dice: " + toolCardParameters.panelDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
                         if (!toolCard9ParamsOk(player,toolCardParameters) && !dicePlaced){
                             usedToolCard = false;
-                            return new UseToolCardResult(false, draftPool,roundTrack,players);
+                            return new UseToolCardResult(false, draftPool,roundTrack,players, null);
                         }
                         draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
                         toolCard.use(new CommandToolCard9(player,toolCardParameters.panelCellIndex,draftPool.get(toolCardParameters.draftPoolDiceIndex)));
                         isSpecialTurn = true;
                         dicePlaced = true;
-                        return new UseToolCardResult(true,draftPool,roundTrack,players);
-                        break;
+                        return new UseToolCardResult(true,draftPool,roundTrack,players, null);
                     case 10:
                         Dice dice = new Dice(draftPool.get(toolCardParameters.draftPoolDiceIndex));
                         System.out.println("Using toolcard10 with dice = " + dice);
@@ -765,7 +762,7 @@ public class Game implements Serializable{
         Dice secondDice = diceCell.getDiceOn();
         if (secondDice == null) return false;
         if (windowPanel.noDiceNear(toolCardParameters.secondPanelCellIndex))return false;
-        if (!windowPanel.diceOkWithRestriction(secondCell,secondDice,false,false)) return false;
+        if (!windowPanel.diceOkWithRestriction(secondDiceCell,secondDice,false,false)) return false;
         return true;
     }
 
