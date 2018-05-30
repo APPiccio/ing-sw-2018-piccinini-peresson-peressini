@@ -406,6 +406,16 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         toolCardThread.toolCardParameters.actionSign = addend;
     }
 
+    @Override
+    public void setSecondPanelCellIndex(int playerHashCode, int cellIndex) throws RemoteException {
+        toolCardThread.toolCardParameters.secondPanelCellIndex = cellIndex;
+    }
+
+    @Override
+    public void setSecondPanelDiceIndex(int playerHashCode, int diceIndex) throws RemoteException {
+        toolCardThread.toolCardParameters.secondPanelDiceIndex = diceIndex;
+    }
+
     class ToolCardThreadController extends Thread {
 
         int gameHashCode;
@@ -446,6 +456,9 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     case 5:
                         useToolCard5();
                         break;
+                    case 4:
+                        useToolCard4();
+                        break;
                     default:
                         break;
                 }
@@ -455,6 +468,23 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
         }
 
+        private void useToolCard4() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            //first set
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.panelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+            //second set
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.secondPanelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.secondPanelCellIndex == null);
+
+            sendToolCardRequest();
+        }
+
         private void useToolCard1() throws RemoteException{
             toolCardParameters.reset();
             toolCardParameters.toolCardID = toolCardID;
@@ -462,6 +492,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             while (toolCardParameters.draftPoolDiceIndex == null) ;
             view.actionSignRequired();
             while (toolCardParameters.actionSign == null) ;
+
             sendToolCardRequest();
         }
 

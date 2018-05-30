@@ -44,6 +44,10 @@ public interface RemoteController extends Remote {
 
     void setPanelCellIndex(int playerHashCode, int cellIndex) throws RemoteException;
 
+    void setSecondPanelCellIndex(int playerHashCode, int cellIndex) throws RemoteException;
+
+    void setSecondPanelDiceIndex(int playerHashCode, int diceIndex) throws RemoteException;
+
     void setActionSign(int playerHashCode, int addend) throws RemoteException;
 
 }

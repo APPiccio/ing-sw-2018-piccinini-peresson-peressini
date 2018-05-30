@@ -608,6 +608,7 @@ public class Game implements Serializable{
                             usedToolCard = false;
                             return new UseToolCardResult(false, draftPool, roundTrack, players);
                         }
+                        //Building command
                         toolCard.use(new CommandToolCard1(draftPool.get(toolCardParameters.draftPoolDiceIndex), toolCardParameters.actionSign));
                         return new UseToolCardResult(true, draftPool, roundTrack, players);
                     case 2:
@@ -616,7 +617,7 @@ public class Game implements Serializable{
                             usedToolCard = false;
                             return new UseToolCardResult(false, draftPool,roundTrack,players);
                         }
-
+                        //Building command
                         toolCard.use(new CommandToolCard2(new Pair<>(toolCardParameters.panelDiceIndex,toolCardParameters.panelCellIndex),player.getPanel()));
                         return new UseToolCardResult(true, draftPool, roundTrack, players);
                     case 3:
@@ -625,6 +626,7 @@ public class Game implements Serializable{
                             usedToolCard = false;
                             return new UseToolCardResult(false, draftPool,roundTrack,players);
                         }
+                        //Building command
                         toolCard.use(new CommandToolCard3(new Pair<>(toolCardParameters.panelDiceIndex,toolCardParameters.panelCellIndex),player.getPanel()));
                         return new UseToolCardResult(true, draftPool, roundTrack, players);
                     case 5:
@@ -638,12 +640,43 @@ public class Game implements Serializable{
                         toolCard.use(new CommandToolCard5(draftPoolDice, roundTrack,
                                 toolCardParameters.roundTrackRoundIndex, toolCardParameters.roundTrackDiceIndex));
                         return new UseToolCardResult(true, draftPool, roundTrack, players);
+                    case 4:
+                        System.out.println("Using toolcard4 Dice: " + toolCardParameters.panelDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
+                        System.out.println("and Dice: " + toolCardParameters.secondPanelDiceIndex + " in Cell: " + toolCardParameters.secondPanelCellIndex);
+                        if (!toolCard4ParamsOk(player,toolCardParameters)){
+                            usedToolCard = false;
+                            return new UseToolCardResult(false, draftPool,roundTrack,players);
+                        }
+                        //Building command
+                        LinkedHashMap<Integer,Integer> linkedHashMap = new LinkedHashMap<>();
+                        linkedHashMap.put(toolCardParameters.panelDiceIndex,toolCardParameters.panelCellIndex);
+                        linkedHashMap.put(toolCardParameters.secondPanelDiceIndex,toolCardParameters.secondPanelCellIndex);
+                        toolCard.use(new CommandToolCard4(linkedHashMap,player.getPanel()));
+                        return new UseToolCardResult(true, draftPool, roundTrack, players);
                     default:
                         break;
                 }
             }
         }
         return new UseToolCardResult(false, draftPool , roundTrack , players);
+    }
+
+    private boolean toolCard4ParamsOk(Player player, ToolCardParameters toolCardParameters) {
+        WindowPanel windowPanel = player.getPanel();
+        if (windowPanel == null) return false;
+        Cell cell = windowPanel.getCell(toolCardParameters.panelCellIndex);
+        if (cell == null) return false;
+        Cell secondCell = windowPanel.getCell(toolCardParameters.secondPanelCellIndex);
+        if (secondCell == null) return false;
+        Cell diceCell = windowPanel.getCell(toolCardParameters.panelDiceIndex);
+        if (diceCell == null) return false;
+        Dice dice = diceCell.getDiceOn();
+        if (dice == null) return false;
+        Cell secondDiceCell = windowPanel.getCell(toolCardParameters.secondPanelDiceIndex);
+        if (secondDiceCell == null) return false;
+        Dice secondDice = diceCell.getDiceOn();
+        if (secondDice == null) return false;
+        return true;
     }
 
     private boolean toolCard3ParamsOk(Player player, ToolCardParameters toolCardParameters) {
