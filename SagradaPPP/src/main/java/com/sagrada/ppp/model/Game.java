@@ -4,6 +4,7 @@ import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
+import javafx.util.Pair;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -444,12 +445,13 @@ public class Game implements Serializable{
         allToolCards.add(new ToolCard8());
         allToolCards.add(new ToolCard9());
         allToolCards.add(new ToolCard10());
-        allToolCards.add(new ToolCard11());
+        allToolCards.add(new ToolCard11());rmi
+
         allToolCards.add(new ToolCard12());
 */
-        allToolCards.add(new ToolCard1());
-        allToolCards.add(new ToolCard1());
-        allToolCards.add(new ToolCard1());
+        allToolCards.add(new ToolCard2());
+        allToolCards.add(new ToolCard5());
+        allToolCards.add(new ToolCard5());
         for(int i = 0; i < 3 ; i++){
             toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
         }
@@ -595,30 +597,114 @@ public class Game implements Serializable{
         if(players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new UseToolCardResult(false, draftPool , roundTrack , players);
         ToolCard toolCard = toolCards.stream().filter( x -> x.getId() == toolCardParameters.toolCardID).findFirst().orElse(null);
         if(toolCard != null){
-
-            System.out.println(getPlayerByHashcode(playerHashCode).getUsername() + " is using toolcard ID = " + toolCard.getId());
-            getPlayerByHashcode(playerHashCode).setFavorTokens(getPlayerByHashcode(playerHashCode).getFavorTokens() - toolCard.getCost());
-            usedToolCard = true;
-            switch (toolCard.getId()){
-                case 1:
-                    if(!toolCard1ParamsOk(toolCardParameters)){
-                        usedToolCard = false;
-                        return new UseToolCardResult(false, draftPool, roundTrack, players);
-                    }
-                    toolCard.use(new CommandToolCard1(draftPool.get(toolCardParameters.draftPoolDiceIndex), toolCardParameters.actionSign));
-                    return new UseToolCardResult(true, draftPool, roundTrack, players);
-                default:
-                    break;
+            Player player = getPlayerByHashcode(playerHashCode);
+            if (player != null) {
+                System.out.println(player.getUsername() + " is using toolcard ID = " + toolCard.getId());
+                player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
+                usedToolCard = true;
+                switch (toolCard.getId()){
+                    case 1:
+                        if(!toolCard1ParamsOk(toolCardParameters)){
+                            usedToolCard = false;
+                            return new UseToolCardResult(false, draftPool, roundTrack, players);
+                        }
+                        //Building command
+                        toolCard.use(new CommandToolCard1(draftPool.get(toolCardParameters.draftPoolDiceIndex), toolCardParameters.actionSign));
+                        return new UseToolCardResult(true, draftPool, roundTrack, players);
+                    case 2:
+                        System.out.println("Using toolCard2 Dice: " + toolCardParameters.panelDiceIndex + " Cell: " + toolCardParameters.panelCellIndex);
+                        if (!toolCard2ParamsOk(player,toolCardParameters)){
+                            usedToolCard = false;
+                            return new UseToolCardResult(false, draftPool,roundTrack,players);
+                        }
+                        //Building command
+                        toolCard.use(new CommandToolCard2(new Pair<>(toolCardParameters.panelDiceIndex,toolCardParameters.panelCellIndex),player.getPanel()));
+                        return new UseToolCardResult(true, draftPool, roundTrack, players);
+                    case 3:
+                        System.out.println("Using toolCard3 Dice: " + toolCardParameters.panelDiceIndex + " Cell: " + toolCardParameters.panelCellIndex);
+                        if (!toolCard3ParamsOk(player,toolCardParameters)){
+                            usedToolCard = false;
+                            return new UseToolCardResult(false, draftPool,roundTrack,players);
+                        }
+                        //Building command
+                        toolCard.use(new CommandToolCard3(new Pair<>(toolCardParameters.panelDiceIndex,toolCardParameters.panelCellIndex),player.getPanel()));
+                        return new UseToolCardResult(true, draftPool, roundTrack, players);
+                    case 5:
+                        System.out.println("Using toolCard5 Draft pool dice: " + toolCardParameters.draftPoolDiceIndex + "Round: " +
+                                toolCardParameters.roundTrackRoundIndex + "Selected round dice: " + toolCardParameters.roundTrackDiceIndex);
+                        Dice draftPoolDice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
+                        if (!toolCard5ParamsOk(draftPoolDice)){
+                            usedToolCard = false;
+                            return new UseToolCardResult(false, draftPool,roundTrack,players);
+                        }
+                        toolCard.use(new CommandToolCard5(draftPoolDice, roundTrack,
+                                toolCardParameters.roundTrackRoundIndex, toolCardParameters.roundTrackDiceIndex));
+                        return new UseToolCardResult(true, draftPool, roundTrack, players);
+                    case 4:
+                        System.out.println("Using toolcard4 Dice: " + toolCardParameters.panelDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
+                        System.out.println("and Dice: " + toolCardParameters.secondPanelDiceIndex + " in Cell: " + toolCardParameters.secondPanelCellIndex);
+                        if (!toolCard4ParamsOk(player,toolCardParameters)){
+                            usedToolCard = false;
+                            return new UseToolCardResult(false, draftPool,roundTrack,players);
+                        }
+                        //Building command
+                        LinkedHashMap<Integer,Integer> linkedHashMap = new LinkedHashMap<>();
+                        linkedHashMap.put(toolCardParameters.panelDiceIndex,toolCardParameters.panelCellIndex);
+                        linkedHashMap.put(toolCardParameters.secondPanelDiceIndex,toolCardParameters.secondPanelCellIndex);
+                        toolCard.use(new CommandToolCard4(linkedHashMap,player.getPanel()));
+                        return new UseToolCardResult(true, draftPool, roundTrack, players);
+                    default:
+                        break;
+                }
             }
         }
         return new UseToolCardResult(false, draftPool , roundTrack , players);
     }
+
+    private boolean toolCard4ParamsOk(Player player, ToolCardParameters toolCardParameters) {
+        WindowPanel windowPanel = player.getPanel();
+        if (windowPanel == null) return false;
+        Cell cell = windowPanel.getCell(toolCardParameters.panelCellIndex);
+        if (cell == null) return false;
+        Cell secondCell = windowPanel.getCell(toolCardParameters.secondPanelCellIndex);
+        if (secondCell == null) return false;
+        Cell diceCell = windowPanel.getCell(toolCardParameters.panelDiceIndex);
+        if (diceCell == null) return false;
+        Dice dice = diceCell.getDiceOn();
+        if (dice == null) return false;
+        Cell secondDiceCell = windowPanel.getCell(toolCardParameters.secondPanelDiceIndex);
+        if (secondDiceCell == null) return false;
+        Dice secondDice = diceCell.getDiceOn();
+        if (secondDice == null) return false;
+        return true;
+    }
+
+    private boolean toolCard3ParamsOk(Player player, ToolCardParameters toolCardParameters) {
+        return toolCard2ParamsOk(player,toolCardParameters);
+    }
+
 
     private boolean toolCard1ParamsOk(ToolCardParameters toolCardParameters){
         Dice dice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
         if (dice == null) return false;
         if (dice.getValue() == 1 && toolCardParameters.actionSign == -1) return false;
         if (dice.getValue() == 6 && toolCardParameters.actionSign == +1) return false;
+        return true;
+    }
+    private boolean toolCard2ParamsOk(Player player, ToolCardParameters toolCardParameters){
+        WindowPanel windowPanel = player.getPanel();
+        if (windowPanel == null) return false;
+        Cell cell = windowPanel.getCell(toolCardParameters.panelCellIndex);
+        if (cell == null) return false;
+        Cell diceCell = windowPanel.getCell(toolCardParameters.panelDiceIndex);
+        if (diceCell == null) return false;
+        Dice dice = diceCell.getDiceOn();
+        if (dice == null) return false;
+        return true;
+    }
+
+    private boolean toolCard5ParamsOk(Dice draftPoolDice) {
+        if (draftPoolDice == null) return false;
         return true;
     }
 

@@ -1,6 +1,5 @@
 package com.sagrada.ppp.controller;
 
-import com.sagrada.ppp.*;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
 import com.sagrada.ppp.utils.StaticValues;
@@ -19,12 +18,10 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     private transient ObjectInputStream in;
     private transient ArrayList<LobbyObserver> lobbyObservers;
     private transient ArrayList<GameObserver> gameObservers;
-    private transient Response response;
-    private transient ArrayList<Response> notificationQueue;
     private transient volatile boolean waitingForResponse;
     private transient JoinGameResult joinGameResult;
     private transient ListeningThread notificationThread;
-    private transient volatile Object responseLock;
+    private final transient Object responseLock;
     private transient LeaveGameResult leaveGameResult;
     private transient boolean disconnectionResult;
     private transient PlaceDiceResult placeDiceResult;
@@ -39,8 +36,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         in = new ObjectInputStream(socket.getInputStream());
         lobbyObservers = new ArrayList<>();
         gameObservers = new ArrayList<>();
-        response = null;
-        notificationQueue = new ArrayList<>();
         waitingForResponse = false;
         notificationThread = new ListeningThread(this);
         notificationThread.start();
@@ -66,9 +61,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
             lobbyObservers.remove(observer);
             return leaveGameResult;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;
@@ -92,9 +85,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                 responseLock.notifyAll();
             }
             return joinGameResult;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;
@@ -111,7 +102,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     public void handle(Response response) {
-        return;
+        //do nothing
     }
 
     public void handle(JoinGameResponse response) {
@@ -214,9 +205,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
             closeConnection();
             return disconnectionResult;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return false;
@@ -235,9 +224,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
             out.reset();
             return placeDiceResult;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
         return null;
@@ -367,9 +354,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     }
                 }catch (EOFException e){
                     System.out.println("Closing client socket");
-                }catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
+                }catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
@@ -390,9 +375,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
             toolCardThread = new ToolCardThreadController(isToolCardUsableResult, view, gameHashCode, playerHashCode, toolCardIndex, in, out);
             toolCardThread.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -404,22 +387,33 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
 
     @Override
     public void setRoundTrackDiceIndex(int playerHashCode, int diceIndex, int roundIndex) throws RemoteException {
-
+        toolCardThread.toolCardParameters.roundTrackDiceIndex = diceIndex;
+        toolCardThread.toolCardParameters.roundTrackRoundIndex = roundIndex;
     }
 
     @Override
     public void setPanelDiceIndex(int playerHashCode, int diceIndex) throws RemoteException {
-
+        toolCardThread.toolCardParameters.panelDiceIndex = diceIndex;
     }
 
     @Override
     public void setPanelCellIndex(int playerHashCode, int cellIndex) throws RemoteException {
-
+        toolCardThread.toolCardParameters.panelCellIndex = cellIndex;
     }
 
     @Override
     public void setActionSign(int playerHashCode, int addend) throws RemoteException {
         toolCardThread.toolCardParameters.actionSign = addend;
+    }
+
+    @Override
+    public void setSecondPanelCellIndex(int playerHashCode, int cellIndex) throws RemoteException {
+        toolCardThread.toolCardParameters.secondPanelCellIndex = cellIndex;
+    }
+
+    @Override
+    public void setSecondPanelDiceIndex(int playerHashCode, int diceIndex) throws RemoteException {
+        toolCardThread.toolCardParameters.secondPanelDiceIndex = diceIndex;
     }
 
     class ToolCardThreadController extends Thread {
@@ -449,12 +443,21 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         public void run() {
             try {
                 view.isToolCardUsable(result);
-                toolCardParameters.toolCardID = toolCardID;
                 switch (toolCardID) {
                     case 1:
                         useToolCard1();
                         break;
                     case 2:
+                        useToolCard2();
+                        break;
+                    case 3:
+                        useToolCard3();
+                        break;
+                    case 5:
+                        useToolCard5();
+                        break;
+                    case 4:
+                        useToolCard4();
                         break;
                     default:
                         break;
@@ -465,11 +468,65 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
         }
 
+        private void useToolCard4() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            //first set
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.panelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+            //second set
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.secondPanelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.secondPanelCellIndex == null);
+
+            sendToolCardRequest();
+        }
+
         private void useToolCard1() throws RemoteException{
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
             view.draftPoolDiceIndexRequired();
             while (toolCardParameters.draftPoolDiceIndex == null) ;
             view.actionSignRequired();
             while (toolCardParameters.actionSign == null) ;
+
+            sendToolCardRequest();
+        }
+
+        private void useToolCard2() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.panelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+            sendToolCardRequest();
+        }
+
+        private void useToolCard3() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.panelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+            sendToolCardRequest();
+        }
+
+        private void useToolCard5() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            view.roundTrackDiceIndexRequired();
+            while (toolCardParameters.roundTrackRoundIndex == null || toolCardParameters.roundTrackDiceIndex == null);
+            sendToolCardRequest();
+        }
+
+        private void sendToolCardRequest(){
             try {
                 waitingForResponse = true;
                 out.writeObject(new UseToolCardRequest(gameHashCode, playerHashCode, toolCardParameters));
@@ -480,9 +537,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     responseLock.notifyAll();
                 }
                 view.notifyUsageCompleted(useToolCardResult);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
