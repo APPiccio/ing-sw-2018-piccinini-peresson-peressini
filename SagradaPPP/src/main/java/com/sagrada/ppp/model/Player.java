@@ -15,6 +15,7 @@ public class Player implements Serializable {
     private PlayerStatus status;
     private Dice activeDice;
     private int favorTokens;
+    private int hashCode;
 
     public void setFavorTokens(int favorTokens) {
         this.favorTokens = favorTokens;
@@ -43,11 +44,14 @@ public class Player implements Serializable {
         this.panel = player.panel;
         this.activeDice = player.activeDice;
         this.favorTokens = player.favorTokens;
+        this.hashCode = player.hashCode;
+
     }
     public Player(String username){
         this.status = PlayerStatus.ACTIVE;
         this.panel = null;
         this.username = username;
+        this.hashCode = this.hashCode();
     }
 
     public void setActiveDice(Dice activeDice) {
@@ -82,4 +86,8 @@ public class Player implements Serializable {
     }
 
     public WindowPanel getPanel(){return panel;}
+
+    public int getHashCode(){
+        return hashCode;
+    }
 }

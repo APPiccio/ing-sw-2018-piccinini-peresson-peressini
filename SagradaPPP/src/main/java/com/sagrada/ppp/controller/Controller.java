@@ -3,10 +3,13 @@ package com.sagrada.ppp.controller;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.server.Service;
 import com.sagrada.ppp.view.ToolCardHandler;
+
+import java.lang.reflect.Array;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.spi.AbstractResourceBundleProvider;
 
 public class Controller extends UnicastRemoteObject implements RemoteController {
 
@@ -120,6 +123,16 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         toolCardThreads.get(playerHashCode).toolCardParameters.secondPanelDiceIndex = diceIndex;
     }
 
+    @Override
+    public void setDiceValue(int playerHashCode, int diceValue) throws RemoteException {
+        toolCardThreads.get(playerHashCode).toolCardParameters.diceValue = diceValue;
+    }
+
+    @Override
+    public void setTwoDiceAction(int playerHashCode, boolean choice) throws RemoteException {
+        toolCardThreads.get(playerHashCode).toolCardParameters.twoDiceAction = choice;
+    }
+
     class ToolCardThreadController extends Thread {
 
         int gameHashCode;
@@ -158,16 +171,33 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         view.notifyUsageCompleted(useToolCardResult);
                         break;
                     case 2:
-                        useToolCard2();
+                        useToolCard2and3();
                         break;
                     case 3:
-                        useToolCard3();
+                        useToolCard2and3();
+                        break;
+                    case 4:
+                        useToolCard4();
                         break;
                     case 5:
                         useToolCard5();
                         break;
-                    case 4:
-                        useToolCard4();
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                    case 9:
+                        break;
+                    case 10:
+                        useToolCard10();
+                        break;
+                    case 11:
+                        useToolCard11();
+                        break;
+                    case 12:
+                        useToolCard12();
                         break;
                     default:
                         break;
@@ -195,7 +225,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             view.notifyUsageCompleted(useToolCardResult);
         }
 
-        private void useToolCard3() throws RemoteException {
+        private void useToolCard2and3() throws RemoteException {
             toolCardParameters.reset();
             toolCardParameters.toolCardID = toolCardID;
             view.panelDiceIndexRequired();
@@ -206,16 +236,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             view.notifyUsageCompleted(useToolCardResult);
         }
 
-        private void useToolCard2() throws RemoteException {
-            toolCardParameters.reset();
-            toolCardParameters.toolCardID = toolCardID;
-            view.panelDiceIndexRequired();
-            while (toolCardParameters.panelDiceIndex == null);
-            view.panelCellIndexRequired();
-            while (toolCardParameters.panelCellIndex == null);
-            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
-            view.notifyUsageCompleted(useToolCardResult);
-        }
 
         private void useToolCard5() throws RemoteException {
             toolCardParameters.reset();
@@ -227,6 +247,81 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
             view.notifyUsageCompleted(useToolCardResult);
         }
-    }
 
+        private void useToolCard10() throws RemoteException{
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+            view.notifyUsageCompleted(useToolCardResult);
+        }
+
+        private void useToolCard11() throws RemoteException{
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+            if(!useToolCardResult.result){
+                view.notifyUsageCompleted(useToolCardResult);
+            }
+            else{
+                //now ask to choose dice value and place it
+                //dice from server, just extracted from dicebag
+                Dice dice = useToolCardResult.dice;
+                view.diceValueRequired(dice.getColor());
+                while (toolCardParameters.diceValue == null);
+                dice.setValue(toolCardParameters.diceValue);
+                ArrayList<Integer> positions = service.getLegalPositions(gameHashCode, playerHashCode, dice);
+                if(!positions.isEmpty()) {
+                    do {
+                        view.panelCellIndexRequired();
+                        while (toolCardParameters.panelCellIndex == null) ;
+                    }
+                    while (!positions.contains(toolCardParameters.panelCellIndex));
+                    useToolCardResult.result = service.specialDicePlacement(gameHashCode, playerHashCode, toolCardParameters.panelCellIndex, dice);
+                    for(Player player : useToolCardResult.players){
+                        if(player.hashCode() == playerHashCode){
+                            WindowPanel panel = player.getPanel();
+                            panel.addDice(toolCardParameters.panelCellIndex, dice);
+                            player.setPanel(panel);
+                        }
+                    }
+                    useToolCardResult.draftpool.remove(toolCardParameters.panelCellIndex);
+
+                }
+                else{
+                    service.putDiceInDraftPool(gameHashCode, dice);
+                    useToolCardResult.result = false;
+                }
+                view.notifyUsageCompleted(useToolCardResult);
+            }
+        }
+
+        private void useToolCard12() throws RemoteException{
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.roundTrackDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.panelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+            view.twoDiceActionRequired();
+            while (toolCardParameters.twoDiceAction == null);
+            if(toolCardParameters.twoDiceAction){
+                view.secondPanelDiceIndexRequired();
+                while (toolCardParameters.secondPanelDiceIndex == null);
+                view.secondPanelCellIndexRequired();
+                while (toolCardParameters.secondPanelCellIndex == null);
+            }
+            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+            view.notifyUsageCompleted(useToolCardResult);
+        }
+
+
+
+
+    }
 }

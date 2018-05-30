@@ -330,7 +330,7 @@ public class WindowPanel implements Serializable {
      */
     public ArrayList<Integer> getLegalPosition(Dice dice){
         ArrayList<Integer> h = new ArrayList<>();
-        for(int i = 0; i < 19; i++){
+        for(int i = 0; i <= 19; i++){
             if (diceOk(dice, i)){
                 h.add(i);
             }

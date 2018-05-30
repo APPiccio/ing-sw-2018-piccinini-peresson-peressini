@@ -29,6 +29,8 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     private transient ToolCardThreadController toolCardThread;
     private transient volatile IsToolCardUsableResult isToolCardUsableResult;
     private transient volatile UseToolCardResult useToolCardResult;
+    private transient volatile ArrayList<Integer> positions;
+    private transient volatile boolean specialDicePlacementResult;
 
     public SocketClientController() throws IOException {
         socket = new Socket(StaticValues.SERVER_ADDRESS, StaticValues.SOCKET_PORT);
@@ -291,6 +293,24 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     @Override
+    public void handle(GetLegalPositionResponse response) {
+        synchronized (responseLock) {
+            waitingForResponse = false;
+            positions = response.positions;
+            responseLock.notifyAll();
+        }
+    }
+
+    @Override
+    public void handle(SpecialDicePlacementResponse response) {
+        synchronized (responseLock) {
+            waitingForResponse = false;
+            specialDicePlacementResult = response.result;
+            responseLock.notifyAll();
+        }
+    }
+
+    @Override
     public void endTurn(int gameHashCode, int playerHashCode) throws RemoteException {
         try {
             out.writeObject(new EndTurnRequest(gameHashCode, playerHashCode));
@@ -328,6 +348,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         if(gameObservers.size() == 0) {
             try {
                 out.writeObject(new DetachGameObserverRequest(gameHashCode));
+                out.reset();
                 gameObservers.remove(gameObserver);
                 notificationThread.interrupt();
             } catch (IOException e) {
@@ -367,6 +388,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         try {
             waitingForResponse = true;
             out.writeObject(new IsToolCardUsableRequest(gameHashCode, playerHashCode, toolCardIndex));
+            out.reset();
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();
@@ -416,6 +438,16 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         toolCardThread.toolCardParameters.secondPanelDiceIndex = diceIndex;
     }
 
+    @Override
+    public void setDiceValue(int playerHashCode, int diceValue) throws RemoteException {
+        toolCardThread.toolCardParameters.diceValue = diceValue;
+    }
+
+    @Override
+    public void setTwoDiceAction(int playerHashCode, boolean choice) throws RemoteException {
+        toolCardThread.toolCardParameters.twoDiceAction = choice;
+    }
+
     class ToolCardThreadController extends Thread {
 
         int gameHashCode;
@@ -448,17 +480,35 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                         useToolCard1();
                         break;
                     case 2:
-                        useToolCard2();
+                        useToolCard2and3();
                         break;
                     case 3:
-                        useToolCard3();
-                        break;
-                    case 5:
-                        useToolCard5();
+                        useToolCard2and3();
                         break;
                     case 4:
                         useToolCard4();
                         break;
+                    case 5:
+                        useToolCard5();
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                    case 9:
+                        break;
+                    case 10:
+                        useToolCard10();
+                        break;
+                    case 11:
+                        useToolCard11();
+                        break;
+                    case 12:
+                        useToolCard12();
+                        break;
+
                     default:
                         break;
                 }
@@ -483,6 +533,8 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             while (toolCardParameters.secondPanelCellIndex == null);
 
             sendToolCardRequest();
+            view.notifyUsageCompleted(useToolCardResult);
+
         }
 
         private void useToolCard1() throws RemoteException{
@@ -492,11 +544,12 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             while (toolCardParameters.draftPoolDiceIndex == null) ;
             view.actionSignRequired();
             while (toolCardParameters.actionSign == null) ;
-
             sendToolCardRequest();
+            view.notifyUsageCompleted(useToolCardResult);
+
         }
 
-        private void useToolCard2() throws RemoteException {
+        private void useToolCard2and3() throws RemoteException {
             toolCardParameters.reset();
             toolCardParameters.toolCardID = toolCardID;
             view.panelDiceIndexRequired();
@@ -504,17 +557,10 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             view.panelCellIndexRequired();
             while (toolCardParameters.panelCellIndex == null);
             sendToolCardRequest();
+            view.notifyUsageCompleted(useToolCardResult);
+
         }
 
-        private void useToolCard3() throws RemoteException {
-            toolCardParameters.reset();
-            toolCardParameters.toolCardID = toolCardID;
-            view.panelDiceIndexRequired();
-            while (toolCardParameters.panelDiceIndex == null);
-            view.panelCellIndexRequired();
-            while (toolCardParameters.panelCellIndex == null);
-            sendToolCardRequest();
-        }
 
         private void useToolCard5() throws RemoteException {
             toolCardParameters.reset();
@@ -524,22 +570,147 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             view.roundTrackDiceIndexRequired();
             while (toolCardParameters.roundTrackRoundIndex == null || toolCardParameters.roundTrackDiceIndex == null);
             sendToolCardRequest();
+            view.notifyUsageCompleted(useToolCardResult);
+
         }
 
-        private void sendToolCardRequest(){
+        private void useToolCard10() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            sendToolCardRequest();
+            view.notifyUsageCompleted(useToolCardResult);
+
+        }
+
+
+        private void useToolCard11() throws RemoteException{
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            sendToolCardRequest();
+            if(!useToolCardResult.result){
+                view.notifyUsageCompleted(useToolCardResult);
+            }
+            else{
+                //now ask to choose dice value and place it
+                //dice from server, just extracted from dicebag
+                Dice dice = useToolCardResult.dice;
+                view.diceValueRequired(dice.getColor());
+                while (toolCardParameters.diceValue == null);
+                dice.setValue(toolCardParameters.diceValue);
+                sendLegalDicePositionsRequest(dice);
+                if(!positions.isEmpty()) {
+                    do {
+                        view.panelCellIndexRequired();
+                        while (toolCardParameters.panelCellIndex == null) ;
+                    }
+                    while (!positions.contains(toolCardParameters.panelCellIndex));
+
+                    sendSpecialPlacementRequest(toolCardParameters.panelCellIndex, dice);
+                    useToolCardResult.result = specialDicePlacementResult;
+
+                    for(Player player : useToolCardResult.players){
+                        if(player.getHashCode() == playerHashCode){
+                            WindowPanel panel = player.getPanel();
+                            panel.addDice(toolCardParameters.panelCellIndex, dice);
+                            player.setPanel(panel);
+                        }
+                    }
+                    useToolCardResult.draftpool.remove(toolCardParameters.panelCellIndex);
+                }
+                else{
+                    try {
+                        out.writeObject(new PutDiceInDraftPoolRequest(gameHashCode, dice));
+                        out.reset();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    useToolCardResult.result = false;
+                }
+                view.notifyUsageCompleted(useToolCardResult);
+            }
+        }
+
+
+
+
+
+        private void useToolCard12() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.roundTrackDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.panelDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+            view.twoDiceActionRequired();
+            while (toolCardParameters.twoDiceAction == null);
+            if(toolCardParameters.twoDiceAction){
+                view.secondPanelDiceIndexRequired();
+                while (toolCardParameters.secondPanelDiceIndex == null);
+                view.secondPanelCellIndexRequired();
+                while (toolCardParameters.secondPanelCellIndex == null);
+            }
+            sendToolCardRequest();
+            view.notifyUsageCompleted(useToolCardResult);
+
+        }
+
+
+        private void sendLegalDicePositionsRequest(Dice dice){
             try {
                 waitingForResponse = true;
-                out.writeObject(new UseToolCardRequest(gameHashCode, playerHashCode, toolCardParameters));
+                out.writeObject(new GetLegalPositionRequest(gameHashCode, playerHashCode, dice));
+                out.reset();
                 synchronized (responseLock) {
                     while (waitingForResponse) {
                         responseLock.wait();
                     }
                     responseLock.notifyAll();
                 }
-                view.notifyUsageCompleted(useToolCardResult);
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
+
+
+        private void sendSpecialPlacementRequest(int cellIndex, Dice dice){
+            try {
+                waitingForResponse = true;
+                out.writeObject(new SpecialDicePlacementRequest(gameHashCode, playerHashCode, cellIndex, dice));
+                out.reset();
+                synchronized (responseLock) {
+                    while (waitingForResponse) {
+                        responseLock.wait();
+                    }
+                    responseLock.notifyAll();
+                }
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void sendToolCardRequest(){
+            try {
+                waitingForResponse = true;
+                out.writeObject(new UseToolCardRequest(gameHashCode, playerHashCode, toolCardParameters));
+                out.reset();
+                synchronized (responseLock) {
+                    while (waitingForResponse) {
+                        responseLock.wait();
+                    }
+                    responseLock.notifyAll();
+                }
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+
     }
+
 }

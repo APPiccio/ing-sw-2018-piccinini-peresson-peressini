@@ -22,6 +22,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         try {
             System.out.println("Sending notification to: "+out.toString());
             out.writeObject(new PlayerEventNotification(numOfPlayers, username,players,PlayerEventType.LEAVE));
+            out.reset();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,9 +50,9 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
                 System.out.println("listening....");
                 response = ((Request) in.readObject()).handle(this);
                 if(response != null){
-                    System.out.println("Sending response to: "+out.toString());
-                    out.reset();
+                    System.out.println("Sending response to: "+ out.toString());
                     out.writeObject(response);
+                    out.reset();
                 }
 
             } catch (IOException e) {
@@ -76,6 +77,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         try {
             System.out.println("Sending notification to: "+out.toString());
             out.writeObject(new PlayerEventNotification(numOfPlayers, username,players,PlayerEventType.JOIN));
+            out.reset();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,6 +87,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     public void onTimerChanges(long timerStart, TimerStatus timerStatus){
         try {
             out.writeObject(new TimerNotification(timerStart, timerStatus));
+            out.reset();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -155,6 +158,22 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
+    public Response handle(GetLegalPositionRequest request) {
+        return new GetLegalPositionResponse(service.getLegalPositions(request.gameHashCode, request.playerHashCode, request.dice));
+    }
+
+    @Override
+    public Response handle(SpecialDicePlacementRequest request) {
+        return new SpecialDicePlacementResponse(service.specialDicePlacement(request.gameHashCode, request.playerHashCode, request.cellIndex, request.dice));
+    }
+
+    @Override
+    public Response handle(PutDiceInDraftPoolRequest request) {
+        service.putDiceInDraftPool(request.gameHashCode, request.dice);
+        return null;
+    }
+
+    @Override
     public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
         try {
             out.writeObject(new DicePlacedNotification(dicePlacedMessage));
@@ -168,6 +187,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
         try {
             out.writeObject(new PanelChoiceNotification(playerHashCode, panels, panelsAlreadyChosen, color));
+            out.reset();
         } catch (IOException e) {
             e.printStackTrace();
         }

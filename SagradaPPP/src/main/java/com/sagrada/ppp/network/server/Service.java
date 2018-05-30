@@ -154,7 +154,6 @@ public class Service {
     }
 
     public PlaceDiceResult placeDice(int gameHashCode, int playerHashCode, int diceIndex, int row, int col){
-        System.out.println("Chiamata al service");
         return games.get(gameHashCode).placeDice(playerHashCode, diceIndex, row , col);
     }
 
@@ -180,6 +179,18 @@ public class Service {
 
     public int getToolCardID(int gameHashCode, int toolCardIndex){
         return games.get(gameHashCode).getToolCardID(toolCardIndex);
+    }
+
+    public boolean specialDicePlacement(int gameHashCode, int playerHashCode, int cellIndex, Dice dice){
+        return games.get(gameHashCode).specialDicePlacement(playerHashCode, cellIndex, dice);
+    }
+
+    public ArrayList<Integer> getLegalPositions(int gameHashCode, int playerhashCode, Dice dice){
+        return games.get(gameHashCode).getLegalPositions(playerhashCode, dice);
+    }
+
+    public void putDiceInDraftPool(int gameHashCode, Dice dice){
+        games.get(gameHashCode).putDiceInDraftPool(dice);
     }
 
 }

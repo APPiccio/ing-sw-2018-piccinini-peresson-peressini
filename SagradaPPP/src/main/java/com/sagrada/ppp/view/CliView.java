@@ -47,6 +47,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     transient volatile boolean isToolCardUsableFlag;
     transient volatile ToolCardFlags toolCardFlags;
     transient UseToolCardResult useToolCardResult;
+    transient int toolCardIndex;
 
 
 
@@ -276,7 +277,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                         break;
                     }
                     if(param.length == 2){
-                        int toolCardIndex = -1;
+                        toolCardIndex = -1;
                         try {
                             toolCardIndex = Integer.parseInt(param[1]);
                         } catch (NumberFormatException e){
@@ -346,7 +347,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
 
                                         roundIndex = -1;
                                     }
-                                    while (command.split(" ").length != 1 && !(roundIndex >= 0 && roundIndex < roundTrack.getRounds())) {
+                                    while (command.split(" ").length != 1 && !(roundIndex > 0 && roundIndex < roundTrack.getCurrentRound())) {
                                         System.out.println("Round not valid. Try again: ");
                                         command = scanner.nextLine();
                                         try {
@@ -396,6 +397,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                                     }
                                 }
                                 if(toolCardFlags.isSecondPanelDiceRequired){
+                                    toolCardFlags.isSecondPanelDiceRequired = false;
                                     System.out.println("Chose a Dice from your panel!");
                                     System.out.println("Insert row index: ");
                                     command = scanner.nextLine();
@@ -410,6 +412,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                                     controller.setSecondPanelDiceIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
                                 }
                                 if(toolCardFlags.isSecondPanelCellRequired){
+                                    toolCardFlags.isSecondPanelCellRequired = false;
                                     System.out.println("Chose a Cell from your panel!");
                                     System.out.println("Insert row index: ");
                                     command = scanner.nextLine();
@@ -423,9 +426,37 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                                     toolCardFlags.isSecondPanelCellRequired = false;
                                     controller.setSecondPanelCellIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
                                 }
+                                if(toolCardFlags.isDiceValueRequired){
+                                    toolCardFlags.isDiceValueRequired = false;
+                                    System.out.println("You have drafted a " + toolCardFlags.colorDiceValueRequired +" dice");
+                                    System.out.println("Now choose the value");
+                                    String inputValue = scanner.nextLine();
+                                    while(!(inputValue.equals("1") || inputValue.equals("2") || inputValue.equals("3") || inputValue.equals("4") || inputValue.equals("5") || inputValue.equals("6"))){
+                                        System.out.println("Invalid choice, please retry:");
+                                        inputValue = scanner.nextLine();
+                                    }
+                                    controller.setDiceValue(hashCode, Integer.parseInt(inputValue));
+                                }
+                                if(toolCardFlags.isTwoDiceActionRequired){
+                                    toolCardFlags.isTwoDiceActionRequired = false;
+                                    System.out.println("Do you want to place another dice? (y/n)");
+                                    String inputChoice = scanner.nextLine();
+                                    while (!(inputChoice.equals("y")) && !(inputChoice.equals("n"))){
+                                        System.out.println("Unknown command, type y or n");
+                                        inputChoice = scanner.nextLine();
+                                    }
+                                    if(inputChoice.equals("y")){
+                                        controller.setTwoDiceAction(hashCode, true);
+                                    }
+                                    else{
+                                        controller.setTwoDiceAction(hashCode, false);
+                                    }
+                                }
+
                             }
                             if(isToolCardActionEnded){
                                 isToolCardActionEnded = false;
+                                //special action on toolcard 11
                                 if(useToolCardResult.result){
                                     System.out.println("Tool card used successfully! This is the update game status:");
                                     showGameStatus();
@@ -731,6 +762,19 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     public void secondPanelCellIndexRequired() throws RemoteException {
         toolCardFlags.reset();
         toolCardFlags.isSecondPanelCellRequired = true;
+    }
+
+    @Override
+    public void diceValueRequired(Color color) throws RemoteException {
+        toolCardFlags.reset();
+        toolCardFlags.isDiceValueRequired = true;
+        toolCardFlags.colorDiceValueRequired = color;
+    }
+
+    @Override
+    public void twoDiceActionRequired() throws RemoteException {
+        toolCardFlags.reset();
+        toolCardFlags.isTwoDiceActionRequired = true;
     }
 }
 

@@ -1,5 +1,6 @@
 package com.sagrada.ppp.view;
 
+import com.sagrada.ppp.model.Color;
 import com.sagrada.ppp.model.UseToolCardResult;
 
 import java.rmi.Remote;
@@ -18,4 +19,8 @@ public interface ToolCardHandler extends Remote {
     void secondPanelDiceIndexRequired() throws RemoteException;
 
     void secondPanelCellIndexRequired() throws  RemoteException;
+
+    void diceValueRequired(Color color) throws RemoteException;
+
+    void twoDiceActionRequired() throws RemoteException;
 }

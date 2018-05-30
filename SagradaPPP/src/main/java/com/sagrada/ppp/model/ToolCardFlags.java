@@ -8,6 +8,9 @@ public class ToolCardFlags {
     public volatile boolean isPanelCellRequired;
     public volatile boolean isSecondPanelCellRequired;
     public volatile boolean isActionSignRequired;
+    public volatile boolean isDiceValueRequired;
+    public volatile Color colorDiceValueRequired;
+    public volatile boolean isTwoDiceActionRequired;
 
     public ToolCardFlags(){
     }
@@ -20,5 +23,8 @@ public class ToolCardFlags {
         isActionSignRequired = false;
         isSecondPanelCellRequired = false;
         isSecondPanelDiceRequired = false;
+        isDiceValueRequired = false;
+        isTwoDiceActionRequired = false;
+        colorDiceValueRequired = null;
     }
 }

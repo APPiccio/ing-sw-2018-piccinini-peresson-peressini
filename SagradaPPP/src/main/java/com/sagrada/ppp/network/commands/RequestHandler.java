@@ -13,4 +13,7 @@ public interface RequestHandler {
     Response handle(DetachGameObserverRequest request);
     Response handle(IsToolCardUsableRequest request);
     Response handle(UseToolCardRequest request);
+    Response handle(GetLegalPositionRequest request);
+    Response handle(SpecialDicePlacementRequest request);
+    Response handle(PutDiceInDraftPoolRequest request);
 }

@@ -279,7 +279,7 @@ public class StaticValues {
             case 1:
                 return "After drafting, increase or decrease the value of the drafted die by 1 (1 may not change to 6, or 6 to 1)";
             case 2:
-                return "Move any one die in your window ignoring the color restrictions (you must obey all other placement restrictions";
+                return "Move any one die in your window ignoring the color restrictions (you must obey all other placement restrictions)";
             case 3:
                 return "Move any one die in your window ignoring shade restriction (you must obey all other placement restriction)";
             case 4:
@@ -296,6 +296,10 @@ public class StaticValues {
                 return "After drafting, place the die in a sport that is not adjacent to another die (you must obey all other placement restrictions)";
             case 10:
                 return "After drafting, flip the die to its opposite side (6 to 1, 5 to 2, 4 to 3, etc.)";
+            case 11:
+                return "After drafting, return the dice to the Dice Bag and pull 1 die from the bag. Choose a value and place the new die obeying all placement restrictions, or return it to the Draft Pool";
+            case 12:
+                return "Move up to two dice of the same color that match the color of a die in the Round Track. You must obey all placement restrictions";
             default:
                 return "CARD ID UNKNOWN";
         }

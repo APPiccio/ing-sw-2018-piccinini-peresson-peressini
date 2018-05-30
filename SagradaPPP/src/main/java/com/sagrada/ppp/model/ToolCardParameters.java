@@ -13,8 +13,8 @@ public class ToolCardParameters implements Serializable {
     public volatile Integer secondPanelCellIndex;
     public volatile Integer toolCardID;
     public volatile Integer actionSign;
-
-
+    public volatile Integer diceValue;
+    public volatile Boolean twoDiceAction;
 
     public void reset(){
         toolCardID = 0;
@@ -26,5 +26,7 @@ public class ToolCardParameters implements Serializable {
         actionSign = null;
         secondPanelCellIndex = null;
         secondPanelDiceIndex = null;
+        diceValue = null;
+        twoDiceAction = null;
     }
 }

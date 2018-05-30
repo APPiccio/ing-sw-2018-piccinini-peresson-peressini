@@ -50,4 +50,8 @@ public interface RemoteController extends Remote {
 
     void setActionSign(int playerHashCode, int addend) throws RemoteException;
 
+    void setDiceValue(int playerHashCode, int diceValue) throws RemoteException;
+
+    void setTwoDiceAction(int playerHashCode, boolean choice) throws RemoteException;
+
 }
