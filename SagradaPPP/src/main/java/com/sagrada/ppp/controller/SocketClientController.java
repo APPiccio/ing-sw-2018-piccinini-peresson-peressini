@@ -442,6 +442,10 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                         break;
                     case 3:
                         useToolCard3();
+                        break;
+                    case 5:
+                        useToolCard5();
+                        break;
                     default:
                         break;
                 }
@@ -478,6 +482,16 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             while (toolCardParameters.panelDiceIndex == null);
             view.panelCellIndexRequired();
             while (toolCardParameters.panelCellIndex == null);
+            sendToolCardRequest();
+        }
+
+        private void useToolCard5() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            view.roundTrackDiceIndexRequired();
+            while (toolCardParameters.roundTrackRoundIndex == null || toolCardParameters.roundTrackDiceIndex == null);
             sendToolCardRequest();
         }
 

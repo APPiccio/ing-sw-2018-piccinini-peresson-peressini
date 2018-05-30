@@ -402,9 +402,51 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                                     toolCardFlags.isPanelDiceRequired = false;
                                     controller.setPanelDiceIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
                                 }
-                                if(toolCardFlags.isDraftPoolDiceRequired){
 
+                                if(toolCardFlags.isRoundTrackDiceRequired) {
+                                    System.out.println("Chose a round from the Round Track!");
+                                    System.out.println("Select a round: ");
+                                    command = scanner.nextLine();
+                                    if (isEndedTurn) break;
+                                    int roundIndex;
+                                    try {
+                                        roundIndex = Integer.parseInt(command.split(" ")[0]);
+                                    }   catch (NumberFormatException e){
+
+                                        roundIndex = -1;
+                                    }
+                                    while (command.split(" ").length != 1 && !(roundIndex >= 0 && roundIndex < roundTrack.getRounds())) {
+                                        System.out.println("Round not valid. Try again: ");
+                                        command = scanner.nextLine();
+                                        try {
+                                            roundIndex = Integer.parseInt(command.split(" ")[0]);
+                                        }   catch (NumberFormatException e){
+                                            roundIndex = -1;
+                                        }
+                                    }
+                                    System.out.println("Chose a Dice from the selected round!");
+                                    command = scanner.nextLine();
+                                    if (isEndedTurn) break;
+                                    int diceIndex;
+                                    try {
+                                        diceIndex = Integer.parseInt(command.split(" ")[0]);
+                                    }   catch (NumberFormatException e){
+
+                                        diceIndex = -1;
+                                    }
+                                    while (command.split(" ").length != 1 && !(diceIndex >= 0 && diceIndex < roundTrack.getDicesOnRound(diceIndex).size())) {
+                                        System.out.println("Index not valid. Try again: ");
+                                        command = scanner.nextLine();
+                                        try {
+                                            diceIndex = Integer.parseInt(command.split(" ")[0]);
+                                        }   catch (NumberFormatException e){
+                                            diceIndex = -1;
+                                        }
+                                    }
+                                    toolCardFlags.isRoundTrackDiceRequired = false;
+                                    controller.setRoundTrackDiceIndex(hashCode, diceIndex, roundIndex);
                                 }
+
                                 if(toolCardFlags.isActionSignRequired){
                                     System.out.println("You want to decrease or increase the dice value?");
                                     System.out.println("type \t'-' -> -1");

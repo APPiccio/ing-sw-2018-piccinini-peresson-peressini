@@ -153,6 +153,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         break;
                     case 3:
                         useToolCard3();
+                        break;
+                    case 5:
+                        useToolCard5();
+                        break;
                     default:
 
                         break;
@@ -180,6 +184,17 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             while (toolCardParameters.panelDiceIndex == null);
             view.panelCellIndexRequired();
             while (toolCardParameters.panelCellIndex == null);
+            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+            view.notifyUsageCompleted(useToolCardResult);
+        }
+
+        private void useToolCard5() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            view.roundTrackDiceIndexRequired();
+            while (toolCardParameters.roundTrackRoundIndex == null || toolCardParameters.roundTrackDiceIndex == null);
             UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
             view.notifyUsageCompleted(useToolCardResult);
         }
