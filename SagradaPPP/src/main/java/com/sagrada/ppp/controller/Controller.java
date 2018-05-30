@@ -165,6 +165,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         break;
                     case 4:
                         useToolCard4();
+                        break;
+                    case 9:
+                        useToolCard9();
+                        break;
                     default:
 
                         break;
@@ -172,6 +176,19 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+        }
+
+        private void useToolCard9() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+
+
+            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+            view.notifyUsageCompleted(useToolCardResult);
         }
 
         private void useToolCard4() throws RemoteException {
@@ -199,6 +216,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             while (toolCardParameters.panelDiceIndex == null);
             view.panelCellIndexRequired();
             while (toolCardParameters.panelCellIndex == null);
+
             UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
             view.notifyUsageCompleted(useToolCardResult);
         }
@@ -210,6 +228,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             while (toolCardParameters.panelDiceIndex == null);
             view.panelCellIndexRequired();
             while (toolCardParameters.panelCellIndex == null);
+
             UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
             view.notifyUsageCompleted(useToolCardResult);
         }

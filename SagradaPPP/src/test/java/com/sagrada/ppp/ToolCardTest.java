@@ -317,73 +317,22 @@ public class ToolCardTest {
         panel.addDice(8,new Dice(Color.BLUE, 6));
 
 
-        commandToolCard9 = new CommandToolCard9(player,index);
+       // commandToolCard9 = new CommandToolCard9(player,index);
         Dice dice = new Dice();
         player.setActiveDice(dice);
         player.setPanel(panel);
 
-        commandToolCard9.useCard();
+       // commandToolCard9.useCard();
 
         assertEquals(player.getPanel().getCell(index).getDiceOn(),dice);
 
-        testIllegalStateExceptionToolCard9_1();
-
-        testIllegalStateExceptionToolCard9_2();
 
 
 
 
     }
-    @Test(expected = IllegalStateException.class)
-    public void testIllegalStateExceptionToolCard9_1(){
-        CommandToolCard commandToolCard9;
-        Player player = new Player("test");
-        int index = 0;
-
-        WindowPanel panel = new WindowPanel(10, StaticValues.FRONT_SIDE);
-
-        panel.addDice(2, new Dice(Color.GREEN, 3));
-
-        panel.addDice(8,new Dice(Color.BLUE, 6));
 
 
-        commandToolCard9 = new CommandToolCard9(player,index);
-        Dice dice = new Dice();
-        player.setActiveDice(dice);
-        player.setPanel(panel);
-
-        commandToolCard9.useCard();
-
-        assertEquals(player.getPanel().getCell(index).getDiceOn(),dice);
-
-        new CommandToolCard9(player,19).useCard();
-    }
-    @Test(expected = IllegalStateException.class)
-    public void testIllegalStateExceptionToolCard9_2(){
-        CommandToolCard commandToolCard9;
-        Player player = new Player("test");
-        int index = 0;
-
-        WindowPanel panel = new WindowPanel(10, StaticValues.FRONT_SIDE);
-
-        panel.addDice(2, new Dice(Color.GREEN, 3));
-
-        panel.addDice(8,new Dice(Color.BLUE, 6));
-
-
-        commandToolCard9 = new CommandToolCard9(player,index);
-        Dice dice = new Dice();
-        player.setActiveDice(dice);
-        player.setPanel(panel);
-
-        commandToolCard9.useCard();
-
-        assertEquals(player.getPanel().getCell(index).getDiceOn(),dice);
-
-        commandToolCard9.useCard();
-
-        player.setActiveDice(new Dice());
-    }
 
 
     @Test

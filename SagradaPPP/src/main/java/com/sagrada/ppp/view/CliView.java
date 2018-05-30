@@ -333,9 +333,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                                     toolCardFlags.isPanelDiceRequired = false;
                                     controller.setPanelDiceIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
                                 }
-                                if(toolCardFlags.isDraftPoolDiceRequired){
-
-                                }
                                 if(toolCardFlags.isActionSignRequired){
                                     System.out.println("You want to decrease or increase the dice value?");
                                     System.out.println("type \t'-' -> -1");
@@ -384,6 +381,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                             }
                             if(isToolCardActionEnded){
                                 isToolCardActionEnded = false;
+                                isToolCardUsableFlag = false;
                                 if(useToolCardResult.result){
                                     System.out.println("Tool card used successfully! This is the update game status:");
                                     showGameStatus();
