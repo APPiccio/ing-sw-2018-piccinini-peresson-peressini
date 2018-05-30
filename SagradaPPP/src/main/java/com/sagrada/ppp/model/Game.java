@@ -151,7 +151,7 @@ public class Game implements Serializable{
         return h;
     }
 
-    //TO DO check if enum should be passed as a copy and not as a reference --> private invariant
+    //TODO check if enum should be passed as a copy and not as a reference --> private invariant
     public GameStatus getGameStatus() {
         return gameStatus;
     }
@@ -449,7 +449,7 @@ public class Game implements Serializable{
 
         allToolCards.add(new ToolCard12());
 */
-        allToolCards.add(new ToolCard2());
+        allToolCards.add(new ToolCard7());
         allToolCards.add(new ToolCard5());
         allToolCards.add(new ToolCard5());
         for(int i = 0; i < 3 ; i++){
@@ -583,8 +583,21 @@ public class Game implements Serializable{
     public boolean isToolCardUsable(int playerHashCode, int toolCardIndex){
         ToolCard toolCard = toolCards.get(toolCardIndex);
         Player player = getPlayerByHashcode(playerHashCode);
-        if(toolCard != null && player != null){
-            return player.getFavorTokens() >= toolCard.getCost();
+        if (toolCard != null && player != null) {
+            if (toolCard.getId() == 5 && roundTrack.getCurrentRound() == 1) {
+                System.out.println("Trying to use tool card number 5 during first round.\nOperation denied.");
+                return false;
+            }
+            if (toolCard.getId() == 7 && (turn <= players.size() || dicePlaced)) {
+                System.out.println("Trying to use tool card number 7 during second turn of the round.\nOperation denied");
+                return false;
+            }
+            if (toolCard.getId() == 9 && dicePlaced) {
+                System.out.println("Trying to use tool card number 9 usable only on drafting.\nOperation denied");
+                return false;
+            }
+           return player.getFavorTokens() >=
+                   toolCard.getCost();
         }
         return false;
     }
@@ -600,7 +613,6 @@ public class Game implements Serializable{
             Player player = getPlayerByHashcode(playerHashCode);
             if (player != null) {
                 System.out.println(player.getUsername() + " is using toolcard ID = " + toolCard.getId());
-                player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                 usedToolCard = true;
                 switch (toolCard.getId()){
                     case 1:
@@ -609,6 +621,7 @@ public class Game implements Serializable{
                             return new UseToolCardResult(false, draftPool, roundTrack, players);
                         }
                         //Building command
+                        player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard1(draftPool.get(toolCardParameters.draftPoolDiceIndex), toolCardParameters.actionSign));
                         return new UseToolCardResult(true, draftPool, roundTrack, players);
                     case 2:
@@ -618,6 +631,7 @@ public class Game implements Serializable{
                             return new UseToolCardResult(false, draftPool,roundTrack,players);
                         }
                         //Building command
+                        player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard2(new Pair<>(toolCardParameters.panelDiceIndex,toolCardParameters.panelCellIndex),player.getPanel()));
                         return new UseToolCardResult(true, draftPool, roundTrack, players);
                     case 3:
@@ -627,6 +641,7 @@ public class Game implements Serializable{
                             return new UseToolCardResult(false, draftPool,roundTrack,players);
                         }
                         //Building command
+                        player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard3(new Pair<>(toolCardParameters.panelDiceIndex,toolCardParameters.panelCellIndex),player.getPanel()));
                         return new UseToolCardResult(true, draftPool, roundTrack, players);
                     case 5:
@@ -637,6 +652,7 @@ public class Game implements Serializable{
                             usedToolCard = false;
                             return new UseToolCardResult(false, draftPool,roundTrack,players);
                         }
+                        player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard5(draftPoolDice, roundTrack,
                                 toolCardParameters.roundTrackRoundIndex, toolCardParameters.roundTrackDiceIndex));
                         return new UseToolCardResult(true, draftPool, roundTrack, players);
@@ -651,7 +667,13 @@ public class Game implements Serializable{
                         LinkedHashMap<Integer,Integer> linkedHashMap = new LinkedHashMap<>();
                         linkedHashMap.put(toolCardParameters.panelDiceIndex,toolCardParameters.panelCellIndex);
                         linkedHashMap.put(toolCardParameters.secondPanelDiceIndex,toolCardParameters.secondPanelCellIndex);
+                        player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard4(linkedHashMap,player.getPanel()));
+                        return new UseToolCardResult(true, draftPool, roundTrack, players);
+                    case 7:
+                        System.out.println("Using toolCard7: re-rolling draft pool dices");
+                        player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
+                        toolCard.use(new CommandToolCard7(draftPool));
                         return new UseToolCardResult(true, draftPool, roundTrack, players);
                     default:
                         break;

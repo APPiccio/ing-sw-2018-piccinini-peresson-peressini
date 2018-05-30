@@ -443,24 +443,31 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         public void run() {
             try {
                 view.isToolCardUsable(result);
-                switch (toolCardID) {
-                    case 1:
-                        useToolCard1();
-                        break;
-                    case 2:
-                        useToolCard2();
-                        break;
-                    case 3:
-                        useToolCard3();
-                        break;
-                    case 5:
-                        useToolCard5();
-                        break;
-                    case 4:
-                        useToolCard4();
-                        break;
-                    default:
-                        break;
+
+                if (result) {
+                    switch (toolCardID) {
+                        case 1:
+                            useToolCard1();
+                            break;
+                        case 2:
+                            useToolCard2();
+                            break;
+                        case 3:
+                            useToolCard3();
+                            break;
+                        case 5:
+                            useToolCard5();
+                            break;
+                        case 4:
+                            useToolCard4();
+                            break;
+                        case 7:
+                            useToolCard7();
+                            break;
+                        default:
+                            break;
+
+                    }
                 }
 
             } catch (RemoteException e) {
@@ -523,6 +530,12 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             while (toolCardParameters.draftPoolDiceIndex == null);
             view.roundTrackDiceIndexRequired();
             while (toolCardParameters.roundTrackRoundIndex == null || toolCardParameters.roundTrackDiceIndex == null);
+            sendToolCardRequest();
+        }
+
+        private void useToolCard7() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
             sendToolCardRequest();
         }
 
