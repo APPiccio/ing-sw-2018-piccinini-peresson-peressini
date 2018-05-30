@@ -180,7 +180,7 @@ public class WindowPanel implements Serializable {
      * @param ignorePosition flag showing if color restriction has to be avoided
      * @return true if the placement has been done successfully
      */
-    private boolean diceOk(Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
+    public boolean diceOk(Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
         Cell cell = cells.get(i);
         if (cell.hasDiceOn()) {
             System.out.println("PLACEMENT ERROR >>> ANOTHER DICE IN THIS POSITION");
@@ -388,7 +388,7 @@ public class WindowPanel implements Serializable {
      * @param dice dice to bu put
      * @param ignoreColor ingore cell color restriction
      * @param ignoreValue ignore cell value restriction
-     * @return true if the dice doesn't break any rules
+     * @return true if the dice doesn't break any rules except positioning
      */
     public boolean diceOkWithRestriction(Cell cell, Dice dice, boolean ignoreColor, boolean ignoreValue) {
         if (!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;

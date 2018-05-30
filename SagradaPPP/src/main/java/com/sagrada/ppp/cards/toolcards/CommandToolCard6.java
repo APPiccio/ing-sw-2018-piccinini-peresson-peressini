@@ -3,11 +3,10 @@ package com.sagrada.ppp.cards.toolcards;
 import com.sagrada.ppp.model.Dice;
 import com.sagrada.ppp.model.Player;
 
-public class CommandToolCard6 implements CommandToolCard{
+public class CommandToolCard6 implements CommandToolCard {
 
     private Dice dice;
     private Player player;
-    private int draftPoolIndex;
 
     public CommandToolCard6(Dice dice, Player player) {
         this.dice = dice;
@@ -19,4 +18,5 @@ public class CommandToolCard6 implements CommandToolCard{
         dice.throwDice();
         player.setActiveDice(dice);
     }
+
 }

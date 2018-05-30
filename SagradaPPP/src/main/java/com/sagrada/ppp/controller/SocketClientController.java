@@ -494,10 +494,12 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     case 6:
                         break;
                     case 7:
+                        useToolCard7();
                         break;
                     case 8:
                         break;
                     case 9:
+                        useToolCard9();
                         break;
                     case 10:
                         useToolCard10();
@@ -511,11 +513,24 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
 
                     default:
                         break;
+
                 }
 
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+        }
+
+        private void useToolCard9() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+
+            sendToolCardRequest();
         }
 
         private void useToolCard4() throws RemoteException {
@@ -527,9 +542,9 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             view.panelCellIndexRequired();
             while (toolCardParameters.panelCellIndex == null);
             //second set
-            view.panelDiceIndexRequired();
+            view.secondPanelDiceIndexRequired();
             while (toolCardParameters.secondPanelDiceIndex == null);
-            view.panelCellIndexRequired();
+            view.secondPanelCellIndexRequired();
             while (toolCardParameters.secondPanelCellIndex == null);
 
             sendToolCardRequest();
@@ -692,6 +707,12 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+
+        private void useToolCard7() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            sendToolCardRequest();
         }
 
         private void sendToolCardRequest(){
