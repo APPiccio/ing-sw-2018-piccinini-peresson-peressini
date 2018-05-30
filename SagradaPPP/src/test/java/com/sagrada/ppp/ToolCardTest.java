@@ -185,28 +185,7 @@ public class ToolCardTest {
     @Test
     public void card5() {
 
-        Dice draftPoolDice = new Dice(Color.BLUE, 5);
-        Dice roundTrackDice = new Dice(Color.GREEN, 1);
-        Dice draftPoolDiceCopy = new Dice(draftPoolDice);
-        Dice roundTrackDiceCopy = new Dice(roundTrackDice);
-
-        assertEquals(draftPoolDice.getValue(), draftPoolDiceCopy.getValue());
-        assertEquals(draftPoolDice.getColor(), draftPoolDiceCopy.getColor());
-        assertEquals(roundTrackDice.getValue(), roundTrackDiceCopy.getValue());
-        assertEquals(roundTrackDice.getColor(), roundTrackDiceCopy.getColor());
-
-        ToolCard toolCard5 = new ToolCard5();
-        toolCard5.use(new CommandToolCard5(roundTrackDiceCopy, draftPoolDiceCopy));
-
-        assertEquals(draftPoolDice.getValue(), roundTrackDiceCopy.getValue());
-        assertEquals(draftPoolDice.getColor(), roundTrackDiceCopy.getColor());
-        assertEquals(roundTrackDice.getValue(), draftPoolDiceCopy.getValue());
-        assertEquals(roundTrackDice.getColor(), draftPoolDiceCopy.getColor());
-        assertNotEquals(draftPoolDice.getValue(), draftPoolDiceCopy.getValue());
-        assertNotEquals(draftPoolDice.getColor(), draftPoolDiceCopy.getColor());
-        assertNotEquals(roundTrackDice.getValue(), roundTrackDiceCopy.getValue());
-        assertNotEquals(roundTrackDice.getColor(), roundTrackDiceCopy.getColor());
-
+        //TODO
     }
 
     /*@Test

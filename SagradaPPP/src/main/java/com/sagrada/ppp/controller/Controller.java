@@ -144,6 +144,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         @Override
         public void run() {
             try {
+
                 view.isToolCardUsable(result);
 
                 switch (toolCardID) {
@@ -165,6 +166,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         break;
                     case 4:
                         useToolCard4();
+                        break;
+                    case 5:
+                        useToolCard5();
+                        break;
+                    case 7:
+                        useToolCard7();
                         break;
                     case 9:
                         useToolCard9();
@@ -194,11 +201,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         private void useToolCard4() throws RemoteException {
             toolCardParameters.reset();
             toolCardParameters.toolCardID = toolCardID;
+
             //first set
             view.panelDiceIndexRequired();
             while (toolCardParameters.panelDiceIndex == null);
             view.panelCellIndexRequired();
             while (toolCardParameters.panelCellIndex == null);
+
             //second set
             view.secondPanelDiceIndexRequired();
             while (toolCardParameters.secondPanelDiceIndex == null);
@@ -229,6 +238,24 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             view.panelCellIndexRequired();
             while (toolCardParameters.panelCellIndex == null);
 
+            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+            view.notifyUsageCompleted(useToolCardResult);
+        }
+
+        private void useToolCard5() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            view.roundTrackDiceIndexRequired();
+            while (toolCardParameters.roundTrackRoundIndex == null || toolCardParameters.roundTrackDiceIndex == null);
+            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+            view.notifyUsageCompleted(useToolCardResult);
+        }
+
+        private void useToolCard7() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
             UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
             view.notifyUsageCompleted(useToolCardResult);
         }
