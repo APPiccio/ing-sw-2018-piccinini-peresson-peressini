@@ -3,17 +3,16 @@ package com.sagrada.ppp.controller;
 import com.sagrada.ppp.*;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
-import com.sagrada.ppp.network.server.Service;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.view.CliView;
 import com.sagrada.ppp.view.ToolCardHandler;
 
 import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class SocketClientController implements RemoteController, ResponseHandler, Serializable {
+public class SocketClientController extends UnicastRemoteObject implements RemoteController, ResponseHandler, Serializable {
 
     private transient Socket socket;
     private transient ObjectOutputStream out;
