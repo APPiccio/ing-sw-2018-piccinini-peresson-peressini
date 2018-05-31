@@ -447,9 +447,9 @@ public class Game implements Serializable{
         allToolCards.add(new ToolCard11());
         allToolCards.add(new ToolCard12());
 */
-        allToolCards.add(new ToolCard2());
-        allToolCards.add(new ToolCard5());
-        allToolCards.add(new ToolCard5());
+        allToolCards.add(new ToolCard6());
+        allToolCards.add(new ToolCard6());
+        allToolCards.add(new ToolCard6());
         for(int i = 0; i < 3 ; i++){
             toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
         }
@@ -587,15 +587,18 @@ public class Game implements Serializable{
                 return false;
             }
             if (toolCard.getId() == 7 && (turn <= players.size() || dicePlaced)) {
-                System.out.println("Trying to use tool card number 7 during second turn of the round.\nOperation denied");
+                System.out.println("Trying to use tool card number 7 during second turn of the round.\nOperation denied.");
+                return false;
+            }
+            if (toolCard.getId() == 6 && dicePlaced) {
+                System.out.println("Trying to use tool card number 6 usable only on drafting.\nOperation denied.");
                 return false;
             }
             if (toolCard.getId() == 9 && dicePlaced) {
-                System.out.println("Trying to use tool card number 9 usable only on drafting.\nOperation denied");
+                System.out.println("Trying to use tool card number 9 usable only on drafting.\nOperation denied.");
                 return false;
             }
-           return player.getFavorTokens() >=
-                   toolCard.getCost();
+           return player.getFavorTokens() >= toolCard.getCost();
         }
         return false;
     }
@@ -670,7 +673,11 @@ public class Game implements Serializable{
                                 toolCardParameters.roundTrackRoundIndex, toolCardParameters.roundTrackDiceIndex));
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 6:
-                        break;
+                        System.out.println("Using toolCard6");
+                        Dice reRoll = draftPool.get(toolCardParameters.draftPoolDiceIndex);
+                        draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
+                        toolCard.use(new CommandToolCard6(reRoll));
+                        return new UseToolCardResult(true,draftPool,roundTrack,players, reRoll);
                     case 7:
                         System.out.println("Using toolCard7: re-rolling draft pool dices");
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());

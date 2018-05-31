@@ -4,12 +4,10 @@ import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.server.Service;
 import com.sagrada.ppp.view.ToolCardHandler;
 
-import java.lang.reflect.Array;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.spi.AbstractResourceBundleProvider;
 
 public class Controller extends UnicastRemoteObject implements RemoteController {
 
@@ -184,6 +182,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         useToolCard5();
                         break;
                     case 6:
+                        useToolCard6();
                         break;
                     case 7:
                         useToolCard7();
@@ -285,6 +284,44 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             view.notifyUsageCompleted(useToolCardResult);
         }
 
+        private void useToolCard6() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+            if (!useToolCardResult.result) {
+                view.notifyUsageCompleted(useToolCardResult);
+            }
+            else {
+                Dice dice = useToolCardResult.dice;
+                view.reRolledDiceActionRequired(dice);
+                ArrayList<Integer> legalPositions = service.getLegalPositions(gameHashCode, playerHashCode, dice);
+                if (!legalPositions.isEmpty()) {
+                    do {
+                        toolCardParameters.panelCellIndex = null;
+                        view.panelCellIndexRequired();
+                        while (toolCardParameters.panelCellIndex == null);
+                        System.out.println("-------> panel cell index " + toolCardParameters.panelCellIndex);
+                    } while (!legalPositions.contains(toolCardParameters.panelCellIndex));
+                    useToolCardResult.result = service.specialDicePlacement(gameHashCode, playerHashCode, toolCardParameters.panelCellIndex, dice);
+                    for(Player player : useToolCardResult.players){
+                        if(player.getHashCode() == playerHashCode){
+                            WindowPanel panel = player.getPanel();
+                            panel.addDice(toolCardParameters.panelCellIndex, dice);
+                            player.setPanel(panel);
+                        }
+                    }
+                    useToolCardResult.draftpool.remove(toolCardParameters.panelCellIndex);
+                }
+                else{
+                    service.putDiceInDraftPool(gameHashCode, dice);
+                    useToolCardResult.result = false;
+                }
+                view.notifyUsageCompleted(useToolCardResult);
+            }
+        }
+
         private void useToolCard11() throws RemoteException{
             toolCardParameters.reset();
             toolCardParameters.toolCardID = toolCardID;
@@ -310,7 +347,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                     while (!positions.contains(toolCardParameters.panelCellIndex));
                     useToolCardResult.result = service.specialDicePlacement(gameHashCode, playerHashCode, toolCardParameters.panelCellIndex, dice);
                     for(Player player : useToolCardResult.players){
-                        if(player.hashCode() == playerHashCode){
+                        if(player.getHashCode() == playerHashCode){
                             WindowPanel panel = player.getPanel();
                             panel.addDice(toolCardParameters.panelCellIndex, dice);
                             player.setPanel(panel);
