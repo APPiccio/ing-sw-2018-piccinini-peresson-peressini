@@ -157,53 +157,54 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             try {
 
                 view.isToolCardUsable(result);
+                if(result) {
+                    switch (toolCardID) {
+                        case 1:
+                            toolCardParameters.reset();
+                            toolCardParameters.toolCardID = toolCardID;
+                            view.draftPoolDiceIndexRequired();
+                            while (toolCardParameters.draftPoolDiceIndex == null) ;
+                            view.actionSignRequired();
+                            while (toolCardParameters.actionSign == null) ;
+                            UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
+                            view.notifyUsageCompleted(useToolCardResult);
+                            break;
+                        case 2:
+                            useToolCard2and3();
+                            break;
+                        case 3:
+                            useToolCard2and3();
+                            break;
+                        case 4:
+                            useToolCard4();
+                            break;
+                        case 5:
+                            useToolCard5();
+                            break;
+                        case 6:
+                            useToolCard6();
+                            break;
+                        case 7:
+                            useToolCard7();
+                            break;
+                        case 8:
+                            break;
+                        case 9:
+                            useToolCard9();
+                            break;
+                        case 10:
+                            useToolCard10();
+                            break;
+                        case 11:
+                            useToolCard11();
+                            break;
+                        case 12:
+                            useToolCard12();
+                            break;
+                        default:
 
-                switch (toolCardID) {
-                    case 1:
-                        toolCardParameters.reset();
-                        toolCardParameters.toolCardID = toolCardID;
-                        view.draftPoolDiceIndexRequired();
-                        while (toolCardParameters.draftPoolDiceIndex == null) ;
-                        view.actionSignRequired();
-                        while (toolCardParameters.actionSign == null) ;
-                        UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
-                        view.notifyUsageCompleted(useToolCardResult);
-                        break;
-                    case 2:
-                        useToolCard2and3();
-                        break;
-                    case 3:
-                        useToolCard2and3();
-                        break;
-                    case 4:
-                        useToolCard4();
-                        break;
-                    case 5:
-                        useToolCard5();
-                        break;
-                    case 6:
-                        useToolCard6();
-                        break;
-                    case 7:
-                        useToolCard7();
-                        break;
-                    case 8:
-                        break;
-                    case 9:
-                        useToolCard9();
-                        break;
-                    case 10:
-                        useToolCard10();
-                        break;
-                    case 11:
-                        useToolCard11();
-                        break;
-                    case 12:
-                        useToolCard12();
-                        break;
-                    default:
-
-                        break;
+                            break;
+                    }
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();

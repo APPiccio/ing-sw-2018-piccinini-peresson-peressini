@@ -6,6 +6,7 @@ import com.sagrada.ppp.cards.toolcards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.utils.StaticValues;
+import com.sagrada.ppp.view.ToolCardHandler;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class MainGamePane extends UnicastRemoteObject implements GameObserver, WindowPanelEventBus {
+public class MainGamePane extends UnicastRemoteObject implements GameObserver, WindowPanelEventBus, ToolCardHandler {
 
     private RoundTrack roundTrack;
     private double height,widht = 100d;
@@ -64,9 +65,13 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private EventHandler<MouseEvent> draftPoolDiceEventHandler;
     private EventHandler<MouseEvent> skipButtonEventHandler;
+    private EventHandler<MouseEvent> toolCardClickEvent;
     private Label gameStatus;
+    private boolean parameterAquired;
+    private volatile  ToolCardFlags toolCardFlags;
+    private boolean usedToolcard;
 
-    public MainGamePane() throws RemoteException {
+    public MainGamePane() throws RemoteException  {
 
 
         defInset = new Insets(5);
@@ -90,6 +95,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         skipButton = new Button();
         draftPoolDiceButtons = new ArrayList<>();
         gameStatus = new Label();
+        toolCardFlags = new ToolCardFlags();
+        parameterAquired = false;
         //creating all Listeners
         createListeners();
 
@@ -281,6 +288,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     }
     private void drawToolCards(){
         int count = 0;
+        toolCardButtons.clear();
         for(ToolCard toolCard : toolCards){
             Button toolCardButton = new Button();
             toolCardButtons.add(toolCardButton);
@@ -297,6 +305,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
                             )
                     )
             );
+            toolCardButton.addEventHandler(MouseEvent.MOUSE_CLICKED,toolCardClickEvent);
             toolCardsContainer.add(toolCardButton,count,1);
             count++;
         }
@@ -342,6 +351,15 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
                 clickedButton.setScaleY(1.2);
                 clickedButton.setSelected(true);
             }
+            if (toolCardFlags.isDraftPoolDiceRequired){
+                try {
+                    System.out.println("Index draft pool: " + draftPoolDiceButtons.indexOf(clickedButton));
+                    controller.setDraftPoolDiceIndex(joinGameResult.getPlayerHashCode(),draftPoolDiceButtons.indexOf(clickedButton));
+
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
 
         };
         skipButtonEventHandler = event -> {
@@ -352,6 +370,20 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
                 e.printStackTrace();
             }
         };
+        toolCardClickEvent = event -> {
+            Button toolCardButton =(Button) event.getSource();
+            try {
+                if (!usedToolcard)
+                    controller.isToolCardUsable(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode(),toolCardButtons.indexOf(toolCardButton),this);
+                else{
+                    Alert alert = new Alert(Alert.AlertType.ERROR,"Cant use another toolcard in this turn");
+                    alert.showAndWait();
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        };
+
     }
 
     @Override
@@ -364,43 +396,60 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
 
     @Override
-    public void onCellClicked(int x,int y) {
-        DiceButton diceButtonSelected = draftPoolDiceButtons.stream().filter(DiceButton::isSelected).findFirst().orElse(null);
-        if(diceButtonSelected != null){
-            Platform.runLater(()-> {
-                        try {
-                            PlaceDiceResult result = controller.placeDice(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode(),draftPoolDiceButtons.indexOf(diceButtonSelected),y,x);
-                            if(result.status){
-                                playerWindowPanel.setPanel(result.panel);
-                                draftPool.remove(draftPoolDiceButtons.indexOf(diceButtonSelected));
-                                drawDraftPool();
-                            }else{
-                                Alert alert = new Alert(Alert.AlertType.ERROR,result.message);
-                                alert.setHeaderText(null);
-                                alert.initModality(Modality.APPLICATION_MODAL);
-                                alert.initOwner(stage);
-                                alert.showAndWait();
+    public void onCellClicked(int row,int col) {
+        if (!(toolCardFlags.isPanelCellRequired)) {
+            DiceButton diceButtonSelected = draftPoolDiceButtons.stream().filter(DiceButton::isSelected).findFirst().orElse(null);
+            if(diceButtonSelected != null){
+                Platform.runLater(()-> {
+                            try {
+                                PlaceDiceResult result = controller.placeDice(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode(),draftPoolDiceButtons.indexOf(diceButtonSelected),row,col);
+                                if(result.status){
+                                    playerWindowPanel.setPanel(result.panel);
+                                    draftPool.remove(draftPoolDiceButtons.indexOf(diceButtonSelected));
+                                    drawDraftPool();
+                                }else{
+                                    Alert alert = new Alert(Alert.AlertType.ERROR,result.message);
+                                    alert.setHeaderText(null);
+                                    alert.initModality(Modality.APPLICATION_MODAL);
+                                    alert.initOwner(stage);
+                                    alert.showAndWait();
+                                }
+
+                            } catch (RemoteException e) {
+                                e.printStackTrace();
                             }
-
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
                         }
-                    }
-            );
+                );
 
+            }else {
+                Alert alert = new Alert(Alert.AlertType.ERROR,"Please Select a dice and THEN click on a panel cell!");
+                alert.setHeaderText(null);
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.initOwner(stage);
+                alert.showAndWait();
+            }
         }else {
-            Alert alert = new Alert(Alert.AlertType.ERROR,"Please Select a dice and THEN click on a panel cell!");
-            alert.setHeaderText(null);
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.initOwner(stage);
-            alert.showAndWait();
+            toolCardFlags.isPanelCellRequired = false;
+            try {
+                controller.setPanelCellIndex(joinGameResult.getPlayerHashCode(),row*StaticValues.PATTERN_COL + col);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+
         }
 
     }
 
     @Override
-    public void onDiceClicked(DiceButton diceButton, Dice dice) {
-
+    public void onDiceClicked(int row,int col) {
+        if (toolCardFlags.isPanelDiceRequired){
+            toolCardFlags.isPanelDiceRequired = false;
+            try {
+                controller.setPanelDiceIndex(joinGameResult.getPlayerHashCode(),row*StaticValues.PATTERN_COL + col);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -424,6 +473,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     @Override
     public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
        Platform.runLater(()->{
+            usedToolcard = false;
             roundTrack = endTurnMessage.roundTrack;
             roundTrackPane.setRoundTrack(roundTrack);
             draftPool = endTurnMessage.draftpool;
@@ -459,5 +509,119 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
                 e.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public void isToolCardUsable(boolean result) throws RemoteException {
+        Platform.runLater(() ->{
+          if(!result){
+              Alert alert = new Alert(Alert.AlertType.ERROR,"Toolcard currently not usable");
+              alert.setHeaderText("ERROR");
+              alert.showAndWait();
+          }
+        });
+
+    }
+
+    @Override
+    public void draftPoolDiceIndexRequired() throws RemoteException {
+        Platform.runLater(()-> {
+            for (DiceButton diceButton : draftPoolDiceButtons) {
+                if (diceButton.isSelected()) {
+                    diceButton.setSelected(false);
+                    diceButton.setScaleX(1);
+                    diceButton.setScaleY(1);
+                }
+            }
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select a dice from DraftPool");
+            alert.showAndWait();
+            toolCardFlags.reset();
+            toolCardFlags.isDraftPoolDiceRequired = true;
+
+        });
+
+    }
+
+    @Override
+    public void roundTrackDiceIndexRequired() throws RemoteException {
+
+    }
+
+    @Override
+    public void panelDiceIndexRequired() throws RemoteException {
+        Platform.runLater(()-> {
+            for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(true);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select a Dice from your Panel");
+            alert.showAndWait();
+            toolCardFlags.reset();
+            toolCardFlags.isPanelDiceRequired = true;
+
+        });
+    }
+
+    @Override
+    public void panelCellIndexRequired() throws RemoteException {
+        Platform.runLater(()-> {
+            for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(true);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select a Cell from your Panel");
+            alert.showAndWait();
+            toolCardFlags.reset();
+            toolCardFlags.isPanelCellRequired = true;
+
+        });
+    }
+
+    @Override
+    public void actionSignRequired() throws RemoteException {
+
+    }
+
+    @Override
+    public void notifyUsageCompleted(UseToolCardResult useToolCardResult) throws RemoteException {
+        Platform.runLater(()->{
+            players = useToolCardResult.players;
+            draftPool = useToolCardResult.draftpool;
+            toolCardFlags.reset();
+            roundTrackPane.setRoundTrack(useToolCardResult.roundTrack);
+            for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(false);
+            drawDraftPool();
+            drawWindowPanels();
+
+            Alert alert = new Alert(Alert.AlertType.NONE);
+            if(useToolCardResult.result){
+               alert.setAlertType(Alert.AlertType.INFORMATION);
+               alert.setTitle("All Good");
+               alert.setHeaderText("Tool Card used successfully!");
+            }else {
+                alert.setAlertType(Alert.AlertType.INFORMATION);
+                alert.setTitle("Ehhhg, something went wrong");
+                alert.setHeaderText("Negative result!");
+            }
+            alert.showAndWait();
+            usedToolcard = true;
+        });
+
+
+
+    }
+
+    @Override
+    public void secondPanelDiceIndexRequired() throws RemoteException {
+
+    }
+
+    @Override
+    public void secondPanelCellIndexRequired() throws RemoteException {
+
+    }
+
+    @Override
+    public void diceValueRequired(com.sagrada.ppp.model.Color color) throws RemoteException {
+
+    }
+
+    @Override
+    public void twoDiceActionRequired() throws RemoteException {
+
     }
 }

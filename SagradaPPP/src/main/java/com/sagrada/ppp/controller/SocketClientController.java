@@ -475,46 +475,48 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         public void run() {
             try {
                 view.isToolCardUsable(result);
-                switch (toolCardID) {
-                    case 1:
-                        useToolCard1();
-                        break;
-                    case 2:
-                        useToolCard2and3();
-                        break;
-                    case 3:
-                        useToolCard2and3();
-                        break;
-                    case 4:
-                        useToolCard4();
-                        break;
-                    case 5:
-                        useToolCard5();
-                        break;
-                    case 6:
-                        useToolCard6();
-                        break;
-                    case 7:
-                        useToolCard7();
-                        break;
-                    case 8:
-                        break;
-                    case 9:
-                        useToolCard9();
-                        break;
-                    case 10:
-                        useToolCard10();
-                        break;
-                    case 11:
-                        useToolCard11();
-                        break;
-                    case 12:
-                        useToolCard12();
-                        break;
+                if(result) {
+                    switch (toolCardID) {
+                        case 1:
+                            useToolCard1();
+                            break;
+                        case 2:
+                            useToolCard2and3();
+                            break;
+                        case 3:
+                            useToolCard2and3();
+                            break;
+                        case 4:
+                            useToolCard4();
+                            break;
+                        case 5:
+                            useToolCard5();
+                            break;
+                        case 6:
+                            useToolCard6();
+                            break;
+                        case 7:
+                            useToolCard7();
+                            break;
+                        case 8:
+                            break;
+                        case 9:
+                            useToolCard9();
+                            break;
+                        case 10:
+                            useToolCard10();
+                            break;
+                        case 11:
+                            useToolCard11();
+                            break;
+                        case 12:
+                            useToolCard12();
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
 
+                    }
                 }
 
             } catch (RemoteException e) {
