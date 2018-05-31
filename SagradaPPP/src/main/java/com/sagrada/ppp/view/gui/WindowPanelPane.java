@@ -98,6 +98,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
             }
             if(c.hasDiceOn()){
                 DiceButton diceButton = new DiceButton(c.getDiceOn(),cellWidth*.80,cellHeight*.80);
+                diceButton.setMouseTransparent(true);
                 diceButton.setMinSize(50,50);
                 cell.setCenter(diceButton);
 
@@ -131,7 +132,16 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
     public void handle(MouseEvent event) {
         CellPane cell = ((CellPane) event.getSource());
         System.out.println("col: "+cell.col + " row: " +cell.row);
-        if(eventBus !=  null) eventBus.onCellClicked(cell.col,cell.row);
+        if(eventBus !=  null) {
+            if(panel.getCell(cell.row,cell.col).hasDiceOn()){
+                System.out.println("has dice on!");
+                DiceButton diceButton = (DiceButton) cell.getChildren().get(0);
+                if (diceButton != null)
+                    eventBus.onDiceClicked(cell.row,cell.col);
+            }else {
+                eventBus.onCellClicked(cell.row, cell.col);
+            }
+        }
     }
 
     private class CellPane extends BorderPane{
