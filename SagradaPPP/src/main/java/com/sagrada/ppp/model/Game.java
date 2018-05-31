@@ -447,9 +447,10 @@ public class Game implements Serializable{
         allToolCards.add(new ToolCard11());
         allToolCards.add(new ToolCard12());
 */
-        allToolCards.add(new ToolCard2());
-        allToolCards.add(new ToolCard5());
-        allToolCards.add(new ToolCard5());
+        allToolCards.add(new ToolCard10());
+        allToolCards.add(new ToolCard11());
+        allToolCards.add(new ToolCard12());
+
         for(int i = 0; i < 3 ; i++){
             toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
         }
@@ -703,7 +704,12 @@ public class Game implements Serializable{
                     case 11:
                         System.out.println("Using toolcard 11");
                         Dice draftDice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
-                        draftPool.remove(toolCardParameters.draftPoolDiceIndex);
+                        draftPool.stream().forEach(System.out::println);
+                        ArrayList<Dice> h = new ArrayList<>();
+                        draftPool.stream().filter(x -> draftPool.indexOf(x) != toolCardParameters.draftPoolDiceIndex).forEach(x -> h.add(x));
+                        //draftPool.remove(toolCardParameters.draftPoolDiceIndex);
+                        draftPool = h;
+                        draftPool.stream().forEach(System.out::println);
                         toolCard.use(new CommandToolCard11(diceBag,draftDice));
                         return new UseToolCardResult(true,draftPool,roundTrack,players, draftDice);
                     case 12:

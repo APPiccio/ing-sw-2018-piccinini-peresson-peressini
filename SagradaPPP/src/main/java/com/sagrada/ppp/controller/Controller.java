@@ -304,13 +304,14 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 ArrayList<Integer> positions = service.getLegalPositions(gameHashCode, playerHashCode, dice);
                 if(!positions.isEmpty()) {
                     do {
+                        toolCardParameters.panelCellIndex = null;
                         view.panelCellIndexRequired();
                         while (toolCardParameters.panelCellIndex == null) ;
                     }
                     while (!positions.contains(toolCardParameters.panelCellIndex));
                     useToolCardResult.result = service.specialDicePlacement(gameHashCode, playerHashCode, toolCardParameters.panelCellIndex, dice);
                     for(Player player : useToolCardResult.players){
-                        if(player.hashCode() == playerHashCode){
+                        if(player.getHashCode() == playerHashCode){
                             WindowPanel panel = player.getPanel();
                             panel.addDice(toolCardParameters.panelCellIndex, dice);
                             player.setPanel(panel);

@@ -619,6 +619,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                 sendLegalDicePositionsRequest(dice);
                 if(!positions.isEmpty()) {
                     do {
+                        toolCardParameters.panelCellIndex = null;
                         view.panelCellIndexRequired();
                         while (toolCardParameters.panelCellIndex == null) ;
                     }
