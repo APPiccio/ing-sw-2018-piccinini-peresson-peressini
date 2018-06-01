@@ -579,7 +579,7 @@ public class Game implements Serializable{
     }
 
 
-    public boolean isToolCardUsable(int playerHashCode, int toolCardIndex){
+    public synchronized boolean isToolCardUsable(int playerHashCode, int toolCardIndex){
         ToolCard toolCard = toolCards.get(toolCardIndex);
         Player player = getPlayerByHashcode(playerHashCode);
         if (toolCard != null && player != null) {
@@ -605,7 +605,7 @@ public class Game implements Serializable{
         return toolCards.get(toolCardIndex).getId();
     }
 
-    public UseToolCardResult useToolCard(int playerHashCode, ToolCardParameters toolCardParameters) {
+    public synchronized UseToolCardResult useToolCard(int playerHashCode, ToolCardParameters toolCardParameters) {
         if(players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new UseToolCardResult(false, draftPool , roundTrack , players, null);
         ToolCard toolCard = toolCards.stream().filter( x -> x.getId() == toolCardParameters.toolCardID).findFirst().orElse(null);
         if(toolCard != null){
@@ -681,13 +681,13 @@ public class Game implements Serializable{
                         break;
                     case 9:
 
-                        System.out.println("Using toolcard9 Dice: " + toolCardParameters.panelDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
+                        System.out.println("Using toolcard9 Dice: " + toolCardParameters.draftPoolDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
                         if (!toolCard9ParamsOk(player,toolCardParameters) && !dicePlaced){
                             usedToolCard = false;
                             return new UseToolCardResult(false, draftPool,roundTrack,players, null);
                         }
-                        draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
                         toolCard.use(new CommandToolCard9(player,toolCardParameters.panelCellIndex,draftPool.get(toolCardParameters.draftPoolDiceIndex)));
+                        draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
                         isSpecialTurn = true;
                         dicePlaced = true;
                         return new UseToolCardResult(true,draftPool,roundTrack,players, null);
