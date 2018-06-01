@@ -188,6 +188,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                             useToolCard7();
                             break;
                         case 8:
+                            useToolCard8();
                             break;
                         case 9:
                             useToolCard9();
@@ -276,6 +277,10 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             view.notifyUsageCompleted(useToolCardResult);
         }
 
+        private void useToolCard8() throws RemoteException {
+            useToolCard9();
+        }
+
         private void useToolCard10() throws RemoteException{
             toolCardParameters.reset();
             toolCardParameters.toolCardID = toolCardID;
@@ -284,6 +289,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             UseToolCardResult useToolCardResult = service.useToolCard(gameHashCode, playerHashCode, toolCardParameters);
             view.notifyUsageCompleted(useToolCardResult);
         }
+
+
 
         private void useToolCard6() throws RemoteException {
             toolCardParameters.reset();

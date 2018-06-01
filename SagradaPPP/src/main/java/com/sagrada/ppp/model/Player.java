@@ -16,6 +16,8 @@ public class Player implements Serializable {
     private Dice activeDice;
     private int favorTokens;
     private int hashCode;
+    private boolean skipSecondTurn;
+
 
     public void setFavorTokens(int favorTokens) {
         this.favorTokens = favorTokens;
@@ -45,6 +47,7 @@ public class Player implements Serializable {
         this.activeDice = player.activeDice;
         this.favorTokens = player.favorTokens;
         this.hashCode = player.hashCode;
+        this.skipSecondTurn = false;
 
     }
     public Player(String username){
@@ -52,6 +55,8 @@ public class Player implements Serializable {
         this.panel = null;
         this.username = username;
         this.hashCode = this.hashCode();
+        this.skipSecondTurn = false;
+
     }
 
     public void setActiveDice(Dice activeDice) {
@@ -89,5 +94,13 @@ public class Player implements Serializable {
 
     public int getHashCode(){
         return hashCode;
+    }
+
+    public boolean hasToSkipSecondTurn() {
+        return skipSecondTurn;
+    }
+
+    public void setSkipSecondTurn(boolean skipSecondTurn) {
+        this.skipSecondTurn = skipSecondTurn;
     }
 }

@@ -459,6 +459,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                             }
                             else {
                                 System.out.println("There's a time and place for everything, but not now.");
+                                usedToolCard = false;
                             }
 
                             //codice di ritorno alle normale istruzioni
