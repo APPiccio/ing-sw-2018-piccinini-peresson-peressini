@@ -66,7 +66,7 @@ public class Lobby implements EventHandler<MouseEvent> {
     /**
      * Create and display a TextInputDialog for the user's name.
      * <p>
-     * This method handle the possibility of entering in the TextField
+     * This method handles the possibility of entering in the TextField
      * an empty String or a String containing whitespaces.
      */
     private void createTextInputDialog() {

@@ -1,20 +1,28 @@
 package com.sagrada.ppp.cards.toolcards;
 
 import com.sagrada.ppp.model.Dice;
-import com.sagrada.ppp.model.Player;
+import com.sagrada.ppp.model.WindowPanel;
+
+import java.util.ArrayList;
 
 public class CommandToolCard8 implements CommandToolCard {
 
-    private Player player;
-    private Dice dice;
+    private int cellIndex;
+    private WindowPanel windowPanel;
+    private int draftPoolDiceIndex;
+    private ArrayList<Dice> draftPool;
 
-    public CommandToolCard8(Player player, Dice dice) {
-        this.player =player;
-        this.dice = dice;
+    public CommandToolCard8(int index, WindowPanel windowPanel, int draftPoolDiceIndex, ArrayList<Dice> draftPool) {
+        this.cellIndex = index;
+        this.windowPanel = windowPanel;
+        this.draftPoolDiceIndex = draftPoolDiceIndex;
+        this.draftPool = draftPool;
     }
 
     @Override
     public void useCard() {
-        player.setActiveDice(dice);
+        windowPanel.addDice(cellIndex, draftPool.remove(draftPoolDiceIndex) ,
+                false, false, false);
+
     }
 }

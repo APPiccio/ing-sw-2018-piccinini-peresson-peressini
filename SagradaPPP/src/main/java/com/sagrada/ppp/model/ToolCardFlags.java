@@ -11,6 +11,8 @@ public class ToolCardFlags {
     public volatile boolean isDiceValueRequired;
     public volatile Color colorDiceValueRequired;
     public volatile boolean isTwoDiceActionRequired;
+    public volatile boolean isReRolledDiceActionRequired;
+    public volatile Dice reRolledDice;
 
     public ToolCardFlags(){
     }
@@ -18,6 +20,7 @@ public class ToolCardFlags {
     public void reset(){
         isDraftPoolDiceRequired = false;
         isPanelCellRequired = false;
+
         isPanelDiceRequired = false;
         isRoundTrackDiceRequired = false;
         isActionSignRequired = false;
@@ -26,5 +29,7 @@ public class ToolCardFlags {
         isDiceValueRequired = false;
         isTwoDiceActionRequired = false;
         colorDiceValueRequired = null;
+        isReRolledDiceActionRequired = false;
+        reRolledDice = null;
     }
 }

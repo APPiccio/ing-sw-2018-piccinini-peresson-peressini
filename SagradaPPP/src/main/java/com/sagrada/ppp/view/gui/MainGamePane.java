@@ -606,6 +606,11 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     }
 
     @Override
+    public void reRolledDiceActionRequired(Dice dice) throws RemoteException {
+
+    }
+
+    @Override
     public void secondPanelDiceIndexRequired() throws RemoteException {
 
     }
