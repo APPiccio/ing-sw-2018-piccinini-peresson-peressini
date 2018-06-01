@@ -410,20 +410,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                                 if (toolCardFlags.isReRolledDiceActionRequired) {
                                     toolCardFlags.isReRolledDiceActionRequired = false;
                                     System.out.println("Your new dice drafted is: " + toolCardFlags.reRolledDice.toString());
-                                    /*
-                                    System.out.println("Select a cell from your panel!");
-                                    System.out.println(INSERT_ROW);
-                                    command = scanner.nextLine();
-                                    if (isEndedTurn) break;
-                                    int rowIndex = checkCommandRange(0,StaticValues.PATTERN_ROW, command);
-
-                                    System.out.println(INSERT_COLUMN);
-                                    command = scanner.nextLine();
-                                    if (isEndedTurn) break;
-                                    int columnIndex = checkCommandRange(0, StaticValues.PATTERN_COL,command);
-                                    controller.setPanelCellIndex(hashCode,
-                                            rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
-                                    */
                                 }
 
                                 if(toolCardFlags.isTwoDiceActionRequired){
