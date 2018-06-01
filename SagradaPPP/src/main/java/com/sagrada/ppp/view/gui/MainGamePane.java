@@ -28,6 +28,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 
 public class MainGamePane extends UnicastRemoteObject implements GameObserver, WindowPanelEventBus, ToolCardHandler {
@@ -69,7 +70,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     private Label gameStatus;
     private boolean parameterAquired;
     private volatile  ToolCardFlags toolCardFlags;
-    private boolean usedToolcard;
+    private boolean isToolCardUsed;
+    private int sign;
 
     public MainGamePane() throws RemoteException  {
 
@@ -373,10 +375,15 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         toolCardClickEvent = event -> {
             Button toolCardButton =(Button) event.getSource();
             try {
-                if (!usedToolcard)
-                    controller.isToolCardUsable(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode(),toolCardButtons.indexOf(toolCardButton),this);
-                else{
-                    Alert alert = new Alert(Alert.AlertType.ERROR,"Cant use another toolcard in this turn");
+                if (!isToolCardUsed) {
+                    isToolCardUsed = true;
+                    controller.isToolCardUsable(joinGameResult.getGameHashCode(), joinGameResult.getPlayerHashCode(), toolCardButtons.indexOf(toolCardButton), this);
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.ERROR,"Can't use another toolCard in this turn");
+                    alert.setTitle("Error");
+                    alert.setHeaderText(null);
+                    alert.initModality(Modality.APPLICATION_MODAL);
+                    alert.initOwner(stage);
                     alert.showAndWait();
                 }
             } catch (RemoteException e) {
@@ -473,7 +480,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     @Override
     public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
        Platform.runLater(()->{
-            usedToolcard = false;
+            isToolCardUsed = false;
             roundTrack = endTurnMessage.roundTrack;
             roundTrackPane.setRoundTrack(roundTrack);
             draftPool = endTurnMessage.draftpool;
@@ -515,8 +522,10 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     public void isToolCardUsable(boolean result) throws RemoteException {
         Platform.runLater(() ->{
           if(!result){
-              Alert alert = new Alert(Alert.AlertType.ERROR,"Toolcard currently not usable");
+              Alert alert = new Alert(Alert.AlertType.ERROR,"ToolCard currently not usable");
               alert.setHeaderText("ERROR");
+              alert.initModality(Modality.APPLICATION_MODAL);
+              alert.initOwner(stage);
               alert.showAndWait();
           }
         });
@@ -534,6 +543,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
                 }
             }
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select a dice from DraftPool");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
             alert.showAndWait();
             toolCardFlags.reset();
             toolCardFlags.isDraftPoolDiceRequired = true;
@@ -552,10 +563,11 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         Platform.runLater(()-> {
             for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(true);
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select a Dice from your Panel");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
             alert.showAndWait();
             toolCardFlags.reset();
             toolCardFlags.isPanelDiceRequired = true;
-
         });
     }
 
@@ -564,6 +576,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         Platform.runLater(()-> {
             for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(true);
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select a Cell from your Panel");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
             alert.showAndWait();
             toolCardFlags.reset();
             toolCardFlags.isPanelCellRequired = true;
@@ -573,7 +587,35 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     @Override
     public void actionSignRequired() throws RemoteException {
+        Platform.runLater(() -> {
+            ArrayList<String> choices = new ArrayList<>();
+            choices.add("Increase the value by 1!");
+            choices.add("Decrease the value by 1!");
+            ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
+            dialog.setTitle("Action required");
+            dialog.setHeaderText(null);
+            dialog.setContentText("Chose your action: ");
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(stage);
+            dialog.getDialogPane().lookupButton(ButtonType.CANCEL).setDisable(true);
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(input -> {
+                if (input.equals(choices.get(0))) {
+                    sign = 1;
+                }
+                else {
+                    sign = -1;
+                }
+            });
+            try {
+                controller.setActionSign(joinGameResult.getPlayerHashCode(), sign);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            toolCardFlags.reset();
+            toolCardFlags.isActionSignRequired = true;
 
+        });
     }
 
     @Override
@@ -593,12 +635,13 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
                alert.setTitle("All Good");
                alert.setHeaderText("Tool Card used successfully!");
             }else {
+                isToolCardUsed = false;
                 alert.setAlertType(Alert.AlertType.INFORMATION);
-                alert.setTitle("Ehhhg, something went wrong");
+                alert.setTitle("Ehhhgggrrr, something went wrong");
                 alert.setHeaderText("Negative result!");
+
             }
             alert.showAndWait();
-            usedToolcard = true;
         });
 
 

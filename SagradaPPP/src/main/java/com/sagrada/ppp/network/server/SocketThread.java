@@ -17,16 +17,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     private boolean isStopped;
 
 
-    @Override
-    public void onPlayerLeave(String username,ArrayList<String> players, int numOfPlayers) throws RemoteException {
-        try {
-            System.out.println("Sending notification to: "+out.toString());
-            out.writeObject(new PlayerEventNotification(numOfPlayers, username,players,PlayerEventType.LEAVE));
-            out.reset();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     public SocketThread(Socket socket, Service service){
@@ -44,15 +35,18 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     public void run() {
-        while (true && !isStopped) {
+        while (!isStopped) {
             //DO SOCKET SERVER STUFF TO CLIENT
             try {
                 System.out.println("listening....");
                 response = ((Request) in.readObject()).handle(this);
                 if(response != null){
                     System.out.println("Sending response to: "+ out.toString());
-                    out.writeObject(response);
-                    out.reset();
+                    synchronized (this) {
+                        out.writeObject(response);
+                        out.reset();
+                        this.notifyAll();
+                    }
                 }
 
             } catch (IOException e) {
@@ -72,26 +66,6 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         }
     }
 
-    @Override
-    public void onPlayerJoined(String username, ArrayList<String> players, int numOfPlayers) throws RemoteException {
-        try {
-            System.out.println("Sending notification to: "+out.toString());
-            out.writeObject(new PlayerEventNotification(numOfPlayers, username,players,PlayerEventType.JOIN));
-            out.reset();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onTimerChanges(long timerStart, TimerStatus timerStatus){
-        try {
-            out.writeObject(new TimerNotification(timerStart, timerStatus));
-            out.reset();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public Response handle(Request request){
         return null;
@@ -174,7 +148,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
+    public synchronized void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
         try {
             out.writeObject(new DicePlacedNotification(dicePlacedMessage));
             out.reset();
@@ -184,7 +158,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
+    public synchronized void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
         try {
             out.writeObject(new PanelChoiceNotification(playerHashCode, panels, panelsAlreadyChosen, color));
             out.reset();
@@ -195,7 +169,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
 
 
     @Override
-    public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
+    public synchronized void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
         try {
             out.writeObject(new GameStartNotification(gameStartMessage));
             out.reset();
@@ -205,7 +179,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+    public synchronized void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
         try {
             out.writeObject(new EndTurnNotification(endTurnMessage));
             out.reset();
@@ -215,7 +189,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+    public synchronized void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
         try {
             out.writeObject(new EndGameNotification(playersScore));
             out.reset();
@@ -223,5 +197,36 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
             e.printStackTrace();
         }
 
+    }
+    @Override
+    public synchronized void onPlayerLeave(String username,ArrayList<String> players, int numOfPlayers) throws RemoteException {
+        try {
+            System.out.println("Sending notification to: "+out.toString());
+            out.writeObject(new PlayerEventNotification(numOfPlayers, username,players,PlayerEventType.LEAVE));
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public synchronized void onPlayerJoined(String username, ArrayList<String> players, int numOfPlayers) throws RemoteException {
+        try {
+            System.out.println("Sending notification to: " + out.toString());
+            out.writeObject(new PlayerEventNotification(numOfPlayers, username,players,PlayerEventType.JOIN));
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public synchronized void onTimerChanges(long timerStart, TimerStatus timerStatus){
+        try {
+            out.writeObject(new TimerNotification(timerStart, timerStatus));
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

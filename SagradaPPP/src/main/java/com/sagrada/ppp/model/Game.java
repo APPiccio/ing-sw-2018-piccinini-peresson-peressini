@@ -459,10 +459,9 @@ public class Game implements Serializable{
         allToolCards.add(new ToolCard11());
         allToolCards.add(new ToolCard12());
 */
-        allToolCards.add(new ToolCard10());
-        allToolCards.add(new ToolCard11());
-        allToolCards.add(new ToolCard12());
-
+        allToolCards.add(new ToolCard7());
+        allToolCards.add(new ToolCard8());
+        allToolCards.add(new ToolCard8());
         for(int i = 0; i < 3 ; i++){
             toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
         }
@@ -593,6 +592,9 @@ public class Game implements Serializable{
         ToolCard toolCard = toolCards.get(toolCardIndex);
         Player player = getPlayerByHashcode(playerHashCode);
         if (toolCard != null && player != null) {
+            if (!players.get(getCurrentPlayerIndex()).equals(player)){
+                return false;
+            }
             if (toolCard.getId() == 5 && roundTrack.getCurrentRound() == 1) {
                 System.out.println("Trying to use tool card number 5 during first round.\nOperation denied.");
                 return false;
@@ -606,9 +608,9 @@ public class Game implements Serializable{
                         "after placing a dice.\nOperation denied.");
                 return false;
             }
-            else if (toolCard.getId() == 8 && turn > players.size()) {
-                System.out.println("Trying to use tool card number 8 during second turn of the round." +
-                        "\nOperation denied.");
+            else if (toolCard.getId() == 8 && (turn > players.size() || dicePlaced)) {
+                System.out.println("Trying to use tool card number 8 during second turn of the round OR " +
+                        "before placing a dice.\nOperation denied.");
                 return false;
             }
             else if (toolCard.getId() == 9 && dicePlaced) {
@@ -665,7 +667,7 @@ public class Game implements Serializable{
                     case 4:
                         System.out.println("Using toolCard4 Dice: " + toolCardParameters.panelDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
                         System.out.println("and Dice: " + toolCardParameters.secondPanelDiceIndex + " in Cell: " + toolCardParameters.secondPanelCellIndex);
-                        if (!toolCard4ParamsOk(player,toolCardParameters)){
+                        if (!toolCard4ParamsOk(new Player(player),toolCardParameters)){
                             usedToolCard = false;
                             return new UseToolCardResult(false, draftPool,roundTrack,players, null);
                         }
@@ -718,7 +720,6 @@ public class Game implements Serializable{
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard9(player,toolCardParameters.panelCellIndex,draftPool.get(toolCardParameters.draftPoolDiceIndex)));
                         draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
-                        isSpecialTurn = true;
                         dicePlaced = true;
                         return new UseToolCardResult(true,draftPool,roundTrack,players, null);
                     case 10:
@@ -735,9 +736,8 @@ public class Game implements Serializable{
                     case 11:
                         System.out.println("Using toolCard 11");
                         Dice draftDice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
-                        draftPool.forEach(System.out::println);
                         draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
-                        draftPool.forEach(System.out::println);
+                        player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard11(diceBag,draftDice));
                         return new UseToolCardResult(true,draftPool,roundTrack,players, draftDice);
                     case 12:
@@ -783,18 +783,18 @@ public class Game implements Serializable{
         if (windowPanel == null) return false;
         Cell cell = windowPanel.getCell(toolCardParameters.panelCellIndex);
         if (cell == null) return false;
+        Cell secondCell = windowPanel.getCell(toolCardParameters.secondPanelCellIndex);
+        if (secondCell == null) return false;
         Cell diceCell = windowPanel.getCell(toolCardParameters.panelDiceIndex);
         if (diceCell == null) return false;
         Dice dice = diceCell.getDiceOn();
         if (dice == null) return false;
-        if (windowPanel.noDiceNear(toolCardParameters.panelCellIndex))return false;
-        if (!windowPanel.diceOkWithRestriction(cell,dice,false,false)) return false;
+        if (!windowPanel.addDice(toolCardParameters.panelCellIndex,dice)) return false;
         Cell secondDiceCell = windowPanel.getCell(toolCardParameters.secondPanelDiceIndex);
         if (secondDiceCell == null) return false;
-        Dice secondDice = diceCell.getDiceOn();
+        Dice secondDice = secondDiceCell.getDiceOn();
         if (secondDice == null) return false;
-        if (windowPanel.noDiceNear(toolCardParameters.secondPanelCellIndex))return false;
-        if (!windowPanel.diceOkWithRestriction(secondDiceCell,secondDice,false,false)) return false;
+        if (!windowPanel.addDice(toolCardParameters.secondPanelCellIndex,secondDice)) return false;
         return true;
     }
 
