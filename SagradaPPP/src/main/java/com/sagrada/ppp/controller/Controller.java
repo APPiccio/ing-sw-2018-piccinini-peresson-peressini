@@ -155,7 +155,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         @Override
         public void run() {
             try {
-
                 view.isToolCardUsable(result);
                 if(result) {
                     switch (toolCardID) {
@@ -362,7 +361,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                             player.setPanel(panel);
                         }
                     }
-                    useToolCardResult.draftpool.remove(toolCardParameters.panelCellIndex);
+                    useToolCardResult.draftpool.remove((int) toolCardParameters.panelCellIndex);
 
                 }
                 else{
@@ -377,7 +376,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             toolCardParameters.reset();
             toolCardParameters.toolCardID = toolCardID;
             view.roundTrackDiceIndexRequired();
-            while (toolCardParameters.draftPoolDiceIndex == null);
+            while (toolCardParameters.roundTrackDiceIndex == null || toolCardParameters.roundTrackRoundIndex == null);
             view.panelDiceIndexRequired();
             while (toolCardParameters.panelDiceIndex == null);
             view.panelCellIndexRequired();
@@ -395,6 +394,4 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         }
 
     }
-
-
-    }
+}

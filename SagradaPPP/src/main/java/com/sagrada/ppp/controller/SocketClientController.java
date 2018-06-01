@@ -709,7 +709,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             toolCardParameters.reset();
             toolCardParameters.toolCardID = toolCardID;
             view.roundTrackDiceIndexRequired();
-            while (toolCardParameters.draftPoolDiceIndex == null);
+            while (toolCardParameters.roundTrackDiceIndex == null || toolCardParameters.roundTrackRoundIndex == null);
             view.panelDiceIndexRequired();
             while (toolCardParameters.panelDiceIndex == null);
             view.panelCellIndexRequired();

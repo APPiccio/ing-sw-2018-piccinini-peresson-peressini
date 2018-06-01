@@ -43,13 +43,13 @@ public class Player implements Serializable {
         this.status = player.status;
         this.username = player.username;
         this.privateColor = player.privateColor;
-        this.panel = player.panel;
+        this.panel = new WindowPanel(player.panel);
         this.activeDice = player.activeDice;
         this.favorTokens = player.favorTokens;
         this.hashCode = player.hashCode;
         this.skipSecondTurn = false;
-
     }
+
     public Player(String username){
         this.status = PlayerStatus.ACTIVE;
         this.panel = null;

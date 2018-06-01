@@ -707,6 +707,7 @@ public class Game implements Serializable{
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard8(toolCardParameters.panelCellIndex, player.getPanel(),
                                 toolCardParameters.draftPoolDiceIndex, draftPool));
+                        isSpecialTurn = true;
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 9:
                         System.out.println("Using toolCard9 Dice: " + toolCardParameters.draftPoolDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
@@ -734,22 +735,16 @@ public class Game implements Serializable{
                     case 11:
                         System.out.println("Using toolCard 11");
                         Dice draftDice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
-                        draftPool.stream().forEach(System.out::println);
-                        ArrayList<Dice> h = new ArrayList<>();
-                        draftPool.stream().filter(x -> draftPool.indexOf(x) != toolCardParameters.draftPoolDiceIndex).forEach(x -> h.add(x));
-                        //draftPool.remove(toolCardParameters.draftPoolDiceIndex);
-                        draftPool = h;
-                        draftPool.stream().forEach(System.out::println);
+                        draftPool.forEach(System.out::println);
+                        draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
+                        draftPool.forEach(System.out::println);
                         toolCard.use(new CommandToolCard11(diceBag,draftDice));
                         return new UseToolCardResult(true,draftPool,roundTrack,players, draftDice);
                     case 12:
                         System.out.println("Using toolCard12 Dice: " + toolCardParameters.panelDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
                         System.out.println("and Dice: " + toolCardParameters.secondPanelDiceIndex + " in Cell: " + toolCardParameters.secondPanelCellIndex);
-                        Cell cell1start = player.getPanel().getCell(toolCardParameters.panelDiceIndex);
-                        Cell cell1end = player.getPanel().getCell(toolCardParameters.panelCellIndex);
-                        Cell cell2start = player.getPanel().getCell(toolCardParameters.secondPanelDiceIndex);
-                        Cell cell2end = player.getPanel().getCell(toolCardParameters.secondPanelCellIndex);
-                        if (!toolCard12ParamsOk(cell1start, cell1end, cell2start, cell2end, toolCardParameters)){
+                        Player playerCopy = new Player(player);
+                        if (!toolCard12ParamsOk(toolCardParameters, playerCopy)){
                             usedToolCard = false;
                             return new UseToolCardResult(false, draftPool,roundTrack,players, null);
                         }
@@ -847,14 +842,30 @@ public class Game implements Serializable{
        return dice != null;
     }
 
-    private boolean toolCard12ParamsOk(Cell cell1start, Cell cell1end, Cell cell2start, Cell cell2end, ToolCardParameters toolCardParameters){
+    private boolean toolCard12ParamsOk(ToolCardParameters toolCardParameters , Player player){
+        Cell cell1start = player.getPanel().getCell(toolCardParameters.panelDiceIndex);
+        Cell cell1end = player.getPanel().getCell(toolCardParameters.panelCellIndex);
         Dice dice = roundTrack.getDice(toolCardParameters.roundTrackRoundIndex, toolCardParameters.roundTrackDiceIndex);
-        if (dice == null) return false;
+        if (dice == null || cell1end == null || cell1start == null) return false;
+        System.out.println("prima print");
         Color color = dice.getColor();
         if((toolCardParameters.secondPanelCellIndex == toolCardParameters.panelCellIndex)||(toolCardParameters.panelCellIndex == toolCardParameters.secondPanelDiceIndex)) return false;
-        if(cell1end == null || cell1start == null || cell2end == null || cell2start == null ) return false;
-        if(!cell1start.hasDiceOn() || cell1end.hasDiceOn()) return false;
-        if (!(cell1start.getDiceOn().getColor().equals(color) && cell2start.getDiceOn().getColor().equals(color))) return false;
+        System.out.println("seconda print");
+        if(!cell1start.hasDiceOn() || cell1end.hasDiceOn() || !cell1start.getDiceOn().getColor().equals(color)) return false;
+        WindowPanel panel = player.getPanel();
+        Dice movingDice1 = panel.removeDice(toolCardParameters.panelDiceIndex);
+        if(!panel.addDice(toolCardParameters.panelCellIndex,movingDice1)) return false;
+        System.out.println(" terza print");
+        if(toolCardParameters.twoDiceAction){
+            Cell cell2start = player.getPanel().getCell(toolCardParameters.secondPanelDiceIndex);
+            Cell cell2end = player.getPanel().getCell(toolCardParameters.secondPanelCellIndex);
+            Dice movingDice2 = panel.removeDice(toolCardParameters.secondPanelDiceIndex);
+            if(!panel.addDice(toolCardParameters.secondPanelCellIndex, movingDice2)) return false;
+            if(cell2end == null || cell2start == null) return false;
+            System.out.println("quarta print");
+            if(!cell2start.hasDiceOn() || cell2end.hasDiceOn() || !cell2start.getDiceOn().getColor().equals(color)) return false;
+        }
+        System.out.println("ultima print");
         return true;
     }
 
