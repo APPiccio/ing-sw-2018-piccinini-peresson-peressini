@@ -8,6 +8,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Random;
 
 public class ToolCardTest {
 
@@ -248,10 +249,18 @@ public class ToolCardTest {
     }*/
 
     @Test
-    public void card6(){
+    public void card6() {
+        Dice olDice = new Dice();
+        Dice newDice = new Dice(olDice);
 
-        //TODO
+        assertNotEquals(olDice.hashCode(), newDice.hashCode());
+        assertEquals(olDice.getColor(), newDice.getColor());
+        assertEquals(olDice.getValue(), newDice.getValue());
 
+        CommandToolCard commandToolCard = new CommandToolCard6(newDice);
+        commandToolCard.useCard();
+
+        assertEquals(olDice.getColor(), newDice.getColor());
     }
 
     @Test
@@ -270,8 +279,7 @@ public class ToolCardTest {
     }
     @Test
     public void card8(){
-
-        //TODO
+        int cellIndex = new Random().nextInt(20);
     }
 
     @Test

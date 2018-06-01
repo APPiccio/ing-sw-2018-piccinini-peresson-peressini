@@ -459,9 +459,9 @@ public class Game implements Serializable{
         allToolCards.add(new ToolCard11());
         allToolCards.add(new ToolCard12());
 */
-        allToolCards.add(new ToolCard7());
-        allToolCards.add(new ToolCard8());
-        allToolCards.add(new ToolCard8());
+        allToolCards.add(new ToolCard1());
+        allToolCards.add(new ToolCard1());
+        allToolCards.add(new ToolCard1());
         for(int i = 0; i < 3 ; i++){
             toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
         }
@@ -608,9 +608,9 @@ public class Game implements Serializable{
                         "after placing a dice.\nOperation denied.");
                 return false;
             }
-            else if (toolCard.getId() == 8 && turn > players.size()) {
-                System.out.println("Trying to use tool card number 8 during second turn of the round." +
-                        "\nOperation denied.");
+            else if (toolCard.getId() == 8 && (turn > players.size() || dicePlaced)) {
+                System.out.println("Trying to use tool card number 8 during second turn of the round OR " +
+                        "before placing a dice.\nOperation denied.");
                 return false;
             }
             else if (toolCard.getId() == 9 && dicePlaced) {
@@ -709,6 +709,7 @@ public class Game implements Serializable{
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard8(toolCardParameters.panelCellIndex, player.getPanel(),
                                 toolCardParameters.draftPoolDiceIndex, draftPool));
+                        isSpecialTurn = true;
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 9:
                         System.out.println("Using toolCard9 Dice: " + toolCardParameters.draftPoolDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
