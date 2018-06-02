@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
-
 public class MainGamePane extends UnicastRemoteObject implements GameObserver, WindowPanelEventBus, ToolCardHandler {
 
     private RoundTrack roundTrack;
@@ -71,7 +70,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     private boolean parameterAquired;
     private volatile  ToolCardFlags toolCardFlags;
     private boolean isToolCardUsed;
-    private int sign;
     private static final String ACTION_REQUIRED = "Action required";
 
     public MainGamePane() throws RemoteException  {
@@ -105,7 +103,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     }
 
-    public void draw(){
+    private void draw(){
 
         Label toolCardsTitle = new Label("Tool Cards");
         Label publicObjectiveCardsTitle = new Label("Public Objective Cards");
@@ -124,7 +122,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         skipButton.addEventHandler(MouseEvent.MOUSE_CLICKED,skipButtonEventHandler);
         VBox.setMargin(skipButton,defInset);
         skipButton.setAlignment(Pos.CENTER);
-
 
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHgrow(Priority.ALWAYS);
@@ -146,8 +143,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         HBox.setMargin(privateCardImageView,defInset);
         HBox.setHgrow(privateCardImageView,Priority.ALWAYS);
         privateCardImageView.setImage(new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_"+privateColor.toString().toLowerCase()+".png",150,204,true,true));
-
-
 
         HBox.setMargin(gameStatus,defInset);
         bottomContainer.setAlignment(Pos.CENTER);
@@ -196,7 +191,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         drawWindowPanels();
         opponentsWindowPanelsPane.setPadding(defInset);
 
-
         //setting up all tabs
         gameTab.setContent(mainGamePane);
         gameTab.setText("Game Tab");
@@ -226,7 +220,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     }
 
-    public void init(com.sagrada.ppp.model.Color privateColor, JoinGameResult joinGameResult, GameStartMessage gameStartMessage, RemoteController controller, Stage stage) {
+    void init(com.sagrada.ppp.model.Color privateColor, JoinGameResult joinGameResult, GameStartMessage gameStartMessage, RemoteController controller, Stage stage) {
         this.controller = controller;
         this.stage = stage;
         this.privateColor = privateColor;
@@ -517,7 +511,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     @Override
     public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
-       Platform.runLater(()->{
+       Platform.runLater(() -> {
             isToolCardUsed = false;
             roundTrack = endTurnMessage.roundTrack;
             roundTrackPane.setRoundTrack(roundTrack);
@@ -558,7 +552,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     @Override
     public void isToolCardUsable(boolean result) throws RemoteException {
-        Platform.runLater(() ->{
+        Platform.runLater(() -> {
           if(!result){
               Alert alert = new Alert(Alert.AlertType.ERROR,"ToolCard currently not usable");
               alert.setHeaderText("ERROR");
@@ -580,7 +574,9 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
                     diceButton.setScaleY(1);
                 }
             }
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select a dice from DraftPool");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select a dice from draft pool!");
+            alert.setTitle(ACTION_REQUIRED);
+            alert.setHeaderText(null);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.initOwner(stage);
             alert.showAndWait();
@@ -588,12 +584,11 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
             toolCardFlags.isDraftPoolDiceRequired = true;
 
         });
-
     }
 
     @Override
     public void panelDiceIndexRequired() throws RemoteException {
-        Platform.runLater(()-> {
+        Platform.runLater(() -> {
             for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(true);
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select a dice from your Panel");
             alert.initModality(Modality.APPLICATION_MODAL);
@@ -621,6 +616,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     @Override
     public void actionSignRequired() throws RemoteException {
         Platform.runLater(() -> {
+            toolCardFlags.reset();
             ArrayList<String> choices = new ArrayList<>();
             choices.add("Increase the value by 1!");
             choices.add("Decrease the value by 1!");
@@ -630,24 +626,25 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
             dialog.setContentText("Chose your action: ");
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(stage);
-            dialog.getDialogPane().lookupButton(ButtonType.CANCEL).setDisable(true);
             Optional<String> result = dialog.showAndWait();
-            result.ifPresent(input -> {
-                if (input.equals(choices.get(0))) {
+            if (result.isPresent()) {
+                int sign;
+                if (result.get().equals(choices.get(0))) {
                     sign = 1;
                 }
                 else {
                     sign = -1;
                 }
-            });
-            try {
-                controller.setActionSign(joinGameResult.getPlayerHashCode(), sign);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+                try {
+                    controller.setActionSign(joinGameResult.getPlayerHashCode(), sign);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
-            toolCardFlags.reset();
-            toolCardFlags.isActionSignRequired = true;
-
+            else {
+                isToolCardUsed = false;
+                toolCardFlags.reset();
+            }
         });
     }
 
@@ -711,7 +708,30 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     @Override
     public void diceValueRequired(com.sagrada.ppp.model.Color color) throws RemoteException {
-
+        Platform.runLater(() -> {
+            ArrayList<Integer> choices = new ArrayList<>();
+            for (int i = 1; i <= 6; i++) {
+                choices.add(i);
+            }
+            ChoiceDialog<Integer> dialog = new ChoiceDialog<>(choices.get(0), choices);
+            dialog.setTitle(ACTION_REQUIRED);
+            dialog.setHeaderText(null);
+            dialog.setContentText("You have drafted a " + color.toString().toUpperCase() + " dice!\n" + "Now chose the value!");
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(stage);
+            Optional<Integer> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                try {
+                    controller.setDiceValue(joinGameResult.getPlayerHashCode(), result.get());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                isToolCardUsed = false;
+                toolCardFlags.reset();
+            }
+        });
     }
 
     @Override
