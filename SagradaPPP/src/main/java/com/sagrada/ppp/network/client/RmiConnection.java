@@ -12,7 +12,7 @@ public class RmiConnection implements ConnectionMode {
     @Override
     public RemoteController getController() {
         try {
-            RemoteController controller = (RemoteController) Naming.lookup(StaticValues.REGISTRY_NAME);
+            RemoteController controller = (RemoteController) Naming.lookup("//" + StaticValues.SERVER_ADDRESS + "/" +StaticValues.REGISTRY_NAME);
             System.out.println("--> Connected!");
             return controller;
         } catch (Exception e) {
