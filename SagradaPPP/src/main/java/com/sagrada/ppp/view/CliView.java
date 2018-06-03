@@ -513,8 +513,14 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                                 isToolCardUsableFlag = false;
                                 //special action on toolcard 11
                                 if(useToolCardResult.result){
-                                    System.out.println("Tool card used successfully! This is the update game status:");
-                                    showGameStatus();
+                                    if(useToolCardResult.msg != null){
+                                        System.out.println(useToolCardResult.msg);
+                                        showGameStatus();
+                                    }
+                                    else {
+                                        System.out.println("Tool card used successfully! This is the update game status:");
+                                        showGameStatus();
+                                    }
                                 }
                                 else {
                                     System.out.println("Unable to use tool card. Game status unchanged");
@@ -703,7 +709,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     }
 
     private void showPlayerStatus(Player player){
-        if(player.getUsername() == username){
+        if(player.getUsername().equals(username)){
             System.out.println("Your's status:");
         }
         else {

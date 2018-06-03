@@ -5,10 +5,7 @@ import com.sagrada.ppp.model.RoundTrack;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -20,6 +17,12 @@ public class RoundTrackPane extends BorderPane {
     private RoundTrack roundTrack;
     private GridPane mainPane;
     private double width,height;
+    private GuiEventBus eventBus;
+
+    public void setObserver(GuiEventBus eventBus){
+        this.eventBus = eventBus;
+    }
+
     public RoundTrackPane(){
         height = 70;
         width = 70;
@@ -58,22 +61,22 @@ public class RoundTrackPane extends BorderPane {
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundPosition.CENTER,
                                     BackgroundSize.DEFAULT)));
-
-
-            roundIndicator.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setGraphic(new SelectDicePane(roundTrack.getDicesOnRound(((RoundButton) event.getSource()).round),70,70));
-                alert.show();
-            });
-
-            if (i > roundTrack.getCurrentRound()) {
+            if (i >= roundTrack.getCurrentRound()) {
                 roundIndicator.setDisable(true);
+            }
+            else {
+                final int uselessIndex = i;
+                roundIndicator.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    DialogPane dialogPane = new DialogPane();
+                    dialogPane.setContent(new SelectDicePane(roundTrack.getDicesOnRound(((RoundButton) event.getSource()).round),70,70, eventBus, uselessIndex, alert));
+                    alert.setDialogPane(dialogPane);
+                    alert.show();
+                });
                 Tooltip roundToolTip = new Tooltip();
-                roundToolTip.setGraphic(new SelectDicePane(roundTrack.getDicesOnRound(i),width/1.5,height/1.5));
+                roundToolTip.setGraphic(new SelectDicePane(roundTrack.getDicesOnRound(i),width/1.5,height/1.5, eventBus, i, null));
                 roundIndicator.setTooltip(roundToolTip);
             }
-
-
             mainPane.add(roundIndicator,(i-1)%5,(i-1)/5);
             Label title = new Label("RoundTrack");
             title.setTextFill(Color.WHITE);

@@ -25,13 +25,14 @@ public class StaticValues {
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
-    public static int lobbyTimer = 30000;
+    public static int lobbyTimer = 0;
 
     //Connection static value
     public static final int RMI_PORT = 1099;
     public static final String REGISTRY_NAME = "SagradaRegistry";
     public static final int SOCKET_PORT = 1996;
-    public static final String SERVER_ADDRESS = "192.168.43.56";
+    public static final String SERVER_ADDRESS = "localhost";
+    //public static final String SERVER_ADDRESS = "192.168.43.56";
 
     //Tool Card names
     public static final String TOOLCARD1_NAME = "Grozing Pliers";

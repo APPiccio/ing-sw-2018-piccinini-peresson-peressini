@@ -361,12 +361,15 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                             player.setPanel(panel);
                         }
                     }
-                    useToolCardResult.draftpool.remove((int) toolCardParameters.panelCellIndex);
+                    //comment this line because of rmi's unicast behaviour. The server update on draftpool has been
+                    //automatically notified to the view by RMI
+                    //useToolCardResult.draftpool.remove((int) toolCardParameters.panelCellIndex);
 
                 }
                 else{
                     service.putDiceInDraftPool(gameHashCode, dice);
                     useToolCardResult.result = false;
+                    useToolCardResult.msg = "No placement allowed due to game rules. The dice has been put back in the draft pool";
                 }
                 view.notifyUsageCompleted(useToolCardResult);
             }

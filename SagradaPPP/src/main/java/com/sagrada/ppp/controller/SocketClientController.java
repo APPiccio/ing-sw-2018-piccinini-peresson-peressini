@@ -696,6 +696,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                         e.printStackTrace();
                     }
                     useToolCardResult.result = false;
+                    useToolCardResult.msg = "No placement allowed due to game rules. The dice has been put back in the draft pool";
                 }
                 view.notifyUsageCompleted(useToolCardResult);
             }

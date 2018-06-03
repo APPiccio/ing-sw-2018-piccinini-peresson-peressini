@@ -11,7 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 
 import static com.sagrada.ppp.utils.StaticValues.*;
@@ -19,7 +18,7 @@ import static com.sagrada.ppp.utils.StaticValues.*;
 public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent> {
     private WindowPanel panel;
     private Label name,tokens;
-    private WindowPanelEventBus eventBus;
+    private GuiEventBus eventBus;
     private double width,height;
     private final static boolean drawVectorCells = true;
 
@@ -85,8 +84,8 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         this.panel = panel;
         draw();
     }
-    public void setObserver(WindowPanelEventBus windowPanelEventBus){
-        this.eventBus = windowPanelEventBus;
+    public void setObserver(GuiEventBus guiEventBus){
+        this.eventBus = guiEventBus;
     }
 
     /**

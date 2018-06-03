@@ -30,11 +30,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
-public class MainGamePane extends UnicastRemoteObject implements GameObserver, WindowPanelEventBus, ToolCardHandler {
+public class MainGamePane extends UnicastRemoteObject implements GameObserver, GuiEventBus, ToolCardHandler {
 
     private RoundTrack roundTrack;
-    private double height,widht = 100d;
-
     private GridPane mainGamePane;
     private VBox opponentsWindowPanelsPane;
     private HBox bottomContainer;
@@ -86,6 +84,9 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         opponentsWindowPanelsPane = new VBox();
         bottomContainer = new HBox();
         roundTrackPane = new RoundTrackPane();
+        //gni gni
+        roundTrackPane.setObserver(this);
+        //gne gne
         centerContainer = new FlowPane();
         draftPoolContainer = new VBox();
         draftPoolPane = new FlowPane();
@@ -104,6 +105,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
     }
 
     private void draw(){
+
 
         Label toolCardsTitle = new Label("Tool Cards");
         Label publicObjectiveCardsTitle = new Label("Public Objective Cards");
@@ -765,7 +767,19 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
 
     @Override
     public void roundTrackDiceIndexRequired() throws RemoteException {
-
+        //TODO here we are supposed to be in a round from 2 to 10
+        Platform.runLater(() -> {
+            toolCardFlags.reset();
+            for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(true);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(ACTION_REQUIRED);
+            alert.setHeaderText("Round dice selection");
+            alert.setContentText("Select a dice from Round Track");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
+            alert.showAndWait();
+            toolCardFlags.isRoundTrackDiceRequired = true;
+        });
     }
 
     @Override
@@ -783,4 +797,15 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, W
         });
     }
 
+    @Override
+    public void onRoundTrackDiceClicked(int diceIndex, int roundIndex) {
+        if(toolCardFlags.isRoundTrackDiceRequired) {
+            try {
+                toolCardFlags.isRoundTrackDiceRequired = false;
+                controller.setRoundTrackDiceIndex(joinGameResult.getPlayerHashCode(), diceIndex, roundIndex);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
