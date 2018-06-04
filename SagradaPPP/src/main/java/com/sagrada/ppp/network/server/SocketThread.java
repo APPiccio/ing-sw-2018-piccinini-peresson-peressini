@@ -158,6 +158,17 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
+    public synchronized void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
+        System.out.println();
+        try {
+            out.writeObject(new UsedToolCardNotification(toolCardUsedMessage));
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public synchronized void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
         try {
             out.writeObject(new PanelChoiceNotification(playerHashCode, panels, panelsAlreadyChosen, color));

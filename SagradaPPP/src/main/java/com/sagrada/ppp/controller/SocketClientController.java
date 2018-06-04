@@ -262,6 +262,17 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     @Override
+    public void handle(UsedToolCardNotification usedToolCardNotification) {
+        for(GameObserver gameObserver : gameObservers){
+            try {
+                gameObserver.onToolCardUsed(usedToolCardNotification.toolCardNotificationMessage);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public void handle(EndTurnNotification response) {
         for(GameObserver observer : gameObservers){
             try {

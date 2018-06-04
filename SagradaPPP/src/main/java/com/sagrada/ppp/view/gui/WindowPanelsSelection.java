@@ -140,6 +140,11 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
     }
 
     @Override
+    public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
+        //do nothing here
+    }
+
+    @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels,
                               HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
 
