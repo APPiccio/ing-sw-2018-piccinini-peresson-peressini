@@ -3,6 +3,7 @@ package com.sagrada.ppp.model;
 import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.utils.StaticValues;
+import com.sun.jdi.ObjectReference;
 import javafx.util.Pair;
 
 import java.io.Serializable;
@@ -643,16 +644,20 @@ public class Game implements Serializable{
                         //Building command
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard1(draftPool.get(toolCardParameters.draftPoolDiceIndex), toolCardParameters.actionSign));
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
+                        notifyAll();
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 2:
                         System.out.println("Using toolCard2 Dice: " + toolCardParameters.panelDiceIndex + " Cell: " + toolCardParameters.panelCellIndex);
                         if (!toolCard2ParamsOk(player,toolCardParameters)){
                             usedToolCard = false;
+                            notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                             return new UseToolCardResult(false, draftPool,roundTrack,players, null);
                         }
                         //Building command
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard2(new Pair<>(toolCardParameters.panelDiceIndex,toolCardParameters.panelCellIndex),player.getPanel()));
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 3:
                         System.out.println("Using toolCard3 Dice: " + toolCardParameters.panelDiceIndex + " Cell: " + toolCardParameters.panelCellIndex);
@@ -663,6 +668,7 @@ public class Game implements Serializable{
                         //Building command
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard3(new Pair<>(toolCardParameters.panelDiceIndex,toolCardParameters.panelCellIndex),player.getPanel()));
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 4:
                         System.out.println("Using toolCard4 Dice: " + toolCardParameters.panelDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
@@ -677,6 +683,7 @@ public class Game implements Serializable{
                         linkedHashMap.put(toolCardParameters.secondPanelDiceIndex,toolCardParameters.secondPanelCellIndex);
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard4(linkedHashMap,player.getPanel()));
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
 
                     case 5:
@@ -690,6 +697,7 @@ public class Game implements Serializable{
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard5(draftPoolDice, roundTrack,
                                 toolCardParameters.roundTrackRoundIndex, toolCardParameters.roundTrackDiceIndex));
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 6:
                         System.out.println("Using toolCard6");
@@ -697,11 +705,13 @@ public class Game implements Serializable{
                         draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard6(reRoll));
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                         return new UseToolCardResult(true,draftPool,roundTrack,players, reRoll);
                     case 7:
                         System.out.println("Using toolCard7: re-rolling draft pool dices");
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard7(draftPool));
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 8:
                         System.out.println("Using toolCard8");
@@ -710,6 +720,7 @@ public class Game implements Serializable{
                         toolCard.use(new CommandToolCard8(toolCardParameters.panelCellIndex, player.getPanel(),
                                 toolCardParameters.draftPoolDiceIndex, draftPool));
                         isSpecialTurn = true;
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 9:
                         System.out.println("Using toolCard9 Dice: " + toolCardParameters.draftPoolDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
@@ -721,6 +732,7 @@ public class Game implements Serializable{
                         toolCard.use(new CommandToolCard9(player,toolCardParameters.panelCellIndex,draftPool.get(toolCardParameters.draftPoolDiceIndex)));
                         draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
                         dicePlaced = true;
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                         return new UseToolCardResult(true,draftPool,roundTrack,players, null);
                     case 10:
                         Dice dice = new Dice(draftPool.get(toolCardParameters.draftPoolDiceIndex));
@@ -732,6 +744,7 @@ public class Game implements Serializable{
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard10(dice));
                         draftPool.set(toolCardParameters.draftPoolDiceIndex, dice);
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 11:
                         System.out.println("Using toolCard 11");
@@ -739,6 +752,7 @@ public class Game implements Serializable{
                         draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard11(diceBag,draftDice));
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                         return new UseToolCardResult(true,draftPool,roundTrack,players, draftDice);
                     case 12:
                         System.out.println("Using toolCard12 Dice: " + toolCardParameters.panelDiceIndex + " in Cell: " + toolCardParameters.panelCellIndex);
@@ -757,6 +771,7 @@ public class Game implements Serializable{
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                         toolCard.use(new CommandToolCard12(positions, panel));
                         player.setPanel(panel);
+                        notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     default:
                         break;
@@ -889,6 +904,18 @@ public class Game implements Serializable{
     public void putDiceInDraftPool(Dice dice){
         draftPool.add(dice);
     }
+
+    private void notifyUsedToolCard(int toolCardID, Player player, ArrayList<Dice> draftPool, RoundTrack roundTrack){
+        ToolCardNotificationMessage toolCardNotificationMessage = new ToolCardNotificationMessage(toolCardID, player, draftPool, roundTrack);
+        for(GameObserver gameObserver : gameObservers){
+            try {
+                gameObserver.onToolCardUsed(toolCardNotificationMessage);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     private class MyTimerTask extends TimerTask{
 

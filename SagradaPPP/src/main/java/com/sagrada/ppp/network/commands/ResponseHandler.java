@@ -18,4 +18,5 @@ public interface ResponseHandler {
     void handle(UseToolCardResponse response);
     void handle(GetLegalPositionResponse response);
     void handle(SpecialDicePlacementResponse response);
+    void handle(UsedToolCardNotification usedToolCardNotification);
 }

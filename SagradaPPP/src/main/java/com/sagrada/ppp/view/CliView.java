@@ -679,6 +679,26 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     }
 
     @Override
+    public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
+        //If it's my toolcard notification, discard it. you arleady know what you have done
+        if(toolCardUsedMessage.player.getHashCode() == hashCode) return;
+        this.draftPool = toolCardUsedMessage.draftPool;
+        this.roundTrack = toolCardUsedMessage.roundTrack;
+        //updating toolcard cost
+        for(ToolCard toolCard : toolCards){
+            if(toolCard.getId() == toolCardUsedMessage.toolCardID){
+                toolCard.setUsed();
+            }
+        }
+        //updating players stuff
+        for(Player x : players){
+            if (x.getHashCode() == toolCardUsedMessage.player.getHashCode()) players.set(players.indexOf(x),toolCardUsedMessage.player);
+        }
+        System.out.println(toolCardUsedMessage.player.getUsername() + " has used toolcard #" + toolCardUsedMessage.toolCardID + ", updating game status:");
+        showGameStatus();
+    }
+
+    @Override
     public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
         placedDice = false;
         usedToolCard = false;

@@ -391,9 +391,14 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String,
-            WindowPanel> panelsAlreadyChosen, com.sagrada.ppp.model.Color playerPrivateColor) throws RemoteException {
+    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels,
+                              HashMap<String,WindowPanel> panelsAlreadyChosen, com.sagrada.ppp.model.Color playerPrivateColor) throws RemoteException {
             //Do nothing here
+    }
+
+    @Override
+    public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
+        //TODO implements this notification in GUI
     }
 
     @Override
