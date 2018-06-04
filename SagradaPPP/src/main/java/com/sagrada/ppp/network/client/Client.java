@@ -1,17 +1,10 @@
 package com.sagrada.ppp.network.client;
 
-import com.sagrada.ppp.controller.Controller;
 import com.sagrada.ppp.controller.RemoteController;
-import com.sagrada.ppp.network.client.ConnectionHandler;
-import com.sagrada.ppp.network.client.ConnectionMode;
-import com.sagrada.ppp.network.client.ConnectionModeEnum;
 import com.sagrada.ppp.view.CliView;
 import com.sagrada.ppp.view.gui.GuiView;
 import javafx.application.Application;
-import javafx.stage.Stage;
-
 import java.rmi.RemoteException;
-import java.sql.Connection;
 import java.util.Scanner;
 
 /**
