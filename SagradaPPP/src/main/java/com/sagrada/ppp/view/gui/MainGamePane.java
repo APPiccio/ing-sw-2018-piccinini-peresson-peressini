@@ -32,6 +32,9 @@ import java.util.Optional;
 
 public class MainGamePane extends UnicastRemoteObject implements GameObserver, GuiEventBus, ToolCardHandler {
 
+
+    //TODO add toolcard cost to GUI and keep it up to date after usezzz
+
     private RoundTrack roundTrack;
     private GridPane mainGamePane;
     private VBox opponentsWindowPanelsPane;
@@ -398,7 +401,23 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
 
     @Override
     public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
-        //TODO implements this notification in GUI
+        Platform.runLater(()->{
+
+            if(!toolCardUsedMessage.player.getUsername().equals(joinGameResult.getUsername())) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, toolCardUsedMessage.player.getUsername() + " has used toolcard #" + toolCardUsedMessage.toolCardID);
+                alert.setTitle("ToolCard notification");
+                alert.setHeaderText(null);
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.initOwner(stage);
+                alert.show();
+                draftPool = toolCardUsedMessage.draftPool;
+                players.stream().filter(x -> x.getUsername().equals(toolCardUsedMessage.player.getUsername()))
+                        .findFirst().orElse(null).setPanel(toolCardUsedMessage.player.getPanel());
+                drawDraftPool();
+                drawWindowPanels();
+                roundTrackPane.setRoundTrack(toolCardUsedMessage.roundTrack);
+            }
+        });
     }
 
     @Override
