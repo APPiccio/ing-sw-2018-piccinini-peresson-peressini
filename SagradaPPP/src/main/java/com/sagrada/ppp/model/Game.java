@@ -132,24 +132,26 @@ public class Game implements Serializable{
                     currentTimerTask.isValid = false;
                     continue;
                 }
-
                 while (!endTurn && !(dicePlaced && usedToolCard && !isSpecialTurn) && !turnTimeout){
                     //wait for user action
                 }
 
-                //handling timer
-                if (dicePlaced && usedToolCard) {
-                    currentTimerTask.isValid = false;
-                }
+                synchronized (this) {
+                    //handling timer
+                    if (dicePlaced && usedToolCard) {
+                        currentTimerTask.isValid = false;
+                    }
 
-                System.out.println("END TURN = " + j + ", ROUND = " + i);
-                System.out.println("turn ended by user = " + endTurn);
-                System.out.println("dice placed = " + dicePlaced);
-                System.out.println("used toolCard = " + usedToolCard);
-                System.out.println("is special turn = " + isSpecialTurn);
-                System.out.println("turn timeout " + turnTimeout);
-                toNextTurn();
-                if(j != players.size()*2) notifyEndTurn(justPlayedPlayer , players.get(getCurrentPlayerIndex()));
+                    System.out.println("END TURN = " + j + ", ROUND = " + i);
+                    System.out.println("turn ended by user = " + endTurn);
+                    System.out.println("dice placed = " + dicePlaced);
+                    System.out.println("used toolCard = " + usedToolCard);
+                    System.out.println("is special turn = " + isSpecialTurn);
+                    System.out.println("turn timeout " + turnTimeout);
+                    toNextTurn();
+
+                    if (j != players.size() * 2) notifyEndTurn(justPlayedPlayer, players.get(getCurrentPlayerIndex()));
+                }
             }
             toNextRound();
             setTurn(1);
@@ -460,9 +462,9 @@ public class Game implements Serializable{
         allToolCards.add(new ToolCard11());
         allToolCards.add(new ToolCard12());
 */
-        allToolCards.add(new ToolCard10());
-        allToolCards.add(new ToolCard11());
-        allToolCards.add(new ToolCard12());
+        allToolCards.add(new ToolCard4());
+        allToolCards.add(new ToolCard3());
+        allToolCards.add(new ToolCard2());
         for(int i = 0; i < 3 ; i++){
             toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
         }
@@ -649,7 +651,7 @@ public class Game implements Serializable{
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 2:
                         System.out.println("Using toolCard2 Dice: " + toolCardParameters.panelDiceIndex + " Cell: " + toolCardParameters.panelCellIndex);
-                        if (!toolCard2ParamsOk(player,toolCardParameters)){
+                        if (!toolCard2ParamsOk(new Player(player),toolCardParameters)){
                             usedToolCard = false;
                             notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack);
                             return new UseToolCardResult(false, draftPool,roundTrack,players, null);
@@ -661,7 +663,7 @@ public class Game implements Serializable{
                         return new UseToolCardResult(true, draftPool, roundTrack, players, null);
                     case 3:
                         System.out.println("Using toolCard3 Dice: " + toolCardParameters.panelDiceIndex + " Cell: " + toolCardParameters.panelCellIndex);
-                        if (!toolCard3ParamsOk(player,toolCardParameters)){
+                        if (!toolCard3ParamsOk(new Player(player),toolCardParameters)){
                             usedToolCard = false;
                             return new UseToolCardResult(false, draftPool,roundTrack,players, null);
                         }
@@ -804,11 +806,13 @@ public class Game implements Serializable{
         if (diceCell == null) return false;
         Dice dice = diceCell.getDiceOn();
         if (dice == null) return false;
+        windowPanel.removeDice(toolCardParameters.panelDiceIndex);
         if (!windowPanel.addDice(toolCardParameters.panelCellIndex,dice)) return false;
         Cell secondDiceCell = windowPanel.getCell(toolCardParameters.secondPanelDiceIndex);
         if (secondDiceCell == null) return false;
         Dice secondDice = secondDiceCell.getDiceOn();
         if (secondDice == null) return false;
+        windowPanel.removeDice(toolCardParameters.secondPanelDiceIndex);
         if (!windowPanel.addDice(toolCardParameters.secondPanelCellIndex,secondDice)) return false;
         return true;
     }
@@ -822,8 +826,8 @@ public class Game implements Serializable{
         if (diceCell == null) return false;
         Dice dice = diceCell.getDiceOn();
         if (dice == null) return false;
-        if (windowPanel.noDiceNear(toolCardParameters.panelCellIndex))return false;
-        if (!player.getPanel().diceOkWithRestriction(cell,dice,false,true)) return false;
+        windowPanel.removeDice(toolCardParameters.panelDiceIndex);
+        if (!player.getPanel().diceOk(dice,toolCardParameters.panelCellIndex,false,true,false)) return false;
         return true;
     }
 
@@ -844,8 +848,9 @@ public class Game implements Serializable{
         if (diceCell == null) return false;
         Dice dice = diceCell.getDiceOn();
         if (dice == null) return false;
-        if (windowPanel.noDiceNear(toolCardParameters.panelCellIndex))return false;
-        if (!player.getPanel().diceOkWithRestriction(cell,dice,true,false)) return false;
+        windowPanel.removeDice(toolCardParameters.panelDiceIndex);
+
+        if (!player.getPanel().diceOk(dice,toolCardParameters.panelCellIndex,true,false,false)) return false;
         return true;
     }
 

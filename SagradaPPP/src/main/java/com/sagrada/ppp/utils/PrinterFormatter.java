@@ -21,7 +21,7 @@ public class PrinterFormatter {
     private static final char BOTTOM_RIGHT = (int) '┘';
     private static final char BOTTOM_CENTER = (int) '┴';
     private static final char BOTTOM_LEFT = (int) '└';
-    private static final String HORIZONTAL = "─────────";
+    private static final String HORIZONTAL = "──────────";
     private static final char VERTICAL = (int) '│';
 
 
@@ -34,7 +34,7 @@ public class PrinterFormatter {
             final String top = BLACK_BOLD_BRIGHT + TOP_LEFT + "%1$9s" + TOP_CENTER + "%2$9s"+ TOP_CENTER + "%3$9s" + TOP_CENTER + "%4$9s" + TOP_CENTER + "%5$9s"+TOP_RIGHT+ RESET +"\n";
             final String mid = BLACK_BOLD_BRIGHT + MID_LEFT + "%1$9s" + MID_CENTER + "%2$9s"+ MID_CENTER + "%3$9s" + MID_CENTER + "%4$9s" + MID_CENTER + "%5$9s"+MID_RIGHT+ RESET +"\n";
             final String bottom = BLACK_BOLD_BRIGHT + BOTTOM_LEFT + "%1$9s" + BOTTOM_CENTER + "%2$9s"+ BOTTOM_CENTER + "%3$9s" + BOTTOM_CENTER + "%4$9s" + BOTTOM_CENTER + "%5$9s"+ BOTTOM_RIGHT+RESET +"\n";
-            final String format = verticalDivider+"%1$20s"+verticalDivider+"%2$20s"+verticalDivider+"%3$20s"+verticalDivider+"%4$20s"+verticalDivider+"%5$20s"+verticalDivider+"\n";
+            final String format = verticalDivider+"%1$9s"+verticalDivider+"%2$9s"+verticalDivider+"%3$9s"+verticalDivider+"%4$9s"+verticalDivider+"%5$9s"+verticalDivider+"\n";
 
             //insert title
             result.append("Panel Name: ");
@@ -64,18 +64,18 @@ public class PrinterFormatter {
             for (Cell c:cells) {
                 if(c.hasDiceOn()){
                     Dice d = c.getDiceOn();
-                    rowValue[i] = center(getColoredString(d.getColor(),"" + d.getValue()),20,' ',true);
-                    rowColor[i] = center(getColoredString(d.getColor(),d.getColor().toString()),20,' ',true);
+                    rowValue[i] = getColoredString(d.getColor(),center(" " + d.getValue(),9,' ',true));
+                    rowColor[i] = getColoredString(d.getColor(),center(d.getColor().toString(),9,' ',true));
                 }else if(c.hasColorRestriction()){
                     rowValue[i] =getColoredBkgrnd(c.getColor(),center(c.getColor().toString(),9,' ',true));
                     rowColor[i] = getColoredBkgrnd(c.getColor(),center("CELL",9,' ',true));
                 }else if(c.hasValueRestriction()){
-                    rowValue[i] = center(WHITE_UNDERLINED + c.getValue() + RESET,20, ' ',true);
-                    rowColor[i] = center(WHITE_UNDERLINED + "CELL" + RESET,20, ' ',true);
+                    rowValue[i] = WHITE_BOLD_BRIGHT + center(Integer.toString(c.getValue()),9, ' ',true) + RESET;
+                    rowColor[i] = WHITE_BOLD_BRIGHT +center( "CELL" ,9, ' ',true)+ RESET;
                 }else {
 
-                    rowValue[i] = center(WHITE_UNDERLINED + "BLANK" + RESET,20, ' ',true);
-                    rowColor[i] = center(WHITE_UNDERLINED + "CELL" + RESET,20, ' ',true);
+                    rowValue[i] = WHITE_BACKGROUND_BRIGHT + center("BLANK" ,9, ' ',true)+ RESET;
+                    rowColor[i] = WHITE_BACKGROUND_BRIGHT + center("CELL" ,9, ' ',true)+ RESET;
 
                 }
                 if(i < PATTERN_COL - 1) i++;
@@ -99,15 +99,15 @@ public class PrinterFormatter {
     private static String getColoredString(Color color, String msg){
         switch (color){
             case GREEN:
-                return GREEN_BOLD + msg + RESET;
+                return GREEN_BOLD_BRIGHT + msg + RESET;
             case RED:
-                return RED_BOLD + msg + RESET;
+                return RED_BOLD_BRIGHT + msg + RESET;
             case BLUE:
-                return BLUE_BOLD + msg + RESET;
+                return BLUE_BOLD_BRIGHT + msg + RESET;
             case YELLOW:
-                return YELLOW_BOLD + msg + RESET;
+                return YELLOW_BOLD_BRIGHT + msg + RESET;
             case PURPLE:
-                return PURPLE_BOLD + msg + RESET;
+                return PURPLE_BOLD_BRIGHT + msg + RESET;
                 default:
                     return RESET;
         }

@@ -23,7 +23,7 @@ public class ToolCardTest {
         card6();
         card7();
         card8();
-        card9();
+        //card9();
         card10();
         card11();
         card12();
@@ -302,7 +302,6 @@ public class ToolCardTest {
 
        // commandToolCard9.useCard();
 
-        assertEquals(player.getPanel().getCell(index).getDiceOn(),dice);
 
 
 
