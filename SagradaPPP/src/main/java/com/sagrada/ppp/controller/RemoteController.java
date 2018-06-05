@@ -16,9 +16,9 @@ public interface RemoteController extends Remote {
 
     JoinGameResult joinGame(String username, LobbyObserver lobbyObserver) throws RemoteException;
 
-    void attachGameObserver(int gameHashCode, GameObserver gameObserver) throws RemoteException;
+    void attachGameObserver(int gameHashCode, GameObserver gameObserver, int playerHashCode) throws RemoteException;
 
-    void detachGameObserver(int gameHashCode, GameObserver gameObserver) throws RemoteException;
+    void detachAllGameObserver(int gameHashCode, int playerHashCode) throws RemoteException;
 
     String getUsername(int playerHashCode, int gameHashCode) throws RemoteException;
     //TODO remove this
@@ -26,7 +26,7 @@ public interface RemoteController extends Remote {
 
     void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) throws RemoteException;
 
-    boolean disconnect(int gameHashCode, int playerHashCode, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException;
+    boolean disconnect(int gameHashCode, int playerHashCode) throws RemoteException;
 
     PlaceDiceResult placeDice(int gameHashCode, int playerHashCode, int diceIndex, int row, int col) throws RemoteException;
 

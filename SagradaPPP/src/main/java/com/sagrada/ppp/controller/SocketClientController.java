@@ -4,7 +4,6 @@ import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.view.ToolCardHandler;
-
 import java.io.*;
 import java.net.Socket;
 import java.rmi.RemoteException;
@@ -16,7 +15,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     private transient Socket socket;
     private transient ObjectOutputStream out;
     private transient ObjectInputStream in;
-    private transient ArrayList<LobbyObserver> lobbyObservers;
+    private transient LobbyObserver lobbyObserver;
     private transient ArrayList<GameObserver> gameObservers;
     private transient volatile boolean waitingForResponse;
     private transient JoinGameResult joinGameResult;
@@ -36,7 +35,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         socket = new Socket(StaticValues.SERVER_ADDRESS, StaticValues.SOCKET_PORT);
         out = new ObjectOutputStream(socket.getOutputStream());
         in = new ObjectInputStream(socket.getInputStream());
-        lobbyObservers = new ArrayList<>();
         gameObservers = new ArrayList<>();
         waitingForResponse = false;
         notificationThread = new ListeningThread(this);
@@ -50,6 +48,8 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         return null;
     }
 
+
+
     @Override
     public LeaveGameResult leaveLobby(int gameHashCode, String username,LobbyObserver observer) throws RemoteException {
         try {
@@ -61,7 +61,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                 }
                 responseLock.notifyAll();
             }
-            lobbyObservers.remove(observer);
+            lobbyObserver = null;
             return leaveGameResult;
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -70,7 +70,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     @Override
-    public void attachGameObserver(int gameHashCode ,GameObserver gameObserver) throws RemoteException {
+    public void attachGameObserver(int gameHashCode ,GameObserver gameObserver, int playerHashCode) throws RemoteException {
         gameObservers.add(gameObserver);
     }
 
@@ -79,7 +79,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         try {
             waitingForResponse = true;
             out.writeObject(new JoinGameRequest(username));
-            lobbyObservers.add(lobbyObserver);
+            this.lobbyObserver = lobbyObserver;
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();
@@ -126,30 +126,28 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     public void handle(PlayerEventNotification response) {
-        for (LobbyObserver observer : lobbyObservers) {
             try {
                 switch (response.eventType) {
                     case JOIN:
-                        observer.onPlayerJoined(response.username, response.players, response.numOfPlayers);
+                        lobbyObserver.onPlayerJoined(response.username, response.players, response.numOfPlayers);
                         break;
                     case LEAVE:
-                        observer.onPlayerLeave(response.username, response.players, response.numOfPlayers);
+                        lobbyObserver.onPlayerLeave(response.username, response.players, response.numOfPlayers);
                         break;
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-        }
+
     }
 
     public void handle(TimerNotification response){
-        for(LobbyObserver observer : lobbyObservers){
             try {
-                observer.onTimerChanges(response.timerStart, response.timerStatus);
+                lobbyObserver.onTimerChanges(response.timerStart, response.timerStatus);
             } catch (RemoteException e){
                 e.printStackTrace();
             }
-        }
+
     }
 
     @Override
@@ -193,12 +191,12 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     @Override
-    public boolean disconnect(int gameHashCode, int playerHashCode, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException {
+    public boolean disconnect(int gameHashCode, int playerHashCode) throws RemoteException {
         try{
             waitingForResponse = true;
             out.writeObject(new DisconnectionRequest(gameHashCode,playerHashCode));
-            lobbyObservers.remove(lobbyObserver);
-            gameObservers.remove(gameObserver);
+            this.lobbyObserver = null;
+            gameObservers.clear();
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();
@@ -354,17 +352,14 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     @Override
-    public void detachGameObserver(int gameHashCode, GameObserver gameObserver) throws RemoteException {
-        gameObservers.remove(gameObserver);
-        if(gameObservers.size() == 0) {
-            try {
-                out.writeObject(new DetachGameObserverRequest(gameHashCode));
-                out.reset();
-                gameObservers.remove(gameObserver);
-                notificationThread.interrupt();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public void detachAllGameObserver(int gameHashCode, int playerHashCode) throws RemoteException {
+        gameObservers.clear();
+        try {
+            out.writeObject(new DetachGameObserverRequest(gameHashCode, playerHashCode));
+            out.reset();
+            notificationThread.interrupt();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

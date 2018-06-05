@@ -37,13 +37,13 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
     @Override
-    public void attachGameObserver(int gameHashCode,GameObserver gameObserver) throws RemoteException {
-        service.attachGameObserver(gameHashCode, gameObserver);
+    public void attachGameObserver(int gameHashCode,GameObserver gameObserver, int playerHashCode) throws RemoteException {
+        service.attachGameObserver(gameHashCode, gameObserver, playerHashCode);
     }
 
     @Override
-    public void detachGameObserver(int gameHashCode, GameObserver gameObserver) throws RemoteException {
-        service.detachGameObserver(gameHashCode, gameObserver);
+    public void detachAllGameObserver(int gameHashCode, int playerHashCode) throws RemoteException {
+        service.detachAllGameObserver(gameHashCode, playerHashCode);
     }
 
     @Override
@@ -57,8 +57,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
     @Override
-    public boolean disconnect(int gameHashCode, int playerHashCode, LobbyObserver lobbyObserver, GameObserver gameObserver) throws RemoteException {
-        return service.disconnect(gameHashCode, playerHashCode, lobbyObserver, gameObserver);
+    public boolean disconnect(int gameHashCode, int playerHashCode) throws RemoteException {
+        return service.disconnect(gameHashCode, playerHashCode);
     }
 
     @Override

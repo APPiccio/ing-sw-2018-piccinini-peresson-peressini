@@ -45,7 +45,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
                     synchronized (this) {
                         out.writeObject(response);
                         out.reset();
-                        this.notifyAll();
+                        notifyAll();
                     }
                 }
 
@@ -97,6 +97,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     public Response handle(DisconnectionRequest request) {
         //TODO detach observer and notify game of that
         isStopped = true;
+        service.disconnect(request.gameHashCode, request.playerHashCode);
         return new DisconnectionResponse(true);
     }
 
@@ -121,7 +122,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
 
     @Override
     public Response handle(DetachGameObserverRequest request) {
-        service.detachGameObserver(request.gameHashCode, this);
+        service.detachAllGameObserver(request.gameHashCode, request.playerHashCode);
         isStopped = true;
         return null;
     }

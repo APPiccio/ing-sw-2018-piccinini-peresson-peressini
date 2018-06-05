@@ -237,7 +237,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         this.publicObjectiveCards = gameStartMessage.publicObjectiveCards;
         this.currentPlayerUser = gameStartMessage.players.get(0).getUsername();
         try {
-            this.controller.attachGameObserver(this.joinGameResult.getGameHashCode(),this);
+            this.controller.attachGameObserver(this.joinGameResult.getGameHashCode(),this, joinGameResult.getPlayerHashCode());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
