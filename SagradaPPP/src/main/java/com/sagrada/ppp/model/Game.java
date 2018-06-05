@@ -3,6 +3,8 @@ package com.sagrada.ppp.model;
 import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.utils.StaticValues;
+import com.sagrada.ppp.view.gui.Lobby;
+import com.sun.jdi.ObjectReference;
 import javafx.util.Pair;
 
 import java.io.Serializable;
@@ -17,19 +19,19 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  */
 public class Game implements Serializable{
+    private HashMap<Integer, LobbyObserver> lobbyObservers;
+    private HashMap<Integer, ArrayList<GameObserver>> gameObservers;
     private ArrayList<Player> players;
     private DiceBag diceBag;
     private ArrayList<WindowPanel> panels;
     private ArrayList<Dice> draftPool;
     private RoundTrack roundTrack;
     private GameStatus gameStatus;
-    private ArrayList<LobbyObserver> lobbyObservers;
     private LobbyTimer lobbyTimer;
     private long lobbyTimerStartTime;
     public volatile boolean waitingForPanelChoice;
     public volatile boolean panelChoiceTimerExpired;
     public Integer chosenPanelIndex;
-    public ArrayList<GameObserver> gameObservers;
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private int turn;
@@ -52,11 +54,11 @@ public class Game implements Serializable{
         roundTrack = new RoundTrack(StaticValues.NUMBER_OF_TURNS);
         gameStatus = GameStatus.INIT;
         if(username != null) players.add(new Player(username));
-        lobbyObservers = new ArrayList<>();
+        lobbyObservers = new HashMap<>();
         waitingForPanelChoice = false;
         panelChoiceTimerExpired = false;
         chosenPanelIndex = null;
-        gameObservers = new ArrayList<>();
+        gameObservers = new HashMap<>();
         toolCards = new ArrayList<>();
         publicObjectiveCards = new ArrayList<>();
         chosenPanelIndex = -1;
@@ -141,9 +143,14 @@ public class Game implements Serializable{
                 //check if player has to skip his second turn
                 //only in this if statement justPlayedPlayer contains the current player
                 //after call "toNextTurn" justPlayedPlayer contains the previous player
-                if (justPlayedPlayer.hasToSkipSecondTurn()) {
-                    System.out.println(players.get(getCurrentPlayerIndex()).getUsername() + " has to skip second turn " +
-                            "this round due to toolCard7 behaviour");
+                if (justPlayedPlayer.hasToSkipSecondTurn() || justPlayedPlayer.getPlayerStatus().equals(PlayerStatus.INACTIVE)) {
+                    if(justPlayedPlayer.hasToSkipSecondTurn()) {
+                        System.out.println(players.get(getCurrentPlayerIndex()).getUsername() + " has to skip second turn " +
+                                "this round due to toolCard7 behaviour");
+                    }
+                    else {
+                        System.out.println("Player should be inactive, actual player status = " + justPlayedPlayer.getPlayerStatus());
+                    }
                     toNextTurn();
                     if(j != players.size()*2) notifyEndTurn(justPlayedPlayer , players.get(getCurrentPlayerIndex()));
                     currentTimerTask.isValid = false;
@@ -234,7 +241,7 @@ public class Game implements Serializable{
         Player h = new Player(user);
         players.add(h);
         notifyPlayerJoin(user,getUsernames(),players.size());
-        attachLobbyObserver(lobbyObserver);
+        attachLobbyObserver(lobbyObserver, h.getHashCode());
         if(players.size() == 2){
             //start timer
             lobbyTimerStartTime = System.currentTimeMillis();
@@ -324,7 +331,7 @@ public class Game implements Serializable{
         for(Player player : players){
             if (player.getUsername().equals(username)){
                 players.remove(player);
-                detachLobbyObserver(observer);
+                detachLobbyObserver(player.getHashCode());
                 notifyPlayerLeave(username,getUsernames(),players.size());
                 if(players.size() < 2){
                     if(lobbyTimer != null) {
@@ -352,36 +359,45 @@ public class Game implements Serializable{
     }
 
 
-    public void attachGameObserver(GameObserver observer){
+    public void attachGameObserver(GameObserver observer, int playerHashCode){
         if(observer == null) return;
-        gameObservers.add(observer);
+        if(gameObservers.get(playerHashCode) == null){
+            gameObservers.put(playerHashCode, new ArrayList<>());
+        }
+        gameObservers.get(playerHashCode).add(observer);
     }
 
-    public void detachGameObserver(GameObserver observer){
-        lobbyObservers.remove(observer);
+    public void detachGameObserver(int playerHashCode, GameObserver gameObserver){
+        gameObservers.get(playerHashCode).remove(gameObserver);
     }
 
-    public void attachLobbyObserver(LobbyObserver observer){
+    public void detachAllGameObservers(int playerHashCode){
+        gameObservers.remove(playerHashCode);
+    }
+
+    public void attachLobbyObserver(LobbyObserver observer, int playerHashCode){
         if(observer == null) return;
-        lobbyObservers.add(observer);
+        lobbyObservers.put(playerHashCode, observer);
     }
 
-    public void detachLobbyObserver(LobbyObserver observer){
-        lobbyObservers.remove(observer);
+    public void detachLobbyObserver(int playerHashCode){
+        lobbyObservers.remove(playerHashCode);
     }
 
-    private void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color){
-        for(GameObserver observer : gameObservers){
-            try {
-                observer.onPanelChoice(playerHashCode, panels, panelsAlreadyChosen, color);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+    private void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
+        for (ArrayList<GameObserver> observers : gameObservers.values()) {
+            for (GameObserver observer : observers) {
+                try {
+                    observer.onPanelChoice(playerHashCode, panels, panelsAlreadyChosen, color);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     void notifyTimerChanges(TimerStatus timerStatus) {
-        for (LobbyObserver observer : lobbyObservers) {
+        for (LobbyObserver observer : lobbyObservers.values()) {
             try {
                 System.out.println("I'm notifying a new LobbyTimerStatus = " + timerStatus);
                 observer.onTimerChanges(lobbyTimerStartTime, timerStatus);
@@ -392,7 +408,7 @@ public class Game implements Serializable{
     }
 
     private void notifyPlayerJoin(String username, ArrayList<String> players, int numOfPlayers){
-        for (LobbyObserver observer: lobbyObservers) {
+        for (LobbyObserver observer: lobbyObservers.values()) {
             try {
 
                 observer.onPlayerJoined(username , players,numOfPlayers);
@@ -407,17 +423,20 @@ public class Game implements Serializable{
         for(Player player : players){
             usernameToPanel.put(player.getUsername(), player.getPanel());
         }
-        for(GameObserver gameObserver : gameObservers){
-            try {
-                gameObserver.onGameStart(new GameStartMessage(usernameToPanel, draftPool, toolCards, publicObjectiveCards, getUsernames(),players));
-            } catch (RemoteException e) {
-                e.printStackTrace();
+
+        for (ArrayList<GameObserver> observers : gameObservers.values()) {
+            for (GameObserver observer : observers) {
+                try {
+                    observer.onGameStart(new GameStartMessage(usernameToPanel, draftPool, toolCards, publicObjectiveCards, getUsernames(),players));
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     private void notifyPlayerLeave(String username, ArrayList<String> players, int numOfPlayers) {
-        for (LobbyObserver observer: lobbyObservers) {
+        for (LobbyObserver observer: lobbyObservers.values()) {
             try {
                 observer.onPlayerLeave(username ,players, numOfPlayers);
             } catch (RemoteException e) {
@@ -428,21 +447,26 @@ public class Game implements Serializable{
 
     private void notifyEndTurn(Player previousPlayer, Player currentPlayer){
         EndTurnMessage endTurnMessage = new EndTurnMessage(previousPlayer, currentPlayer, players, turn, draftPool, roundTrack);
-        for(GameObserver gameObserver : gameObservers){
-            try {
-                gameObserver.onEndTurn(endTurnMessage);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+
+        for (ArrayList<GameObserver> observers : gameObservers.values()) {
+            for (GameObserver observer : observers) {
+                try {
+                    observer.onEndTurn(endTurnMessage);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     private void notifyEndGame(ArrayList<PlayerScore> playersScore) {
-        for(GameObserver gameObserver : gameObservers){
-            try {
-                gameObserver.onEndGame(playersScore);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        for (ArrayList<GameObserver> observers : gameObservers.values()) {
+            for (GameObserver observer : observers) {
+                try {
+                    observer.onEndGame(playersScore);
+                }catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -544,16 +568,14 @@ public class Game implements Serializable{
         chosenPanelIndex = panelIndex;
     }
 
-    public boolean disconnect(int playerHashCode, LobbyObserver lobbyObserver, GameObserver gameObserver){
-        for(Player player : players){
-            if(player.hashCode() == playerHashCode) {
-                detachLobbyObserver(lobbyObserver);
-                detachGameObserver(gameObserver);
-                player.setPlayerStatus(PlayerStatus.INACTIVE);
-                return true;
-            }
-        }
-        return false;
+    public boolean disconnect(int playerHashCode){
+        Player player = getPlayerByHashcode(playerHashCode);
+        if(player == null) return false;
+        detachLobbyObserver(playerHashCode);
+        detachAllGameObservers(playerHashCode);
+        player.setPlayerStatus(PlayerStatus.INACTIVE);
+        //TODO notify user of disconnection
+        return true;
     }
 
     private void toNextTurn() {
@@ -595,18 +617,19 @@ public class Game implements Serializable{
         if(result) {
             dicePlaced = true;
             draftPool.remove(diceIndex);
-            gameObservers.forEach(x -> {
-                try {
-                    x.onDicePlaced(new DicePlacedMessage(currentPlayer.getUsername(),new WindowPanel(currentPlayer.getPanel()),draftPool));
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+
+            for (ArrayList<GameObserver> observers : gameObservers.values()) {
+                for (GameObserver observer : observers) {
+                    try {
+                        observer.onDicePlaced(new DicePlacedMessage(currentPlayer.getUsername(),new WindowPanel(currentPlayer.getPanel()),draftPool));
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                 }
-            });
-            notifyAll();
+            }
             return new PlaceDiceResult("risiko è meglio",true,new WindowPanel(currentPlayer.getPanel()));
         }
         else {
-            notifyAll();
             return new PlaceDiceResult("Invalid position, pay attention to game rules!" , false, new WindowPanel(currentPlayer.getPanel()));
         }
     }
@@ -963,11 +986,13 @@ public class Game implements Serializable{
 
     private void notifyUsedToolCard(int toolCardID, Player player, ArrayList<Dice> draftPool, RoundTrack roundTrack){
         ToolCardNotificationMessage toolCardNotificationMessage = new ToolCardNotificationMessage(toolCardID, player, draftPool, roundTrack);
-        for(GameObserver gameObserver : gameObservers){
-            try {
-                gameObserver.onToolCardUsed(toolCardNotificationMessage);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        for (ArrayList<GameObserver> observers : gameObservers.values()) {
+            for (GameObserver observer : observers) {
+                try {
+                    observer.onToolCardUsed(toolCardNotificationMessage);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

@@ -14,12 +14,14 @@ public abstract class PublicObjectiveCard implements Serializable {
     public PublicObjectiveCard() {
         this.name = null;
         this.id = 0;
+        this.description = null;
     }
 
     /**
      * @param name  name of the PublicObjectiveCard
      * @param id    number of the PublicObjectiveCard
-     * @see com.sagrada.ppp.utils.StaticValues for the names of the cards
+     * @see com.sagrada.ppp.utils.StaticValues for the name of the cards
+     * @see com.sagrada.ppp.utils.StaticValues for the description of the cards
      */
     protected PublicObjectiveCard(String name, int id) {
         this.name = name;
@@ -29,10 +31,6 @@ public abstract class PublicObjectiveCard implements Serializable {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -49,8 +47,10 @@ public abstract class PublicObjectiveCard implements Serializable {
      */
     public abstract int getScore(WindowPanel playerWindowPanel);
 
-    public String toString(){
-        return "PUB OBJ ---> Card ID = " + this.id + ", Card Name : " + this.name + ", Description: " + this.description;
+    @Override
+    public String toString() {
+        return "PUB OBJ ---> Card ID = " +
+                this.id + ", Card name: " + this.name + ", Description: " + this.description;
     }
 
 }

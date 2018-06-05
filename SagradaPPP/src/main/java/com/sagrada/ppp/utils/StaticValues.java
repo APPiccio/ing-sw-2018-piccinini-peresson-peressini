@@ -23,6 +23,8 @@ public class StaticValues {
     public static int NUMBER_OF_CARDS = 12;
     public static final long TURN_DURATION = 120000;
 
+    public static final String TOKEN_URL = "src/main/java/com/sagrada/ppp/utils/token.json";
+
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
     public static int lobbyTimer = 0;
@@ -149,6 +151,7 @@ public class StaticValues {
     public static final String STRING_COMMAND_HELP = "show commands list";
     public static final String STRING_COMMAND_PLAYERS_IN_LOBBY = "show players connected to this lobby";
     public static final String STRING_COMMAND_START_GAME = "start game";
+
 
     public static final String STRING_COMMAND_PLACE_DICE = "<dice_index> <cell_row> <cell_col> place the chosen dice in the panel";
     public static final String STRING_COMMAND_END_TURN = "end your current turn";

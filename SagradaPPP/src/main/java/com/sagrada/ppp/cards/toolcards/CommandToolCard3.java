@@ -3,11 +3,12 @@ package com.sagrada.ppp.cards.toolcards;
 import com.sagrada.ppp.model.WindowPanel;
 import javafx.util.Pair;
 
-//Move any one die in your window ignoring shade (value) restriction
-
 public class CommandToolCard3 implements CommandToolCard {
 
-    private Pair<Integer, Integer> positions; //Pair <oldIndex, newIndex>
+    /**
+     * positions<oldDiceIndex, newDiceIndex>
+     */
+    private Pair<Integer, Integer> positions;
     private WindowPanel windowPanel;
 
     public CommandToolCard3(Pair<Integer, Integer> positions, WindowPanel windowPanel) {
@@ -15,6 +16,10 @@ public class CommandToolCard3 implements CommandToolCard {
         this.windowPanel = windowPanel;
     }
 
+    /**
+     * Move the dice in oldDiceIndex position to newDiceIndex position,
+     * ignoring shade restriction
+     */
     @Override
     public void useCard() {
         windowPanel.addDice(positions.getValue(), windowPanel.removeDice(positions.getKey()),

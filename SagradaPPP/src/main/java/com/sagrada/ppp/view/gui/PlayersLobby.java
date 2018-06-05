@@ -119,7 +119,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
     private void timerEnded() {
         try {
-            controller.attachGameObserver(joinGameResult.getGameHashCode(),windowPanelsSelection);
+            controller.attachGameObserver(joinGameResult.getGameHashCode(),windowPanelsSelection, joinGameResult.getPlayerHashCode());
         } catch (RemoteException e) {
             e.printStackTrace();
         }

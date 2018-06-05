@@ -58,10 +58,9 @@ public class Client
             System.out.println("Choose a valid option, type 'guy' or 'cli'.");
             viewMode = scanner.nextLine();
         }
-
         if(viewMode.equals("cli")){
             CliView view = new CliView(controller, connectionModeEnum);
-            view.start();
+            view.init();
         }
         else{
             new Thread(() -> Application.launch(GuiView.class)).start();

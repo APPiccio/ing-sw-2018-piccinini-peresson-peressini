@@ -35,9 +35,9 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
     }
 
     /**
-     * @param x
-     * @param y
-     * @param panel
+     * @param x     cell column index
+     * @param y     cell row index
+     * @param panel windowPanel of the current player
      * @return
      */
     private boolean isDiceLegal(int x, int y, WindowPanel panel) {

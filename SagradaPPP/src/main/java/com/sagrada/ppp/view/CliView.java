@@ -6,6 +6,7 @@ import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.client.ConnectionHandler;
 import com.sagrada.ppp.network.client.ConnectionModeEnum;
+import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
@@ -13,6 +14,7 @@ import static com.sagrada.ppp.utils.StaticValues.*;
 import java.awt.desktop.SystemSleepEvent;
 import java.io.Serializable;
 
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -53,6 +55,8 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     private static final String PERMISSION_DENIED = "Permission denied! It's not your turn!";
     private int currentTurn;
     private int currentRound;
+    private JoinGameResult joinGameResult;
+
 
     public CliView(RemoteController controller, ConnectionModeEnum connectionModeEnum) throws RemoteException{
         this.scanner = new Scanner(System.in);
@@ -72,7 +76,29 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         toolCardFlags = new ToolCardFlags();
     }
 
-    public void start() throws RemoteException {
+
+    public void init() throws RemoteException {
+        if (PlayerTokenSerializer.isTokenPresent()){
+            System.out.println("Do you want to resume the previous game? (y/n)");
+            String in = scanner.nextLine();
+            while(!in.equals("y") && !in.equals("n")){
+                System.out.println("Invalid answer, type y (yes) or n (no)");
+                in = scanner.nextLine();
+            }
+            if(in.equals("y")){
+                //TODO controller call to reconnect
+            }
+            else{
+                PlayerTokenSerializer.deleteToken();
+                start();
+            }
+        }
+        else{
+            start();
+        }
+    }
+
+    private void start() throws RemoteException {
         System.out.println("Welcome to SAGRADA");
         System.out.println("Please enter your username! This can't be empty or with spaces.");
         username = scanner.nextLine();
@@ -81,12 +107,12 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             username = scanner.nextLine();
         }
 
-        JoinGameResult joinGameResult = controller.joinGame(username, this);
+        this.joinGameResult = controller.joinGame(username, this);
         while (hashCode < 0){
             System.out.println("Join failed. Trying new attempt...");
             joinGameResult = controller.joinGame(username, this);
         }
-        controller.attachGameObserver(joinGameResult.getGameHashCode(),this);
+        controller.attachGameObserver(joinGameResult.getGameHashCode(),this, joinGameResult.getPlayerHashCode());
 
         gameHashCode = joinGameResult.getGameHashCode();
         hashCode = joinGameResult.getPlayerHashCode();
@@ -212,6 +238,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             }
             else {
                 if(timerStatus.equals(TimerStatus.FINISH)){
+                    PlayerTokenSerializer.serialize(joinGameResult);
                     System.out.println("---> Countdown completed or full lobby. The game will start soon");
                     gameReady = true;
                 }
@@ -577,8 +604,10 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             command = scanner.nextLine();
             param = command.split(" ");
             command = param[0];
-        }
-
+      }
+      System.out.println("Disconnecting...");
+      controller.disconnect(gameHashCode, hashCode);
+      System.exit(0);
     }
 
     //min included, max excluded
@@ -777,7 +806,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             //if you are here, it means that you want to change socket -> rmi
             //close socket connection before changing connection mode
             try {
-                controller.detachGameObserver(gameHashCode,this);
+                controller.detachAllGameObserver(gameHashCode,hashCode);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -785,7 +814,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         ConnectionHandler connectionHandler = new ConnectionHandler(connectionModeEnum);
         controller = connectionHandler.getController();
         try {
-            controller.attachGameObserver(gameHashCode, this);
+            controller.attachGameObserver(gameHashCode, this, hashCode);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
