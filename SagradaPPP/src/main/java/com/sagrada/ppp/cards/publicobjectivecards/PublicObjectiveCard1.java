@@ -13,7 +13,6 @@ import java.util.ArrayList;
  */
 public class PublicObjectiveCard1 extends PublicObjectiveCard {
 
-
     /**
      * @see PublicObjectiveCard#PublicObjectiveCard(String, int)
      */
