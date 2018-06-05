@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -31,15 +32,26 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
     private Stage stage;
 
     PlayersLobby(String username, RemoteController controller, Stage stage) throws RemoteException {
+        BorderPane borderPane = new BorderPane();
+        Scene scene = new Scene(borderPane, 700*1436/2156, 700);
+        ScrollPane scrollPane = new ScrollPane();
+        TabPane tabPane = new TabPane();
+        VBox vBoxPlayersTab = new VBox();
+        URL url = this.getClass().getResource("SagradaStyleSheet.css");
+        if (url == null) {
+            System.out.println("Resource not found. Aborting.");
+            System.exit(-1);
+        }
+        String css = url.toExternalForm();
+        scene.getStylesheets().add(css);
+
         vBoxPlayers = new VBox();
         vBoxEventsTab = new VBox();
         windowPanelsSelection = new WindowPanelsSelection();
         this.controller = controller;
         this.stage = stage;
-        BorderPane borderPane = new BorderPane();
-        ScrollPane scrollPane = new ScrollPane();
-        TabPane tabPane = new TabPane();
-        VBox vBoxPlayersTab = new VBox();
+
+
 
         joinGameResult = this.controller.joinGame(username, this);
         vBoxPlayersTab.getChildren().addAll(playerID(), vBoxPlayers);
@@ -74,7 +86,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
         borderPane.setCenter(tabPane);
 
-        stage.setScene(new Scene(borderPane, 700*1436/2156, 700));
+        stage.setScene(scene);
         stage.setTitle("Players Lobby");
         stage.show();
     }

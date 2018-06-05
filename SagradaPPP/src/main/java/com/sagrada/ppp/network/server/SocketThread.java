@@ -4,6 +4,7 @@ import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,10 +50,12 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
                     }
                 }
 
-            } catch (IOException e) {
+            }catch (IOException e) {
                 e.printStackTrace();
                 return;
-            } catch (ClassNotFoundException e) {
+
+            }
+            catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

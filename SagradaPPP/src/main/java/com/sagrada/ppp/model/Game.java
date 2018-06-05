@@ -3,7 +3,6 @@ package com.sagrada.ppp.model;
 import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sun.jdi.ObjectReference;
 import javafx.util.Pair;
 
 import java.io.Serializable;
@@ -11,6 +10,12 @@ import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Core class of the game
+ * Each game has a unique instance of this class.
+ * Allows to have multiple games on the same server.
+ *
+ */
 public class Game implements Serializable{
     private ArrayList<Player> players;
     private DiceBag diceBag;
@@ -62,9 +67,13 @@ public class Game implements Serializable{
         turnTimeout = false;
     }
 
+    /**
+     * Handles the setup of a game
+     */
     void init() {
         gameStatus = GameStatus.ACTIVE;
         assignPrivateObjectiveColors();
+        //Shuffles the collection to have pseudo random turn orders!
         Collections.shuffle(players);
         turn = 1;
         HashMap<Integer, ArrayList<WindowPanel>> panels = extractPanels();
@@ -83,6 +92,8 @@ public class Game implements Serializable{
             notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerPrivateColor(playerHashCode));
             PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(System.currentTimeMillis(), this);
             panelChoiceTimer.start();
+
+            //TODO syncronize this!
             while(waitingForPanelChoice && !panelChoiceTimerExpired){
             }
             System.out.println("Proceeding due to flag change.");
@@ -103,12 +114,18 @@ public class Game implements Serializable{
         gameHandler();
     }
 
+    /**
+     * Handling turns and rounds mechanics.
+     * From round 1 to round 10 and foreach round handles players turn, according to game rules
+     */
     private void gameHandler() {
         Player justPlayedPlayer = null;
+
         for(int i = 1; i <= 10; i++){
             for (Player player : players) {
                 player.setSkipSecondTurn(false);
             }
+
             for(int j = 1; j <= players.size()*2; j++){
                 System.out.println("BEGIN TURN = " + j + ", ROUND = " + i);
                 endTurn = false;
@@ -135,7 +152,7 @@ public class Game implements Serializable{
                 while (!endTurn && !(dicePlaced && usedToolCard && !isSpecialTurn) && !turnTimeout){
                     //wait for user action
                 }
-
+                //Sync end turn with eventual responses e.g. UseToolCardResponse
                 synchronized (this) {
                     //handling timer
                     if (dicePlaced && usedToolCard) {
@@ -157,6 +174,8 @@ public class Game implements Serializable{
             setTurn(1);
             if(i != 10) notifyEndTurn(justPlayedPlayer, players.get(getCurrentPlayerIndex()));
         }
+
+        //handling end game and points calculation
         ArrayList<PlayerScore> playersScore = new ArrayList<>();
         for (Player player : players) {
             playersScore.add(getPlayerScore(player));
@@ -164,6 +183,9 @@ public class Game implements Serializable{
         notifyEndGame(playersScore);
     }
 
+    /**
+     * @return returns a new instance of the draft pool
+     */
     private ArrayList<Dice> getDraftPool() {
         ArrayList<Dice> h = new ArrayList<>();
         for(Dice dice : draftPool){
@@ -172,15 +194,12 @@ public class Game implements Serializable{
         return h;
     }
 
-    //TODO check if enum should be passed as a copy and not as a reference --> private invariant
-    public GameStatus getGameStatus() {
-        return gameStatus;
-    }
 
-    public Player getPlayer(String username){
-        return players.stream().filter(x -> x.getUsername().equals(username)).findFirst().orElse(null);
-    }
-
+    /**
+     * Handles end turn mechanics,
+     * notify each client the updated game status
+     * Calls the player reordering (for more information about player reordering see reorderPlayers() method)
+     */
     private void toNextRound() {
         if (roundTrack.getCurrentRound() == 10){
             gameStatus = GameStatus.SCORE;
@@ -200,6 +219,11 @@ public class Game implements Serializable{
         return lobbyTimerStartTime;
     }
 
+    /**
+     * @param username username received by the client
+     * @param lobbyObserver observer that handles the lobby notifications(local for socket, remote for rmi)
+     * @return returns the player's hash code
+     */
     public int joinGame(String username, LobbyObserver lobbyObserver) {
         int i = 1;
         String user = username;
@@ -233,10 +257,17 @@ public class Game implements Serializable{
         return h.hashCode();
     }
 
+    /**
+     * @return true if players.size is lower than MAX_USER_PER_GAME (default = 4) and game is in INIT STATUS
+     */
     public boolean isJoinable(){
         return players.size() < StaticValues.MAX_USER_PER_GAME && gameStatus.equals(GameStatus.INIT);
     }
 
+    /**
+     * @param hashCode unique hashCode of the player (identifies a player)
+     * @return string containing player's username
+     */
     public String getPlayerUsername(int hashCode){
         for(Player player : players){
             if (player.hashCode() == hashCode) return player.getUsername();
@@ -245,6 +276,10 @@ public class Game implements Serializable{
     }
 
 
+    /**
+     * @param username unique username of the player
+     * @return true if username is in the players list
+     */
     private boolean isInMatch(String username) {
         for(Player player : players){
             if (player.getUsername().equals(username)) return true;
@@ -252,6 +287,9 @@ public class Game implements Serializable{
         return false;
     }
 
+    /**
+     * @return returns a copy of the players list
+     */
     public ArrayList<Player> getPlayers(){
         ArrayList<Player> playersCopy = new ArrayList<>();
         for(Player player : players){
@@ -263,6 +301,9 @@ public class Game implements Serializable{
         return (int) players.stream().filter(x -> x.getPlayerStatus()==PlayerStatus.ACTIVE).count();
     }
 
+    /**
+     * @return list of strings each containing the username of a player in this game
+     */
     public ArrayList<String> getUsernames(){
         ArrayList<String> playersUsername = new ArrayList<>();
         for(Player player : players){
@@ -274,6 +315,11 @@ public class Game implements Serializable{
         //return this.getPlayers().stream().map(Player::getUsername).collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * If a player leaves the lobby this method is called, its Lobby Observer is removed, and the lobby timer is interrupted if less than 2 players remains in this game's lobby.
+     * @param username identify the player who wants to leave the lobby
+     * @param observer observer to remove from observers list.
+     */
     public void leaveLobby(String username, LobbyObserver observer){
         for(Player player : players){
             if (player.getUsername().equals(username)){
@@ -292,6 +338,10 @@ public class Game implements Serializable{
         }
     }
 
+    /**
+     * @param username identify a player
+     * @return returns player's hash code
+     */
     public int getPlayerHashCode(String username){
         for(Player player : players){
             if (player.getUsername().equals(username)){
@@ -782,6 +832,7 @@ public class Game implements Serializable{
         }
         return new UseToolCardResult(false, draftPool , roundTrack , players, null);
     }
+    //todo move param check on toolcard
 
     private boolean toolCard9ParamsOk(Player player, ToolCardParameters toolCardParameters) {
         WindowPanel windowPanel = player.getPanel();

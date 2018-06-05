@@ -1,0 +1,30 @@
+
+.sagradabutton{
+    -fx-background-color:#B42744;
+        -fx-border-color:#D58929;
+        -fx-text-fill: #0C0B0E;
+        -fx-border-radius: 0;
+        -fx-padding: 10 10 10 10;
+        -fx-font-size: 12pt;
+        -fx-font-family: "Modern No. 20";
+}
+
+.label{
+    -fx-font-size: 12pt;
+    -fx-font-family: "Modern No. 20";
+}
+.dialog-pane{
+    -fx-background-color: #B42744;
+}
+.dialog-pane .button{
+    -fx-background-color:#B42744;
+    -fx-border-color:#D58929;
+    -fx-text-fill: #0C0B0E;
+    -fx-border-radius: 0;
+    -fx-padding: 10 10 10 10;
+    -fx-font-size: 12pt;
+    -fx-font-family: "Modern No. 20";
+}
+.dialog-pane .label {
+    -fx-text-fill: white;
+}

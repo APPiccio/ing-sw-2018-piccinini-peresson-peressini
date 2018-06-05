@@ -7,6 +7,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -115,9 +116,17 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         private Cell cell;
         private final int cornerRadius = 2;
 
-        public CellPane(int row, int col,double cellWidth,double cellHeight,Cell cell) {
+        private CellPane(int row, int col,double cellWidth,double cellHeight,Cell cell) {
             this.row = row;
             this.col = col;
+            this.cell = cell;
+            this.cellWidth = cellWidth;
+            this.cellHeight = cellHeight;
+            this.setMinSize(cellWidth,cellHeight);
+        }
+        //used only to create tooltip
+        private CellPane(double cellWidth,double cellHeight,Cell cell){
+            cell.setDiceOn(null);
             this.cell = cell;
             this.cellWidth = cellWidth;
             this.cellHeight = cellHeight;
@@ -140,7 +149,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
             }
         }
 
-        private void drawCell(){
+        private CellPane drawCell(){
             if(cell.hasColorRestriction()){
                 if (!drawVectorCells) {
                     this.setBackground(
@@ -194,10 +203,14 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
                 DiceButton diceButton = new DiceButton(cell.getDiceOn(),cellWidth*.80,cellHeight*.80);
                 diceButton.setMouseTransparent(true);
                 diceButton.setMinSize(50,50);
+                Tooltip tooltip = new Tooltip();
+                tooltip.setGraphic(new CellPane(cellWidth,cellHeight,cell).drawCell());
+                Tooltip.install(this,tooltip);
                 this.setCenter(diceButton);
 
 
             }
+            return this;
         }
 
     }

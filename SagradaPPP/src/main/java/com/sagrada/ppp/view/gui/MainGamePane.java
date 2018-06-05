@@ -24,6 +24,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -107,6 +108,13 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private void draw(){
 
 
+        Scene scene = new Scene(tabContainer, 700, 1270);
+        URL url = this.getClass().getResource("SagradaStyleSheet.css");
+        if (url == null) {
+            System.out.println("Resource not found. Aborting.");
+            System.exit(-1);
+        }
+        String css = url.toExternalForm();
         Label toolCardsTitle = new Label("Tool Cards");
         Label publicObjectiveCardsTitle = new Label("Public Objective Cards");
         toolCardsContainer.setVgap(5);
@@ -119,6 +127,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         publicCardsContainer.add(publicObjectiveCardsTitle,0,0,2,1);
 
         skipButton.setText("Skip Turn");
+        skipButton.getStyleClass().add("sagradabutton");
         skipButton.setPadding(defInset);
         skipButton.setDisable(true);
         skipButton.addEventHandler(MouseEvent.MOUSE_CLICKED,skipButtonEventHandler);
@@ -206,7 +215,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
 
         tabContainer.getTabs().addAll(gameTab,settingsTab,logTab);
 
-        Scene scene = new Scene(tabContainer, 700, 1270);
+
+        scene.getStylesheets().add(css);
         stage.setScene(scene);
         stage.setTitle("Main game");
         stage.setResizable(true);
@@ -304,6 +314,10 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
                             )
                     )
             );
+            Tooltip tooltip = new Tooltip();
+            tooltip.setText(StaticValues.getToolCardDescription(toolCard.getId()));
+            tooltip.setWrapText(true);
+            toolCardButton.setTooltip(tooltip);
             toolCardButton.addEventHandler(MouseEvent.MOUSE_CLICKED,toolCardClickEvent);
             toolCardsContainer.add(toolCardButton,count,1);
             count++;
@@ -327,6 +341,10 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
                             )
                     )
             );
+            Tooltip tooltip = new Tooltip();
+            tooltip.setText(StaticValues.getPublicObjectiveCardDescription(publicObjectiveCard.getId()));
+            tooltip.setWrapText(true);
+            publicObjectiveButton.setTooltip(tooltip);
             publicCardsContainer.add(publicObjectiveButton,count,1);
             count++;
         }

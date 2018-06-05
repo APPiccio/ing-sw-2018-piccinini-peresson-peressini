@@ -16,6 +16,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.rmi.RemoteException;
 
 public class Lobby implements EventHandler<MouseEvent> {
@@ -29,6 +30,15 @@ public class Lobby implements EventHandler<MouseEvent> {
         this.stage = stage;
         this.controller = controller;
         BorderPane borderPane = new BorderPane();
+        Scene scene = new Scene(borderPane, 700*1436/2156, 700);
+        //styling class
+        URL url = this.getClass().getResource("SagradaStyleSheet.css");
+        if (url == null) {
+            System.out.println("Resource not found. Aborting.");
+            System.exit(-1);
+        }
+        String css = url.toExternalForm();
+        scene.getStylesheets().add(css);
 
         borderPane.setBackground(
                 new Background(
@@ -44,16 +54,19 @@ public class Lobby implements EventHandler<MouseEvent> {
         );
 
         play = new Button("Play");
+        play.getStyleClass().add("sagradabutton");
         borderPane.setCenter(play);
         play.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
         about = new Button("About");
+
+        about.getStyleClass().add("sagradabutton");
         borderPane.setBottom(about);
         BorderPane.setAlignment(about, Pos.BOTTOM_CENTER);
         BorderPane.setMargin(about, new Insets(10));
         about.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 
-        stage.setScene(new Scene(borderPane, 700*1436/2156, 700));
+        stage.setScene(scene);
         stage.setTitle("Welcome to Sagrada");
         stage.setMinHeight(300);
         stage.setMinWidth(300*1400/2500);
@@ -77,6 +90,7 @@ public class Lobby implements EventHandler<MouseEvent> {
             usernameDialog.setHeaderText(null);
             usernameDialog.setContentText("Please enter your username!\nThis cannot be empty or contain spaces.");
             Button button = (Button) usernameDialog.getDialogPane().lookupButton(ButtonType.OK);
+            button.getStyleClass().add("sagradabutton");
             button.disableProperty().bind(Bindings.isEmpty(usernameDialog.getEditor().textProperty()));
             usernameDialog.initModality(Modality.APPLICATION_MODAL);
             usernameDialog.initOwner(stage);
