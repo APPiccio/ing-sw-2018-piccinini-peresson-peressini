@@ -14,4 +14,6 @@ public interface GameObserver extends Remote {
     void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException;
     void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException;
     void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException;
+    void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException;
+    void onPlayerDisconnection(Player disconnectingPlayer) throws RemoteException;
 }

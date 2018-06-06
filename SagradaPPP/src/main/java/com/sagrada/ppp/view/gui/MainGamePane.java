@@ -164,7 +164,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         ImageView privateCardImageView = new ImageView();
         HBox.setMargin(privateCardImageView,defInset);
         HBox.setHgrow(privateCardImageView,Priority.ALWAYS);
-        privateCardImageView.setImage(new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_"+privateColor.toString().toLowerCase()+".png",150,204,true,true));
+        privateCardImageView.setImage(new Image("file:graphics/PrivateCards/private_" + privateColor + ".png" , 150, 204, true, true));
+        //privateCardImageView.setImage(new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_"+privateColor.toString().toLowerCase()+".png",150,204,true,true));
 
         HBox.setMargin(gameStatus,defInset);
         bottomContainer.setAlignment(Pos.CENTER);
@@ -434,6 +435,16 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels,
                               HashMap<String,WindowPanel> panelsAlreadyChosen, com.sagrada.ppp.model.Color playerPrivateColor) throws RemoteException {
             //Do nothing here
+    }
+
+    @Override
+    public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
+
+    }
+
+    @Override
+    public void onPlayerDisconnection(Player disconnectingPlayer) throws RemoteException {
+
     }
 
     @Override

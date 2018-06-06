@@ -251,4 +251,24 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
+        try {
+            out.writeObject(new PlayerReconnectionNotification(reconnectingPlayer));
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPlayerDisconnection(Player disconnectingPlayer) throws RemoteException {
+        try {
+            out.writeObject(new PlayerReconnectionNotification(disconnectingPlayer));
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -22,7 +22,6 @@ public class Game implements Serializable{
     private HashMap<Integer, ArrayList<GameObserver>> gameObservers;
     private ArrayList<Player> players;
     private DiceBag diceBag;
-    private ArrayList<WindowPanel> panels;
     private ArrayList<Dice> draftPool;
     private RoundTrack roundTrack;
     private GameStatus gameStatus;
@@ -525,7 +524,7 @@ public class Game implements Serializable{
     private void extractToolCards(){
         Random r = new Random();
         ArrayList<ToolCard> allToolCards = new ArrayList<>();
-/*
+
         allToolCards.add(new ToolCard1());
         allToolCards.add(new ToolCard2());
         allToolCards.add(new ToolCard3());
@@ -538,10 +537,7 @@ public class Game implements Serializable{
         allToolCards.add(new ToolCard10());
         allToolCards.add(new ToolCard11());
         allToolCards.add(new ToolCard12());
-*/
-        allToolCards.add(new ToolCard4());
-        allToolCards.add(new ToolCard3());
-        allToolCards.add(new ToolCard2());
+
         for(int i = 0; i < 3 ; i++){
             toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
         }
@@ -578,6 +574,7 @@ public class Game implements Serializable{
         detachAllGameObservers(playerHashCode);
         player.setPlayerStatus(PlayerStatus.INACTIVE);
         //TODO notify user of disconnection
+        notifyDisconnection(player);
         return true;
     }
 
@@ -1000,6 +997,30 @@ public class Game implements Serializable{
         }
     }
 
+    private void notifyDisconnection(Player disconnectingPlayer){
+        for (ArrayList<GameObserver> observers : gameObservers.values()) {
+            for (GameObserver observer : observers) {
+                try {
+                    observer.onPlayerDisconnection(disconnectingPlayer);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void notifyReconnection(Player reconnectingPlayer){
+        for (ArrayList<GameObserver> observers : gameObservers.values()) {
+            for (GameObserver observer : observers) {
+                try {
+                    observer.onPlayerReconnection(reconnectingPlayer);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     public ReconnectionResult reconnection(int playerHashCode, GameObserver gameObserver) {
         System.out.println(playerHashCode + " is trying to reconnect");
 
@@ -1013,6 +1034,7 @@ public class Game implements Serializable{
             return new ReconnectionResult(false, "Permission denied.", null);
         //TODO notify other users
         player.setPlayerStatus(PlayerStatus.ACTIVE);
+        notifyReconnection(player);
         attachGameObserver(gameObserver, playerHashCode);
         return new ReconnectionResult(true, "Reconnection completed!",
                 new GameStartMessage(null, draftPool, toolCards, publicObjectiveCards,

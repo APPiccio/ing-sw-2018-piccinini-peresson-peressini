@@ -816,6 +816,17 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         }
     }
 
+    @Override
+    public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
+        System.out.println("---> " + reconnectingPlayer.getUsername() + " is back online!");
+    }
+
+    @Override
+    public void onPlayerDisconnection(Player disconnectingPlayer) throws RemoteException {
+        System.out.println("---> " + disconnectingPlayer.getUsername() + " is now offline! " +
+                "He will automatically passed every turns until the next reconnection");
+    }
+
     private void showPlayerStatus(Player player){
         if(player.getUsername().equals(username)){
             System.out.println("Your's status:");
