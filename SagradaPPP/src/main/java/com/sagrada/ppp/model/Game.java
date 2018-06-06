@@ -474,7 +474,8 @@ public class Game implements Serializable{
     public HashMap<Integer, ArrayList<WindowPanel>> extractPanels() {
         HashMap<Integer, ArrayList<WindowPanel>> temp = new HashMap<>();
         ArrayList<Integer> notUsedPanel = new ArrayList<>();
-        for(int i = 1; i <= StaticValues.NUMBER_OF_CARDS; i++ ){
+        for(int i = 1; i <= WindowPanel.getNumberOfPanels(); i++ ){
+            System.out.println("unused panels" + i);
             notUsedPanel.add(i);
         }
         for(Player player : players){

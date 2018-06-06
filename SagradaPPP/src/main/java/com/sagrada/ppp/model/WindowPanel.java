@@ -3,12 +3,14 @@ package com.sagrada.ppp.model;
 
 import com.sagrada.ppp.utils.PrinterFormatter;
 import com.sagrada.ppp.utils.StaticValues;
+import com.sagrada.ppp.utils.WindowPanelParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -22,12 +24,14 @@ public class WindowPanel implements Serializable {
     private int favorTokens;
     private int cardID;
     private ArrayList<Cell> cells;
+    private static ArrayList<WindowPanel> loadedPanels = new ArrayList<>();
 
 
     /**
      * @param windowPanel window pane to be copied
      */
     public WindowPanel(WindowPanel windowPanel){
+
         this.panelName = windowPanel.getPanelName();
         this.favorTokens = windowPanel.getFavorTokens();
         this.cardID = windowPanel.getCardID();
@@ -40,52 +44,50 @@ public class WindowPanel implements Serializable {
         }
     }
 
+    /**
+     * Intended to be used only by the windowpanel parser!
+     * @param panelName
+     * @param favorTokens
+     * @param cardID
+     * @param cells
+     */
+    public WindowPanel(String panelName,int favorTokens, int cardID, ArrayList<Cell> cells){
+        this.panelName = panelName;
+        this.favorTokens = favorTokens;
+        this.cardID = cardID;
+        this.cells = cells;
+    }
+
 
     /**
      * @param cardNumber is the ID of the physic card that has face up and face down, between 1 and 12
      * @param side front or rear of the card, 1 means face up, 0 means face down
      */
     public WindowPanel(int cardNumber, int side)  {
-
-        int fileIndex = cardNumber * 2 - side;
-        JSONTokener jsonTokener = null;
-        try {
-            jsonTokener = new JSONTokener(new FileReader("templates/panel" + fileIndex + ".json"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        JSONObject jsonObject = new JSONObject(jsonTokener);
-        JSONArray jsonArrayCells = jsonObject.getJSONArray("cells");
-        cells = new ArrayList<>();
-
-        //getting card name and favor token from JSON
-        cardID = jsonObject.getInt("cardID");
-        favorTokens = jsonObject.getInt("favorTokens");
-        panelName = jsonObject.getString("name");
+        this(getPanel(cardNumber,side));
 
 
-        String color;
-        String value;
-
-        for (Object jsonArrayCell : jsonArrayCells) {
-            JSONObject jsonCell = (JSONObject) jsonArrayCell;
-
-            color = jsonCell.get("color").toString();
-            value = jsonCell.get("value").toString();
-
-            if (!color.equals(StaticValues.NULL_JSON_VALUE)) {
-                //colored cell
-                cells.add(new Cell(Color.getColor(color)));
-
-            } else if (!value.equals(StaticValues.NULL_JSON_VALUE)) {
-                //value cell
-                cells.add(new Cell(Integer.parseInt(value)));
-            } else {
-                //blank cell
-                cells.add(new Cell());
+    }
+    private static WindowPanel getPanel(int cardNumber, int side){
+        if(loadedPanels.size() == 0){
+            try {
+                loadedPanels = WindowPanelParser.getPanelsFromFile();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+        return loadedPanels.get(((2*cardNumber)-side)-1);
+    }
+
+    public static int getNumberOfPanels() {
+        if(loadedPanels.size() == 0){
+            try {
+                loadedPanels = WindowPanelParser.getPanelsFromFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return loadedPanels.size()/2;
     }
 
 

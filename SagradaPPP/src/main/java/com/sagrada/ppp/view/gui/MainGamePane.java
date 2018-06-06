@@ -12,8 +12,11 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -47,7 +50,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private WindowPanelPane playerWindowPanel;
     private GridPane toolCardsContainer;
     private GridPane publicCardsContainer;
-    private HBox topContainer;
+    private VBox topContainer;
     private Insets defInset;
     private TabPane tabContainer;
     private Button skipButton;
@@ -94,10 +97,10 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         centerContainer = new FlowPane();
         draftPoolContainer = new VBox();
         draftPoolPane = new FlowPane();
-        playerWindowPanel = new WindowPanelPane(new WindowPanel(0,0),440,400);
+        playerWindowPanel = new WindowPanelPane(null,440,400);
         toolCardsContainer = new GridPane();
         publicCardsContainer = new GridPane();
-        topContainer = new HBox();
+        topContainer = new VBox();
         skipButton = new Button();
         draftPoolDiceButtons = new ArrayList<>();
         gameStatus = new Label();
@@ -140,19 +143,24 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHgrow(Priority.ALWAYS);
         ColumnConstraints col2 = new ColumnConstraints();
-        col2.setHgrow(Priority.NEVER);
-        mainGamePane.getColumnConstraints().addAll(col1,col2);
-        mainGamePane.add(opponentsWindowPanelsPane,1,0,1,3);
+        col2.setHgrow(Priority.SOMETIMES);
+        mainGamePane.getColumnConstraints().addAll(col2,col1,col2);
+        RowConstraints row1 = new RowConstraints();
+        row1.setVgrow(Priority.ALWAYS);
+        RowConstraints row2 = new RowConstraints();
+        row2.setVgrow(Priority.SOMETIMES);
+        mainGamePane.getRowConstraints().addAll(row1,row2);
+        mainGamePane.add(opponentsWindowPanelsPane,2,0,1,2);
         drawToolCards();
         drawPublicObjectiveCards();
 
         topContainer.getChildren().addAll(toolCardsContainer,publicCardsContainer);
         topContainer.setAlignment(Pos.CENTER);
-        GridPane.setHalignment(topContainer,HPos.CENTER);
+        GridPane.setValignment(topContainer,VPos.CENTER);
         topContainer.setPadding(defInset);
+        mainGamePane.setEffect(new InnerShadow(BlurType.GAUSSIAN, Color.web("2E112D"),500,0,0,0));
         mainGamePane.add(topContainer,0,0,1,1);
-        mainGamePane.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY,new CornerRadii(5),new Insets(0))));
-
+        mainGamePane.setBackground(new Background(new BackgroundFill(Color.web("F0433A"),CornerRadii.EMPTY,new Insets(0))));
         ImageView privateCardImageView = new ImageView();
         HBox.setMargin(privateCardImageView,defInset);
         HBox.setHgrow(privateCardImageView,Priority.ALWAYS);
@@ -166,7 +174,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         HBox.setHgrow(roundTrackPane,Priority.ALWAYS);
         bottomContainer.getChildren().addAll(gameStatus,privateCardImageView,roundTrackPane);
         bottomContainer.setPadding(defInset);
-        mainGamePane.add(bottomContainer,0,2,1,1);
+        mainGamePane.add(bottomContainer,0,1,2,1);
 
         Label draftPoolTitle = new Label("DraftPool");
         draftPoolTitle.setTextFill(Color.BLACK);
@@ -181,16 +189,12 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         draftPoolPane.setPrefWrapLength(190);
 
         drawDraftPool();
-        centerContainer.setBackground(
-                new Background(
-                    new BackgroundFill(
-                        Color.DARKGREEN,
-                        new CornerRadii(5),
-                        Insets.EMPTY)));
+       ///centerContainer.setBackground(                new Background(                    new BackgroundFill(                        Color.web("F0433A"),      new CornerRadii(5),                        Insets.EMPTY)));
+        centerContainer.setBorder(new Border(new BorderStroke(Color.web("C7F4FC"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
         centerContainer.getChildren().add(draftPoolContainer);
         centerContainer.setAlignment(Pos.CENTER);
         centerContainer.setPadding(defInset);
-        mainGamePane.add(centerContainer,0,1,1,1);
+        mainGamePane.add(centerContainer,1,0,1,1);
 
         opponentsWindowPanelsPane.setAlignment(Pos.CENTER);
         opponentsWindowPanelsPane.setSpacing(5);
@@ -227,10 +231,13 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         if (currentPlayerUser.equals(joinGameResult.getUsername())){
             skipButton.setDisable(false);
             Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn!");
+            centerContainer.setBorder(new Border(new BorderStroke(Color.web("1EA896"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
             alert.setHeaderText(null);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.initOwner(stage);
             alert.show();
+        }else {
+            centerContainer.setBorder(new Border(new BorderStroke(Color.web("FF715B"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
         }
 
     }
@@ -277,7 +284,15 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
                 username.setTextFill(Color.BLACK);
                 username.setAlignment(Pos.CENTER);
                 opponentsWindowPanelsPane.getChildren().add(username);
-                opponentsWindowPanelsPane.getChildren().add(new WindowPanelPane(player.getPanel(),200,170));
+                WindowPanelPane pane = new WindowPanelPane(player.getPanel(),200,170);
+
+                Border border = new Border(new BorderStroke(
+                        currentPlayerUser.equals(player.getUsername())?Color.web("1EA896"):Color.web("FF715B"),
+                        BorderStrokeStyle.SOLID,
+                        new CornerRadii(4),
+                        BorderStroke.MEDIUM));
+                pane.setBorder(border);
+                opponentsWindowPanelsPane.getChildren().add(pane);
             }
         }
         opponentsWindowPanelsPane.getChildren().add(skipButton);
@@ -304,6 +319,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         for(ToolCard toolCard : toolCards){
             Button toolCardButton = new Button();
             toolCardButtons.add(toolCardButton);
+            Border border = new Border(new BorderStroke(Color.web("FFFFFF"),BorderStrokeStyle.SOLID,new CornerRadii(3),BorderStroke.MEDIUM));
+            toolCardButton.setBorder(border);
             toolCardButton.setId(Integer.toString(toolCard.getId()));
             toolCardButton.setMinSize(150,204);
             toolCardButton.setBackground(
@@ -331,6 +348,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         for(PublicObjectiveCard publicObjectiveCard : publicObjectiveCards){
             Button publicObjectiveButton = new Button();
             publicCardButtons.add(publicObjectiveButton);
+            Border border = new Border(new BorderStroke(Color.web("FFFFFF"),BorderStrokeStyle.SOLID,new CornerRadii(3),BorderStroke.MEDIUM));
+            publicObjectiveButton.setBorder(border);
             publicObjectiveButton.setId(Integer.toString(publicObjectiveCard.getId()));
             publicObjectiveButton.setMinSize(150,204);
             publicObjectiveButton.setBackground(
@@ -570,6 +589,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
             if(endTurnMessage.currentPlayer.getUsername().equals(joinGameResult.getUsername())){
                 skipButton.setDisable(false);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn!");
+                centerContainer.setBorder(new Border(new BorderStroke(Color.web("1EA896"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
                 alert.setHeaderText(null);
                 alert.initModality(Modality.APPLICATION_MODAL);
                 alert.initOwner(stage);
@@ -577,6 +597,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
             }else if(endTurnMessage.previousPlayer.getUsername().equals(joinGameResult.getUsername())){
                 skipButton.setDisable(true);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION,"Your turn is ended!");
+                centerContainer.setBorder(new Border(new BorderStroke(Color.web("FF715B"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
                 alert.setHeaderText(null);
                 alert.initModality(Modality.APPLICATION_MODAL);
                 alert.initOwner(stage);
