@@ -57,6 +57,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         try {
             waitingForResponse = true;
             out.writeObject(new LeaveGameRequest(username, gameHashCode));
+            out.reset();
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();
@@ -81,6 +82,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         try {
             waitingForResponse = true;
             out.writeObject(new JoinGameRequest(username));
+            out.reset();
             this.lobbyObserver = lobbyObserver;
             synchronized (responseLock) {
                 while (waitingForResponse) {
@@ -156,6 +158,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     public void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) throws RemoteException {
         try {
             out.writeObject(new PanelChoiceRequest(gameHashCode,playerHashCode,panelIndex));
+            out.reset();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -197,6 +200,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         try{
             waitingForResponse = true;
             out.writeObject(new DisconnectionRequest(gameHashCode,playerHashCode));
+            out.reset();
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();
@@ -219,6 +223,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         try {
             waitingForResponse = true;
             out.writeObject(new PlaceDiceRequest(gameHashCode, playerHashCode, diceIndex, row, col));
+            out.reset();
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();
@@ -345,6 +350,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     public void closeSocket(){
         try {
             out.writeObject(new CloseSocketRequest());
+            out.reset();
             closeConnection();
         } catch (IOException e) {
             e.printStackTrace();
@@ -369,6 +375,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         try {
             waitingForResponse = true;
             out.writeObject(new ReconnectionRequest(gameHashCode, playerHashCode, null));
+            out.reset();
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();

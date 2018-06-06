@@ -13,7 +13,6 @@ import static com.sagrada.ppp.utils.StaticValues.*;
 
 import java.io.Serializable;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -666,7 +665,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
 
     private Player getPlayerByHashCode(int playerHashCode) {
         for (Player player : players) {
-            return player.getHashCode() == playerHashCode ? player : null;
+            if (player.getHashCode() == hashCode) return player;
         }
         return null;
 
