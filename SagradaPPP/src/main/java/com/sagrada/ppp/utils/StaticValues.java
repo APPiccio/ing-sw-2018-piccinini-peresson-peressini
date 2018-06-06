@@ -27,7 +27,7 @@ public class StaticValues {
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
-    public static int lobbyTimer = 0;
+    public static int lobbyTimer = 4000;
 
     //Connection static value
     public static final int RMI_PORT = 1099;

@@ -33,7 +33,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     private transient ArrayList<Dice> draftPool;
     private transient ArrayList<String> orderedPlayersUsername;
     private transient boolean isGameStarted;
-    private transient HashMap<String, WindowPanel> playersPanel;
     private transient ArrayList<Player> players;
     private transient ArrayList<ToolCard> toolCards;
     private transient ArrayList<PublicObjectiveCard> publicObjectiveCards;
@@ -75,24 +74,77 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         toolCardFlags = new ToolCardFlags();
     }
 
-
     public void init() throws RemoteException {
-        if (PlayerTokenSerializer.isTokenPresent()){
+        if (PlayerTokenSerializer.isTokenPresent()) {
             System.out.println("Do you want to resume the previous game? (y/n)");
             String in = scanner.nextLine();
             while(!in.equals("y") && !in.equals("n")){
                 System.out.println("Invalid answer, type y (yes) or n (no)");
                 in = scanner.nextLine();
             }
-            if(in.equals("y")){
-                //TODO controller call to reconnect
+            if (in.equals("y")){
+                JoinGameResult jgr = PlayerTokenSerializer.deserialize();
+                ReconnectionResult reconnectionResult = controller.reconnection(jgr.getPlayerHashCode(),
+                        jgr.getGameHashCode(), this);
+                if (!reconnectionResult.result) {
+                    System.out.println(reconnectionResult.message);
+                    do {
+                        System.out.println("Do you want to retry?");
+                        in = scanner.nextLine();
+                        while (!in.equals("y") && !in.equals("n")) {
+                            System.out.println("Invalid answer, type y (yes) or n (no)");
+                            in = scanner.nextLine();
+                        }
+                        if (in.equals("y")) {
+                            reconnectionResult = controller.reconnection(jgr.getPlayerHashCode(),
+                                    jgr.getGameHashCode(), this);
+                            System.out.println(reconnectionResult.message);
+                        }
+                    } while (!reconnectionResult.result && !in.equals("n"));
+                    if (in.equals("n")) {
+                        PlayerTokenSerializer.deleteToken();
+                        start();
+                    }
+                    else {
+                        hashCode = jgr.getPlayerHashCode();
+                        gameHashCode = jgr.getGameHashCode();
+                        username = jgr.getUsername();
+                        draftPool = reconnectionResult.gameStartMessage.draftpool;
+                        toolCards = reconnectionResult.gameStartMessage.toolCards;
+                        publicObjectiveCards = reconnectionResult.gameStartMessage.publicObjectiveCards;
+                        players = reconnectionResult.gameStartMessage.players;
+                        currentPlayer = reconnectionResult.gameStartMessage.currentPlayer;
+                        roundTrack = reconnectionResult.gameStartMessage.roundTrack;
+                        isGameStarted = true;
+                        showGameStatus();
+                        System.out.println("Bella raga, sono passato dalla riga 123");
+                        inGame(0, null);
+                    }
+                }
+                else {
+                    System.out.println(reconnectionResult.message);
+                    hashCode = jgr.getPlayerHashCode();
+                    gameHashCode = jgr.getGameHashCode();
+                    username = jgr.getUsername();
+                    draftPool = reconnectionResult.gameStartMessage.draftpool;
+                    toolCards = reconnectionResult.gameStartMessage.toolCards;
+                    publicObjectiveCards = reconnectionResult.gameStartMessage.publicObjectiveCards;
+                    players = reconnectionResult.gameStartMessage.players;
+                    currentPlayer = reconnectionResult.gameStartMessage.currentPlayer;
+                    roundTrack = reconnectionResult.gameStartMessage.roundTrack;
+                    isGameStarted = true;
+                    showGameStatus();
+                    System.out.println("Bella raga, sono passato dalla riga 141");
+                    inGame(0, null);
+                }
+
             }
-            else{
+            else {
                 PlayerTokenSerializer.deleteToken();
                 start();
             }
         }
-        else{
+        else {
             start();
         }
     }
@@ -265,7 +317,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             switch (command) {
 
                 case StaticValues.COMMAND_PLACE_DICE:
-                    if(!currentPlayer.getUsername().equals(username)){
+                    if(currentPlayer.getHashCode() != hashCode){
                         System.out.println(PERMISSION_DENIED);
                         break;
                     }
@@ -279,13 +331,14 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                     else {
                         PlaceDiceResult result = controller.placeDice(gameHashCode, hashCode,
                                 Integer.parseInt(param[1]), Integer.parseInt(param[2]), Integer.parseInt(param[3]));
-                        if(result.status){
+                        if(result.status) {
+                            getPlayerByHashCode(hashCode).setPanel(result.panel);
                             placedDice = true;
-                            playersPanel.remove(username);
-                            playersPanel.put(username, result.panel);
+                            //TODO aggiungere draftpool PlaceDiceResult
                             draftPool.remove(Integer.parseInt(param[1]));
                             System.out.println("Dice placed correctly. Panel updated :");
-                            System.out.println(playersPanel.get(username));
+
+                            System.out.println(getPlayerByHashCode(hashCode).getPanel());
                             System.out.println("----------------------------------------");
                             System.out.println("Draft pool: ");
                             for(int i = 0; i < draftPool.size(); i++){
@@ -597,18 +650,27 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                     }
                     break;
                 default:
-                    System.out.println("Command not found : "+command);
+                    System.out.println("Command not found : " + command);
                     break;
             }
             command = scanner.nextLine();
             param = command.split(" ");
             command = param[0];
-      }
-      System.out.println("Disconnecting...");
-      controller.disconnect(gameHashCode, hashCode);
-      System.exit(0);
+        }
+
+        System.out.println("Disconnecting...");
+        boolean disconnectionResult = controller.disconnect(gameHashCode, hashCode);
+        System.out.println("Disconnection result: " + disconnectionResult);
+        System.exit(0);
     }
 
+    private Player getPlayerByHashCode(int playerHashCode) {
+        for (Player player : players) {
+            return player.getHashCode() == playerHashCode ? player : null;
+        }
+        return null;
+
+    }
     //min included, max excluded
     private boolean checkCommandRange(int min, int max, String command) {
         int index;
@@ -662,7 +724,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         players = gameStartMessage.players;
         currentPlayer = gameStartMessage.players.get(0);
         isGameStarted = true;
-        this.playersPanel = gameStartMessage.chosenPanels;
         this.draftPool = gameStartMessage.draftpool;
         this.publicObjectiveCards = gameStartMessage.publicObjectiveCards;
         this.toolCards = gameStartMessage.toolCards;
@@ -747,7 +808,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         System.out.println("----------------------------------------");
         System.out.println("NOW STARTING --> ROUND = " + currentRound + " - TURN = " + currentTurn);
         showGameStatus();
-        if(endTurnMessage.currentPlayer.getUsername().equals(username)) {
+        if(endTurnMessage.currentPlayer.getHashCode() == hashCode) {
             System.out.println("It's your turn!");
             showInGameCommandList();
         }

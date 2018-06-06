@@ -57,6 +57,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
     }
 
     void draw(){
+        if(panel == null) return;
         double cellHeight = height/4;
         double cellWidth = width/4;
         int col = 0;

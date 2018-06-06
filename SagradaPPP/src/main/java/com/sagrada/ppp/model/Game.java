@@ -3,7 +3,7 @@ package com.sagrada.ppp.model;
 import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.view.gui.Lobby;
+import javafx.application.Platform;
 import javafx.util.Pair;
 
 import java.io.Serializable;
@@ -106,6 +106,7 @@ public class Game implements Serializable{
             getPlayerByHashcode(playerHashCode).setPanel(panels.get(playerHashCode).get(chosenPanelIndex));
             getPlayerByHashcode(playerHashCode).setFavorTokens(getPlayerByHashcode(playerHashCode).getPanel().getFavorTokens());
         }
+        gameStatus = GameStatus.ACTIVE;
         extractPublicObjCards();
         extractToolCards();
         roundTrack.setCurrentRound(1);
@@ -379,7 +380,7 @@ public class Game implements Serializable{
         lobbyObservers.put(playerHashCode, observer);
     }
 
-    public void detachLobbyObserver(int playerHashCode){
+    public void detachLobbyObserver(int playerHashCode) {
         lobbyObservers.remove(playerHashCode);
     }
 
@@ -426,7 +427,9 @@ public class Game implements Serializable{
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {
                 try {
-                    observer.onGameStart(new GameStartMessage(usernameToPanel, draftPool, toolCards, publicObjectiveCards, getUsernames(),players));
+                    observer.onGameStart(new GameStartMessage(usernameToPanel, draftPool, toolCards,
+                            publicObjectiveCards, getUsernames(),players,
+                            roundTrack, players.get(getCurrentPlayerIndex())));
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -473,7 +476,8 @@ public class Game implements Serializable{
     public HashMap<Integer, ArrayList<WindowPanel>> extractPanels() {
         HashMap<Integer, ArrayList<WindowPanel>> temp = new HashMap<>();
         ArrayList<Integer> notUsedPanel = new ArrayList<>();
-        for(int i = 1; i <= StaticValues.NUMBER_OF_CARDS; i++ ){
+        for(int i = 1; i <= WindowPanel.getNumberOfPanels(); i++ ){
+            System.out.println("unused panels" + i);
             notUsedPanel.add(i);
         }
         for(Player player : players){
@@ -567,7 +571,7 @@ public class Game implements Serializable{
         chosenPanelIndex = panelIndex;
     }
 
-    public boolean disconnect(int playerHashCode){
+    public boolean disconnect(int playerHashCode) {
         Player player = getPlayerByHashcode(playerHashCode);
         if(player == null) return false;
         detachLobbyObserver(playerHashCode);
@@ -707,7 +711,7 @@ public class Game implements Serializable{
         if(toolCard != null){
             Player player = getPlayerByHashcode(playerHashCode);
             if (player != null) {
-                System.out.println(player.getUsername() + " is using toolcard ID = " + toolCard.getId());
+                System.out.println(player.getUsername() + " is using toolCard ID = " + toolCard.getId());
                 usedToolCard = true;
                 switch (toolCard.getId()){
                     case 1:
@@ -996,6 +1000,24 @@ public class Game implements Serializable{
         }
     }
 
+    public ReconnectionResult reconnection(int playerHashCode, GameObserver gameObserver) {
+        System.out.println(playerHashCode + " is trying to reconnect");
+
+        if (gameStatus.equals(GameStatus.PANEL_CHOICE)) return new ReconnectionResult(false,
+                "You can't reconnect during game initialization. Try again later!", null);
+        if (!gameStatus.equals(GameStatus.ACTIVE)) return new ReconnectionResult(false,
+                "The game you're trying to reconnect has already ended.", null);
+        Player player = getPlayerByHashcode(playerHashCode);
+        System.out.println("active " + player.getPlayerStatus());
+        if (player == null || !player.getPlayerStatus().equals(PlayerStatus.INACTIVE))
+            return new ReconnectionResult(false, "Permission denied.", null);
+        //TODO notify other users
+        player.setPlayerStatus(PlayerStatus.ACTIVE);
+        attachGameObserver(gameObserver, playerHashCode);
+        return new ReconnectionResult(true, "Reconnection completed!",
+                new GameStartMessage(null, draftPool, toolCards, publicObjectiveCards,
+                        null, players, roundTrack, players.get(getCurrentPlayerIndex())));
+    }
 
     private class MyTimerTask extends TimerTask{
 
