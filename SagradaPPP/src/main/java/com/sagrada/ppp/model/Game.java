@@ -382,7 +382,7 @@ public class Game implements Serializable{
         lobbyObservers.put(playerHashCode, observer);
     }
 
-    public void detachLobbyObserver(int playerHashCode){
+    public void detachLobbyObserver(int playerHashCode) {
         lobbyObservers.remove(playerHashCode);
     }
 
@@ -572,10 +572,8 @@ public class Game implements Serializable{
         chosenPanelIndex = panelIndex;
     }
 
-    public boolean disconnect(int playerHashCode){
-        System.out.println("DIOODIODIODIODIODOIDOIDIODIO \n\n\n\n\n\n\n\n\n\n\n\n\n");
+    public boolean disconnect(int playerHashCode) {
         Player player = getPlayerByHashcode(playerHashCode);
-        System.out.println(playerHashCode + " is disconnecting --- is null ? " + player == null);
         if(player == null) return false;
         detachLobbyObserver(playerHashCode);
         detachAllGameObservers(playerHashCode);
@@ -714,7 +712,7 @@ public class Game implements Serializable{
         if(toolCard != null){
             Player player = getPlayerByHashcode(playerHashCode);
             if (player != null) {
-                System.out.println(player.getUsername() + " is using toolcard ID = " + toolCard.getId());
+                System.out.println(player.getUsername() + " is using toolCard ID = " + toolCard.getId());
                 usedToolCard = true;
                 switch (toolCard.getId()){
                     case 1:
@@ -1011,7 +1009,6 @@ public class Game implements Serializable{
         if (!gameStatus.equals(GameStatus.ACTIVE)) return new ReconnectionResult(false,
                 "The game you're trying to reconnect has already ended.", null);
         Player player = getPlayerByHashcode(playerHashCode);
-        if(player == null) System.out.println("player doesn't exist");
         System.out.println("active " + player.getPlayerStatus());
         if (player == null || !player.getPlayerStatus().equals(PlayerStatus.INACTIVE))
             return new ReconnectionResult(false, "Permission denied.", null);

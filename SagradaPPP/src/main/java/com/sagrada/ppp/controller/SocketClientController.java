@@ -31,7 +31,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     private transient volatile UseToolCardResult useToolCardResult;
     private transient volatile ArrayList<Integer> positions;
     private transient volatile boolean specialDicePlacementResult;
-    private transient ReconnectionResult reconnectionResult;
+    private transient volatile ReconnectionResult reconnectionResult;
 
     public SocketClientController() throws IOException {
         socket = new Socket(StaticValues.SERVER_ADDRESS, StaticValues.SOCKET_PORT);
@@ -197,8 +197,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         try{
             waitingForResponse = true;
             out.writeObject(new DisconnectionRequest(gameHashCode,playerHashCode));
-            this.lobbyObserver = null;
-            gameObservers.clear();
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();
@@ -207,7 +205,8 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
             notificationThread.interrupt();
             closeConnection();
-            System.out.println("Disconnection status = " + disconnectionResult);
+            this.lobbyObserver = null;
+            gameObservers.clear();
             return disconnectionResult;
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();

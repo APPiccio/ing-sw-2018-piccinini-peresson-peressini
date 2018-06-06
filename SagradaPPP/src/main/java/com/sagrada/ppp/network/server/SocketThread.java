@@ -99,7 +99,8 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     @Override
     public Response handle(DisconnectionRequest request) {
         //TODO detach observer and notify game of that
-        DisconnectionResponse disconnectionResponse = new DisconnectionResponse(service.disconnect(request.gameHashCode, request.playerHashCode));
+        DisconnectionResponse disconnectionResponse = new DisconnectionResponse(service.disconnect(request.gameHashCode,
+                request.playerHashCode));
         isStopped = true;
         return disconnectionResponse;
     }

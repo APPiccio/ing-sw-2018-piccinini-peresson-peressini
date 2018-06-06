@@ -144,12 +144,12 @@ public class Service {
 
 
     public void choosePanel(int gameHashCode, int playerHashCode, int panelIndex){
-        System.out.println("Recived choice for " + playerHashCode);
+        System.out.println("Received choice for " + playerHashCode);
         games.get(gameHashCode).pairPanelToPlayer(playerHashCode,panelIndex);
         games.get(gameHashCode).waitingForPanelChoice = false;
     }
 
-    public boolean disconnect(int gameHashCode, int playerHashCode){
+    public boolean disconnect(int gameHashCode, int playerHashCode) {
         Game game = games.get(gameHashCode);
         return game.disconnect(playerHashCode);
     }
