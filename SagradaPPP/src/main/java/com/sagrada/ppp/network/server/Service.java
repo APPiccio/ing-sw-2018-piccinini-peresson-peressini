@@ -186,12 +186,19 @@ public class Service {
         return games.get(gameHashCode).specialDicePlacement(playerHashCode, cellIndex, dice);
     }
 
-    public ArrayList<Integer> getLegalPositions(int gameHashCode, int playerhashCode, Dice dice){
-        return games.get(gameHashCode).getLegalPositions(playerhashCode, dice);
+    public ArrayList<Integer> getLegalPositions(int gameHashCode, int playerHashCode, Dice dice){
+        return games.get(gameHashCode).getLegalPositions(playerHashCode, dice);
     }
 
     public void putDiceInDraftPool(int gameHashCode, Dice dice){
         games.get(gameHashCode).putDiceInDraftPool(dice);
+    }
+
+    public ReconnectionResult reconnection(int playerHashCode, int gameHashCode, GameObserver gameObserver) {
+        Game game = games.get(gameHashCode);
+        if (game == null) return new ReconnectionResult(false,
+                "Unable to reconnect: game does not exist.", null);
+        return games.get(gameHashCode).reconnection(playerHashCode, gameObserver);
     }
 
 }

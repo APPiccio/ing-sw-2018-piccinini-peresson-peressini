@@ -54,4 +54,6 @@ public interface RemoteController extends Remote {
 
     void setTwoDiceAction(int playerHashCode, boolean choice) throws RemoteException;
 
+    ReconnectionResult reconnection(int playerHashCode, int gameHashCode, GameObserver gameObserver) throws RemoteException;
+
 }

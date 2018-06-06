@@ -52,8 +52,8 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
 
             }catch (IOException e) {
                 e.printStackTrace();
+                System.out.println("Closing socket...");
                 return;
-
             }
             catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -99,9 +99,9 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     @Override
     public Response handle(DisconnectionRequest request) {
         //TODO detach observer and notify game of that
+        DisconnectionResponse disconnectionResponse = new DisconnectionResponse(service.disconnect(request.gameHashCode, request.playerHashCode));
         isStopped = true;
-        service.disconnect(request.gameHashCode, request.playerHashCode);
-        return new DisconnectionResponse(true);
+        return disconnectionResponse;
     }
 
     @Override
@@ -149,6 +149,12 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     public Response handle(PutDiceInDraftPoolRequest request) {
         service.putDiceInDraftPool(request.gameHashCode, request.dice);
         return null;
+    }
+
+    @Override
+    public Response handle(ReconnectionRequest request) {
+        return new ReconnectionResponse(service.reconnection(request.playerHashCode, request.gameHashCode,
+                this));
     }
 
     @Override

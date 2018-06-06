@@ -6,6 +6,7 @@ import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.view.ToolCardHandler;
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     private transient volatile UseToolCardResult useToolCardResult;
     private transient volatile ArrayList<Integer> positions;
     private transient volatile boolean specialDicePlacementResult;
+    private transient ReconnectionResult reconnectionResult;
 
     public SocketClientController() throws IOException {
         socket = new Socket(StaticValues.SERVER_ADDRESS, StaticValues.SOCKET_PORT);
@@ -203,7 +205,9 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                 }
                 responseLock.notifyAll();
             }
+            notificationThread.interrupt();
             closeConnection();
+            System.out.println("Disconnection status = " + disconnectionResult);
             return disconnectionResult;
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -260,10 +264,10 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     @Override
-    public void handle(UsedToolCardNotification usedToolCardNotification) {
+    public void handle(UsedToolCardNotification response) {
         for(GameObserver gameObserver : gameObservers){
             try {
-                gameObserver.onToolCardUsed(usedToolCardNotification.toolCardNotificationMessage);
+                gameObserver.onToolCardUsed(response.toolCardNotificationMessage);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -320,6 +324,15 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     @Override
+    public void handle(ReconnectionResponse response) {
+        synchronized (responseLock) {
+            waitingForResponse = false;
+            reconnectionResult = response.reconnectionResult;
+            responseLock.notifyAll();
+        }
+    }
+
+    @Override
     public void endTurn(int gameHashCode, int playerHashCode) throws RemoteException {
         try {
             out.writeObject(new EndTurnRequest(gameHashCode, playerHashCode));
@@ -352,6 +365,26 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     @Override
+    public ReconnectionResult reconnection(int playerHashCode, int gameHashCode,
+                                           GameObserver gameObserver) throws RemoteException {
+        try {
+            waitingForResponse = true;
+            out.writeObject(new ReconnectionRequest(gameHashCode, playerHashCode, null));
+            synchronized (responseLock) {
+                while (waitingForResponse) {
+                    responseLock.wait();
+                }
+                responseLock.notifyAll();
+            }
+            if (reconnectionResult.result) gameObservers.add(gameObserver);
+            return reconnectionResult;
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public void detachAllGameObserver(int gameHashCode, int playerHashCode) throws RemoteException {
         gameObservers.clear();
         try {
@@ -378,6 +411,14 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     Response response = ((Response) in.readObject());
                     if (response != null) {
                         response.handle(handler);
+                    }
+                }catch (SocketException e){
+                    if(isInterrupted()){
+                        //TODO add stuff to close connection due to server crash
+                        System.out.println("SERVER CRASH --> Closing notification thread");
+                    }
+                    else{
+                        e.printStackTrace();
                     }
                 }catch (EOFException e){
                     System.out.println("Closing client socket");

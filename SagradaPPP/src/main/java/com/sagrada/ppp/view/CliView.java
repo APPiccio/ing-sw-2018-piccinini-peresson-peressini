@@ -78,22 +78,76 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
 
 
     public void init() throws RemoteException {
-        if (PlayerTokenSerializer.isTokenPresent()){
+        if (PlayerTokenSerializer.isTokenPresent()) {
             System.out.println("Do you want to resume the previous game? (y/n)");
             String in = scanner.nextLine();
             while(!in.equals("y") && !in.equals("n")){
                 System.out.println("Invalid answer, type y (yes) or n (no)");
                 in = scanner.nextLine();
             }
-            if(in.equals("y")){
-                //TODO controller call to reconnect
+            if (in.equals("y")){
+                JoinGameResult jgr = PlayerTokenSerializer.deserialize();
+                ReconnectionResult reconnectionResult = controller.reconnection(jgr.getPlayerHashCode(),
+                        jgr.getGameHashCode(), this);
+                if (!reconnectionResult.result) {
+                    System.out.println(reconnectionResult.message);
+                    do {
+                        System.out.println("Do you want to retry?");
+                        in = scanner.nextLine();
+                        while (!in.equals("y") && !in.equals("n")) {
+                            System.out.println("Invalid answer, type y (yes) or n (no)");
+                            in = scanner.nextLine();
+                        }
+                        if (in.equals("y")) {
+                            reconnectionResult = controller.reconnection(jgr.getPlayerHashCode(),
+                                    jgr.getGameHashCode(), this);
+                            System.out.println(reconnectionResult.message);
+                        }
+                    } while (!reconnectionResult.result && !in.equals("n"));
+                    if (in.equals("n")) {
+                        PlayerTokenSerializer.deleteToken();
+                        start();
+                    }
+                    else {
+
+                        hashCode = jgr.getPlayerHashCode();
+                        gameHashCode = jgr.getGameHashCode();
+                        username = jgr.getUsername();
+                        draftPool = reconnectionResult.gameStartMessage.draftpool;
+                        toolCards = reconnectionResult.gameStartMessage.toolCards;
+                        publicObjectiveCards = reconnectionResult.gameStartMessage.publicObjectiveCards;
+                        players = reconnectionResult.gameStartMessage.players;
+                        currentPlayer = reconnectionResult.gameStartMessage.currentPlayer;
+                        roundTrack = reconnectionResult.gameStartMessage.roundTrack;
+                        isGameStarted = true;
+                        showGameStatus();
+                        inGame(0, "");
+                    }
+                }
+                else {
+                    System.out.println(reconnectionResult.message);
+                    hashCode = jgr.getPlayerHashCode();
+                    gameHashCode = jgr.getGameHashCode();
+                    username = jgr.getUsername();
+                    draftPool = reconnectionResult.gameStartMessage.draftpool;
+                    toolCards = reconnectionResult.gameStartMessage.toolCards;
+                    publicObjectiveCards = reconnectionResult.gameStartMessage.publicObjectiveCards;
+                    players = reconnectionResult.gameStartMessage.players;
+                    currentPlayer = reconnectionResult.gameStartMessage.currentPlayer;
+                    roundTrack = reconnectionResult.gameStartMessage.roundTrack;
+                    isGameStarted = true;
+                    showGameStatus();
+                    if(currentPlayer.getHashCode() == hashCode)
+                    inGame(0, "");
+                }
+
             }
-            else{
+            else {
                 PlayerTokenSerializer.deleteToken();
                 start();
             }
         }
-        else{
+        else {
             start();
         }
     }
@@ -266,7 +320,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             switch (command) {
 
                 case StaticValues.COMMAND_PLACE_DICE:
-                    if(!currentPlayer.getUsername().equals(username)){
+                    if(currentPlayer.getHashCode() != hashCode){
                         System.out.println(PERMISSION_DENIED);
                         break;
                     }
@@ -748,7 +802,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         System.out.println("----------------------------------------");
         System.out.println("NOW STARTING --> ROUND = " + currentRound + " - TURN = " + currentTurn);
         showGameStatus();
-        if(endTurnMessage.currentPlayer.getUsername().equals(username)) {
+        if(endTurnMessage.currentPlayer.getHashCode() == hashCode) {
             System.out.println("It's your turn!");
             showInGameCommandList();
         }
