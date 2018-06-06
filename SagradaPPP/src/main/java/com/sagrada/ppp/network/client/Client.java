@@ -51,11 +51,10 @@ public class Client
             return;
         }
 
-        //TODO : remove this line and replace with the choice single-multi player
         System.out.println("Choose gui or cli!");
         String viewMode = scanner.nextLine();
-        while (!viewMode.equals("gui") && !viewMode.equals("cli")){
-            System.out.println("Choose a valid option, type 'guy' or 'cli'.");
+        while (!viewMode.equals("gui") && !viewMode.equals("cli")) {
+            System.out.println("Choose a valid option, type 'gui' or 'cli'.");
             viewMode = scanner.nextLine();
         }
         if(viewMode.equals("cli")){
@@ -67,11 +66,6 @@ public class Client
         }
 
         System.out.println("Stopping client...");
-    }
-
-
-    public void login(RemoteController controller){
-        System.out.println("Insert username: ");
     }
 
 }

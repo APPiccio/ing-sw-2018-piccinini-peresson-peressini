@@ -144,12 +144,12 @@ public class Service {
 
 
     public void choosePanel(int gameHashCode, int playerHashCode, int panelIndex){
-        System.out.println("Recived choice for " + playerHashCode);
+        System.out.println("Received choice for " + playerHashCode);
         games.get(gameHashCode).pairPanelToPlayer(playerHashCode,panelIndex);
         games.get(gameHashCode).waitingForPanelChoice = false;
     }
 
-    public boolean disconnect(int gameHashCode, int playerHashCode){
+    public boolean disconnect(int gameHashCode, int playerHashCode) {
         Game game = games.get(gameHashCode);
         return game.disconnect(playerHashCode);
     }
@@ -186,12 +186,19 @@ public class Service {
         return games.get(gameHashCode).specialDicePlacement(playerHashCode, cellIndex, dice);
     }
 
-    public ArrayList<Integer> getLegalPositions(int gameHashCode, int playerhashCode, Dice dice){
-        return games.get(gameHashCode).getLegalPositions(playerhashCode, dice);
+    public ArrayList<Integer> getLegalPositions(int gameHashCode, int playerHashCode, Dice dice){
+        return games.get(gameHashCode).getLegalPositions(playerHashCode, dice);
     }
 
     public void putDiceInDraftPool(int gameHashCode, Dice dice){
         games.get(gameHashCode).putDiceInDraftPool(dice);
+    }
+
+    public ReconnectionResult reconnection(int playerHashCode, int gameHashCode, GameObserver gameObserver) {
+        Game game = games.get(gameHashCode);
+        if (game == null) return new ReconnectionResult(false,
+                "Unable to reconnect: game does not exist.", null);
+        return games.get(gameHashCode).reconnection(playerHashCode, gameObserver);
     }
 
 }

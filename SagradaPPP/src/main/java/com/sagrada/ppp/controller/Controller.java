@@ -86,6 +86,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
     @Override
+    public ReconnectionResult reconnection(int playerHashCode, int gameHashCode,
+                                           GameObserver gameObserver) throws RemoteException {
+        return service.reconnection(playerHashCode, gameHashCode, gameObserver);
+    }
+
+    @Override
     public void setActionSign(int playerHashCode, int addend) throws RemoteException {
         toolCardThreads.get(playerHashCode).toolCardParameters.actionSign = addend;
     }

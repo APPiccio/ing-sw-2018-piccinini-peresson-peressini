@@ -26,8 +26,7 @@ public class PlayerTokenSerializer {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             try {
                 oos.close();
                 fos.close();
@@ -45,4 +44,30 @@ public class PlayerTokenSerializer {
             e.printStackTrace();
         }
     }
+
+    public static JoinGameResult deserialize() {
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
+        JoinGameResult joinGameResult = null;
+        try {
+            fis = new FileInputStream(StaticValues.TOKEN_URL);
+            ois = new ObjectInputStream(fis);
+            joinGameResult = (JoinGameResult) ois.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                ois.close();
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return joinGameResult;
+    }
+
 }
