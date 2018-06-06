@@ -4,7 +4,6 @@ import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.view.gui.Lobby;
-import com.sun.jdi.ObjectReference;
 import javafx.util.Pair;
 
 import java.io.Serializable;

@@ -11,7 +11,6 @@ import com.sagrada.ppp.utils.StaticValues;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
 
-import java.awt.desktop.SystemSleepEvent;
 import java.io.Serializable;
 
 import java.rmi.Remote;
