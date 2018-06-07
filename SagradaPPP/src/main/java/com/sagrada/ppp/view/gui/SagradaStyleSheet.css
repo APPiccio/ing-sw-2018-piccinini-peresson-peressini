@@ -1,27 +1,27 @@
 
 
 .dialog-pane{
-    -fx-background-color: #F0433A;
+    -fx-background-color: #FFFFFF;
 }
 .sagradabutton,
 .dialog-pane .button{
-    -fx-background-color:#F0433A;
-    -fx-border-color:#FF715B;
-    -fx-text-fill: #2E112D;
-    -fx-border-radius: 3;
+    -fx-background-color:#FFFFFF;
+    -fx-text-fill: black;
+    -fx-border-radius: 0;
     -fx-padding: 10 10 10 10;
+
 
 }
 .sagradabutton:hover,
 .dialog-pane .button:hover{
-    -fx-background-color:#C9283E;
+    -fx-border-radius: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
 }
-
+.tab .tab-label,
 .label,
 .dialog-pane .label {
     -fx-font-size: 10pt;
-    -fx-text-fill: #2E112D;
-    -fx-font-weight: bold;
+    -fx-text-fill: black;
 }
 .tab-pane .tab-header-area .tab-header-background {
     -fx-opacity: 0;
@@ -37,29 +37,31 @@
 }
 .tab-pane .tab
 {
-    -fx-background-color: #F0433A;
 
+    -fx-background-color: white;
+
+}
+.tab-header-background {
+    -fx-background-color: white ;
+}
+.dicebutton {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
 }
 
 .tab-pane .tab:selected
 {
-    -fx-background-color: #F0433A;
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 5, 0);
 }
 .pane{
     -fx-background-color: #F0433A;
 }
 
-.tab .tab-label {
-    -fx-alignment: CENTER;
-    -fx-text-fill: #2E112D;
-    -fx-font-size: 12px;
-    -fx-font-weight: bold;
-}
+
 
 .tab:selected .tab-label {
     -fx-alignment: CENTER;
-    -fx-background-color: #F0433A;
-    -fx-text-fill: #2E112D;
+    -fx-text-fill: black;
 }
 
 .tab-pane:top *.tab-header-area {

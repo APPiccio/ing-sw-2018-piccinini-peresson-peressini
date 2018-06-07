@@ -25,6 +25,7 @@ public class DiceButton extends Button {
                                 BackgroundRepeat.NO_REPEAT,
                                 BackgroundPosition.CENTER,
                                 BackgroundSize.DEFAULT)));
+        this.getStyleClass().add("dicebutton");
     }
 
     public void setSelected(boolean selected) {

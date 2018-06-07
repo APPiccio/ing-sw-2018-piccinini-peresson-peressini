@@ -6,12 +6,13 @@ import com.sagrada.ppp.utils.StaticValues;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-public class RoundTrackPane extends BorderPane {
+public class RoundTrackPane extends VBox {
 
 
     private RoundTrack roundTrack;
@@ -28,8 +29,14 @@ public class RoundTrackPane extends BorderPane {
         width = 70;
         mainPane = new GridPane();
         roundTrack = new RoundTrack();
-
-        this.setBackground(new Background(new BackgroundFill(Color.BLACK,new CornerRadii(5),new Insets(0))));
+        Label title = new Label("RoundTrack");
+        title.setAlignment(Pos.TOP_LEFT);
+        title.setTextFill(Color.WHITE);
+        title.setPadding(new Insets(0,0,5,0));
+        this.getChildren().add(title);
+        this.getChildren().add(mainPane);
+        this.setEffect(new DropShadow(10,Color.BLACK));
+        this.setBackground(new Background(new BackgroundFill(Color.web("3f454f"),new CornerRadii(5),new Insets(0))));
         this.setPadding(new Insets(10));
 
         draw();
@@ -77,14 +84,12 @@ public class RoundTrackPane extends BorderPane {
                 roundToolTip.setGraphic(new SelectDicePane(roundTrack.getDicesOnRound(i),width/1.5,height/1.5, eventBus, i, null));
                 roundIndicator.setTooltip(roundToolTip);
             }
-            mainPane.add(roundIndicator,(i-1)%5,(i-1)/5);
-            Label title = new Label("RoundTrack");
-            title.setTextFill(Color.WHITE);
-            title.setPadding(new Insets(0,0,5,0));
-            this.setTop(title);
-            this.setCenter(mainPane);
+            mainPane.add(roundIndicator,(i-1)/5,(i-1)%5);
+
+
 
         }
+
     }
     public void setRoundTrack(RoundTrack roundTrack) {
         this.roundTrack = roundTrack;
