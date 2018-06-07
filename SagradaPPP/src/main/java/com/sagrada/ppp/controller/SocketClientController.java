@@ -337,6 +337,28 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     @Override
+    public void handle(PlayerReconnectionNotification response) {
+        for(GameObserver gameObserver : gameObservers){
+            try {
+                gameObserver.onPlayerReconnection(response.reconnectingPlayer);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void handle(PlayerDisconnectionNotification response) {
+        for(GameObserver gameObserver : gameObservers){
+            try {
+                gameObserver.onPlayerDisconnection(response.disconnectingPlayer);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public void endTurn(int gameHashCode, int playerHashCode) throws RemoteException {
         try {
             out.writeObject(new EndTurnRequest(gameHashCode, playerHashCode));

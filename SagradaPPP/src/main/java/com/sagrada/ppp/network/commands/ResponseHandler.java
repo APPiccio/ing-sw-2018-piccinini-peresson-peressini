@@ -20,5 +20,7 @@ public interface ResponseHandler {
     void handle(SpecialDicePlacementResponse response);
     void handle(UsedToolCardNotification response);
     void handle(ReconnectionResponse response);
+    void handle(PlayerReconnectionNotification response);
+    void handle(PlayerDisconnectionNotification response);
 
 }
