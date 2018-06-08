@@ -34,7 +34,7 @@ public class StaticValues {
     public static final String REGISTRY_NAME = "SagradaRegistry";
     public static final int SOCKET_PORT = 1996;
     public static final String SERVER_ADDRESS = "localhost";
-    //public static final String SERVER_ADDRESS = "192.168.43.56";
+    //public static final String SERVER_ADDRESS = "192.168.43.162";
 
     //Tool Card names
     public static final String TOOLCARD1_NAME = "Grozing Pliers";
@@ -232,7 +232,7 @@ public class StaticValues {
             case PURPLE:
                 return  FILE_URI_PREFIX + PURPLE_DICE_ASSET +val+ PNG_ASSET;
             default:
-                return null;
+                return  FILE_URI_PREFIX + PURPLE_CELL_ASSET;
         }
 
     }

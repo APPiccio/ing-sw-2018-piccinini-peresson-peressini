@@ -329,7 +329,8 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 else{
                     service.putDiceInDraftPool(gameHashCode, dice);
-                    useToolCardResult.result = false;
+                    useToolCardResult.result = true;
+                    useToolCardResult.msg = "No placement positions available, dice put back in the draft pool!";
                 }
                 view.notifyUsageCompleted(useToolCardResult);
             }
@@ -374,7 +375,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                 }
                 else{
                     service.putDiceInDraftPool(gameHashCode, dice);
-                    useToolCardResult.result = false;
+                    useToolCardResult.result = true;
                     useToolCardResult.msg = "No placement allowed due to game rules. The dice has been put back in the draft pool";
                 }
                 view.notifyUsageCompleted(useToolCardResult);

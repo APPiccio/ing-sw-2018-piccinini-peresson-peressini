@@ -681,13 +681,14 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
             else {
                 Dice dice = useToolCardResult.dice;
+                System.out.println("TOOLCARD 6 DICE = " + dice.toString());
                 view.reRolledDiceActionRequired(dice);
                 sendLegalDicePositionsRequest(dice);
                 if(!positions.isEmpty()) {
                     do {
                         toolCardParameters.panelCellIndex = null;
                         view.panelCellIndexRequired();
-                        while (toolCardParameters.panelCellIndex == null) ;
+                        while (toolCardParameters.panelCellIndex == null);
                     }
                     while (!positions.contains(toolCardParameters.panelCellIndex));
 
@@ -710,7 +711,9 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    useToolCardResult.result = false;
+                    useToolCardResult.result = true;
+                    useToolCardResult.msg = "No placement positions available, dice put back in the draft pool!";
+                    useToolCardResult.draftpool.add(dice);
                 }
                 view.notifyUsageCompleted(useToolCardResult);
             }
@@ -761,6 +764,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                             player.setPanel(panel);
                         }
                     }
+                    //this line should be only in socket controller
                     useToolCardResult.draftpool.remove(toolCardParameters.panelCellIndex);
                 }
                 else{
@@ -770,8 +774,10 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    useToolCardResult.result = false;
+                    useToolCardResult.result = true;
                     useToolCardResult.msg = "No placement allowed due to game rules. The dice has been put back in the draft pool";
+                    //this line should be only in socket controller
+                    useToolCardResult.draftpool.add(dice);
                 }
                 view.notifyUsageCompleted(useToolCardResult);
             }

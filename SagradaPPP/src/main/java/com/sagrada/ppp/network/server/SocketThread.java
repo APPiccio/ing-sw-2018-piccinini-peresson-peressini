@@ -2,11 +2,9 @@ package com.sagrada.ppp.network.server;
 
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
-import com.sun.javafx.binding.StringFormatter;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;

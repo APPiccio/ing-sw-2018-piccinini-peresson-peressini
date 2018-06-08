@@ -893,11 +893,11 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
             toolCardFlags.reset();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(ACTION_REQUIRED);
+            alert.setGraphic(new ImageView(new Image(StaticValues.getAssetUri(dice.getColor(), dice.getValue()), 50, 50, true, true)));
             alert.setHeaderText("Your new drafted dice is: ");
             alert.setContentText(null);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.initOwner(stage);
-            alert.setGraphic(new DiceButton(dice, 50, 50));
             alert.showAndWait();
         });
     }
