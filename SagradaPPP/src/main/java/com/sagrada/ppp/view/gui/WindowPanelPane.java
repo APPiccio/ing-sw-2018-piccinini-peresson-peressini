@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -37,8 +38,9 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         this.setHgap(5);
         this.setVgap(5);
         this.setAlignment(Pos.CENTER);
+        this.setEffect(new DropShadow(10,Color.BLACK));
         this.setBackground(new Background(
-                new BackgroundFill(Color.BLACK,new CornerRadii(10), new Insets(0))
+                new BackgroundFill(Color.web("#3f454f"),new CornerRadii(10), new Insets(0))
         ));
         this.autosize();
 

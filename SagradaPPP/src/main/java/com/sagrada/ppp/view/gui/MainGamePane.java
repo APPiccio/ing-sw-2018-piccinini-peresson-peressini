@@ -15,8 +15,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.InnerShadow;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -30,6 +29,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.Policy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -42,7 +42,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private RoundTrack roundTrack;
     private GridPane mainGamePane;
     private VBox opponentsWindowPanelsPane;
-    private HBox bottomContainer;
+    private VBox leftContainer;
     private RoundTrackPane roundTrackPane;
     private FlowPane centerContainer;
     private VBox draftPoolContainer;
@@ -50,11 +50,12 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private WindowPanelPane playerWindowPanel;
     private GridPane toolCardsContainer;
     private GridPane publicCardsContainer;
-    private VBox topContainer;
+    private HBox topContainer;
     private Insets defInset;
     private TabPane tabContainer;
     private Button skipButton;
     private Tab gameTab,settingsTab,logTab;
+    private ScrollPane rightContainer;
 
     private String currentPlayerUser;
     private Stage stage;
@@ -89,8 +90,9 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         toolCardButtons = new ArrayList<>();
         publicCardButtons = new ArrayList<>();
         opponentsWindowPanelsPane = new VBox();
-        bottomContainer = new HBox();
+        leftContainer = new VBox();
         roundTrackPane = new RoundTrackPane();
+        rightContainer = new ScrollPane();
         //gni gni
         roundTrackPane.setObserver(this);
         //gne gne
@@ -100,7 +102,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         playerWindowPanel = new WindowPanelPane(null,440,400);
         toolCardsContainer = new GridPane();
         publicCardsContainer = new GridPane();
-        topContainer = new VBox();
+        topContainer = new HBox();
         skipButton = new Button();
         draftPoolDiceButtons = new ArrayList<>();
         gameStatus = new Label();
@@ -114,7 +116,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private void draw(){
 
 
-        Scene scene = new Scene(tabContainer, 700, 1270);
+        Scene scene = new Scene(tabContainer, 1440, 900);
+        stage.centerOnScreen();
         URL url = this.getClass().getResource("SagradaStyleSheet.css");
         if (url == null) {
             System.out.println("Resource not found. Aborting.");
@@ -146,11 +149,11 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         col2.setHgrow(Priority.SOMETIMES);
         mainGamePane.getColumnConstraints().addAll(col2,col1,col2);
         RowConstraints row1 = new RowConstraints();
-        row1.setVgrow(Priority.ALWAYS);
+        row1.setVgrow(Priority.NEVER);
         RowConstraints row2 = new RowConstraints();
-        row2.setVgrow(Priority.SOMETIMES);
+        row2.setVgrow(Priority.ALWAYS);
         mainGamePane.getRowConstraints().addAll(row1,row2);
-        mainGamePane.add(opponentsWindowPanelsPane,2,0,1,2);
+
         drawToolCards();
         drawPublicObjectiveCards();
 
@@ -158,9 +161,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         topContainer.setAlignment(Pos.CENTER);
         GridPane.setValignment(topContainer,VPos.CENTER);
         topContainer.setPadding(defInset);
-        mainGamePane.setEffect(new InnerShadow(BlurType.GAUSSIAN, Color.web("2E112D"),500,0,0,0));
-        mainGamePane.add(topContainer,0,0,1,1);
-        mainGamePane.setBackground(new Background(new BackgroundFill(Color.web("F0433A"),CornerRadii.EMPTY,new Insets(0))));
+        mainGamePane.add(topContainer,0,0,3,1);
+        mainGamePane.setBackground(new Background(new BackgroundFill(Color.web("FFFFFF"),CornerRadii.EMPTY,new Insets(0))));
         ImageView privateCardImageView = new ImageView();
         HBox.setMargin(privateCardImageView,defInset);
         HBox.setHgrow(privateCardImageView,Priority.ALWAYS);
@@ -168,14 +170,15 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         //privateCardImageView.setImage(new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_"+privateColor.toString().toLowerCase()+".png",150,204,true,true));
 
         HBox.setMargin(gameStatus,defInset);
-        bottomContainer.setAlignment(Pos.CENTER);
-        GridPane.setHalignment(bottomContainer,HPos.CENTER);
+        leftContainer.setAlignment(Pos.CENTER);
+        GridPane.setHalignment(leftContainer,HPos.CENTER);
         gameStatus.setFont(Font.font("Courier New",FontWeight.BOLD,20));
         gameStatus.setAlignment(Pos.BASELINE_LEFT);
         HBox.setHgrow(roundTrackPane,Priority.ALWAYS);
-        bottomContainer.getChildren().addAll(gameStatus,privateCardImageView,roundTrackPane);
-        bottomContainer.setPadding(defInset);
-        mainGamePane.add(bottomContainer,0,1,2,1);
+        //todo add gameStatus,privateCardImageView
+        leftContainer.getChildren().addAll(roundTrackPane);
+        leftContainer.setPadding(defInset);
+        mainGamePane.add(leftContainer,0,1,1,1);
 
         Label draftPoolTitle = new Label("DraftPool");
         draftPoolTitle.setTextFill(Color.BLACK);
@@ -191,14 +194,19 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
 
         drawDraftPool();
        ///centerContainer.setBackground(                new Background(                    new BackgroundFill(                        Color.web("F0433A"),      new CornerRadii(5),                        Insets.EMPTY)));
-        centerContainer.setBorder(new Border(new BorderStroke(Color.web("C7F4FC"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
+        playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("C7F4FC"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
         centerContainer.getChildren().add(draftPoolContainer);
         centerContainer.setAlignment(Pos.CENTER);
         centerContainer.setPadding(defInset);
-        mainGamePane.add(centerContainer,1,0,1,1);
+        GridPane.setFillWidth(centerContainer,false);
+        GridPane.setFillHeight(centerContainer,false);
+        mainGamePane.add(centerContainer,1,1,1,1);
 
         opponentsWindowPanelsPane.setAlignment(Pos.CENTER);
         opponentsWindowPanelsPane.setSpacing(5);
+        rightContainer.setContent(opponentsWindowPanelsPane);
+        rightContainer.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        mainGamePane.add(rightContainer,2,1,1,1);
 
         //drawing All Window Panels
         GridPane.setFillWidth(mainGamePane,true);
@@ -232,13 +240,13 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         if (currentPlayerUser.equals(joinGameResult.getUsername())){
             skipButton.setDisable(false);
             Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn!");
-            centerContainer.setBorder(new Border(new BorderStroke(Color.web("1EA896"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
+            playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("1EA896"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
             alert.setHeaderText(null);
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.initOwner(stage);
             alert.show();
         }else {
-            centerContainer.setBorder(new Border(new BorderStroke(Color.web("FF715B"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
+            playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("FF715B"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
         }
 
     }
@@ -320,6 +328,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         for(ToolCard toolCard : toolCards){
             Button toolCardButton = new Button();
             toolCardButtons.add(toolCardButton);
+            toolCardButton.setEffect(new DropShadow(10,Color.BLACK));
             Border border = new Border(new BorderStroke(Color.web("FFFFFF"),BorderStrokeStyle.SOLID,new CornerRadii(3),BorderStroke.MEDIUM));
             toolCardButton.setBorder(border);
             toolCardButton.setId(Integer.toString(toolCard.getId()));
@@ -349,6 +358,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         for(PublicObjectiveCard publicObjectiveCard : publicObjectiveCards){
             Button publicObjectiveButton = new Button();
             publicCardButtons.add(publicObjectiveButton);
+            publicObjectiveButton.setEffect(new DropShadow(10,Color.BLACK));
             Border border = new Border(new BorderStroke(Color.web("FFFFFF"),BorderStrokeStyle.SOLID,new CornerRadii(3),BorderStroke.MEDIUM));
             publicObjectiveButton.setBorder(border);
             publicObjectiveButton.setId(Integer.toString(publicObjectiveCard.getId()));
@@ -600,7 +610,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
             if(endTurnMessage.currentPlayer.getUsername().equals(joinGameResult.getUsername())){
                 skipButton.setDisable(false);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn!");
-                centerContainer.setBorder(new Border(new BorderStroke(Color.web("1EA896"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
+                playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("1EA896"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
                 alert.setHeaderText(null);
                 alert.initModality(Modality.APPLICATION_MODAL);
                 alert.initOwner(stage);
@@ -608,7 +618,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
             }else if(endTurnMessage.previousPlayer.getUsername().equals(joinGameResult.getUsername())){
                 skipButton.setDisable(true);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION,"Your turn is ended!");
-                centerContainer.setBorder(new Border(new BorderStroke(Color.web("FF715B"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
+                playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("FF715B"),BorderStrokeStyle.SOLID,new CornerRadii(5),BorderStroke.MEDIUM)));
                 alert.setHeaderText(null);
                 alert.initModality(Modality.APPLICATION_MODAL);
                 alert.initOwner(stage);
