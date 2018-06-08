@@ -2,6 +2,8 @@ package com.sagrada.ppp.network.server;
 
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
+import com.sun.javafx.binding.StringFormatter;
+
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
@@ -16,6 +18,9 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     private ObjectInputStream in;
     private Response response;
     private boolean isStopped;
+    private int gameHashCode;
+    private int playerHashCode;
+    private String username;
 
 
 
@@ -50,9 +55,12 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
                     }
                 }
 
-            }catch (IOException e) {
+            }
+
+            catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Closing socket...");
+                service.leaveLobby(gameHashCode, username, this, this);
                 return;
             }
             catch (ClassNotFoundException e) {
@@ -81,6 +89,9 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
 
     public Response handle(JoinGameRequest joinGameRequest){
         JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this,this);
+        this.playerHashCode = joinGameResult.getPlayerHashCode();
+        this.gameHashCode = joinGameResult.getGameHashCode();
+        this.username = joinGameResult.getUsername();
         return new JoinGameResponse(joinGameResult);
     }
 
@@ -270,5 +281,11 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public void rmiPing() throws RemoteException {
+        //do nothing here.. only to keep inheritance
     }
 }

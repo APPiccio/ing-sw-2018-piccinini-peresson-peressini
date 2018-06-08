@@ -17,12 +17,13 @@ public class LobbyTimer extends Thread {
 
         }
         if(!isInterrupted()) {
-            game.notifyTimerChanges(TimerStatus.FINISH);
-            Runnable myrunnable = () -> {
-                game.init();
-            };
-            new Thread(myrunnable).start();
-
+            if(game.pingAllLobbyObservers()) {
+                game.notifyTimerChanges(TimerStatus.FINISH);
+                Runnable myrunnable = () -> {
+                    game.init();
+                };
+                new Thread(myrunnable).start();
+            }
         }
     }
 }

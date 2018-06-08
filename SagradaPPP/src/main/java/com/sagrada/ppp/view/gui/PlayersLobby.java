@@ -220,4 +220,9 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         }
     }
 
+
+    @Override
+    public void rmiPing() throws RemoteException {
+
+    }
 }

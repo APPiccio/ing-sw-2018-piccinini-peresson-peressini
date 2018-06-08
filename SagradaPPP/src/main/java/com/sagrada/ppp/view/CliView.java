@@ -970,4 +970,8 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         toolCardFlags.isTwoDiceActionRequired = true;
     }
 
+    @Override
+    public void rmiPing() throws RemoteException {
+        //do nothing here
+    }
 }
