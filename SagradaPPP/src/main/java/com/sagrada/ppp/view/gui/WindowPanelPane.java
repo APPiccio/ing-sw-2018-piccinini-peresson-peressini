@@ -101,13 +101,26 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         System.out.println("col: "+cell.col + " row: " +cell.row);
         if(eventBus !=  null) {
             if(panel.getCell(cell.row,cell.col).hasDiceOn()){
-                System.out.println("has dice on!");
-                DiceButton diceButton = (DiceButton) cell.getChildren().get(0);
-                if (diceButton != null)
-                    eventBus.onDiceClicked(cell.row,cell.col);
+                eventBus.onDiceClicked(cell.row,cell.col);
             }else {
                 eventBus.onCellClicked(cell.row, cell.col);
             }
+        }
+    }
+    public static Color getColor(com.sagrada.ppp.model.Color color){
+        switch (color){
+            case GREEN:
+                return Color.web("589D5A");
+            case RED:
+                return Color.web("BE321E");
+            case BLUE:
+                return Color.web("67B1B8");
+            case YELLOW:
+                return Color.web("DAC706");
+            case PURPLE:
+                return Color.web("9F3D80");
+            default:
+                return Color.BLACK;
         }
     }
 
@@ -135,22 +148,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
             this.cellHeight = cellHeight;
             this.setMinSize(cellWidth,cellHeight);
         }
-        private Color getColor(com.sagrada.ppp.model.Color color){
-            switch (color){
-                case GREEN:
-                    return Color.web("589D5A");
-                case RED:
-                    return Color.web("BE321E");
-                case BLUE:
-                    return Color.web("67B1B8");
-                case YELLOW:
-                    return Color.web("DAC706");
-                case PURPLE:
-                    return Color.web("9F3D80");
-                default:
-                    return Color.BLACK;
-            }
-        }
+
 
         private CellPane drawCell(){
             if(cell.hasColorRestriction()){

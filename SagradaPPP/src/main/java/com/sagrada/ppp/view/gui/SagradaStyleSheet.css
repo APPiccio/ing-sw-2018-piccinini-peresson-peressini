@@ -17,6 +17,12 @@
     -fx-border-radius: 0;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
 }
+.title
+{
+    -fx-font-size: 30pt;
+    -fx-text-fill: black;
+    -fx-font-family: Impact;
+}
 .tab .tab-label,
 .label,
 .dialog-pane .label {

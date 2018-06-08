@@ -3,6 +3,7 @@ package com.sagrada.ppp.view.gui;
 import com.sagrada.ppp.model.Dice;
 import com.sagrada.ppp.model.WindowPanel;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -24,6 +25,7 @@ public class SelectDicePane extends GridPane implements EventHandler<MouseEvent>
         gridPane.setVgap(diceHeight/10);
         gridPane.setHgap(diceWidth/10);
         this.alertParent = alertParent;
+        this.setPadding(new Insets(10,10,10,10));
         this.getChildren().add(gridPane);
         this.eventBus = eventBus;
         this.roundIndex = roundIndex;
@@ -40,6 +42,10 @@ public class SelectDicePane extends GridPane implements EventHandler<MouseEvent>
                 row++;
             }
         }
+        Button closeButton = new Button("Close");
+        closeButton.setOnMouseClicked(e ->
+            alertParent.hide()
+        );
 
     }
 
