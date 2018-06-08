@@ -3,10 +3,12 @@ package com.sagrada.ppp.model;
 import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.utils.StaticValues;
+import com.sagrada.ppp.view.gui.Lobby;
 import javafx.application.Platform;
 import javafx.util.Pair;
 
 import java.io.Serializable;
+import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -119,6 +121,12 @@ public class Game implements Serializable{
      * Handling turns and rounds mechanics.
      * From round 1 to round 10 and foreach round handles players turn, according to game rules
      */
+
+    private void rmiPing(GameObserver gameObserver) throws RemoteException {
+            gameObserver.rmiPing();
+    }
+
+
     private void gameHandler() {
         Player justPlayedPlayer = null;
 
@@ -251,6 +259,7 @@ public class Game implements Serializable{
         else{
             if(players.size() == 4){
                 //starting game
+
                 lobbyTimer.interrupt();
                 notifyTimerChanges(TimerStatus.FINISH);
                 Runnable myrunnable = () -> {
@@ -400,7 +409,7 @@ public class Game implements Serializable{
             try {
                 System.out.println("I'm notifying a new LobbyTimerStatus = " + timerStatus);
                 observer.onTimerChanges(lobbyTimerStartTime, timerStatus);
-            } catch (RemoteException e) {
+            }catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
@@ -409,8 +418,10 @@ public class Game implements Serializable{
     private void notifyPlayerJoin(String username, ArrayList<String> players, int numOfPlayers){
         for (LobbyObserver observer: lobbyObservers.values()) {
             try {
-
                 observer.onPlayerJoined(username , players,numOfPlayers);
+            } catch (ConnectException e){
+                System.out.println("Connection Exception");
+                e.printStackTrace();
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -1040,6 +1051,23 @@ public class Game implements Serializable{
                 new GameStartMessage(null, draftPool, toolCards, publicObjectiveCards,
                         null, players, roundTrack, players.get(getCurrentPlayerIndex())));
     }
+
+    public boolean pingAllLobbyObservers(){
+        boolean result = true;
+        for(Integer playerHashCode : lobbyObservers.keySet()){
+            try {
+                lobbyObservers.get(playerHashCode).rmiPing();
+            } catch (ConnectException e) {
+                result = false;
+                System.out.println("--> detected player disconnection, username = " + getPlayerByHashcode(playerHashCode).getUsername());
+                leaveLobby(getPlayerByHashcode(playerHashCode).getUsername(), lobbyObservers.get(playerHashCode));
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
 
     private class MyTimerTask extends TimerTask{
 

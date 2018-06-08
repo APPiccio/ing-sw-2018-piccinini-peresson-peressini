@@ -244,4 +244,8 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
 
     }
 
+    @Override
+    public void rmiPing() throws RemoteException {
+        //do nothing here
+    }
 }

@@ -27,7 +27,7 @@ public class StaticValues {
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
-    public static int lobbyTimer = 4000;
+    public static int lobbyTimer = 0;
 
     //Connection static value
     public static final int RMI_PORT = 1099;
@@ -239,7 +239,7 @@ public class StaticValues {
 
     public static int getLobbyTimer(){
 
-        if(lobbyTimer != 0) return lobbyTimer;
+        if(lobbyTimer > 0) return lobbyTimer;
         JSONTokener jsonTokener = null;
         try {
             jsonTokener = new JSONTokener(new FileReader("src/main/java/com/sagrada/ppp/utils/config.json"));

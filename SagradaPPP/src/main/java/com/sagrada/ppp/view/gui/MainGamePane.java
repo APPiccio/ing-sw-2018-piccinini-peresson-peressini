@@ -882,4 +882,9 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
             }
         }
     }
+
+    @Override
+    public void rmiPing() throws RemoteException {
+        //do nothing here
+    }
 }
