@@ -92,9 +92,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         leftContainer = new VBox();
         roundTrackPane = new RoundTrackPane();
         rightContainer = new ScrollPane();
-        //gni gni
         roundTrackPane.setObserver(this);
-        //gne gne
         centerContainer = new FlowPane();
         draftPoolContainer = new VBox();
         draftPoolPane = new FlowPane();
@@ -113,7 +111,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     }
 
     private void draw(){
-
 
         Scene scene = new Scene(tabContainer, 1440, 900);
         stage.centerOnScreen();
@@ -767,16 +764,19 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
             drawWindowPanels();
 
             Alert alert = new Alert(Alert.AlertType.NONE);
-            if(useToolCardResult.result){
-               alert.setAlertType(Alert.AlertType.INFORMATION);
-               alert.setTitle("All Good");
-               alert.setHeaderText("Tool Card used successfully!");
-            }else {
+            if (useToolCardResult.result) {
+                alert.setAlertType(Alert.AlertType.INFORMATION);
+                alert.setTitle("All good");
+                alert.setHeaderText("Tool card used successfully!");
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.initOwner(stage);
+            } else {
                 isToolCardUsed = false;
                 alert.setAlertType(Alert.AlertType.INFORMATION);
-                alert.setTitle("Ehhhgggrrr, something went wrong");
+                alert.setTitle("Ehhhgggrrr, something went wrong...");
                 alert.setHeaderText("Negative result!");
-
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.initOwner(stage);
             }
             alert.showAndWait();
         });

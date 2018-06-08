@@ -36,7 +36,6 @@ public class ResultPane extends UnicastRemoteObject {
 
     ResultPane(ArrayList<PlayerScore> playersScore, ArrayList<PublicObjectiveCard> publicObjectiveCards,
                RemoteController controller, Stage stage) throws RemoteException {
-
         this.controller = controller;
         this.stage = stage;
         BorderPane borderPane = new BorderPane();
@@ -71,11 +70,10 @@ public class ResultPane extends UnicastRemoteObject {
         drawResultTable(playersScore, publicObjectiveCards);
         borderPane.setCenter(topVBox);
 
-        stage.setScene(new Scene(borderPane, 1280, 720));
+        stage.setScene(new Scene(borderPane, 1920, 1080));
         stage.setTitle("Results");
         stage.centerOnScreen();
         stage.show();
-
     }
 
     private void drawWindowPanels(ArrayList<PlayerScore> playersScore) {
@@ -87,7 +85,8 @@ public class ResultPane extends UnicastRemoteObject {
             imageView.setFitWidth(100);
             imageView.setFitHeight(150);
             imageView.setPreserveRatio(true);
-            WindowPanelPane windowPanelPane = new WindowPanelPane(playerScore.getWindowPanel(), 135, 135);
+            WindowPanelPane windowPanelPane = new WindowPanelPane(playerScore.getWindowPanel(),
+                    135, 135);
             Label label = new Label(playerScore.getUsername() + "'s panel");
             if (playersScore.size() == 2) {
                 if (i == 0) {
@@ -120,7 +119,8 @@ public class ResultPane extends UnicastRemoteObject {
         topVBox.getChildren().add(publicObjectiveCardsHBox);
     }
 
-    private void drawResultTable(ArrayList<PlayerScore> playersScore, ArrayList<PublicObjectiveCard> publicObjectiveCards) {
+    private void drawResultTable(ArrayList<PlayerScore> playersScore,
+                                 ArrayList<PublicObjectiveCard> publicObjectiveCards) {
         //Create column Username
         TableColumn<PlayerScore, String> usernameCol = new TableColumn<>("Username");
         //Create column TotalPoints
@@ -130,15 +130,20 @@ public class ResultPane extends UnicastRemoteObject {
         //Create column Empty Cell
         TableColumn<PlayerScore, Integer> emptyCellsCol = new TableColumn<>("Empty Cells");
         //Create column PrivateObjectiveCard
-        TableColumn<PlayerScore, Integer> privateObjectiveCardCol = new TableColumn<>("Private Objective Card Points");
+        TableColumn<PlayerScore, Integer> privateObjectiveCardCol =
+                new TableColumn<>("Private Objective Card Points");
         //Create column PublicObjectiveCard
-        TableColumn<PlayerScore, Integer> publicObjectiveCardCol = new TableColumn<>("Public Objective Cards Points");
+        TableColumn<PlayerScore, Integer> publicObjectiveCardCol =
+                new TableColumn<>("Public Objective Cards Points");
         //Create sub-column for PublicObjectiveCardCol (PublicObjectiveCard1)
-        TableColumn<PlayerScore, Integer> publicObjectiveCard1Col = new TableColumn<>(publicObjectiveCards.get(0).getName());
+        TableColumn<PlayerScore, Integer> publicObjectiveCard1Col =
+                new TableColumn<>(publicObjectiveCards.get(0).getName());
         //Create sub-column for PublicObjectiveCardCol (PublicObjectiveCard2)
-        TableColumn<PlayerScore, Integer> publicObjectiveCard2Col = new TableColumn<>(publicObjectiveCards.get(1).getName());
+        TableColumn<PlayerScore, Integer> publicObjectiveCard2Col =
+                new TableColumn<>(publicObjectiveCards.get(1).getName());
         //Create sub-column for PublicObjectiveCardCol (PublicObjectiveCard3)
-        TableColumn<PlayerScore, Integer> publicObjectiveCard3Col = new TableColumn<>(publicObjectiveCards.get(2).getName());
+        TableColumn<PlayerScore, Integer> publicObjectiveCard3Col =
+                new TableColumn<>(publicObjectiveCards.get(2).getName());
         //Adding sub-columns to PublicObjectiveCardCol
         publicObjectiveCardCol.getColumns().add(publicObjectiveCard1Col);
         publicObjectiveCardCol.getColumns().add(publicObjectiveCard2Col);
