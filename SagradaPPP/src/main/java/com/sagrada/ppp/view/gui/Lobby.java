@@ -70,6 +70,7 @@ public class Lobby implements EventHandler<MouseEvent> {
         stage.setTitle("Welcome to Sagrada");
         stage.setMinHeight(300);
         stage.setMinWidth(300*1400/2500);
+        stage.getIcons().add(new Image("file:graphics/icon.png"));
         stage.setResizable(false);
         stage.centerOnScreen();
         stage.show();
