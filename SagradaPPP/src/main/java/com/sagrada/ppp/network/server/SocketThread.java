@@ -39,6 +39,9 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         }
     }
 
+    /**
+     * Start function for a the thread that listens from Client Requests and sends replies(Response).
+     */
     public void run() {
         while (!isStopped) {
             //DO SOCKET SERVER STUFF TO CLIENT
@@ -115,11 +118,6 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         return disconnectionResponse;
     }
 
-    @Override
-    public Response handle(CloseSocketRequest request) {
-        isStopped = true;
-        return null;
-    }
 
     @Override
     public Response handle(PlaceDiceRequest request) {

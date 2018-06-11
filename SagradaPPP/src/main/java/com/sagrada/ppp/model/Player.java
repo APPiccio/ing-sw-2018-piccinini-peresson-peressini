@@ -6,7 +6,9 @@ enum PlayerStatus {
     ACTIVE,
     INACTIVE
 }
-
+/** Represents a player.
+ * @author Peresson Peressini Piccinini
+ */
 public class Player implements Serializable {
 
     private String username;
@@ -19,19 +21,32 @@ public class Player implements Serializable {
     private boolean skipSecondTurn;
 
 
+    /**
+     * Setter for favor tokens
+     */
     public void setFavorTokens(int favorTokens) {
         this.favorTokens = favorTokens;
     }
 
+    /**
+     * @return value of PlayerStatus enum ( ACTIVE: player is actively playing , INACTIVE: player is offline, afk, ecc.)
+     */
     public PlayerStatus getPlayerStatus() {
         return status;
     }
 
+    /**
+     * Default setter for player status.
+     * @param active value of PlayerStatus enum
+     */
     public void setPlayerStatus(PlayerStatus active) {
         this.status = active;
     }
 
 
+    /**
+     * @param panel: panel owned by this instance of player
+     */
     public void setPanel(WindowPanel panel) {
         if(this.panel == null){
             this.favorTokens = panel.getFavorTokens();
@@ -39,6 +54,10 @@ public class Player implements Serializable {
         this.panel = panel;
     }
 
+    /**
+     * Generates a copy of the instance given by parameter
+     * @param player: player to copy
+     */
     public Player(Player player){
         this.status = player.status;
         this.username = player.username;
@@ -50,6 +69,11 @@ public class Player implements Serializable {
         this.skipSecondTurn = false;
     }
 
+
+    /**
+     * Create a player ex-novo
+     * @param username: player name
+     */
     public Player(String username){
         this.status = PlayerStatus.ACTIVE;
         this.panel = null;
@@ -59,16 +83,6 @@ public class Player implements Serializable {
 
     }
 
-    public void setActiveDice(Dice activeDice) {
-        this.activeDice = activeDice;
-    }
-
-    public Dice getActiveDice() {
-        if(activeDice == null){
-            return null;
-        }
-        return new Dice(activeDice);
-    }
 
     public int getFavorTokens() {
         return favorTokens;
@@ -96,6 +110,10 @@ public class Player implements Serializable {
         return hashCode;
     }
 
+    /**
+     * Used for tool cards, see CommandToolCard8
+     * @return true if this player has to skip his second turn.
+     */
     public boolean hasToSkipSecondTurn() {
         return skipSecondTurn;
     }

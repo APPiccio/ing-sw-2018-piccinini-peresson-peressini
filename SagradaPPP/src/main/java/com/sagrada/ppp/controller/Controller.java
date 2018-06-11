@@ -18,20 +18,17 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         this.service = service;
         toolCardThreads = new HashMap<>();
     }
-
-    public ArrayList<Player> getPlayers(int gameHashCode) throws RemoteException{
-        return service.getPlayers(gameHashCode);
-    }
-
+    @Override
     public LeaveGameResult leaveLobby(int gameHashCode, String username, LobbyObserver observer) throws RemoteException{
         return service.leaveLobby(gameHashCode,username,observer,null);
     }
 
-
+    @Override
     public JoinGameResult joinGame(String username, LobbyObserver lobbyObserver) throws RemoteException{
         return service.joinGame(username, lobbyObserver,null);
     }
 
+    @Override
     public String getUsername(int playerHashCode, int gameHashCode) throws RemoteException{
         return service.getUsername(playerHashCode, gameHashCode);
     }
@@ -46,10 +43,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         service.detachAllGameObserver(gameHashCode, playerHashCode);
     }
 
-    @Override
-    public int getNumPlayers(int gameHashCode) throws RemoteException {
-        return service.getNumPlayers(gameHashCode);
-    }
 
     @Override
     public void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) throws RemoteException {
@@ -79,11 +72,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         toolCardThread.start();
     }
 
-    //here only to keep inheritance
-    @Override
-    public void closeSocket() throws RemoteException {
-
-    }
 
     @Override
     public ReconnectionResult reconnection(int playerHashCode, int gameHashCode,

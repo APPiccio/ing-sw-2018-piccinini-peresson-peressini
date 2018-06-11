@@ -297,7 +297,6 @@ public class ToolCardTest {
 
        // commandToolCard9 = new CommandToolCard9(player,index);
         Dice dice = new Dice();
-        player.setActiveDice(dice);
         player.setPanel(panel);
 
        // commandToolCard9.useCard();

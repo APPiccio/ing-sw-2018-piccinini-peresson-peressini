@@ -61,12 +61,6 @@ public class StaticValues {
     public static final String PUBLICOBJECTIVECARD9_NAME = "Color Diagonals";
     public static final String PUBLICOBJECTIVECARD10_NAME = "Color Variety";
 
-    public static final String PRIVATEOBJECTIVECARDRED_NAME = "Shades of Red";
-    public static final String PRIVATEOBJECTIVECARDYELLOW_NAME = "Shades of Yellow";
-    public static final String PRIVATEOBJECTIVECARDGREEN_NAME = "Shades of Green";
-    public static final String PRIVATEOBJECTIVECARDBLUE_NAME = "Shades of Blue";
-    public static final String PRIVATEOBJECTIVECARDPURPLE_NAME = "Shades of Purple";
-
     //Colors for print formatter
     // Reset
     public static final String RESET = "\033[0m";  // Text Reset

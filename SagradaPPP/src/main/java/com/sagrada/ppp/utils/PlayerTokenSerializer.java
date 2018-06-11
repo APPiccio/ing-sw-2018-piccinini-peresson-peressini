@@ -6,6 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 
+/**
+ * Saves an instance of JoinGameResult into a file.
+ * Used to reconnect to a game after a sudden disconnection(eg. network disconnection)
+ */
 public class PlayerTokenSerializer {
 
 

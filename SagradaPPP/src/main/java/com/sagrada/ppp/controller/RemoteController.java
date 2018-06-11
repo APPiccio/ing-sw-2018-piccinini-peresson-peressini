@@ -7,10 +7,12 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
+/**
+ * Controller exported by RMI and implemented by SocketClientController and SocketThread.
+ * Defines all communication methods between View and Model
+ */
 public interface RemoteController extends Remote {
 
-    //TODO remove this
-    ArrayList<Player> getPlayers(int gameHashCode) throws RemoteException;
 
     LeaveGameResult leaveLobby(int gameHashCode, String username, LobbyObserver observer) throws RemoteException;
 
@@ -21,8 +23,6 @@ public interface RemoteController extends Remote {
     void detachAllGameObserver(int gameHashCode, int playerHashCode) throws RemoteException;
 
     String getUsername(int playerHashCode, int gameHashCode) throws RemoteException;
-    //TODO remove this
-    int getNumPlayers(int gameHashCode) throws RemoteException;
 
     void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) throws RemoteException;
 
@@ -31,8 +31,6 @@ public interface RemoteController extends Remote {
     PlaceDiceResult placeDice(int gameHashCode, int playerHashCode, int diceIndex, int row, int col) throws RemoteException;
 
     void endTurn(int gameHashCode, int playerHashCode) throws RemoteException;
-
-    void closeSocket() throws RemoteException;
 
     void isToolCardUsable(int gameHashCode, int playerHashCode, int toolCardIndex, ToolCardHandler view) throws RemoteException;
 

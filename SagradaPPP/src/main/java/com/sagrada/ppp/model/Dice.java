@@ -1,7 +1,5 @@
 package com.sagrada.ppp.model;
 
-import com.sagrada.ppp.utils.IllegalDiceValueException;
-
 import java.io.Serializable;
 import java.util.Random;
 
@@ -18,14 +16,14 @@ public class Dice implements Serializable {
     public Dice(Color color, int value) {
         try {
             if (value < 1 || value > 6) {
-                throw new IllegalDiceValueException();
+                throw new IllegalArgumentException("Illegal Dice, Value given: " + value + ", has to be between 1 and 6");
             }
             else {
                 this.color = color;
                 this.value = value;
             }
         }
-        catch (IllegalDiceValueException e) {
+        catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
     }
@@ -68,11 +66,11 @@ public class Dice implements Serializable {
     public void setValue(int value) {
         try {
             if (value < 1 || value > 6) {
-                throw new IllegalDiceValueException();
+                throw new IllegalArgumentException("Illegal Dice, Value given: " + value + ", has to be between 1 and 6");
             }
             else this.value = value;
         }
-        catch (IllegalDiceValueException e) {
+        catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
     }

@@ -25,6 +25,10 @@ public class PrinterFormatter {
     private static final char VERTICAL = (int) '│';
 
 
+    /**
+     * @param panel: panel from witch this function creates it's visual representation
+     * @return string containing a visual representation of a panel.
+     */
     public static String printWindowPanelContent(WindowPanel panel){
         StringBuilder result = new StringBuilder();
         if(panel == null){

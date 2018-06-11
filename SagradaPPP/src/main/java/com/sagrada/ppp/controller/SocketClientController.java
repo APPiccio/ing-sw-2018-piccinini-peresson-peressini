@@ -46,10 +46,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         toolCardParameters = new ToolCardParameters();
     }
 
-    @Override
-    public ArrayList<Player> getPlayers(int gameHashCode) throws RemoteException {
-        return null;
-    }
+
 
 
 
@@ -101,11 +98,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     @Override
     public String getUsername(int playerHashCode, int gameHashCode) throws RemoteException {
         return null;
-    }
-
-    @Override
-    public int getNumPlayers(int gameHashCode) throws RemoteException {
-        return 0;
     }
 
     public void handle(Response response) {
@@ -369,17 +361,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         }
     }
 
-    @Override
-    public void closeSocket(){
-        try {
-            out.writeObject(new CloseSocketRequest());
-            out.reset();
-            closeConnection();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     private void closeConnection(){
         try {

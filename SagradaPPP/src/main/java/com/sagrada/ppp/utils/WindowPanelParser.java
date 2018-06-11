@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Parses all files in templates's folder into WindowPanel objects.
+ */
 public class WindowPanelParser {
 
     public static ArrayList<WindowPanel> getPanelsFromFile() throws IOException {

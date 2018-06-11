@@ -52,6 +52,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private Button skipButton;
     private Tab gameTab,settingsTab,logTab;
     private ScrollPane rightContainer;
+    private HashMap<Integer,Tooltip> toolCardsToolTips;
 
     private String currentPlayerUser;
     private Stage stage;
@@ -99,6 +100,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         draftPoolDiceButtons = new ArrayList<>();
         gameStatus = new Label();
         toolCardFlags = new ToolCardFlags();
+        toolCardsToolTips = new HashMap<>();
         //creating all Listeners
         createListeners();
 
@@ -329,6 +331,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private void drawToolCards(){
         int count = 0;
         toolCardButtons.clear();
+        toolCardsToolTips.clear();
         for(ToolCard toolCard : toolCards){
             Button toolCardButton = new Button();
             toolCardButtons.add(toolCardButton);
@@ -350,8 +353,9 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
                     )
             );
             Tooltip tooltip = new Tooltip();
-            tooltip.setText(StaticValues.getToolCardDescription(toolCard.getId()));
+            tooltip.setText(StaticValues.getToolCardDescription(toolCard.getId()) + "\nCost: 1");
             tooltip.setWrapText(true);
+            toolCardsToolTips.put(toolCard.getId(),tooltip);
             toolCardButton.setTooltip(tooltip);
             toolCardButton.addEventHandler(MouseEvent.MOUSE_CLICKED,toolCardClickEvent);
             toolCardsContainer.add(toolCardButton,count,1);
@@ -483,6 +487,12 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
                 drawDraftPool();
                 drawWindowPanels();
                 roundTrackPane.setRoundTrack(toolCardUsedMessage.roundTrack);
+                toolCardsToolTips.get(toolCardUsedMessage.toolCardID).setText(
+                        StaticValues.getToolCardDescription(toolCards.stream()
+                                .filter(x-> x.getId() == toolCardUsedMessage.toolCardID)
+                                .findFirst()
+                                .orElse(null)
+                                .getId()) + "\nCost: " + toolCardUsedMessage.toolCardCost);
             }
         });
     }
@@ -758,7 +768,12 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
             for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(false);
             drawDraftPool();
             drawWindowPanels();
-
+            toolCardsToolTips.get(useToolCardResult.toolCardId).setText(
+                    StaticValues.getToolCardDescription(toolCards.stream()
+                            .filter(x-> x.getId() == useToolCardResult.toolCardId)
+                            .findFirst()
+                            .orElse(null)
+                            .getId()) + "\nCost: " + useToolCardResult.toolCardCost);
             Alert alert = new Alert(Alert.AlertType.NONE);
             if (useToolCardResult.result) {
                 alert.setAlertType(Alert.AlertType.INFORMATION);
