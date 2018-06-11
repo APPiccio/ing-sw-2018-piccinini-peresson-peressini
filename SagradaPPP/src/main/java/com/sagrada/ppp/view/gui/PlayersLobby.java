@@ -33,8 +33,10 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
     PlayersLobby(String username, RemoteController controller, Stage stage) throws RemoteException {
         BorderPane borderPane = new BorderPane();
+        borderPane.setStyle("-fx-background-color: #373A3C");
         Scene scene = new Scene(borderPane, 700*1436/2156, 700);
         ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStyleClass().remove("scroll-pane");
         TabPane tabPane = new TabPane();
         VBox vBoxPlayersTab = new VBox();
         URL url = this.getClass().getResource("SagradaStyleSheet.css");

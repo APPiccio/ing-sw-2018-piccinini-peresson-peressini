@@ -220,16 +220,16 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
 
         //setting up all tabs
         gameTab.setContent(mainGamePane);
-        gameTab.setText("Game Tab");
+        gameTab.setText("Game");
         gameTab.setClosable(false);
 
         settingsTab.setClosable(false);
-        settingsTab.setText("Settings Tab");
+        settingsTab.setText("Settings");
 
         logTab.setClosable(false);
-        logTab.setText("LogTab");
+        logTab.setText("Event Log");
 
-        tabContainer.getTabs().addAll(gameTab,settingsTab,logTab);
+        tabContainer.getTabs().addAll(gameTab, logTab, settingsTab);
 
 
         scene.getStylesheets().add(css);

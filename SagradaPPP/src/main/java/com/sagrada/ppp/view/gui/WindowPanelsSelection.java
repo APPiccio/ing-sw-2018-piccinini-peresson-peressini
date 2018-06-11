@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -49,6 +50,11 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         this.controller = controller;
         this.stage = stage;
         this.joinGameResult = new JoinGameResult(joinGameResult);
+        URL url = this.getClass().getResource("SagradaStyleSheet.css");
+        if (url == null) {
+            System.out.println("Resource not found. Aborting.");
+            System.exit(-1);
+        }
 
         hBox1.setSpacing(10);
         hBox2.setSpacing(10);
@@ -60,6 +66,7 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         Tab panelsTab = new Tab();
         Tab eventsTab = new Tab();
         ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStyleClass().remove("scroll-pane");
         scrollPane.setPadding(new Insets(5, 0, 5, 0));
         VBox vBoxPanels = new VBox();
 
@@ -84,7 +91,10 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
 
         borderPane.setCenter(tabPane);
 
-        this.stage.setScene(new Scene(borderPane, 625, 670));
+        Scene scene = new Scene(borderPane, 630, 670);
+        String css = url.toExternalForm();
+        scene.getStylesheets().add(css);
+        this.stage.setScene(scene);
         this.stage.setTitle("Panel selection");
         this.stage.show();
     }
