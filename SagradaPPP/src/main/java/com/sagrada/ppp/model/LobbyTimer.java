@@ -21,6 +21,7 @@ public class LobbyTimer extends Thread {
                 game.notifyTimerChanges(TimerStatus.FINISH);
                 Runnable myrunnable = () -> {
                     game.init();
+                    this.setName("gameThread");
                 };
                 new Thread(myrunnable).start();
             }

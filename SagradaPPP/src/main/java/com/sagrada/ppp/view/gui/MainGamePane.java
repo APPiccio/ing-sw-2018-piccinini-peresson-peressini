@@ -21,9 +21,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.net.URL;
@@ -61,7 +58,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private transient RemoteController controller;
     private com.sagrada.ppp.model.Color privateColor;
     private JoinGameResult joinGameResult;
-    private HashMap<String, WindowPanel> panels;
     private ArrayList<Dice> draftPool;
     private ArrayList<Player> players;
     private ArrayList<DiceButton> draftPoolDiceButtons;
@@ -72,7 +68,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private EventHandler<MouseEvent> skipButtonEventHandler;
     private EventHandler<MouseEvent> toolCardClickEvent;
     private Label gameStatus;
-    private boolean parameterAquired;
     private volatile  ToolCardFlags toolCardFlags;
     private boolean isToolCardUsed;
     private static final String ACTION_REQUIRED = "Action required";
@@ -104,7 +99,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         draftPoolDiceButtons = new ArrayList<>();
         gameStatus = new Label();
         toolCardFlags = new ToolCardFlags();
-        parameterAquired = false;
         //creating all Listeners
         createListeners();
 
@@ -133,17 +127,19 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
 
         skipButton.setText("Skip Turn");
         skipButton.getStyleClass().add("sagradabutton");
-        skipButton.setPadding(defInset);
+        skipButton.setPadding(new Insets(20));
         skipButton.setDisable(true);
         skipButton.addEventHandler(MouseEvent.MOUSE_CLICKED,skipButtonEventHandler);
         VBox.setMargin(skipButton,defInset);
         skipButton.setAlignment(Pos.CENTER);
 
         ColumnConstraints col1 = new ColumnConstraints();
-        col1.setHgrow(Priority.ALWAYS);
+        col1.setPercentWidth(20);
         ColumnConstraints col2 = new ColumnConstraints();
-        col2.setHgrow(Priority.SOMETIMES);
-        mainGamePane.getColumnConstraints().addAll(col2,col1,col2);
+        col2.setPercentWidth(60);
+        ColumnConstraints col3 = new ColumnConstraints();
+        col3.setPercentWidth(20);
+        mainGamePane.getColumnConstraints().addAll(col1,col2,col3);
         RowConstraints row1 = new RowConstraints();
         row1.setVgrow(Priority.NEVER);
         RowConstraints row2 = new RowConstraints();
@@ -171,10 +167,12 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         HBox.setMargin(gameStatus,defInset);
         gameStatus.setAlignment(Pos.TOP_LEFT);
         leftContainer.setAlignment(Pos.CENTER);
+        leftContainer.setSpacing(20);
         GridPane.setHalignment(leftContainer,HPos.CENTER);
         gameStatus.getStyleClass().add("title");
         gameStatus.setAlignment(Pos.BASELINE_LEFT);
-        HBox.setHgrow(roundTrackPane,Priority.ALWAYS);
+        HBox.setHgrow(roundTrackPane,Priority.NEVER);
+        leftContainer.setFillWidth(false);
         //todo add gameStatus,privateCardImageView
         HBox.setMargin(privateObjectiveButton,defInset);
         leftContainer.getChildren().addAll(roundTrackPane,privateObjectiveButton);
@@ -211,7 +209,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         mainGamePane.add(rightContainer,2,1,1,1);
 
         //drawing All Window Panels
-        GridPane.setFillWidth(mainGamePane,true);
         GridPane.setFillWidth(centerContainer,true);
         centerContainer.getChildren().add(playerWindowPanel);
         playerWindowPanel.setObserver(this);
@@ -261,7 +258,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         this.stage = stage;
         this.privateColor = privateColor;
         this.joinGameResult = joinGameResult;
-        this.panels = gameStartMessage.chosenPanels;
         this.draftPool = gameStartMessage.draftpool;
         this.toolCards = gameStartMessage.toolCards;
         this.players = gameStartMessage.players;

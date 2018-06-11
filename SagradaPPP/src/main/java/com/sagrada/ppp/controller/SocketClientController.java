@@ -40,6 +40,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         gameObservers = new ArrayList<>();
         waitingForResponse = false;
         notificationThread = new ListeningThread(this);
+        notificationThread.setName("notificationThread");
         notificationThread.start();
         responseLock = new Object();
         toolCardParameters = new ToolCardParameters();

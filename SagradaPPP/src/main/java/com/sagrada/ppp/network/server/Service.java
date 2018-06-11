@@ -23,6 +23,7 @@ public class Service {
             System.out.println("--> controller exported");
             //Socket connection
             ServerThread serverThread = new ServerThread(this);
+            serverThread.setName("ServerThread");
             serverThread.start();
         } catch (RemoteException e) {
             e.printStackTrace();

@@ -10,6 +10,7 @@ PanelChoiceTimer extends Thread {
     public PanelChoiceTimer(long startTime, Game game){
         this.startTime = startTime;
         this.game = game;
+        this.setName("panelChoiceThread");
     }
 
     public void run(){

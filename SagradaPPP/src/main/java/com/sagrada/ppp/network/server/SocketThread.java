@@ -29,6 +29,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         this.service = service;
         this.response = null;
         this.isStopped = false;
+        this.setName("SocketThread:"+username);
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());

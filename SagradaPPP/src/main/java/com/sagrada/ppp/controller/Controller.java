@@ -157,6 +157,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
             this.toolCardParameters = new ToolCardParameters();
             this.playerHashCode = playerHashCode;
             this.toolCardID = toolCardID;
+            this.setName("ToolcardThread"+toolCardID);
         }
         @Override
         public void run() {
