@@ -1,12 +1,12 @@
 
 
 .dialog-pane{
-    -fx-background-color: #FFFFFF;
+    -fx-background-color: #373A3C;
 }
 .sagradabutton,
 .dialog-pane .button{
-    -fx-background-color:#FFFFFF;
-    -fx-text-fill: black;
+    -fx-background-color:#373A3C;
+    -fx-text-fill: white;
     -fx-border-radius: 0;
     -fx-padding: 10 10 10 10;
 
@@ -17,6 +17,47 @@
     -fx-border-radius: 0;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
 }
+.privateColor
+{
+    -fx-border-radius: 7;
+    -fx-border-width: 5;
+    -fx-border-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
+}
+.mainpane
+{
+    -fx-background-color: #373A3C;
+}
+.text-field {
+    -fx-background-radius: 0;
+    -fx-text-fill: white;
+    -fx-background-color: #ffffff , #373A3C , #373A3C;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+}
+
+.text-field:focused {
+    -fx-background-radius: 0;
+    -fx-text-fill: white;
+    -fx-background-color: #ffffff , #373A3C , #373A3C;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+}
+.scroll-pane > .viewport {
+          -fx-background-color: transparent;
+}
+.scroll-pane {
+       -fx-background-color: #c2c2c3;
+       -fx-border-width: 5;
+       -fx-border-color: white transparent transparent white;
+       -fx-border-radius: 30 0 0 0;
+       -fx-background-radius: 30 0 0 0;
+}
+.leftContainer{
+    -fx-background-color: #c2c2c3;
+    -fx-border-color: white white transparent transparent;
+    -fx-border-width: 5;
+    -fx-border-radius: 0 30 0 0;
+    -fx-background-radius: 0 30 0 0;
+}
 .title
 {
     -fx-font-size: 30pt;
@@ -26,7 +67,7 @@
 .label,
 .dialog-pane .label {
     -fx-font-size: 10pt;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
 }
 .dicebutton {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);

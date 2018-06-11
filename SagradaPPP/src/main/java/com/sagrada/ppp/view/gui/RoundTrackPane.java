@@ -30,8 +30,8 @@ public class RoundTrackPane extends VBox {
         mainPane = new GridPane();
         roundTrack = new RoundTrack();
         Label title = new Label("RoundTrack");
-        title.setAlignment(Pos.TOP_LEFT);
-        title.setTextFill(Color.WHITE);
+        this.setAlignment(Pos.CENTER);
+        title.setAlignment(Pos.CENTER);
         title.setPadding(new Insets(0,0,5,0));
         this.getChildren().add(title);
         this.getChildren().add(mainPane);

@@ -40,7 +40,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         this.setAlignment(Pos.CENTER);
         this.setEffect(new DropShadow(10,Color.BLACK));
         this.setBackground(new Background(
-                new BackgroundFill(Color.web("#3f454f"),new CornerRadii(10), new Insets(0))
+                new BackgroundFill(Color.web("#585b5d"),new CornerRadii(10), new Insets(0))
         ));
         this.autosize();
 

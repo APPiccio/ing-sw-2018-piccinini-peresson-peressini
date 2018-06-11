@@ -40,9 +40,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private VBox opponentsWindowPanelsPane;
     private VBox leftContainer;
     private RoundTrackPane roundTrackPane;
-    private FlowPane centerContainer;
-    private VBox draftPoolContainer;
-    private FlowPane draftPoolPane;
+    private VBox centerContainer;
+    private HBox draftPoolPane;
     private WindowPanelPane playerWindowPanel;
     private GridPane toolCardsContainer;
     private GridPane publicCardsContainer;
@@ -89,9 +88,8 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         roundTrackPane = new RoundTrackPane();
         rightContainer = new ScrollPane();
         roundTrackPane.setObserver(this);
-        centerContainer = new FlowPane();
-        draftPoolContainer = new VBox();
-        draftPoolPane = new FlowPane();
+        centerContainer = new VBox();
+        draftPoolPane = new HBox();
         playerWindowPanel = new WindowPanelPane(null,440,400);
         toolCardsContainer = new GridPane();
         publicCardsContainer = new GridPane();
@@ -109,7 +107,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private void draw(){
 
         Scene scene = new Scene(tabContainer, 1440, 900);
-        stage.centerOnScreen();
+
         URL url = this.getClass().getResource("SagradaStyleSheet.css");
         if (url == null) {
             System.out.println("Resource not found. Aborting.");
@@ -151,71 +149,72 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         drawToolCards();
         drawPublicObjectiveCards();
 
-        topContainer.getChildren().addAll(gameStatus,toolCardsContainer,publicCardsContainer);
+        topContainer.getChildren().addAll(toolCardsContainer,publicCardsContainer);
         topContainer.setAlignment(Pos.CENTER);
         GridPane.setValignment(topContainer,VPos.CENTER);
         topContainer.setPadding(defInset);
         mainGamePane.add(topContainer,0,0,3,1);
-        mainGamePane.setBackground(new Background(new BackgroundFill(Color.web("FFFFFF"),CornerRadii.EMPTY,
-                new Insets(0))));
+        mainGamePane.getStyleClass().add("mainpane");
         Button privateObjectiveButton = new Button();
         privateObjectiveButton.setPadding(defInset);
         privateObjectiveButton.setMinSize(75,75);
+        privateObjectiveButton.getStyleClass().add("privateColor");
         HBox.setMargin(privateObjectiveButton,defInset);
         HBox.setHgrow(privateObjectiveButton,Priority.ALWAYS);
         privateObjectiveButton.setBackground(new Background(new BackgroundFill(WindowPanelPane.getColor(privateColor),new CornerRadii(10),Insets.EMPTY)));
         //privateCardImageView.setImage(new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_"+privateColor.toString().toLowerCase()+".png",150,204,true,true));
 
-        HBox.setMargin(gameStatus,defInset);
-        gameStatus.setAlignment(Pos.TOP_LEFT);
+        gameStatus.setAlignment(Pos.CENTER);
         leftContainer.setAlignment(Pos.CENTER);
         leftContainer.setSpacing(20);
+        leftContainer.getStyleClass().addAll("leftContainer");
         GridPane.setHalignment(leftContainer,HPos.CENTER);
         gameStatus.getStyleClass().add("title");
-        gameStatus.setAlignment(Pos.BASELINE_LEFT);
         HBox.setHgrow(roundTrackPane,Priority.NEVER);
         leftContainer.setFillWidth(false);
-        //todo add gameStatus,privateCardImageView
         HBox.setMargin(privateObjectiveButton,defInset);
         leftContainer.getChildren().addAll(roundTrackPane,privateObjectiveButton);
         leftContainer.setPadding(defInset);
         mainGamePane.add(leftContainer,0,1,1,1);
 
-        Label draftPoolTitle = new Label("DraftPool");
-        draftPoolTitle.setTextFill(Color.BLACK);
-        draftPoolTitle.setAlignment(Pos.CENTER);
 
-        draftPoolContainer.setAlignment(Pos.CENTER);
-        draftPoolContainer.setPadding(defInset);
-        draftPoolContainer.getChildren().addAll(draftPoolTitle, draftPoolPane);
-
-        draftPoolPane.setHgap(2);
-        draftPoolPane.setVgap(2);
-        draftPoolPane.setPrefWrapLength(190);
+        draftPoolPane.setAlignment(Pos.CENTER);
+        draftPoolPane.setPadding(defInset);
+        draftPoolPane.setSpacing(5);
 
         drawDraftPool();
        ///centerContainer.setBackground(                new Background(                    new BackgroundFill(                        Color.web("F0433A"),      new CornerRadii(5),                        Insets.EMPTY)));
         playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("C7F4FC"),BorderStrokeStyle.SOLID,
                 new CornerRadii(5),BorderStroke.MEDIUM)));
-        centerContainer.getChildren().add(draftPoolContainer);
+
         centerContainer.setAlignment(Pos.CENTER);
         centerContainer.setPadding(defInset);
         GridPane.setFillWidth(centerContainer,false);
         GridPane.setFillHeight(centerContainer,false);
         mainGamePane.add(centerContainer,1,1,1,1);
 
+        HBox tmp = new HBox();
+        tmp.getChildren().add(opponentsWindowPanelsPane);
+        tmp.setAlignment(Pos.CENTER);
         opponentsWindowPanelsPane.setAlignment(Pos.CENTER);
         opponentsWindowPanelsPane.setSpacing(5);
-        rightContainer.setContent(opponentsWindowPanelsPane);
+        rightContainer.setContent(tmp);
+        rightContainer.setFitToWidth(true);
         rightContainer.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         mainGamePane.add(rightContainer,2,1,1,1);
 
         //drawing All Window Panels
         GridPane.setFillWidth(centerContainer,true);
-        centerContainer.getChildren().add(playerWindowPanel);
+        centerContainer.setSpacing(15);
+
+        HBox tmpHbox = new HBox();
+        VBox.setVgrow(tmpHbox,Priority.NEVER);
+        tmpHbox.setAlignment(Pos.CENTER);
+        HBox.setHgrow(playerWindowPanel,Priority.NEVER);
+        tmpHbox.getChildren().add(playerWindowPanel);
+        centerContainer.setAlignment(Pos.CENTER);
+        centerContainer.getChildren().addAll(gameStatus,tmpHbox,draftPoolPane);
         playerWindowPanel.setObserver(this);
-        HBox.setHgrow(playerWindowPanel,Priority.ALWAYS);
-        HBox.setMargin(playerWindowPanel,defInset);
         drawWindowPanels();
         opponentsWindowPanelsPane.setPadding(defInset);
 
@@ -238,6 +237,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
         stage.setTitle("Main game");
         stage.setResizable(true);
         stage.show();
+        stage.centerOnScreen();
         if (currentPlayerUser.equals(joinGameResult.getUsername())){
             skipButton.setDisable(false);
             Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn!");
