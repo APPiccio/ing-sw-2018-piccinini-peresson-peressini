@@ -543,10 +543,10 @@ public class Game implements Serializable{
 //        allToolCards.add(new ToolCard5());
         allToolCards.add(new ToolCard6());
 //        allToolCards.add(new ToolCard7());
-//        allToolCards.add(new ToolCard8());
+        allToolCards.add(new ToolCard8());
 //        allToolCards.add(new ToolCard9());
 //        allToolCards.add(new ToolCard10());
-        allToolCards.add(new ToolCard11());
+//        allToolCards.add(new ToolCard11());
 //        allToolCards.add(new ToolCard12());
 
         for(int i = 0; i < 3 ; i++){
@@ -695,7 +695,7 @@ public class Game implements Serializable{
                         "after placing a dice.\nOperation denied.");
                 return false;
             }
-            else if (toolCard.getId() == 8 && (turn > players.size() || dicePlaced)) {
+            else if (toolCard.getId() == 8 && (turn > players.size() || !dicePlaced)) {
                 System.out.println("Trying to use tool card number 8 during second turn of the round OR " +
                         "before placing a dice.\nOperation denied.");
                 return false;

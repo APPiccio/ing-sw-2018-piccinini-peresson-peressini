@@ -9,12 +9,12 @@
 .sagradabutton, .dialog-pane .button {
     -fx-background-color:#373A3C;
     -fx-text-fill: white;
-    -fx-border-radius: 0;
+    -fx-background-radius: 0;
     -fx-padding: 10 10 10 10;
 }
 
 .sagradabutton:hover, .dialog-pane .button:hover {
-    -fx-border-radius: 0;
+    -fx-background-radius: 0;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
 }
 
