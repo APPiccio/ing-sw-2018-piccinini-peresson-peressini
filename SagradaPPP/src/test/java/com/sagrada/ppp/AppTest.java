@@ -1,21 +1,12 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.utils.IllegalDiceValueException;
-import com.sagrada.ppp.utils.PrinterFormatter;
-import com.sagrada.ppp.utils.StaticValues;
+import com.sagrada.ppp.model.CellTest;
+import com.sagrada.ppp.model.ColorTest;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
-/**
- * Unit test for simple Client.
- */
-public class AppTest
-        extends TestCase
-{
+public class AppTest extends TestCase {
     /**
      * Create the test case
      *
@@ -34,33 +25,35 @@ public class AppTest
         return new TestSuite( AppTest.class );
     }
 
-    /**
-     * Rigourous Test :-)
-     */
-
     public void testApp(){
 
-        new CellTest();
         new DiceBagTest();
         new DiceTest();
         new WindowPanelTest();
         new RoundTrackTest();
         //new GameTest();
-        //assertEquals(50000, StaticValues.getLobbyTimer());
-        assertTrue( true);
-
 
     }
 
-    public void testToolCard(){
+    public void testCell() {
+        CellTest cellTest = new CellTest();
+        cellTest.testCell();
+    }
+
+    public void testColor() {
+        ColorTest colorTest = new ColorTest();
+        colorTest.getColor();
+        colorTest.getRandomColor();
+    }
+
+    public void testPublicObjectiveCards() {
+        PublicObjectiveCardTest publicObjectiveCardTest = new PublicObjectiveCardTest();
+        publicObjectiveCardTest.testAllPublicObjectiveCard();
+    }
+
+    public void testToolCards(){
         ToolCardTest toolCardTest = new ToolCardTest();
         toolCardTest.testAllToolCards();
-    }
-
-    public void testCards() {
-
-        new PublicObjectiveCardTest();
-
     }
 
 }

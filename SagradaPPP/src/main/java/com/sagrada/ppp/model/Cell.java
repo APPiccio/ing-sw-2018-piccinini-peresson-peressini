@@ -49,16 +49,8 @@ public class Cell implements Serializable {
         return color;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
     public Integer getValue() {
         return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
     }
 
     public Dice getDiceOn() {
@@ -88,11 +80,11 @@ public class Cell implements Serializable {
         if (this.hasDiceOn()) {
             if (cell.hasDiceOn()) {
                 return this.diceOn.equals(cell.getDiceOn()) &&
-                        this.value.equals(cell.getValue()) && this.color == cell.getColor();
+                        this.value == cell.getValue() && this.color == cell.getColor();
             }
             else return false;
         }
-        return this.value.equals(cell.getValue()) && this.color == cell.getColor();
+        return this.value == cell.getValue() && this.color == cell.getColor();
     }
 
     @Override
