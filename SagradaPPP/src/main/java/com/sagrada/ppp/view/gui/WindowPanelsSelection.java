@@ -136,6 +136,7 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
             selectionPanels.get(i).getChildren().add(new WindowPanelPane(panelAvailable.get(i), 200, 200));
             buttons.add(new Button(SELECT));
             buttons.get(i).addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+            buttons.get(i).getStyleClass().add("sagradabutton");
             selectionPanels.get(i).getChildren().add(buttons.get(i));
         }
 

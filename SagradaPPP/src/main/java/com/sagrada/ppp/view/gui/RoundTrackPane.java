@@ -14,7 +14,6 @@ import javafx.scene.paint.Color;
 
 public class RoundTrackPane extends VBox {
 
-
     private RoundTrack roundTrack;
     private GridPane mainPane;
     private double width,height;

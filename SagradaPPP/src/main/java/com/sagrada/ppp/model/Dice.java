@@ -3,6 +3,9 @@ package com.sagrada.ppp.model;
 import java.io.Serializable;
 import java.util.Random;
 
+/**
+ * This class represent a six-faced dice
+ */
 public class Dice implements Serializable {
 
     private Color color;
@@ -16,7 +19,8 @@ public class Dice implements Serializable {
     public Dice(Color color, int value) {
         try {
             if (value < 1 || value > 6) {
-                throw new IllegalArgumentException("Illegal Dice, Value given: " + value + ", has to be between 1 and 6");
+                throw new IllegalArgumentException("Illegal dice! Value given: " + value +
+                        "; it has to be between 1 and 6");
             }
             else {
                 this.color = color;
@@ -28,45 +32,61 @@ public class Dice implements Serializable {
         }
     }
 
-    //in case we need a random value
+    /**
+     * Create a dice with the given color and a random value
+     * @param color color of the dice
+     */
     public Dice(Color color) {
-        this(color,new Random().nextInt(6) + 1);
+        this(color, new Random().nextInt(6) + 1);
     }
 
-    //in case we need a random color
+    /**
+     * Create a dice with the given value and a random color
+     * @param value value of the dice
+     */
     public Dice(int value) {
-        this(Color.getRandomColor(),value);
+        this(Color.getRandomColor(), value);
     }
 
-    //completely random dice
+    /**
+     * Create a completely random dice
+     */
     public Dice() {
-        this(Color.getRandomColor(),new Random().nextInt(6) + 1);
+        this(Color.getRandomColor(), new Random().nextInt(6) + 1);
+    }
+
+    /**
+     * Randomly choose another value for this dice
+     */
+    public void throwDice() {
+        value = new Random().nextInt(6) + 1;
+    }
+
+    /**
+     * @param dice  dice to compare
+     * @return      true if this and dice have the same value or color
+     */
+    public boolean isSimilar(Dice dice) {
+        return this.color.equals(dice.getColor()) || this.value == dice.getValue();
     }
 
     public Color getColor() {
         return this.color;
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     public int getValue() {
         return this.value;
-    }
-
-    public void throwDice(){
-        value = new Random().nextInt(6) + 1;
-    }
-
-    public boolean isSimilar(Dice dice) {
-        return this.color.equals(dice.getColor()) || this.value == dice.getValue();
-    }
-
-    public void setColor(Color color){
-        this.color = color;
     }
 
     public void setValue(int value) {
         try {
             if (value < 1 || value > 6) {
-                throw new IllegalArgumentException("Illegal Dice, Value given: " + value + ", has to be between 1 and 6");
+                throw new IllegalArgumentException("Illegal dice! Value given: " + value +
+                        "; it has to be between 1 and 6");
             }
             else this.value = value;
         }
@@ -75,21 +95,23 @@ public class Dice implements Serializable {
         }
     }
 
-    public void flip(){
-        this.value = 7 - this.value;
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     @Override
-    public String toString() {
-        return "Color: " + color.name() + ", Value: " + value;
-    }
-
     public boolean equals(Object object) {
         if (object == null) return false;
         if (object == this) return true;
         if (!(object instanceof Dice)) return false;
         Dice dice = (Dice) object;
         return this.color == dice.getColor() && this.value == dice.getValue();
+    }
+
+    @Override
+    public String toString() {
+        return "Color: " + color.name() + ", value: " + value;
     }
 
 }

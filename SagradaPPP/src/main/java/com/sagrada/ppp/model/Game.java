@@ -4,7 +4,6 @@ import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.util.Pair;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 import java.io.Serializable;
 import java.rmi.ConnectException;
@@ -553,16 +552,16 @@ public class Game implements Serializable{
         Random r = new Random();
         ArrayList<ToolCard> allToolCards = new ArrayList<>();
 
-/*        allToolCards.add(new ToolCard1());
+        allToolCards.add(new ToolCard1());
         allToolCards.add(new ToolCard2());
         allToolCards.add(new ToolCard3());
         allToolCards.add(new ToolCard4());
-        allToolCards.add(new ToolCard5());*/
+        allToolCards.add(new ToolCard5());
         allToolCards.add(new ToolCard6());
-/*        allToolCards.add(new ToolCard7());
+/       allToolCards.add(new ToolCard7());
         allToolCards.add(new ToolCard8());
         allToolCards.add(new ToolCard9());
-        allToolCards.add(new ToolCard10());*/
+        allToolCards.add(new ToolCard10());
         allToolCards.add(new ToolCard11());
         allToolCards.add(new ToolCard12());
 
@@ -731,7 +730,7 @@ public class Game implements Serializable{
                         "after placing a dice.\nOperation denied.");
                 return false;
             }
-            else if (toolCard.getId() == 8 && (turn > players.size() || dicePlaced)) {
+            else if (toolCard.getId() == 8 && (turn > players.size() || !dicePlaced)) {
                 System.out.println("Trying to use tool card number 8 during second turn of the round OR " +
                         "before placing a dice.\nOperation denied.");
                 return false;
@@ -870,6 +869,10 @@ public class Game implements Serializable{
                         return new UseToolCardResult(true,toolCard.getId(),toolCard.getCost(), draftPool, roundTrack, players, null, null);
                     case 11:
                         System.out.println("Using toolCard 11");
+                        if (!toolCard11ParamsOk()){
+                            usedToolCard = false;
+                            return new UseToolCardResult(false,toolCard.getId(),toolCard.getCost(), draftPool,roundTrack,players, null, null);
+                        }
                         Dice draftDice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
                         draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
@@ -983,6 +986,10 @@ public class Game implements Serializable{
        return dice != null;
     }
 
+    private boolean toolCard11ParamsOk() {
+        return diceBag.size() >= 1;
+    }
+
     private boolean toolCard12ParamsOk(ToolCardParameters toolCardParameters , Player player){
         Cell cell1start = player.getPanel().getCell(toolCardParameters.panelDiceIndex);
         Cell cell1end = player.getPanel().getCell(toolCardParameters.panelCellIndex);
@@ -1017,7 +1024,6 @@ public class Game implements Serializable{
         boolean result = panel.addDice(cellIndex, dice);
         if (result) {
             player.setPanel(panel);
-            isSpecialTurn = true;
             dicePlaced = true;
         }
         return new PlaceDiceResult("Special dice placement" , true, panel, draftPool);
