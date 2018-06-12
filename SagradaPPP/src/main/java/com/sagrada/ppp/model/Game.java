@@ -558,7 +558,7 @@ public class Game implements Serializable{
         allToolCards.add(new ToolCard4());
         allToolCards.add(new ToolCard5());
         allToolCards.add(new ToolCard6());
-/       allToolCards.add(new ToolCard7());
+        allToolCards.add(new ToolCard7());
         allToolCards.add(new ToolCard8());
         allToolCards.add(new ToolCard9());
         allToolCards.add(new ToolCard10());
