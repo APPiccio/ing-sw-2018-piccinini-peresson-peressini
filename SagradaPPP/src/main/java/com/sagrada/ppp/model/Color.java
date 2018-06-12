@@ -3,20 +3,26 @@ package com.sagrada.ppp.model;
 import java.util.Random;
 
 public enum Color {
+
     BLUE,
     GREEN,
     PURPLE,
     RED,
     YELLOW;
 
-    public static Color getRandomColor(){
-        //return a random color from enum
+    /**
+     * @return a random Color from the enumeration
+     */
+    public static Color getRandomColor() {
         return values()[new Random().nextInt(values().length)];
     }
 
-    //Get a color giving its name >>> Input values (red,blue,purple,blue,yellow)
-    public static Color getColor(String colorName){
-        switch (colorName){
+    /**
+     * @param colorName String containing the color name
+     * @return          Color by the colorName String given
+     */
+    public static Color getColor(String colorName) {
+        switch (colorName) {
             case "blue":
                 return Color.BLUE;
             case "green":

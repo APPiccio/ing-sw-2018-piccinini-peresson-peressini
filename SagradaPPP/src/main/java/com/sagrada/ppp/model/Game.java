@@ -828,6 +828,10 @@ public class Game implements Serializable{
                         return new UseToolCardResult(true,toolCard.getId(),toolCard.getCost(), draftPool, roundTrack, players, null, null);
                     case 11:
                         System.out.println("Using toolCard 11");
+                        if (!toolCard11ParamsOk()){
+                            usedToolCard = false;
+                            return new UseToolCardResult(false,toolCard.getId(),toolCard.getCost(), draftPool,roundTrack,players, null, null);
+                        }
                         Dice draftDice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
                         draftPool.remove((int) toolCardParameters.draftPoolDiceIndex);
                         player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
@@ -941,6 +945,10 @@ public class Game implements Serializable{
        return dice != null;
     }
 
+    private boolean toolCard11ParamsOk() {
+        return diceBag.size() >= 1;
+    }
+
     private boolean toolCard12ParamsOk(ToolCardParameters toolCardParameters , Player player){
         Cell cell1start = player.getPanel().getCell(toolCardParameters.panelDiceIndex);
         Cell cell1end = player.getPanel().getCell(toolCardParameters.panelCellIndex);
@@ -968,14 +976,13 @@ public class Game implements Serializable{
         return true;
     }
 
-    public boolean specialDicePlacement(int playerHashCode, int cellIndex, Dice dice){
+    public boolean specialDicePlacement(int playerHashCode, int cellIndex, Dice dice) {
         if (players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return false;
         Player player = getPlayerByHashcode(playerHashCode);
         WindowPanel panel = player.getPanel();
         boolean result = panel.addDice(cellIndex, dice);
         if (result) {
             player.setPanel(panel);
-            isSpecialTurn = true;
             dicePlaced = true;
         }
         return result;
