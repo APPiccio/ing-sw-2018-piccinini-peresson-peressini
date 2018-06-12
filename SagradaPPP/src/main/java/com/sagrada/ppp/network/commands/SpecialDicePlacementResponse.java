@@ -1,12 +1,14 @@
 package com.sagrada.ppp.network.commands;
 
+import com.sagrada.ppp.model.PlaceDiceResult;
+
 import java.io.Serializable;
 
 public class SpecialDicePlacementResponse implements Serializable, Response {
 
-    public boolean result;
+    public PlaceDiceResult result;
 
-    public SpecialDicePlacementResponse(boolean result) {
+    public SpecialDicePlacementResponse(PlaceDiceResult result) {
         this.result = result;
     }
 

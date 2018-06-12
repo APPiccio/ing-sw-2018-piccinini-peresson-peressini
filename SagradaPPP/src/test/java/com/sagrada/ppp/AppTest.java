@@ -1,6 +1,4 @@
 package com.sagrada.ppp;
-
-import com.sagrada.ppp.utils.IllegalDiceValueException;
 import com.sagrada.ppp.utils.PrinterFormatter;
 import com.sagrada.ppp.utils.StaticValues;
 import junit.framework.Test;

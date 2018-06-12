@@ -160,8 +160,8 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
     }
 
     @Override
-    public void onPlayerDisconnection(Player disconnectingPlayer) throws RemoteException {
-        //do nothing here
+    public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
+
     }
 
     @Override

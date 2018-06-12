@@ -4,6 +4,8 @@ import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.view.CliView;
 import com.sagrada.ppp.view.gui.GuiView;
 import javafx.application.Application;
+
+import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
@@ -59,7 +61,12 @@ public class Client
         }
         if(viewMode.equals("cli")){
             CliView view = new CliView(controller, connectionModeEnum);
-            view.init();
+            try {
+                view.init();
+            }catch (ConnectException e){
+                System.out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION");
+                System.exit(0);
+            }
         }
         else{
             new Thread(() -> Application.launch(GuiView.class)).start();

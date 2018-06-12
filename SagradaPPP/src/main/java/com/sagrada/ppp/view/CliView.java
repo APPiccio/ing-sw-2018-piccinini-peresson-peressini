@@ -8,6 +8,7 @@ import com.sagrada.ppp.network.client.ConnectionHandler;
 import com.sagrada.ppp.network.client.ConnectionModeEnum;
 import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
 
@@ -116,7 +117,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                         roundTrack = reconnectionResult.gameStartMessage.roundTrack;
                         isGameStarted = true;
                         showGameStatus();
-                        System.out.println("Bella raga, sono passato dalla riga 123");
                         inGame(0, null);
                     }
                 }
@@ -133,7 +133,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                     roundTrack = reconnectionResult.gameStartMessage.roundTrack;
                     isGameStarted = true;
                     showGameStatus();
-                    System.out.println("Bella raga, sono passato dalla riga 141");
                     inGame(0, null);
                 }
 
@@ -333,8 +332,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                         if(result.status) {
                             getPlayerByHashCode(hashCode).setPanel(result.panel);
                             placedDice = true;
-                            //TODO aggiungere draftpool PlaceDiceResult
-                            draftPool.remove(Integer.parseInt(param[1]));
+                            draftPool = result.draftPool;
                             System.out.println("Dice placed correctly. Panel updated :");
 
                             System.out.println(getPlayerByHashCode(hashCode).getPanel());
@@ -822,9 +820,14 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     }
 
     @Override
-    public void onPlayerDisconnection(Player disconnectingPlayer) throws RemoteException {
+    public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
         System.out.println("---> " + disconnectingPlayer.getUsername() + " is now offline! " +
                 "He will automatically passed every turns until the next reconnection");
+        if(isLastPlayer){
+            System.out.println("You are the only active player in game!");
+            System.out.println("\n\n\n\n\t\t\t\t ----> YOU WIN <----");
+            System.exit(0);
+        }
     }
 
     private void showPlayerStatus(Player player){

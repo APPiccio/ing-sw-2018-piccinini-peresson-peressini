@@ -29,7 +29,6 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         this.service = service;
         this.response = null;
         this.isStopped = false;
-        this.setName("SocketThread:"+username);
 
         try {
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -61,8 +60,8 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
 
             catch (IOException e) {
                 e.printStackTrace();
-                System.out.println("Closing socket...");
-                service.leaveLobby(gameHashCode, username, this, this);
+                System.out.println("Closing socket... gamehashcode = " + gameHashCode + " - playerHashCode = " + playerHashCode );
+                System.out.println("DISCONNECTION RESULT = " + service.disconnect(gameHashCode, playerHashCode));
                 return;
             }
             catch (ClassNotFoundException e) {
@@ -271,9 +270,9 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onPlayerDisconnection(Player disconnectingPlayer) throws RemoteException {
+    public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
         try {
-            out.writeObject(new PlayerReconnectionNotification(disconnectingPlayer));
+            out.writeObject(new PlayerDisconnectionNotification(disconnectingPlayer, isLastPlayer));
             out.reset();
         } catch (IOException e) {
             e.printStackTrace();
