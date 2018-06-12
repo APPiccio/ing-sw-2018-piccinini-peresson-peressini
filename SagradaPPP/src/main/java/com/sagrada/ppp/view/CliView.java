@@ -936,7 +936,14 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         this.roundTrack = useToolCardResult.roundTrack;
         toolCardFlags.reset();
         isToolCardActionEnded = true;
-        usedToolCard = true;
+        this.usedToolCard = useToolCardResult.result;
+        if(this.useToolCardResult.result){
+            for(ToolCard toolCard : toolCards){
+                if (toolCard.getId() == useToolCardResult.toolCardId){
+                    toolCard.setUsed();
+                }
+            }
+        }
     }
 
     @Override

@@ -59,7 +59,7 @@ public abstract class ToolCard implements Serializable {
 
     @Override
     public String toString() {
-        return "ToolCard ---> Card ID: " + this.id + ", Card name: " + this.name + ", Action: " + description;
+        return "ToolCard ---> Card ID: " + this.id + ", Card cost: " + this.getCost() + ", Card name: " + this.name + ", Action: " + description;
     }
 
 }
