@@ -517,7 +517,9 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         int playerHashCode;
         int toolCardID;
 
-        ToolCardThreadController(IsToolCardUsableResult isToolCardUsableResult, ToolCardHandler view, int gameHashCode, int playerHashCode, int toolCardIndex, ObjectInputStream in, ObjectOutputStream out){
+        ToolCardThreadController(IsToolCardUsableResult isToolCardUsableResult, ToolCardHandler view,
+                                 int gameHashCode, int playerHashCode, int toolCardIndex,
+                                 ObjectInputStream in, ObjectOutputStream out){
             this.result = isToolCardUsableResult.result;
             this.toolCardID = isToolCardUsableResult.toolCardID;
             this.view = view;
@@ -528,11 +530,12 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             this.in = in;
             this.out = out;
         }
+
         @Override
         public void run() {
             try {
                 view.isToolCardUsable(result);
-                if(result) {
+                if (result) {
                     switch (toolCardID) {
                         case 1:
                             useToolCard1();
@@ -556,10 +559,10 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                             useToolCard7();
                             break;
                         case 8:
-                            useToolCard8();
+                            useToolCard8and9();
                             break;
                         case 9:
-                            useToolCard9();
+                            useToolCard8and9();
                             break;
                         case 10:
                             useToolCard10();
@@ -570,27 +573,31 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                         case 12:
                             useToolCard12();
                             break;
-
                         default:
                             break;
-
                     }
                 }
-
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
 
-        private void useToolCard8() throws RemoteException {
-            useToolCard9();
-        }
-
-        private void useToolCard9() throws RemoteException {
+        private void useToolCard1() throws RemoteException {
             toolCardParameters.reset();
             toolCardParameters.toolCardID = toolCardID;
             view.draftPoolDiceIndexRequired();
-            while (toolCardParameters.draftPoolDiceIndex == null);
+            while (toolCardParameters.draftPoolDiceIndex == null) ;
+            view.actionSignRequired();
+            while (toolCardParameters.actionSign == null) ;
+            sendToolCardRequest();
+            view.notifyUsageCompleted(useToolCardResult);
+        }
+
+        private void useToolCard2and3() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.panelDiceIndexRequired();
+            while (toolCardParameters.panelDiceIndex == null);
             view.panelCellIndexRequired();
             while (toolCardParameters.panelCellIndex == null);
             sendToolCardRequest();
@@ -612,33 +619,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             while (toolCardParameters.secondPanelCellIndex == null);
             sendToolCardRequest();
             view.notifyUsageCompleted(useToolCardResult);
-
         }
-
-        private void useToolCard1() throws RemoteException{
-            toolCardParameters.reset();
-            toolCardParameters.toolCardID = toolCardID;
-            view.draftPoolDiceIndexRequired();
-            while (toolCardParameters.draftPoolDiceIndex == null) ;
-            view.actionSignRequired();
-            while (toolCardParameters.actionSign == null) ;
-            sendToolCardRequest();
-            view.notifyUsageCompleted(useToolCardResult);
-
-        }
-
-        private void useToolCard2and3() throws RemoteException {
-            toolCardParameters.reset();
-            toolCardParameters.toolCardID = toolCardID;
-            view.panelDiceIndexRequired();
-            while (toolCardParameters.panelDiceIndex == null);
-            view.panelCellIndexRequired();
-            while (toolCardParameters.panelCellIndex == null);
-            sendToolCardRequest();
-            view.notifyUsageCompleted(useToolCardResult);
-
-        }
-
 
         private void useToolCard5() throws RemoteException {
             toolCardParameters.reset();
@@ -649,7 +630,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             while (toolCardParameters.roundTrackRoundIndex == null || toolCardParameters.roundTrackDiceIndex == null);
             sendToolCardRequest();
             view.notifyUsageCompleted(useToolCardResult);
-
         }
 
         private void useToolCard6() throws RemoteException {
@@ -684,7 +664,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                             player.setPanel(panel);
                         }
                     }
-                    useToolCardResult.draftpool.remove(toolCardParameters.panelCellIndex);
+                    useToolCardResult.draftpool.remove((int) toolCardParameters.panelCellIndex);
                 }
                 else{
                     try {
@@ -699,7 +679,24 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                 }
                 view.notifyUsageCompleted(useToolCardResult);
             }
+        }
 
+        private void useToolCard7() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            sendToolCardRequest();
+            view.notifyUsageCompleted(useToolCardResult);
+        }
+
+        private void useToolCard8and9() throws RemoteException {
+            toolCardParameters.reset();
+            toolCardParameters.toolCardID = toolCardID;
+            view.draftPoolDiceIndexRequired();
+            while (toolCardParameters.draftPoolDiceIndex == null);
+            view.panelCellIndexRequired();
+            while (toolCardParameters.panelCellIndex == null);
+            sendToolCardRequest();
+            view.notifyUsageCompleted(useToolCardResult);
         }
 
         private void useToolCard10() throws RemoteException {
@@ -711,7 +708,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             view.notifyUsageCompleted(useToolCardResult);
         }
 
-        private void useToolCard11() throws RemoteException{
+        private void useToolCard11() throws RemoteException {
             toolCardParameters.reset();
             toolCardParameters.toolCardID = toolCardID;
             view.draftPoolDiceIndexRequired();
@@ -720,7 +717,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             if(!useToolCardResult.result){
                 view.notifyUsageCompleted(useToolCardResult);
             }
-            else{
+            else {
                 //now ask to choose dice value and place it
                 //dice from server, just extracted from dicebag
                 Dice dice = useToolCardResult.dice;
@@ -765,10 +762,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
         }
 
-
-
-
-
         private void useToolCard12() throws RemoteException {
             toolCardParameters.reset();
             toolCardParameters.toolCardID = toolCardID;
@@ -788,11 +781,9 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
             sendToolCardRequest();
             view.notifyUsageCompleted(useToolCardResult);
-
         }
 
-
-        private void sendLegalDicePositionsRequest(Dice dice){
+        private void sendLegalDicePositionsRequest(Dice dice) {
             try {
                 waitingForResponse = true;
                 out.writeObject(new GetLegalPositionRequest(gameHashCode, playerHashCode, dice));
@@ -808,8 +799,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
         }
 
-
-        private void sendSpecialPlacementRequest(int cellIndex, Dice dice){
+        private void sendSpecialPlacementRequest(int cellIndex, Dice dice) {
             try {
                 waitingForResponse = true;
                 out.writeObject(new SpecialDicePlacementRequest(gameHashCode, playerHashCode, cellIndex, dice));
@@ -823,13 +813,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-
-        private void useToolCard7() throws RemoteException {
-            toolCardParameters.reset();
-            toolCardParameters.toolCardID = toolCardID;
-            sendToolCardRequest();
-            view.notifyUsageCompleted(useToolCardResult);
         }
 
         private void sendToolCardRequest(){
@@ -847,8 +830,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                 e.printStackTrace();
             }
         }
-
-
     }
 
 }

@@ -31,8 +31,7 @@ public class Lobby implements EventHandler<MouseEvent> {
         this.controller = controller;
         BorderPane borderPane = new BorderPane();
         Scene scene = new Scene(borderPane, 700*1436/2156, 700);
-        //styling class
-       URL url = this.getClass().getResource("SagradaStyleSheet.css");
+        URL url = this.getClass().getResource("SagradaStyleSheet.css");
         if (url == null) {
             System.out.println("Resource not found. Aborting.");
             System.exit(-1);
