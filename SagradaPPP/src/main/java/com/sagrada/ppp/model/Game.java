@@ -3,8 +3,6 @@ package com.sagrada.ppp.model;
 import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.view.gui.Lobby;
-import javafx.application.Platform;
 import javafx.util.Pair;
 
 import java.io.Serializable;
@@ -17,7 +15,6 @@ import java.util.concurrent.ThreadLocalRandom;
  * Core class of the game
  * Each game has a unique instance of this class.
  * Allows to have multiple games on the same server.
- *
  */
 public class Game implements Serializable{
     private HashMap<Integer, LobbyObserver> lobbyObservers;
@@ -47,7 +44,7 @@ public class Game implements Serializable{
     TODO: Add overloading methods that take a Player as a parameter instead of a String
     */
 
-    public Game(String username){
+    public Game(String username) {
         diceBag = new DiceBag();
         players = new ArrayList<>();
         draftPool = new ArrayList<>();
@@ -121,11 +118,9 @@ public class Game implements Serializable{
      * Handling turns and rounds mechanics.
      * From round 1 to round 10 and foreach round handles players turn, according to game rules
      */
-
     private void rmiPing(GameObserver gameObserver) throws RemoteException {
             gameObserver.rmiPing();
     }
-
 
     private void gameHandler() {
         Player justPlayedPlayer = null;
@@ -207,7 +202,6 @@ public class Game implements Serializable{
         }
         return h;
     }
-
 
     /**
      * Handles end turn mechanics,
@@ -979,7 +973,7 @@ public class Game implements Serializable{
         Player player = getPlayerByHashcode(playerHashCode);
         WindowPanel panel = player.getPanel();
         boolean result = panel.addDice(cellIndex, dice);
-        if(result) {
+        if (result) {
             player.setPanel(panel);
             isSpecialTurn = true;
             dicePlaced = true;
