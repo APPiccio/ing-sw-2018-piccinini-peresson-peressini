@@ -183,7 +183,7 @@ public class Service {
         return games.get(gameHashCode).getToolCardID(toolCardIndex);
     }
 
-    public boolean specialDicePlacement(int gameHashCode, int playerHashCode, int cellIndex, Dice dice){
+    public PlaceDiceResult specialDicePlacement(int gameHashCode, int playerHashCode, int cellIndex, Dice dice){
         return games.get(gameHashCode).specialDicePlacement(playerHashCode, cellIndex, dice);
     }
 

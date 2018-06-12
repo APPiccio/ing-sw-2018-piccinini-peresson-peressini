@@ -30,7 +30,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     private transient volatile IsToolCardUsableResult isToolCardUsableResult;
     private transient volatile UseToolCardResult useToolCardResult;
     private transient volatile ArrayList<Integer> positions;
-    private transient volatile boolean specialDicePlacementResult;
+    private transient volatile PlaceDiceResult specialDicePlacementResult;
     private transient volatile ReconnectionResult reconnectionResult;
 
     public SocketClientController() throws IOException {
@@ -184,6 +184,9 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         synchronized (responseLock) {
             waitingForResponse = false;
             disconnectionResult = response.disconnectionResult;
+            notificationThread.interrupt();
+            this.lobbyObserver = null;
+            gameObservers.clear();
             responseLock.notifyAll();
         }
     }
@@ -200,10 +203,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                 }
                 responseLock.notifyAll();
             }
-            notificationThread.interrupt();
-            closeConnection();
-            this.lobbyObserver = null;
-            gameObservers.clear();
             return disconnectionResult;
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -344,7 +343,8 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     public void handle(PlayerDisconnectionNotification response) {
         for(GameObserver gameObserver : gameObservers){
             try {
-                gameObserver.onPlayerDisconnection(response.disconnectingPlayer);
+                System.out.println("NOTIFICO CLIENT");
+                gameObserver.onPlayerDisconnection(response.disconnectingPlayer, response.isLastPlayer);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -426,17 +426,20 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     if(isInterrupted()){
                         //TODO add stuff to close connection due to server crash
                         System.out.println("SERVER CRASH --> Closing notification thread");
+                        closeConnection();
                     }
                     else{
                         e.printStackTrace();
                     }
                 }catch (EOFException e){
-                    System.out.println("Closing client socket");
+                    System.out.println("Closing client socket due to server crash");
+                    this.interrupt();
                 }catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
             closeConnection();
+            System.exit(0);
         }
     }
 
@@ -655,16 +658,13 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     while (!positions.contains(toolCardParameters.panelCellIndex));
 
                     sendSpecialPlacementRequest(toolCardParameters.panelCellIndex, dice);
-                    useToolCardResult.result = specialDicePlacementResult;
-
+                    useToolCardResult.result = specialDicePlacementResult.status;
+                    useToolCardResult.draftpool = specialDicePlacementResult.draftPool;
                     for(Player player : useToolCardResult.players){
                         if(player.getHashCode() == playerHashCode){
-                            WindowPanel panel = player.getPanel();
-                            panel.addDice(toolCardParameters.panelCellIndex, dice);
-                            player.setPanel(panel);
-                        }
+                            player.setPanel(specialDicePlacementResult.panel);
+                            }
                     }
-                    useToolCardResult.draftpool.remove((int) toolCardParameters.panelCellIndex);
                 }
                 else{
                     try {
@@ -675,7 +675,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     }
                     useToolCardResult.result = true;
                     useToolCardResult.msg = "No placement positions available, dice put back in the draft pool!";
-                    useToolCardResult.draftpool.add(dice);
                 }
                 view.notifyUsageCompleted(useToolCardResult);
             }
@@ -734,17 +733,13 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     while (!positions.contains(toolCardParameters.panelCellIndex));
 
                     sendSpecialPlacementRequest(toolCardParameters.panelCellIndex, dice);
-                    useToolCardResult.result = specialDicePlacementResult;
-
+                    useToolCardResult.result = specialDicePlacementResult.status;
+                    useToolCardResult.draftpool = specialDicePlacementResult.draftPool;
                     for(Player player : useToolCardResult.players){
                         if(player.getHashCode() == playerHashCode){
-                            WindowPanel panel = player.getPanel();
-                            panel.addDice(toolCardParameters.panelCellIndex, dice);
-                            player.setPanel(panel);
+                            player.setPanel(specialDicePlacementResult.panel);
                         }
                     }
-                    //this line should be only in socket controller
-                    useToolCardResult.draftpool.remove(toolCardParameters.panelCellIndex);
                 }
                 else{
                     try {
@@ -755,8 +750,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                     }
                     useToolCardResult.result = true;
                     useToolCardResult.msg = "No placement allowed due to game rules. The dice has been put back in the draft pool";
-                    //this line should be only in socket controller
-                    useToolCardResult.draftpool.add(dice);
                 }
                 view.notifyUsageCompleted(useToolCardResult);
             }

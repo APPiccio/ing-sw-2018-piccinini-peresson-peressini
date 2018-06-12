@@ -6,24 +6,36 @@ import com.sagrada.ppp.model.Dice;
 import com.sagrada.ppp.model.WindowPanel;
 import com.sagrada.ppp.utils.StaticValues;
 import org.junit.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 import static java.lang.Boolean.TRUE;
 
 public class WindowPanelTest {
     public WindowPanelTest() {
-        testDicePositioning();
+//        testDicePositioning();
+        testGetLegalPostion();
+    }
+
+    public WindowPanel generateBlankPanel(){
+        ArrayList<Cell> cells = new ArrayList<>();
+        for(int i = 0; i < 20; i++){
+            cells.add(new Cell());
+        }
+        return new WindowPanel("blank", 100, 0,  cells);
     }
 
     @Test
     public void testDicePositioning() {
 
-        WindowPanel panel = new WindowPanel(0,0);
+        WindowPanel panel = generateBlankPanel();
         assertTrue(panel.addDice(4, new Dice()));
-        panel = new WindowPanel(0,0);
+        panel = generateBlankPanel();
         assertTrue(panel.addDice(9, new Dice()));
-        panel = new WindowPanel(0,0);
+        panel = generateBlankPanel();
         assertTrue(panel.addDice(14, new Dice()));
-        panel = new WindowPanel(0,0);
+        panel = generateBlankPanel();
         assertTrue(panel.addDice(19, new Dice()));
 
 
@@ -68,6 +80,15 @@ public class WindowPanelTest {
         assertNotEquals(panelCopy.hashCode(), panel.hashCode());
 
     }
+
+    @Test
+    public void testGetLegalPostion(){
+        WindowPanel panel = generateBlankPanel();
+        ArrayList<Integer> pos = panel.getLegalPosition(new Dice());
+        assertEquals(14, pos.size());
+        pos.forEach(System.out::println);
+    }
+
 
     @Test
     public void testPanelComposition()  {

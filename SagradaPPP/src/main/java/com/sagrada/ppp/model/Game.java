@@ -38,6 +38,7 @@ public class Game implements Serializable{
     private volatile boolean endTurn;
     private volatile boolean turnTimeout;
     private MyTimerTask currentTimerTask;
+    private volatile boolean gameEnded;
 
     /*
     TODO: Add a method that given the username string returns the desired players
@@ -64,6 +65,7 @@ public class Game implements Serializable{
         isSpecialTurn = false;
         endTurn = false;
         turnTimeout = false;
+        gameEnded = false;
     }
 
     /**
@@ -158,7 +160,7 @@ public class Game implements Serializable{
                     currentTimerTask.isValid = false;
                     continue;
                 }
-                while (!endTurn && !(dicePlaced && usedToolCard && !isSpecialTurn) && !turnTimeout){
+                while (!endTurn && !(dicePlaced && usedToolCard && !isSpecialTurn) && !turnTimeout && !gameEnded){
                     //wait for user action
                 }
                 //Sync end turn with eventual responses e.g. UseToolCardResponse
@@ -183,7 +185,7 @@ public class Game implements Serializable{
             setTurn(1);
             if(i != 10) notifyEndTurn(justPlayedPlayer, players.get(getCurrentPlayerIndex()));
         }
-
+        if (gameEnded) return;
         //handling end game and points calculation
         ArrayList<PlayerScore> playersScore = new ArrayList<>();
         for (Player player : players) {
@@ -386,11 +388,30 @@ public class Game implements Serializable{
         lobbyObservers.remove(playerHashCode);
     }
 
+    private int getPlayerHashCodeByGameObserver(GameObserver gameObserver){
+        for(Integer hash : gameObservers.keySet()){
+            for ( GameObserver obs : gameObservers.get(hash)){
+                if (obs.equals(gameObserver)) return hash;
+            }
+        }
+        return -1;
+    }
+
+    private int getPlayerHashCodeByLobbyObserver(LobbyObserver lobbyObserver){
+        for(Integer hash : lobbyObservers.keySet()){
+            if(lobbyObservers.get(hash).equals(lobbyObserver)) return hash;
+        }
+        return -1;
+    }
+
     private void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
+        pingAllGameObservers();
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {
                 try {
                     observer.onPanelChoice(playerHashCode, panels, panelsAlreadyChosen, color);
+                } catch (ConnectException e){
+
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -427,7 +448,7 @@ public class Game implements Serializable{
         for(Player player : players){
             usernameToPanel.put(player.getUsername(), player.getPanel());
         }
-
+        pingAllGameObservers();
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {
                 try {
@@ -453,7 +474,7 @@ public class Game implements Serializable{
 
     private void notifyEndTurn(Player previousPlayer, Player currentPlayer){
         EndTurnMessage endTurnMessage = new EndTurnMessage(previousPlayer, currentPlayer, players, turn, draftPool, roundTrack);
-
+        pingAllGameObservers();
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {
                 try {
@@ -466,6 +487,7 @@ public class Game implements Serializable{
     }
 
     private void notifyEndGame(ArrayList<PlayerScore> playersScore) {
+        pingAllGameObservers();
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {
                 try {
@@ -530,18 +552,18 @@ public class Game implements Serializable{
         Random r = new Random();
         ArrayList<ToolCard> allToolCards = new ArrayList<>();
 
-//        allToolCards.add(new ToolCard1());
+        allToolCards.add(new ToolCard1());
         allToolCards.add(new ToolCard2());
-//        allToolCards.add(new ToolCard3());
-//        allToolCards.add(new ToolCard4());
-//        allToolCards.add(new ToolCard5());
+        allToolCards.add(new ToolCard3());
+        allToolCards.add(new ToolCard4());
+        allToolCards.add(new ToolCard5());
         allToolCards.add(new ToolCard6());
-//        allToolCards.add(new ToolCard7());
+        allToolCards.add(new ToolCard7());
         allToolCards.add(new ToolCard8());
-//        allToolCards.add(new ToolCard9());
-//        allToolCards.add(new ToolCard10());
-//        allToolCards.add(new ToolCard11());
-//        allToolCards.add(new ToolCard12());
+        allToolCards.add(new ToolCard9());
+        allToolCards.add(new ToolCard10());
+        allToolCards.add(new ToolCard11());
+        allToolCards.add(new ToolCard12());
 
         for(int i = 0; i < 3 ; i++){
             toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
@@ -573,14 +595,31 @@ public class Game implements Serializable{
     }
 
     public boolean disconnect(int playerHashCode) {
-        Player player = getPlayerByHashcode(playerHashCode);
-        if(player == null) return false;
-        detachLobbyObserver(playerHashCode);
-        detachAllGameObservers(playerHashCode);
-        player.setPlayerStatus(PlayerStatus.INACTIVE);
-        //TODO notify user of disconnection
-        notifyDisconnection(player);
-        return true;
+        if(gameStatus.equals(GameStatus.INIT)){
+            leaveLobby(getPlayerByHashcode(playerHashCode).getUsername(),lobbyObservers.get(playerHashCode));
+            return true;
+        }else {
+            Player player = getPlayerByHashcode(playerHashCode);
+            if (player == null) return false;
+            System.out.println("detaching : " + playerHashCode);
+            detachLobbyObserver(playerHashCode);
+            detachAllGameObservers(playerHashCode);
+            player.setPlayerStatus(PlayerStatus.INACTIVE);
+            int numOfActivePlayers = getActivePlayersNumber();
+            if (numOfActivePlayers < 2) {
+                notifyDisconnection(player, true);
+                gameStatus = GameStatus.CLOSE;
+                gameObservers.clear();
+                lobbyObservers.clear();
+                gameEnded = true;
+
+
+            }
+            else {
+                notifyDisconnection(player, false);
+            }
+            return true;
+        }
     }
 
     private void toNextTurn() {
@@ -614,15 +653,16 @@ public class Game implements Serializable{
 
     public synchronized PlaceDiceResult placeDice(int playerHashCode, int diceIndex, int row, int col) {
         Player currentPlayer = getPlayerByHashcode(playerHashCode);
-        if (dicePlaced) return new PlaceDiceResult("Can't place two dice in the same turn!", false,currentPlayer.getPanel());
-        if(players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult("Can't do game actions during others players turn", false,currentPlayer.getPanel());
+        if (dicePlaced) return new PlaceDiceResult("Can't place two dice in the same turn!", false,currentPlayer.getPanel(), draftPool);
+        if(players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult(
+                "Can't do game actions during others players turn", false,currentPlayer.getPanel(), draftPool);
         int index = (row * StaticValues.PATTERN_COL) + col;
         boolean result = currentPlayer.getPanel().addDice(index,draftPool.get(diceIndex));
         System.out.println("place dice result = " + result);
         if(result) {
             dicePlaced = true;
             draftPool.remove(diceIndex);
-
+            pingAllGameObservers();
             for (ArrayList<GameObserver> observers : gameObservers.values()) {
                 for (GameObserver observer : observers) {
                     try {
@@ -632,16 +672,17 @@ public class Game implements Serializable{
                     }
                 }
             }
-            return new PlaceDiceResult("risiko è meglio",true,new WindowPanel(currentPlayer.getPanel()));
+            return new PlaceDiceResult("risiko è meglio",true,new WindowPanel(currentPlayer.getPanel()), draftPool);
         }
         else {
-            return new PlaceDiceResult("Invalid position, pay attention to game rules!" , false, new WindowPanel(currentPlayer.getPanel()));
+            return new PlaceDiceResult("Invalid position, pay attention to game rules!" , false,
+                    new WindowPanel(currentPlayer.getPanel()), draftPool);
         }
     }
 
     private Player getPlayerByHashcode(int hashCode) {
         for(Player player : players){
-            if(player.hashCode() == hashCode) return player;
+            if(player.getHashCode() == hashCode) return player;
         }
         return null;
     }
@@ -976,8 +1017,8 @@ public class Game implements Serializable{
         return true;
     }
 
-    public boolean specialDicePlacement(int playerHashCode, int cellIndex, Dice dice) {
-        if (players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return false;
+    public PlaceDiceResult specialDicePlacement(int playerHashCode, int cellIndex, Dice dice){
+        if (players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult("Somenthing went wrong!", false, null, null);
         Player player = getPlayerByHashcode(playerHashCode);
         WindowPanel panel = player.getPanel();
         boolean result = panel.addDice(cellIndex, dice);
@@ -985,7 +1026,7 @@ public class Game implements Serializable{
             player.setPanel(panel);
             dicePlaced = true;
         }
-        return result;
+        return new PlaceDiceResult("Special dice placement" , true, panel, draftPool);
     }
 
     public ArrayList<Integer> getLegalPositions(int playerHashCode, Dice dice){
@@ -998,6 +1039,7 @@ public class Game implements Serializable{
 
     private void notifyUsedToolCard(int toolCardID, Player player, ArrayList<Dice> draftPool, RoundTrack roundTrack,int toolCardCost){
         ToolCardNotificationMessage toolCardNotificationMessage = new ToolCardNotificationMessage(toolCardID, player, draftPool, roundTrack, toolCardCost);
+        pingAllGameObservers();
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {
                 try {
@@ -1009,11 +1051,13 @@ public class Game implements Serializable{
         }
     }
 
-    private void notifyDisconnection(Player disconnectingPlayer){
+    private void notifyDisconnection(Player disconnectingPlayer, boolean isLastPlayer){
+        gameObservers.keySet().forEach(System.out::println);
+        pingAllGameObservers();
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {
                 try {
-                    observer.onPlayerDisconnection(disconnectingPlayer);
+                    observer.onPlayerDisconnection(disconnectingPlayer, isLastPlayer);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -1022,6 +1066,7 @@ public class Game implements Serializable{
     }
 
     private void notifyReconnection(Player reconnectingPlayer){
+        pingAllGameObservers();
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {
                 try {
@@ -1059,14 +1104,33 @@ public class Game implements Serializable{
             try {
                 lobbyObservers.get(playerHashCode).rmiPing();
             } catch (ConnectException e) {
-                result = false;
                 System.out.println("--> detected player disconnection, username = " + getPlayerByHashcode(playerHashCode).getUsername());
                 leaveLobby(getPlayerByHashcode(playerHashCode).getUsername(), lobbyObservers.get(playerHashCode));
+                if(players.size() < 2){
+                    result = false;
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         }
         return result;
+    }
+
+    private void pingAllGameObservers(){
+        for (ArrayList<GameObserver> obs : gameObservers.values()){
+            for(GameObserver gameObserver : obs){
+                try {
+                    rmiPing(gameObserver);
+                } catch (ConnectException e){
+                    System.out.println("DISCONNECTING DUE TO PING DETECT");
+                    int hash = getPlayerHashCodeByGameObserver(gameObserver);
+                    disconnect(hash);
+                }
+                catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 

@@ -464,7 +464,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void onPlayerDisconnection(Player disconnectingPlayer) throws RemoteException {
+    public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
 
     }
 
@@ -513,7 +513,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
                     }
                     if (result.status) {
                         playerWindowPanel.setPanel(result.panel);
-                        draftPool.remove(draftPoolDiceButtons.indexOf(diceButtonSelected));
+                        draftPool = result.draftPool;
                         drawDraftPool();
                     }
                     else {

@@ -21,6 +21,6 @@ public interface GameObserver extends Remote {
     void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException;
     void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException;
     void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException;
-    void onPlayerDisconnection(Player disconnectingPlayer) throws RemoteException;
+    void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException;
     void rmiPing() throws RemoteException;
 }

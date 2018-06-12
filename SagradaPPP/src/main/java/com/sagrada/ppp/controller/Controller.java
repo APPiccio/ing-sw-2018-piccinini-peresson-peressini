@@ -274,16 +274,17 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         while (toolCardParameters.panelCellIndex == null);
                         System.out.println("-------> panel cell index " + toolCardParameters.panelCellIndex);
                     } while (!legalPositions.contains(toolCardParameters.panelCellIndex));
-                    useToolCardResult.result = service.specialDicePlacement(gameHashCode, playerHashCode,
-                            toolCardParameters.panelCellIndex, dice);
+                    //useToolCardResult.result = service.specialDicePlacement(gameHashCode, playerHashCode,
+                    //        toolCardParameters.panelCellIndex, dice);
+                    PlaceDiceResult specialDicePlacement = service.specialDicePlacement(gameHashCode, playerHashCode, toolCardParameters.panelCellIndex, dice);
+                    useToolCardResult.draftpool = specialDicePlacement.draftPool;
+                    useToolCardResult.result = specialDicePlacement.status;
                     for (Player player : useToolCardResult.players) {
                         if (player.getHashCode() == playerHashCode) {
-                            WindowPanel panel = player.getPanel();
-                            panel.addDice(toolCardParameters.panelCellIndex, dice);
-                            player.setPanel(panel);
+                            System.out.println(specialDicePlacement.panel);
+                            player.setPanel(specialDicePlacement.panel);
                         }
                     }
-                    useToolCardResult.draftpool.remove((int) toolCardParameters.panelCellIndex);
                 }
                 else {
                     service.putDiceInDraftPool(gameHashCode, dice);
@@ -345,12 +346,12 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         while (toolCardParameters.panelCellIndex == null) ;
                     }
                     while (!positions.contains(toolCardParameters.panelCellIndex));
-                    useToolCardResult.result = service.specialDicePlacement(gameHashCode, playerHashCode, toolCardParameters.panelCellIndex, dice);
+                    PlaceDiceResult placeDiceResult = service.specialDicePlacement(gameHashCode, playerHashCode, toolCardParameters.panelCellIndex, dice);
+                    useToolCardResult.result = placeDiceResult.status;
+                    useToolCardResult.draftpool = placeDiceResult.draftPool;
                     for(Player player : useToolCardResult.players){
                         if(player.getHashCode() == playerHashCode){
-                            WindowPanel panel = player.getPanel();
-                            panel.addDice(toolCardParameters.panelCellIndex, dice);
-                            player.setPanel(panel);
+                            player.setPanel(placeDiceResult.panel);
                         }
                     }
                     //comment this line because of rmi's unicast behaviour. The server update on draftPool has been
