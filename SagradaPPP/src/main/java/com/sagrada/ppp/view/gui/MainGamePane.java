@@ -434,7 +434,6 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
             Button toolCardButton =(Button) event.getSource();
             try {
                 if (!isToolCardUsed) {
-                    isToolCardUsed = true;
                     controller.isToolCardUsable(joinGameResult.getGameHashCode(), joinGameResult.getPlayerHashCode(),
                             toolCardButtons.indexOf(toolCardButton), this);
                 }else{
@@ -776,6 +775,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
                             .getId()) + "\nCost: " + useToolCardResult.toolCardCost);
             Alert alert = new Alert(Alert.AlertType.NONE);
             if (useToolCardResult.result) {
+                isToolCardUsed = true;
                 alert.setAlertType(Alert.AlertType.INFORMATION);
                 alert.setTitle("All good");
                 alert.setHeaderText("Tool card used successfully!");

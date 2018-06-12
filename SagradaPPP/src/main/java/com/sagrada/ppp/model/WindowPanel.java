@@ -45,7 +45,7 @@ public class WindowPanel implements Serializable {
     }
 
     /**
-     * Intended to be used only by the windowpanel parser!
+     * Intended to be used only by the WindowPanelParser!
      * @param panelName
      * @param favorTokens
      * @param cardID
