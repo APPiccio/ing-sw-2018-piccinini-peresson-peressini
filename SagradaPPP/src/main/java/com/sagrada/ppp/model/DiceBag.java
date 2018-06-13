@@ -66,7 +66,7 @@ public class DiceBag {
         bag.add(new Dice(dice.getColor()));
     }
 
-    public int numberOfColor(Color color) {
+    int numberOfColor(Color color) {
         return (int) bag.stream().filter(x -> x.getColor() == color).count();
     }
 

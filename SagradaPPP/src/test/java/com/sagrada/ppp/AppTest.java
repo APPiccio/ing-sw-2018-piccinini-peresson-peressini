@@ -2,6 +2,8 @@ package com.sagrada.ppp;
 
 import com.sagrada.ppp.model.CellTest;
 import com.sagrada.ppp.model.ColorTest;
+import com.sagrada.ppp.model.DiceBagTest;
+import com.sagrada.ppp.model.DiceTest;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -20,15 +22,12 @@ public class AppTest extends TestCase {
     /**
      * @return the suite of tests being tested
      */
-    public static Test suite()
-    {
+    public static Test suite() {
         return new TestSuite( AppTest.class );
     }
 
     public void testApp(){
 
-        new DiceBagTest();
-        new DiceTest();
         new WindowPanelTest();
         new RoundTrackTest();
         //new GameTest();
@@ -42,8 +41,17 @@ public class AppTest extends TestCase {
 
     public void testColor() {
         ColorTest colorTest = new ColorTest();
-        colorTest.getColor();
-        colorTest.getRandomColor();
+        colorTest.testAll();
+    }
+
+    public void testDiceBag() {
+        DiceBagTest diceBagTest = new DiceBagTest();
+        diceBagTest.testAll();
+    }
+
+    public void testDice() {
+        DiceTest diceTest = new DiceTest();
+        diceTest.testAll();
     }
 
     public void testPublicObjectiveCards() {

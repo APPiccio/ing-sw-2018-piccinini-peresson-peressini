@@ -21,6 +21,12 @@ public class ColorTest {
     }
 
     @Test
+    public void testAll() {
+        getRandomColor();
+        getColor();
+    }
+
+    @Test
     public void getRandomColor() {
         Color color = Color.getRandomColor();
         assertTrue(colors.values().contains(color));

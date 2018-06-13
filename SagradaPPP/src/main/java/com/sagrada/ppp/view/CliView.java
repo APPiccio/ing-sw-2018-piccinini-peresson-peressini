@@ -8,7 +8,6 @@ import com.sagrada.ppp.network.client.ConnectionHandler;
 import com.sagrada.ppp.network.client.ConnectionModeEnum;
 import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
 

@@ -1,8 +1,5 @@
 package com.sagrada.ppp.model;
 
-import com.sagrada.ppp.model.Cell;
-import com.sagrada.ppp.model.Color;
-import com.sagrada.ppp.model.Dice;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
