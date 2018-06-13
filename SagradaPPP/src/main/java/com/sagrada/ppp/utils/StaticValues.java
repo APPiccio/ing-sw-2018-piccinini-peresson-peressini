@@ -17,7 +17,7 @@ public class StaticValues {
     public static final int PATTERN_COL = 5;
     public static final int NUMBER_OF_CELLS = 20;
     public static final int NUMBER_OF_COLORS = 5;
-    public static final int NUMBER_OF_TURNS = 10;
+    public static final int NUMBER_OF_ROUNDS = 10;
     public static final int DICE_FACES = 6;
     public static final int MAX_USER_PER_GAME = 4;
     public static int NUMBER_OF_CARDS = 12;

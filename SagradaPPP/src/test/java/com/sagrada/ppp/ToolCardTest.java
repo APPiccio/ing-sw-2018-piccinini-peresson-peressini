@@ -204,7 +204,7 @@ public class ToolCardTest {
             for (int j = 0; j < remainingDices; j++) {
                 dices.add(new Dice());
             }
-            roundTrack.setDicesOnTurn(i, dices);
+            roundTrack.setDicesOnRound(i, dices);
         }
 
         ArrayList<Dice> dices = new ArrayList<>(); //extracted dices

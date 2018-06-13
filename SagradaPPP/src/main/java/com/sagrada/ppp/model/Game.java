@@ -49,7 +49,7 @@ public class Game implements Serializable{
         diceBag = new DiceBag();
         players = new ArrayList<>();
         draftPool = new ArrayList<>();
-        roundTrack = new RoundTrack(StaticValues.NUMBER_OF_TURNS);
+        roundTrack = new RoundTrack();
         gameStatus = GameStatus.INIT;
         if(username != null) players.add(new Player(username));
         lobbyObservers = new HashMap<>();
@@ -109,7 +109,6 @@ public class Game implements Serializable{
         gameStatus = GameStatus.ACTIVE;
         extractPublicObjCards();
         extractToolCards();
-        roundTrack.setCurrentRound(1);
         draftPool.addAll(diceBag.extractDices(players.size() *2+1));
         System.out.println("Game is starting.. notify users of that");
         notifyGameStart();
@@ -254,7 +253,7 @@ public class Game implements Serializable{
             return;
         }
         else{
-            roundTrack.setDicesOnTurn(roundTrack.getCurrentRound(), getDraftPool());
+            roundTrack.setDicesOnRound(roundTrack.getCurrentRound(), getDraftPool());
             roundTrack.nextRound();
             draftPool.clear();
             draftPool.addAll(diceBag.extractDices(players.size() * 2 + 1));

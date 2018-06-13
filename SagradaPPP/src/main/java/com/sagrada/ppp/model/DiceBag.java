@@ -1,6 +1,5 @@
 package com.sagrada.ppp.model;
 
-import com.sagrada.ppp.utils.IllegalDiceExtractionException;
 import com.sagrada.ppp.utils.StaticValues;
 
 import java.util.ArrayList;
@@ -56,21 +55,15 @@ public class DiceBag {
      * @return  ArrayList of dices randomly chosen
      */
     ArrayList<Dice> extractDices(int n) {
-        try {
-            if (bag.size() < n || n <= 0) {
-                throw new IllegalDiceExtractionException(n);
-            }
-            else {
-                ArrayList<Dice> dices = new ArrayList<>();
-                for (int i = 0; i < n; i++) {
-                    dices.add(extractRandomDice());
-                }
-                return dices;
-            }
+        if (bag.size() < n || n <= 0) {
+            throw new IllegalArgumentException("Cannot extract " + n + " dices");
         }
-        catch (IllegalDiceExtractionException e) {
-            e.printStackTrace();
-            return null;
+        else {
+            ArrayList<Dice> dices = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                dices.add(extractRandomDice());
+            }
+            return dices;
         }
     }
 

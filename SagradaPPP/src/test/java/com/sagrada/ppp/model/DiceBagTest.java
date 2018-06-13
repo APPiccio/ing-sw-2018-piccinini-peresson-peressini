@@ -9,17 +9,6 @@ import static org.junit.Assert.*;
 public class DiceBagTest {
 
     @Test
-    public void testAll() {
-        DiceBag();
-        size();
-        extractRandomDice();
-        getDiceBag();
-        extractDices();
-        addDice();
-        equals();
-    }
-
-    @Test
     public void DiceBag() {
         DiceBag diceBag = new DiceBag();
 
@@ -104,6 +93,12 @@ public class DiceBagTest {
         diceBag.addDice(new Dice(Color.YELLOW));
 
         assertFalse(oldDiceBag.equals(diceBag));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void extractDicesException() {
+        DiceBag diceBag = new DiceBag();
+        diceBag.extractDices(777);
     }
 
     private int numberOfColor(DiceBag diceBag, Color color) {

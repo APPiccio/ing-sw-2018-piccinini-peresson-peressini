@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 
 public class CellTest {
 
+    //TODO da riorganizzare in stile altre classi di test nella cartella model
+
     @Test
     public void testCell() {
         Dice dice = new Dice();
@@ -47,13 +49,6 @@ public class CellTest {
         assertEquals(Color.RED, cell.getColor());
         assertNull(cell.getDiceOn());
 
-        assertEquals("Color = " + numberedCell.getColor() + "\t\t" + "Value = " +
-                        numberedCell.getValue() + "\t\t" + "Dice = " + numberedCell.getDiceOn().toString() + "\n",
-                            numberedCell.toString());
-
-        assertEquals("Color = " + coloredCell.getColor() + "\t\t" + "Value = " +
-                        coloredCell.getValue() + "\t\t\n", coloredCell.toString());
-
         assertFalse(coloredCell.equals(numberedCell));
         assertFalse(numberedCell.equals(coloredCell));
 
@@ -68,6 +63,21 @@ public class CellTest {
         coloredCell.setDiceOn(testDice1);
 
         assertTrue(numberedCell.equals(coloredCell));
+    }
+
+    @Test
+    public void toStringTest() {
+        Cell numberedCell = new Cell(3);
+        numberedCell.setDiceOn(new Dice());
+
+        assertEquals("Color = " + numberedCell.getColor() + "\t\t" + "Value = " +
+                        numberedCell.getValue() + "\t\t" + "Dice = " + numberedCell.getDiceOn().toString() + "\n",
+                numberedCell.toString());
+
+        Cell coloredCell = new Cell(Color.RED);
+
+        assertEquals("Color = " + coloredCell.getColor() + "\t\t" + "Value = " +
+                coloredCell.getValue() + "\t\t\n", coloredCell.toString());
     }
 
 }
