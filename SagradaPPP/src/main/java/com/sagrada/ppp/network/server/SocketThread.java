@@ -166,6 +166,12 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
+    public Response handle(DisableAFKRequest request) {
+        service.disableAFK(request.gameHashCode, request.playerHashCode);
+        return null;
+    }
+
+    @Override
     public synchronized void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
         try {
             out.writeObject(new DicePlacedNotification(dicePlacedMessage));
@@ -279,9 +285,20 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         }
     }
 
+    @Override
+    public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
+        try {
+            out.writeObject(new PlayerAFKNotification(playerAFK, isLastPlayer, lastPlayer));
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void rmiPing() throws RemoteException {
         //do nothing here.. only to keep inheritance
     }
+
+
 }

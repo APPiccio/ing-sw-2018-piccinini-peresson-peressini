@@ -54,4 +54,6 @@ public interface RemoteController extends Remote {
 
     ReconnectionResult reconnection(int playerHashCode, int gameHashCode, GameObserver gameObserver) throws RemoteException;
 
+    void disableAFK(int gameHashCode, int playerHashCode) throws RemoteException;
+
 }

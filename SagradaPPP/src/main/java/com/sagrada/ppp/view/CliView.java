@@ -8,6 +8,10 @@ import com.sagrada.ppp.network.client.ConnectionHandler;
 import com.sagrada.ppp.network.client.ConnectionModeEnum;
 import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
+import com.sun.media.jfxmedia.events.PlayerStateEvent;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+
+import javax.print.attribute.HashAttributeSet;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
 
@@ -53,6 +57,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     private int currentTurn;
     private int currentRound;
     private JoinGameResult joinGameResult;
+    private boolean isAFK;
 
 
     public CliView(RemoteController controller, ConnectionModeEnum connectionModeEnum) throws RemoteException{
@@ -71,6 +76,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         isEndedTurn = false;
         isToolCardUsableFlag = true;
         toolCardFlags = new ToolCardFlags();
+        isAFK = false;
     }
 
     public void init() throws RemoteException {
@@ -258,6 +264,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     @Override
     public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
         playersScore.sort(Comparator.comparingInt(PlayerScore::getTotalPoints));
+        Collections.reverse(playersScore);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("USERNAME\t\tTOTAL\t\tTOKENS\t\tEMPTY CELLS\t\tPRIVATE\t\tPUB1\t\tPUB2\t\tPUB3\n");
         stringBuilder.append("--------------------------------------------------------------------------------------------------\n");
@@ -272,6 +279,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
             stringBuilder.append(playerScore.getPublicObjectiveCard3Points()).append("\n\n");
         }
         System.out.println(stringBuilder.toString());
+        System.exit(0);
     }
 
     @Override
@@ -292,6 +300,25 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                 }
             }
         }
+    }
+
+    @Override
+    public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
+        if(hashCode == playerAFK.getHashCode()){
+            isAFK = true;
+            System.out.println("---> You have been suspended due to inactivity. Turns will be skipped until your signal");
+            if(isLastPlayer){
+                System.out.println("\n\n\n\n\t\t\t\t ----> " + lastPlayer.getUsername() + " WIN <----");
+                System.exit(0);
+            }
+        }
+        else{
+            if(isLastPlayer){
+                System.out.println("\n\n\n\n\t\t\t\t ----> YOU WIN <----");
+                System.exit(0);
+            }
+        }
+        System.out.println("--> You have been suspended due to inactivity. Turns will be skipped until your signal");
     }
 
     //do stuff in game
@@ -625,6 +652,10 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
                         break;
                     }
                     controller.endTurn(gameHashCode, hashCode);
+                    break;
+                case StaticValues.COMMAND_DISABLE_AFK:
+                    controller.disableAFK(gameHashCode, hashCode);
+                    isAFK = false;
                     break;
                 case StaticValues.COMMAND_SHOW:
                     showGameSecondaryStuff();

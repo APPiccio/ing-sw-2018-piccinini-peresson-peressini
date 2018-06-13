@@ -22,5 +22,6 @@ public interface ResponseHandler {
     void handle(ReconnectionResponse response);
     void handle(PlayerReconnectionNotification response);
     void handle(PlayerDisconnectionNotification response);
+    void handle(PlayerAFKNotification response);
 
 }

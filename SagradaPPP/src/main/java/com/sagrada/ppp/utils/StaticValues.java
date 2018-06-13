@@ -1,6 +1,7 @@
 package com.sagrada.ppp.utils;
 
 import com.sagrada.ppp.model.Color;
+import com.sun.javafx.binding.StringFormatter;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -21,7 +22,7 @@ public class StaticValues {
     public static final int DICE_FACES = 6;
     public static final int MAX_USER_PER_GAME = 4;
     public static int NUMBER_OF_CARDS = 12;
-    public static final long TURN_DURATION = 120000;
+    public static final long TURN_DURATION = 10000;
 
     public static final String TOKEN_URL = "src/main/java/com/sagrada/ppp/utils/token.json";
 
@@ -145,14 +146,13 @@ public class StaticValues {
     public static final String STRING_COMMAND_HELP = "show commands list";
     public static final String STRING_COMMAND_PLAYERS_IN_LOBBY = "show players connected to this lobby";
     public static final String STRING_COMMAND_START_GAME = "start game";
-
+    public static final String STRING_COMMAND_DISABLE_AFK = "'i am active again' signal";
 
     public static final String STRING_COMMAND_PLACE_DICE = "<dice_index> <cell_row> <cell_col> place the chosen dice in the panel";
     public static final String STRING_COMMAND_END_TURN = "end your current turn";
     public static final String STRING_COMMAND_USE_TOOLCARD = "<tool card index> use a tool card";
     public static final String STRING_COMMAND_SHOW = "shows public objective cards, draft pool and tool cards";
     public static final String STRING_COMMAND_CONNECTION = "<rmi/socket> change connection mode";
-
 
     // Cli View command
     public static final String COMMAND_QUIT = ":q";
@@ -170,6 +170,7 @@ public class StaticValues {
     public static final String COMMAND_USE_TOOLCARD = ":toolcard";
     public static final String COMMAND_SHOW = ":show";
     public static final String COMMAND_CONNECTION = ":cmode";
+    public static final String COMMAND_DISABLE_AFK = ":bazinga";
 
 
     //AssetUrl

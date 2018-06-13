@@ -202,4 +202,8 @@ public class Service {
         return games.get(gameHashCode).reconnection(playerHashCode, gameObserver);
     }
 
+    public void disableAFK(int gameHashCode, int playerHashCode){
+        games.get(gameHashCode).disableAFK(playerHashCode);
+    }
+
 }

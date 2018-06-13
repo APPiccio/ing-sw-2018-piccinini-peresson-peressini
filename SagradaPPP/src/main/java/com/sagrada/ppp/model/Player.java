@@ -2,10 +2,6 @@ package com.sagrada.ppp.model;
 
 import java.io.Serializable;
 
-enum PlayerStatus {
-    ACTIVE,
-    INACTIVE
-}
 /** Represents a player.
  * @author Peresson Peressini Piccinini
  */

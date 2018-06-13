@@ -62,7 +62,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                 }
                 responseLock.notifyAll();
             }
-            lobbyObserver = null;
             return leaveGameResult;
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -98,6 +97,16 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     @Override
     public String getUsername(int playerHashCode, int gameHashCode) throws RemoteException {
         return null;
+    }
+
+    @Override
+    public void disableAFK(int gameHashCode, int playerHashCode) throws RemoteException {
+        try {
+            out.writeObject(new DisableAFKRequest(gameHashCode, playerHashCode));
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void handle(Response response) {
@@ -343,8 +352,18 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     public void handle(PlayerDisconnectionNotification response) {
         for(GameObserver gameObserver : gameObservers){
             try {
-                System.out.println("NOTIFICO CLIENT");
                 gameObserver.onPlayerDisconnection(response.disconnectingPlayer, response.isLastPlayer);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void handle(PlayerAFKNotification response) {
+        for(GameObserver gameObserver : gameObservers){
+            try {
+                gameObserver.onPlayerAFK(response.player , response.isLastPlayer, response.lastPlayer);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
