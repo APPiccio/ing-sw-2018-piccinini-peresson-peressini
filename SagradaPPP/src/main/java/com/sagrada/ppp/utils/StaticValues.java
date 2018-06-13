@@ -1,7 +1,6 @@
 package com.sagrada.ppp.utils;
 
 import com.sagrada.ppp.model.Color;
-import com.sun.javafx.binding.StringFormatter;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 

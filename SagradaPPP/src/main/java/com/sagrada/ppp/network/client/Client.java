@@ -9,12 +9,7 @@ import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
-/**
- * Hello world!
- *
- */
-public class Client
-{
+public class Client {
     static RemoteController controller;
     static ConnectionModeEnum connectionModeEnum;
 

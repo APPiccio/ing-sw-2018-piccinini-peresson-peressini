@@ -248,7 +248,7 @@ public class CliView extends UnicastRemoteObject
         System.out.println(username + " has joined the game!\n");
         printPlayersUsername();
     }
-    
+
     @Override
     public void onPlayerLeave(String username, ArrayList<String> players, int numOfPlayers) throws RemoteException {
         playersUsername = players;

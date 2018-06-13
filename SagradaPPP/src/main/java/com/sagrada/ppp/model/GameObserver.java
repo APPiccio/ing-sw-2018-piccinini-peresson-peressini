@@ -1,6 +1,5 @@
 package com.sagrada.ppp.model;
 
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;

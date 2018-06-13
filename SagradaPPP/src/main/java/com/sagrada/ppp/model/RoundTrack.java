@@ -10,7 +10,7 @@ public class RoundTrack implements Serializable {
     private int currentRound;
 
     /**
-     * Init the first dimention of the ArrayList and 10 istances of the second dimention.
+     * Init the first dimension of the ArrayList and 10 instances of the second dimension.
      * @param rounds sets the number of rounds!
      */
 
@@ -152,9 +152,9 @@ public class RoundTrack implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for(int  i = 0; i < 10; i++){
-            sb.append("ROUND " + (i+1) + "DICE:\n");
+            sb.append("ROUND ").append(i + 1).append("DICE:\n");
             for (Dice dice : getDicesOnRound(i+1)){
-                sb.append("--> " + dice.toString() + "\n" );
+                sb.append("--> ").append(dice.toString()).append("\n");
             }
             sb.append("------\n");
         }

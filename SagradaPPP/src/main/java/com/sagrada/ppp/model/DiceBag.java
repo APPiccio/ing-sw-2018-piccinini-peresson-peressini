@@ -27,23 +27,35 @@ public class DiceBag {
         this.bag = diceBag.getDiceBag();
     }
 
+    ArrayList<Dice> getDiceBag() {
+        ArrayList<Dice> diceBag = new ArrayList<>();
+        for (Dice dice : bag) {
+            diceBag.add(new Dice(dice));
+        }
+        return diceBag;
+    }
+
+    public void addDice(Dice dice) {
+        bag.add(new Dice(dice.getColor()));
+    }
+
     public int size() {
         return bag.size();
+    }
+
+    private int numberOf(int n, Color color) {
+        return (int) bag.stream().filter(x -> x.getValue() == n && x.getColor() == color).count();
     }
 
     public Dice extractRandomDice() {
         return new Dice(bag.remove(new Random().nextInt(bag.size())));
     }
 
-    public ArrayList<Dice> getDiceBag() {
-        return new ArrayList<>(bag);
-    }
-
     /**
      * @param n number of dices to extract
      * @return  ArrayList of dices randomly chosen
      */
-    public ArrayList<Dice> extractDices(int n) {
+    ArrayList<Dice> extractDices(int n) {
         try {
             if (bag.size() < n || n <= 0) {
                 throw new IllegalDiceExtractionException(n);
@@ -60,18 +72,6 @@ public class DiceBag {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public void addDice(Dice dice) {
-        bag.add(new Dice(dice.getColor()));
-    }
-
-    int numberOfColor(Color color) {
-        return (int) bag.stream().filter(x -> x.getColor() == color).count();
-    }
-
-    private int numberOf(int n, Color color) {
-        return (int) bag.stream().filter(x -> x.getValue() == n && x.getColor() == color).count();
     }
 
     @Override

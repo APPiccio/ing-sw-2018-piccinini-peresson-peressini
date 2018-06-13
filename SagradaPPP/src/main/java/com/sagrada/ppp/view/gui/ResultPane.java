@@ -80,7 +80,7 @@ public class ResultPane extends UnicastRemoteObject {
         int i = 0;
         for (PlayerScore playerScore : playersScore) {
             Image image = new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_" +
-                    playerScore.getPrivateColor().toString().toLowerCase() + ".png");
+                    playerScore.getPrivateColor().toString().toUpperCase() + ".png");
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(100);
             imageView.setFitHeight(150);
