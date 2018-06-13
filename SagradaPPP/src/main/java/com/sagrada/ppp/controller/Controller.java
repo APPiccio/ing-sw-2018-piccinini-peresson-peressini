@@ -52,6 +52,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     }
 
     @Override
+    public void disableAFK(int gameHashCode, int playerHashCode) throws RemoteException {
+        service.disableAFK(gameHashCode, playerHashCode);
+    }
+
+    @Override
     public boolean disconnect(int gameHashCode, int playerHashCode) throws RemoteException {
         return service.disconnect(gameHashCode, playerHashCode);
     }

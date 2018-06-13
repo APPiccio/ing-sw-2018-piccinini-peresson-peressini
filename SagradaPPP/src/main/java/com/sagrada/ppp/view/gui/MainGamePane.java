@@ -104,6 +104,11 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
 
     }
 
+    @Override
+    public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
+        //TODO implements this
+    }
+
     private void draw(){
 
         Scene scene = new Scene(tabContainer, 1440, 900);

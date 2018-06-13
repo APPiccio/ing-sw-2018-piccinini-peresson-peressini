@@ -166,8 +166,13 @@ public class Game implements Serializable{
                 //Sync end turn with eventual responses e.g. UseToolCardResponse
                 synchronized (this) {
                     //handling timer
+
                     if (dicePlaced && usedToolCard) {
                         currentTimerTask.isValid = false;
+                    }
+
+                    if(turnTimeout && !(dicePlaced || usedToolCard)){
+                        setPlayerAFK(justPlayedPlayer);
                     }
 
                     System.out.println("END TURN = " + j + ", ROUND = " + i);
@@ -204,6 +209,38 @@ public class Game implements Serializable{
         }
         return h;
     }
+
+    public void disableAFK(int playerHashCode){
+        getPlayerByHashcode(playerHashCode).setPlayerStatus(PlayerStatus.ACTIVE);
+        //TODO implements notification
+    }
+
+    private void setPlayerAFK(Player playerAFK){
+        playerAFK.setPlayerStatus(PlayerStatus.INACTIVE);
+        if (getActivePlayersNumber() < 2){
+            Player activePlayer = players.stream().filter(x -> x.getPlayerStatus().equals(PlayerStatus.ACTIVE)).findFirst().orElse(null);
+            notifyPlayerAFK(playerAFK, true, activePlayer);
+            gameEnded = true;
+        }
+        else{
+            notifyPlayerAFK(playerAFK , false, null);
+
+        }
+    }
+
+    private void notifyPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer){
+        pingAllGameObservers();
+        for (ArrayList<GameObserver> observers : gameObservers.values()) {
+            for (GameObserver observer : observers) {
+                try {
+                    observer.onPlayerAFK(playerAFK, isLastPlayer, lastPlayer);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 
     /**
      * Handles end turn mechanics,
@@ -612,8 +649,6 @@ public class Game implements Serializable{
                 gameObservers.clear();
                 lobbyObservers.clear();
                 gameEnded = true;
-
-
             }
             else {
                 notifyDisconnection(player, false);
@@ -1052,7 +1087,6 @@ public class Game implements Serializable{
     }
 
     private void notifyDisconnection(Player disconnectingPlayer, boolean isLastPlayer){
-        gameObservers.keySet().forEach(System.out::println);
         pingAllGameObservers();
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {

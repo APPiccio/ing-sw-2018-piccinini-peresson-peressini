@@ -44,6 +44,12 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         this.vBoxEvents = new VBox();
     }
 
+
+    @Override
+    public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
+        //TODO IMPLEMENTS THIS
+    }
+
     void init(RemoteController controller, Stage stage, JoinGameResult joinGameResult) {
         receivedMyPanels = false;
         userHasChosen = false;

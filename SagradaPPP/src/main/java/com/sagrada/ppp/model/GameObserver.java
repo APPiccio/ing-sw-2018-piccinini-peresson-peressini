@@ -22,5 +22,6 @@ public interface GameObserver extends Remote {
     void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException;
     void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException;
     void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException;
+    void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException;
     void rmiPing() throws RemoteException;
 }
