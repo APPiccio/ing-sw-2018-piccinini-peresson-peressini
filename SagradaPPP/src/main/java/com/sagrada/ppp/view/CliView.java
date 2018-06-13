@@ -8,10 +8,6 @@ import com.sagrada.ppp.network.client.ConnectionHandler;
 import com.sagrada.ppp.network.client.ConnectionModeEnum;
 import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sun.media.jfxmedia.events.PlayerStateEvent;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
-
-import javax.print.attribute.HashAttributeSet;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
 
@@ -21,7 +17,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
-public class CliView extends UnicastRemoteObject implements LobbyObserver, Serializable, GameObserver, ToolCardHandler{
+public class CliView extends UnicastRemoteObject
+        implements LobbyObserver, Serializable, GameObserver, ToolCardHandler {
     private transient Scanner scanner;
     private transient RemoteController controller;
     private transient String username;
@@ -58,7 +55,6 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     private int currentRound;
     private JoinGameResult joinGameResult;
     private boolean isAFK;
-
 
     public CliView(RemoteController controller, ConnectionModeEnum connectionModeEnum) throws RemoteException{
         this.scanner = new Scanner(System.in);
@@ -252,8 +248,7 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
         System.out.println(username + " has joined the game!\n");
         printPlayersUsername();
     }
-
-
+    
     @Override
     public void onPlayerLeave(String username, ArrayList<String> players, int numOfPlayers) throws RemoteException {
         playersUsername = players;
@@ -1014,4 +1009,15 @@ public class CliView extends UnicastRemoteObject implements LobbyObserver, Seria
     public void rmiPing() throws RemoteException {
         //do nothing here
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
 }
