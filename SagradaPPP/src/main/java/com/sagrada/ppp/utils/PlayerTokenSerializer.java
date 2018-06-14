@@ -19,6 +19,7 @@ public class PlayerTokenSerializer {
     }
 
     public static void serialize(JoinGameResult joinGameResult) {
+        if(isTokenPresent()) deleteToken();
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {

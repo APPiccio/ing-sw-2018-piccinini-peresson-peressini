@@ -24,7 +24,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class ResultPane extends UnicastRemoteObject {
+public class EndGameView extends UnicastRemoteObject {
 
     private VBox leftVBox;
     private VBox rightVBox;
@@ -34,8 +34,8 @@ public class ResultPane extends UnicastRemoteObject {
     private transient RemoteController controller;
     private Stage stage;
 
-    ResultPane(ArrayList<PlayerScore> playersScore, ArrayList<PublicObjectiveCard> publicObjectiveCards,
-               RemoteController controller, Stage stage) throws RemoteException {
+    EndGameView(ArrayList<PlayerScore> playersScore, ArrayList<PublicObjectiveCard> publicObjectiveCards,
+                RemoteController controller, Stage stage) throws RemoteException {
         this.controller = controller;
         this.stage = stage;
         BorderPane borderPane = new BorderPane();
@@ -80,7 +80,7 @@ public class ResultPane extends UnicastRemoteObject {
         int i = 0;
         for (PlayerScore playerScore : playersScore) {
             Image image = new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_" +
-                    playerScore.getPrivateColor().toString().toLowerCase() + ".png");
+                    playerScore.getPrivateColor().toString().toUpperCase() + ".png");
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(100);
             imageView.setFitHeight(150);

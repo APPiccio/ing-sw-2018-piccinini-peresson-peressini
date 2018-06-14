@@ -19,17 +19,6 @@ public class DiceTest {
     }
 
     @Test
-    public void testAll() {
-        throwDice();
-        isSimilar();
-        getColor();
-        setColor();
-        getValue();
-        setValue();
-        equals();
-    }
-
-    @Test
     public void throwDice() {
         Dice dice = new Dice(Color.RED, 2);
 
@@ -119,9 +108,25 @@ public class DiceTest {
         tempDice.setColor(Color.BLUE);
 
         assertFalse(tempDice.equals(dice));
+    }
 
-        assertEquals("Color: " + tempDice.getColor() + ", value: " +
-                tempDice.getValue(), tempDice.toString());
+    @Test
+    public void toStringTest() {
+        Dice dice = new Dice(Color.GREEN, 6);
+
+        assertEquals("Color: " + dice.getColor() + ", value: " +
+                dice.getValue(), dice.toString());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void DiceException() {
+        new Dice(Color.getRandomColor(), 777);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setValueException() {
+        Dice dice = new Dice();
+        dice.setValue(777);
     }
 
 }

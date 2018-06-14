@@ -17,18 +17,13 @@ public class Dice implements Serializable {
     }
 
     public Dice(Color color, int value) {
-        try {
-            if (value < 1 || value > 6) {
-                throw new IllegalArgumentException("Illegal dice! Value given: " + value +
-                        "; it has to be between 1 and 6");
-            }
-            else {
-                this.color = color;
-                this.value = value;
-            }
+        if (value < 1 || value > 6) {
+            throw new IllegalArgumentException("Illegal dice! Value given: " + value +
+                    "; it has to be between 1 and 6");
         }
-        catch (IllegalArgumentException e) {
-            e.printStackTrace();
+        else {
+            this.color = color;
+            this.value = value;
         }
     }
 
@@ -66,7 +61,7 @@ public class Dice implements Serializable {
      * @param dice  dice to compare
      * @return      true if this and dice have the same value or color
      */
-    public boolean isSimilar(Dice dice) {
+    boolean isSimilar(Dice dice) {
         return this.color.equals(dice.getColor()) || this.value == dice.getValue();
     }
 
@@ -83,16 +78,11 @@ public class Dice implements Serializable {
     }
 
     public void setValue(int value) {
-        try {
-            if (value < 1 || value > 6) {
-                throw new IllegalArgumentException("Illegal dice! Value given: " + value +
-                        "; it has to be between 1 and 6");
-            }
-            else this.value = value;
+        if (value < 1 || value > 6) {
+            throw new IllegalArgumentException("Illegal dice! Value given: " + value +
+                    "; it has to be between 1 and 6");
         }
-        catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+        else this.value = value;
     }
 
     @Override

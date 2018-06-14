@@ -1,6 +1,5 @@
 package com.sagrada.ppp.model;
 
-import com.sagrada.ppp.utils.IllegalDiceExtractionException;
 import com.sagrada.ppp.utils.StaticValues;
 
 import java.util.ArrayList;
@@ -27,51 +26,45 @@ public class DiceBag {
         this.bag = diceBag.getDiceBag();
     }
 
-    public int size() {
-        return bag.size();
-    }
-
-    public Dice extractRandomDice() {
-        return new Dice(bag.remove(new Random().nextInt(bag.size())));
-    }
-
-    public ArrayList<Dice> getDiceBag() {
-        return new ArrayList<>(bag);
-    }
-
-    /**
-     * @param n number of dices to extract
-     * @return  ArrayList of dices randomly chosen
-     */
-    public ArrayList<Dice> extractDices(int n) {
-        try {
-            if (bag.size() < n || n <= 0) {
-                throw new IllegalDiceExtractionException(n);
-            }
-            else {
-                ArrayList<Dice> dices = new ArrayList<>();
-                for (int i = 0; i < n; i++) {
-                    dices.add(extractRandomDice());
-                }
-                return dices;
-            }
+    ArrayList<Dice> getDiceBag() {
+        ArrayList<Dice> diceBag = new ArrayList<>();
+        for (Dice dice : bag) {
+            diceBag.add(new Dice(dice));
         }
-        catch (IllegalDiceExtractionException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return diceBag;
     }
 
     public void addDice(Dice dice) {
         bag.add(new Dice(dice.getColor()));
     }
 
-    int numberOfColor(Color color) {
-        return (int) bag.stream().filter(x -> x.getColor() == color).count();
+    public int size() {
+        return bag.size();
     }
 
     private int numberOf(int n, Color color) {
         return (int) bag.stream().filter(x -> x.getValue() == n && x.getColor() == color).count();
+    }
+
+    public Dice extractRandomDice() {
+        return new Dice(bag.remove(new Random().nextInt(bag.size())));
+    }
+
+    /**
+     * @param n number of dices to extract
+     * @return  ArrayList of dices randomly chosen
+     */
+    ArrayList<Dice> extractDices(int n) {
+        if (bag.size() < n || n <= 0) {
+            throw new IllegalArgumentException("Cannot extract " + n + " dices");
+        }
+        else {
+            ArrayList<Dice> dices = new ArrayList<>();
+            for (int i = 0; i < n; i++) {
+                dices.add(extractRandomDice());
+            }
+            return dices;
+        }
     }
 
     @Override

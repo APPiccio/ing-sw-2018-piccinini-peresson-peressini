@@ -37,12 +37,12 @@ public class Cell implements Serializable {
         this.value = null;
     }
 
-    public boolean hasValueRestriction() {
-        return value != null;
-    }
-
     public boolean hasColorRestriction() {
         return color != null;
+    }
+
+    public boolean hasValueRestriction() {
+        return value != null;
     }
 
     public Color getColor() {
