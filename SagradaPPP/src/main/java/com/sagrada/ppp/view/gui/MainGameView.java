@@ -23,6 +23,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -30,7 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
-public class MainGamePane extends UnicastRemoteObject implements GameObserver, GuiEventBus, ToolCardHandler {
+public class MainGameView extends UnicastRemoteObject implements GameObserver, GuiEventBus, ToolCardHandler {
 
 
     //TODO add toolcard cost to GUI and keep it up to date after usezzz
@@ -52,6 +54,9 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private Tab gameTab,settingsTab,logTab;
     private ScrollPane rightContainer;
     private HashMap<Integer,Tooltip> toolCardsToolTips;
+    private Scene scene;
+    private boolean gameEnded = false;
+    private boolean afk = false;
 
     private String currentPlayerUser;
     private Stage stage;
@@ -72,7 +77,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     private boolean isToolCardUsed;
     private static final String ACTION_REQUIRED = "Action required";
 
-    public MainGamePane() throws RemoteException  {
+    MainGameView() throws RemoteException  {
 
 
         defInset = new Insets(10);
@@ -104,14 +109,56 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
 
     }
 
+
     @Override
     public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
-        //TODO implements this
+
+        Platform.runLater(()->{
+        if (playerAFK.getHashCode() == joinGameResult.getPlayerHashCode()) {
+            afk = true;
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("You are AFK");
+            alert.setContentText("Press OK to resume a game!");
+            alert.setTitle("AFK status");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK){
+                try {
+                    controller.disableAFK(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
+                    afk = false;
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+
+        }else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,playerAFK.getUsername() + " is afk atm!");
+            alert.setHeaderText(null);
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
+            alert.show();
+        }
+
+            if(isLastPlayer && lastPlayer.getHashCode() == joinGameResult.getPlayerHashCode()){
+                Alert alert = new Alert(Alert.AlertType.NONE);
+                gameEnded = true;
+                alert.setContentText("You are the last player connected.\nYou WIN");
+                stage.hide();
+                alert.setTitle("Winning situescion");
+                alert.setHeaderText(null);
+                alert.initModality(Modality.WINDOW_MODAL);
+                alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
+                alert.initOwner(stage);
+                alert.show();
+            }
+
+    });
     }
 
     private void draw(){
 
-        Scene scene = new Scene(tabContainer, 1440, 900);
+        scene = new Scene(tabContainer, 1440, 900);
 
         URL url = this.getClass().getResource("SagradaStyleSheet.css");
         if (url == null) {
@@ -256,6 +303,10 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
             playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("FF715B"),BorderStrokeStyle.SOLID,
                     new CornerRadii(5),BorderStroke.MEDIUM)));
         }
+        stage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
+        });
 
     }
 
@@ -465,12 +516,36 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
 
     @Override
     public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
-
+        Platform.runLater(()-> {
+            Alert alert = new Alert(Alert.AlertType.NONE);
+            alert.setContentText(reconnectingPlayer.getUsername() + " has reconnected from the game!");
+            alert.setTitle("Player Reconnected");
+            alert.setHeaderText(null);
+            alert.initModality(Modality.WINDOW_MODAL);
+            alert.initOwner(stage);
+            alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            alert.show();
+        });
     }
 
     @Override
     public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
-
+        Platform.runLater(()-> {
+            Alert alert = new Alert(Alert.AlertType.NONE);
+            if (isLastPlayer) {
+                alert.setContentText(disconnectingPlayer.getUsername() + " has disconnected from the game!\nYou are the last player connected.\nYou WIN");
+                gameEnded = true;
+                stage.hide();
+            } else {
+                alert.setContentText(disconnectingPlayer.getUsername() + " has disconnected from the game!");
+            }
+            alert.setTitle("Player Disconnected");
+            alert.setHeaderText(null);
+            alert.initModality(Modality.WINDOW_MODAL);
+            alert.initOwner(stage);
+            alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            alert.show();
+        });
     }
 
     @Override
@@ -633,24 +708,26 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
             drawDraftPool();
             drawWindowPanels();
 
-            if(endTurnMessage.currentPlayer.getUsername().equals(joinGameResult.getUsername())){
-                skipButton.setDisable(false);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION,"It's your turn!");
-                playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("1EA896"),BorderStrokeStyle.SOLID,
-                        new CornerRadii(5),BorderStroke.MEDIUM)));
-                alert.setHeaderText(null);
-                alert.initModality(Modality.APPLICATION_MODAL);
-                alert.initOwner(stage);
-                alert.show();
-            }else if(endTurnMessage.previousPlayer.getUsername().equals(joinGameResult.getUsername())){
-                skipButton.setDisable(true);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION,"Your turn is ended!");
-                playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("FF715B"),BorderStrokeStyle.SOLID,
-                        new CornerRadii(5),BorderStroke.MEDIUM)));
-                alert.setHeaderText(null);
-                alert.initModality(Modality.APPLICATION_MODAL);
-                alert.initOwner(stage);
-                alert.show();
+            if(!gameEnded && !afk) {
+                if (endTurnMessage.currentPlayer.getUsername().equals(joinGameResult.getUsername())) {
+                    skipButton.setDisable(false);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "It's your turn!");
+                    playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("1EA896"), BorderStrokeStyle.SOLID,
+                            new CornerRadii(5), BorderStroke.MEDIUM)));
+                    alert.setHeaderText(null);
+                    alert.initModality(Modality.APPLICATION_MODAL);
+                    alert.initOwner(stage);
+                    alert.show();
+                } else if (endTurnMessage.previousPlayer.getUsername().equals(joinGameResult.getUsername())) {
+                    skipButton.setDisable(true);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Your turn is ended!");
+                    playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("FF715B"), BorderStrokeStyle.SOLID,
+                            new CornerRadii(5), BorderStroke.MEDIUM)));
+                    alert.setHeaderText(null);
+                    alert.initModality(Modality.APPLICATION_MODAL);
+                    alert.initOwner(stage);
+                    alert.show();
+                }
             }
         });
     }
@@ -659,7 +736,7 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
     public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
         Platform.runLater(() -> {
             try {
-                new ResultPane(playersScore, publicObjectiveCards, controller, stage);
+                new EndGameView(playersScore, publicObjectiveCards, controller, stage);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -779,22 +856,24 @@ public class MainGamePane extends UnicastRemoteObject implements GameObserver, G
                             .orElse(null)
                             .getId()) + "\nCost: " + useToolCardResult.toolCardCost);
             Alert alert = new Alert(Alert.AlertType.NONE);
-            if (useToolCardResult.result) {
-                isToolCardUsed = true;
-                alert.setAlertType(Alert.AlertType.INFORMATION);
-                alert.setTitle("All good");
-                alert.setHeaderText("Tool card used successfully!");
-                alert.initModality(Modality.APPLICATION_MODAL);
-                alert.initOwner(stage);
-            } else {
-                isToolCardUsed = false;
-                alert.setAlertType(Alert.AlertType.INFORMATION);
-                alert.setTitle("Ehhhgggrrr, something went wrong...");
-                alert.setHeaderText("Negative result!");
-                alert.initModality(Modality.APPLICATION_MODAL);
-                alert.initOwner(stage);
+            if(!gameEnded && !afk) {
+                if (useToolCardResult.result) {
+                    isToolCardUsed = true;
+                    alert.setAlertType(Alert.AlertType.INFORMATION);
+                    alert.setTitle("All good");
+                    alert.setHeaderText("Tool card used successfully!");
+                    alert.initModality(Modality.APPLICATION_MODAL);
+                    alert.initOwner(stage);
+                } else {
+                    isToolCardUsed = false;
+                    alert.setAlertType(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Ehhhgggrrr, something went wrong...");
+                    alert.setHeaderText("Negative result!");
+                    alert.initModality(Modality.APPLICATION_MODAL);
+                    alert.initOwner(stage);
+                }
+                alert.showAndWait();
             }
-            alert.showAndWait();
         });
 
     }

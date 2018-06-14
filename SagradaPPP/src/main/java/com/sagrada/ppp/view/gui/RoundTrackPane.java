@@ -77,6 +77,7 @@ public class RoundTrackPane extends VBox {
                     DialogPane dialogPane = new DialogPane();
                     dialogPane.setContent(new SelectDicePane(roundTrack.getDicesOnRound(((RoundButton) event.getSource()).round),70,70, eventBus, uselessIndex, alert));
                     alert.setDialogPane(dialogPane);
+                    alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
                     alert.show();
                 });
                 Tooltip roundToolTip = new Tooltip();

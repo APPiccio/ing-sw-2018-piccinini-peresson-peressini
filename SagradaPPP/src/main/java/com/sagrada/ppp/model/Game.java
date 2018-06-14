@@ -363,7 +363,7 @@ public class Game implements Serializable{
     }
 
     /**
-     * If a player leaves the lobby this method is called, its Lobby Observer is removed, and the lobby timer is interrupted if less than 2 players remains in this game's lobby.
+     * If a player leaves the lobby this method is called, its StartGameView Observer is removed, and the lobby timer is interrupted if less than 2 players remains in this game's lobby.
      * @param username identify the player who wants to leave the lobby
      * @param observer observer to remove from observers list.
      */

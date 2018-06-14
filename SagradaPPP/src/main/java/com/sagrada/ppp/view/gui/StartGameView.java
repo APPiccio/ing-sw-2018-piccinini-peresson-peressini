@@ -1,6 +1,11 @@
 package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.model.JoinGameResult;
+import com.sagrada.ppp.model.Player;
+import com.sagrada.ppp.model.ReconnectionResult;
+import com.sagrada.ppp.utils.PlayerTokenSerializer;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -19,14 +24,15 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.rmi.RemoteException;
 
-public class Lobby implements EventHandler<MouseEvent> {
+public class StartGameView implements EventHandler<MouseEvent> {
 
     private Button about;
     private Button play;
+    private Button reconnect;
     private Stage stage;
     private transient RemoteController controller;
 
-    Lobby(Stage stage, RemoteController controller) {
+    StartGameView(Stage stage, RemoteController controller) {
         this.stage = stage;
         this.controller = controller;
         BorderPane borderPane = new BorderPane();
@@ -51,11 +57,27 @@ public class Lobby implements EventHandler<MouseEvent> {
                         )
                 )
         );
-
-        play = new Button("Play");
+        VBox centerContainer = new VBox();
+        centerContainer.setSpacing(20);
+        centerContainer.setAlignment(Pos.CENTER);
+        BorderPane.setAlignment(centerContainer,Pos.CENTER);
+        play = new Button("Play SAGRADA");
         play.getStyleClass().add("sagradabutton");
-        borderPane.setCenter(play);
+        centerContainer.getChildren().add(play);
+        borderPane.setCenter(centerContainer);
         play.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+
+        reconnect = new Button("Reconnect");
+        reconnect.addEventHandler(MouseEvent.MOUSE_CLICKED,this);
+        reconnect.getStyleClass().add("sagradabutton");
+        if(PlayerTokenSerializer.isTokenPresent()){
+            centerContainer.getChildren().add(reconnect);
+        }
+        stage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
+        });
+
 
         about = new Button("About");
 
@@ -108,7 +130,7 @@ public class Lobby implements EventHandler<MouseEvent> {
                 }
                 else {
                     try {
-                        new PlayersLobby(username, controller, stage);
+                        new LobbyView(username, controller, stage);
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
@@ -136,6 +158,23 @@ public class Lobby implements EventHandler<MouseEvent> {
             aboutAlert.initModality(Modality.APPLICATION_MODAL);
             aboutAlert.initOwner(stage);
             aboutAlert.showAndWait();
+        }
+        else if (clickedBtn.equals(reconnect)){
+            JoinGameResult reconnectionToken = PlayerTokenSerializer.deserialize();
+            MainGameView mainGameView;
+            try {
+                mainGameView = new MainGameView();
+                ReconnectionResult reconnectionResult = controller.reconnection(reconnectionToken.getPlayerHashCode(),reconnectionToken.getGameHashCode(),mainGameView);
+                if(reconnectionResult.result) {
+                    Player currentPlayer = reconnectionResult.gameStartMessage.currentPlayer;
+                    mainGameView.init(currentPlayer.getPrivateColor(), reconnectionToken, reconnectionResult.gameStartMessage, controller, stage);
+                }else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION,reconnectionResult.message);
+                    alert.show();
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
         else if (clickedBtn.equals(play)) {
             createTextInputDialog();

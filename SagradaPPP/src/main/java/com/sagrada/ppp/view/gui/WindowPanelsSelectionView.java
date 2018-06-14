@@ -23,7 +23,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WindowPanelsSelection extends UnicastRemoteObject implements GameObserver, EventHandler<MouseEvent> {
+public class WindowPanelsSelectionView extends UnicastRemoteObject implements GameObserver, EventHandler<MouseEvent> {
 
     private transient RemoteController controller;
     private Stage stage;
@@ -38,7 +38,7 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
     private boolean userHasChosen;
     private static final String SELECT = "Select";
 
-    WindowPanelsSelection() throws RemoteException {
+    WindowPanelsSelectionView() throws RemoteException {
         this.hBox2 = new HBox();
         this.hBox1 = new HBox();
         this.vBoxEvents = new VBox();
@@ -100,6 +100,10 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
         Scene scene = new Scene(borderPane, 630, 670);
         String css = url.toExternalForm();
         scene.getStylesheets().add(css);
+        this.stage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
+        });
         this.stage.setScene(scene);
         this.stage.setTitle("Panel selection");
         this.stage.show();
@@ -204,13 +208,13 @@ public class WindowPanelsSelection extends UnicastRemoteObject implements GameOb
                         disableButtons();
                         showAlertTimeout();
                     }
-                    MainGamePane mainGamePane = null;
+                    MainGameView mainGameView = null;
                     try {
-                        mainGamePane = new MainGamePane();
+                        mainGameView = new MainGameView();
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-                    mainGamePane.init(privateColor, joinGameResult, gameStartMessage, controller, stage);
+                    mainGameView.init(privateColor, joinGameResult, gameStartMessage, controller, stage);
                 }
         );
     }

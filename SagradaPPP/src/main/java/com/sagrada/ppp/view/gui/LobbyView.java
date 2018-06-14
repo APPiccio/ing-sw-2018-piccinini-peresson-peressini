@@ -4,6 +4,7 @@ import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.JoinGameResult;
 import com.sagrada.ppp.model.LobbyObserver;
 import com.sagrada.ppp.model.TimerStatus;
+import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -22,16 +23,16 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, EventHandler<MouseEvent> {
+public class LobbyView extends UnicastRemoteObject implements LobbyObserver, EventHandler<MouseEvent> {
 
     private VBox vBoxPlayers;
     private VBox vBoxEventsTab;
     private JoinGameResult joinGameResult;
-    private WindowPanelsSelection windowPanelsSelection;
+    private WindowPanelsSelectionView windowPanelsSelectionView;
     private transient RemoteController controller;
     private Stage stage;
 
-    PlayersLobby(String username, RemoteController controller, Stage stage) throws RemoteException {
+    LobbyView(String username, RemoteController controller, Stage stage) throws RemoteException {
         BorderPane borderPane = new BorderPane();
         borderPane.setStyle("-fx-background-color: #373A3C");
         Scene scene = new Scene(borderPane, 700*1436/2156, 700);
@@ -49,13 +50,17 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
         vBoxPlayers = new VBox();
         vBoxEventsTab = new VBox();
-        windowPanelsSelection = new WindowPanelsSelection();
+        windowPanelsSelectionView = new WindowPanelsSelectionView();
         this.controller = controller;
         this.stage = stage;
-
+        this.stage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
+        });
 
 
         joinGameResult = this.controller.joinGame(username, this);
+        PlayerTokenSerializer.serialize(joinGameResult);
         vBoxPlayersTab.getChildren().addAll(playerID(), vBoxPlayers);
         setActivePlayers(joinGameResult.getPlayersUsername(), joinGameResult.getPlayersUsername().size());
 
@@ -89,7 +94,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
         borderPane.setCenter(tabPane);
 
         stage.setScene(scene);
-        stage.setTitle("Players Lobby");
+        stage.setTitle("Players StartGameView");
         stage.show();
     }
 
@@ -121,11 +126,13 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
 
     private void timerEnded() {
         try {
-            controller.attachGameObserver(joinGameResult.getGameHashCode(),windowPanelsSelection, joinGameResult.getPlayerHashCode());
+            controller.attachGameObserver(joinGameResult.getGameHashCode(), windowPanelsSelectionView, joinGameResult.getPlayerHashCode());
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        windowPanelsSelection.init(controller, stage, joinGameResult);
+
+
+        windowPanelsSelectionView.init(controller, stage, joinGameResult);
     }
 
     private void timerInterrupted() {
@@ -218,7 +225,7 @@ public class PlayersLobby extends UnicastRemoteObject implements LobbyObserver, 
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-            new Lobby(stage, controller);
+            new StartGameView(stage, controller);
         }
     }
 

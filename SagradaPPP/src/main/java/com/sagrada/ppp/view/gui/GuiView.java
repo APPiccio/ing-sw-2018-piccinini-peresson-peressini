@@ -10,7 +10,7 @@ public class GuiView extends Application {
     @Override
     public void start(Stage primaryStage) {
         RemoteController controller = Client.getController();
-        new Lobby(primaryStage, controller);
+        new StartGameView(primaryStage, controller);
     }
 
 }
