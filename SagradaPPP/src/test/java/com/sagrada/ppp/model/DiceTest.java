@@ -123,7 +123,6 @@ public class DiceTest {
         new Dice(Color.getRandomColor(), 777);
     }
 
-
     @Test(expected = IllegalArgumentException.class)
     public void setValueException() {
         Dice dice = new Dice();

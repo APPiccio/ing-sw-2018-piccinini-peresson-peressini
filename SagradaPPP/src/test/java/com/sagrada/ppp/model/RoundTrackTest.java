@@ -9,8 +9,6 @@ import static org.junit.Assert.*;
 
 public class RoundTrackTest {
 
-    //TODO testare toString
-
     private ArrayList<Dice> dices;
     private RoundTrack roundTrack;
 
@@ -117,6 +115,38 @@ public class RoundTrackTest {
         roundTrack.nextRound();
 
         assertEquals(3, roundTrack.getCurrentRound());
+    }
+
+    @Test
+    public void toStringTest() {
+        RoundTrack roundTrack = new RoundTrack();
+        roundTrack.setDicesOnRound(1, dices);
+
+        String string = "Round: 1\nDices:\n" +
+                "--> " + dices.get(0).toString() + "\n" +
+                "--> " + dices.get(1).toString() + "\n" +
+                "--> " + dices.get(2).toString() + "\n" +
+                "------\n" +
+                "Round: 2\nDices:\n" +
+                "------\n" +
+                "Round: 3\nDices:\n" +
+                "------\n" +
+                "Round: 4\nDices:\n" +
+                "------\n" +
+                "Round: 5\nDices:\n" +
+                "------\n" +
+                "Round: 6\nDices:\n" +
+                "------\n" +
+                "Round: 7\nDices:\n" +
+                "------\n" +
+                "Round: 8\nDices:\n" +
+                "------\n" +
+                "Round: 9\nDices:\n" +
+                "------\n" +
+                "Round: 10\nDices:\n" +
+                "------\n";
+
+        assertEquals(string, roundTrack.toString());
     }
 
     @Test(expected = IllegalStateException.class)

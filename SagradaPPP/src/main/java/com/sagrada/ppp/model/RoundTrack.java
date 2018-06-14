@@ -86,7 +86,7 @@ public class RoundTrack implements Serializable {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < 10; i++) {
-            stringBuilder.append("Round: ").append(i + 1).append("Dices:\n");
+            stringBuilder.append("Round: ").append(i + 1).append("\nDices:\n");
             for (Dice dice : getDicesOnRound(i + 1)) {
                 stringBuilder.append("--> ").append(dice.toString()).append("\n");
             }
