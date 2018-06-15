@@ -5,6 +5,7 @@ import com.sagrada.ppp.cards.publicobjectivecards.PublicObjectiveCard;
 import com.sagrada.ppp.cards.toolcards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
+import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.view.ToolCardHandler;
 import javafx.application.Platform;
@@ -769,6 +770,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
         Platform.runLater(() -> {
             try {
+                gameEnded = true;
+                PlayerTokenSerializer.deleteToken();
                 new EndGameView(playersScore, publicObjectiveCards, controller, stage);
             } catch (RemoteException e) {
                 e.printStackTrace();
