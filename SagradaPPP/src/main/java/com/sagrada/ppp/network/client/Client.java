@@ -1,6 +1,7 @@
 package com.sagrada.ppp.network.client;
 
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.view.CliView;
 import com.sagrada.ppp.view.gui.GuiView;
 import javafx.application.Application;
@@ -14,6 +15,8 @@ public class Client {
     private static RemoteController controller;
 
     public static void main(String[] args) throws RemoteException {
+
+        StaticValues.readConstants();
         System.out.println("--> Connecting...");
         controller = null;
         Scanner scanner = new Scanner(System.in);

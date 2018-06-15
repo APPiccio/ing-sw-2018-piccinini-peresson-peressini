@@ -116,17 +116,33 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         Platform.runLater(()->{
         if (playerAFK.getHashCode() == joinGameResult.getPlayerHashCode()) {
             afk = true;
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("You are AFK");
-            alert.setContentText("Press OK to resume a game!");
-            alert.setTitle("AFK status");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK){
+            Alert alert = new Alert(Alert.AlertType.NONE);
+            alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            if(isLastPlayer){
+                gameEnded = true;
+                alert.setHeaderText("You Loose");
+                alert.setContentText("You went afk, leaving only one player!\nPress OK to close the game!");
+                alert.setTitle("AFK status");
+                alert.showAndWait();
                 try {
-                    controller.disableAFK(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
-                    afk = false;
+                    controller.disconnect(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
                 } catch (RemoteException e) {
                     e.printStackTrace();
+                }
+                System.exit(0);
+
+            }else {
+                alert.setHeaderText("You are AFK");
+                alert.setContentText("Press OK to resume the game!");
+                alert.setTitle("AFK status");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    try {
+                        controller.disableAFK(joinGameResult.getGameHashCode(), joinGameResult.getPlayerHashCode());
+                        afk = false;
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -150,7 +166,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 alert.initModality(Modality.WINDOW_MODAL);
                 alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
                 alert.initOwner(stage);
-                alert.show();
+                alert.showAndWait();
+                System.exit(0);
             }
 
     });
@@ -303,7 +320,13 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("FF715B"),BorderStrokeStyle.SOLID,
                     new CornerRadii(5),BorderStroke.MEDIUM)));
         }
+
         stage.setOnCloseRequest(t -> {
+            try {
+                controller.disconnect(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             Platform.exit();
             System.exit(0);
         });
@@ -320,7 +343,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         this.toolCards = gameStartMessage.toolCards;
         this.players = gameStartMessage.players;
         this.publicObjectiveCards = gameStartMessage.publicObjectiveCards;
-        this.currentPlayerUser = gameStartMessage.players.get(0).getUsername();
+        this.currentPlayerUser = gameStartMessage.currentPlayer.getUsername();
         try {
             this.controller.attachGameObserver(this.joinGameResult.getGameHashCode(),this, joinGameResult.getPlayerHashCode());
         } catch (RemoteException e) {
@@ -532,19 +555,26 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
         Platform.runLater(()-> {
             Alert alert = new Alert(Alert.AlertType.NONE);
-            if (isLastPlayer) {
-                alert.setContentText(disconnectingPlayer.getUsername() + " has disconnected from the game!\nYou are the last player connected.\nYou WIN");
-                gameEnded = true;
-                stage.hide();
-            } else {
-                alert.setContentText(disconnectingPlayer.getUsername() + " has disconnected from the game!");
-            }
             alert.setTitle("Player Disconnected");
             alert.setHeaderText(null);
             alert.initModality(Modality.WINDOW_MODAL);
             alert.initOwner(stage);
             alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
-            alert.show();
+
+            if (!gameEnded) {
+                if (isLastPlayer) {
+                    alert.setContentText(disconnectingPlayer.getUsername() + " has disconnected from the game!\nYou are the last player connected.\nYou WIN");
+                    gameEnded = true;
+                    stage.hide();
+                    alert.showAndWait();
+                    System.exit(0);
+                } else {
+                    alert.setContentText(disconnectingPlayer.getUsername() + " has disconnected from the game!");
+                    alert.show();
+                }
+            }
+
+
         });
     }
 
@@ -707,6 +737,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             players = endTurnMessage.players;
             drawDraftPool();
             drawWindowPanels();
+
 
             if(!gameEnded && !afk) {
                 if (endTurnMessage.currentPlayer.getUsername().equals(joinGameResult.getUsername())) {

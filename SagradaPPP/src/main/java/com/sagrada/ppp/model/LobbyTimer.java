@@ -13,7 +13,7 @@ public class LobbyTimer extends Thread {
     }
 
     public void run(){
-        while ((System.currentTimeMillis() < startTime + StaticValues.getLobbyTimer()) && !isInterrupted()){
+        while ((System.currentTimeMillis() < startTime + StaticValues.LOBBY_TIMER) && !isInterrupted()){
 
         }
         if(!isInterrupted()) {

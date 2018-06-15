@@ -53,7 +53,13 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         windowPanelsSelectionView = new WindowPanelsSelectionView();
         this.controller = controller;
         this.stage = stage;
+        //lambda that controls the closing window behaviour
         this.stage.setOnCloseRequest(t -> {
+            try {
+                controller.disconnect(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
             Platform.exit();
             System.exit(0);
         });
@@ -65,7 +71,7 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         setActivePlayers(joinGameResult.getPlayersUsername(), joinGameResult.getPlayersUsername().size());
 
         if (joinGameResult.getPlayersUsername().size() == 3) {
-            long remainingTime = ((joinGameResult.getTimerStart() + StaticValues.getLobbyTimer()) -
+            long remainingTime = ((joinGameResult.getTimerStart() + StaticValues.LOBBY_TIMER) -
                     System.currentTimeMillis())/1000;
             timerStarted(remainingTime);
         }
@@ -194,7 +200,7 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
 
     @Override
     public void onTimerChanges(long timerStart, TimerStatus timerStatus) {
-        long remainingTime = ((StaticValues.getLobbyTimer() + timerStart) - System.currentTimeMillis())/1000;
+        long remainingTime = ((StaticValues.LOBBY_TIMER + timerStart) - System.currentTimeMillis())/1000;
         Platform.runLater(() -> {
                     if (timerStatus.equals(TimerStatus.START)) {
                         timerStarted(remainingTime);

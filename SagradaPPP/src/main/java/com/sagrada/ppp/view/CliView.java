@@ -172,7 +172,7 @@ public class CliView extends UnicastRemoteObject
         System.out.println("Join completed. You are now identified as : " + username);
 
         if(lobbyTimerStartTime != 0){
-            long remainingTime = ((lobbyTimerStartTime + StaticValues.getLobbyTimer()) -
+            long remainingTime = ((lobbyTimerStartTime + StaticValues.LOBBY_TIMER) -
                     System.currentTimeMillis())/1000;
             System.out.println("---> The game will start in " + remainingTime + " seconds");
         }
@@ -279,7 +279,7 @@ public class CliView extends UnicastRemoteObject
 
     @Override
     public void onTimerChanges(long timerStart, TimerStatus timerStatus) throws RemoteException {
-        long duration = ((StaticValues.getLobbyTimer() + timerStart) - System.currentTimeMillis())/1000;
+        long duration = ((StaticValues.LOBBY_TIMER + timerStart) - System.currentTimeMillis())/1000;
         if(timerStatus.equals(TimerStatus.START)){
             System.out.println("---> Timer started! The game will start in " + duration + " seconds");
         }
