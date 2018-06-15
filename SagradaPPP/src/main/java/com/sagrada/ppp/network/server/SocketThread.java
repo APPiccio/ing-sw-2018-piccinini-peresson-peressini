@@ -266,7 +266,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
+    public synchronized void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
         try {
             out.writeObject(new PlayerReconnectionNotification(reconnectingPlayer));
             out.reset();
@@ -276,7 +276,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
+    public synchronized void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
         try {
             out.writeObject(new PlayerDisconnectionNotification(disconnectingPlayer, isLastPlayer));
             out.reset();
@@ -286,7 +286,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
+    public synchronized void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
         try {
             out.writeObject(new PlayerAFKNotification(playerAFK, isLastPlayer, lastPlayer));
             out.reset();

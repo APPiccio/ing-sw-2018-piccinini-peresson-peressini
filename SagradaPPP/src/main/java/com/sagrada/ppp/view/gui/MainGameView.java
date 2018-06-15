@@ -5,6 +5,7 @@ import com.sagrada.ppp.cards.publicobjectivecards.PublicObjectiveCard;
 import com.sagrada.ppp.cards.toolcards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
+import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.view.ToolCardHandler;
 import javafx.application.Platform;
@@ -516,9 +517,10 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                     controller.isToolCardUsable(joinGameResult.getGameHashCode(), joinGameResult.getPlayerHashCode(),
                             toolCardButtons.indexOf(toolCardButton), this);
                 }else{
-                    Alert alert = new Alert(Alert.AlertType.ERROR,"Can't use another toolCard in this turn");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setHeaderText(null);
+                    alert.setContentText("You can't use another tool card in this turn!");
                     alert.initModality(Modality.APPLICATION_MODAL);
                     alert.initOwner(stage);
                     alert.showAndWait();
@@ -627,9 +629,10 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                         drawDraftPool();
                     }
                     else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, result.message);
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Error");
                         alert.setHeaderText(null);
+                        alert.setContentText(result.message);
                         alert.initModality(Modality.APPLICATION_MODAL);
                         alert.initOwner(stage);
                         alert.showAndWait();
@@ -637,10 +640,10 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 });
             }
             else {
-                Alert alert = new Alert(Alert.AlertType.ERROR,
-                        "Please select a dice and THEN click on a panel cell!");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
+                alert.setContentText("Please select a dice and THEN click on a panel cell!");
                 alert.initModality(Modality.APPLICATION_MODAL);
                 alert.initOwner(stage);
                 alert.showAndWait();
@@ -767,6 +770,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
         Platform.runLater(() -> {
             try {
+                gameEnded = true;
+                PlayerTokenSerializer.deleteToken();
                 new EndGameView(playersScore, publicObjectiveCards, controller, stage);
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -778,8 +783,10 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     public void isToolCardUsable(boolean result) throws RemoteException {
         Platform.runLater(() -> {
           if(!result){
-              Alert alert = new Alert(Alert.AlertType.ERROR,"ToolCard currently not usable");
-              alert.setHeaderText("ERROR");
+              Alert alert = new Alert(Alert.AlertType.ERROR);
+              alert.setTitle("Error");
+              alert.setHeaderText(null);
+              alert.setContentText("ToolCard currently not usable");
               alert.initModality(Modality.APPLICATION_MODAL);
               alert.initOwner(stage);
               alert.showAndWait();
@@ -892,7 +899,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                     isToolCardUsed = true;
                     alert.setAlertType(Alert.AlertType.INFORMATION);
                     alert.setTitle("All good");
-                    alert.setHeaderText("Tool card used successfully!");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Tool card used successfully!");
                     alert.initModality(Modality.APPLICATION_MODAL);
                     alert.initOwner(stage);
                 } else {
@@ -1030,7 +1038,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
     @Override
     public void onRoundTrackDiceClicked(int diceIndex, int roundIndex) {
-        if(toolCardFlags.isRoundTrackDiceRequired) {
+        if (toolCardFlags.isRoundTrackDiceRequired) {
             try {
                 toolCardFlags.isRoundTrackDiceRequired = false;
                 controller.setRoundTrackDiceIndex(joinGameResult.getPlayerHashCode(), diceIndex, roundIndex);
