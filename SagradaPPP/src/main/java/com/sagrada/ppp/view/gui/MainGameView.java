@@ -769,7 +769,6 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         Platform.runLater(() -> {
             try {
                 gameEnded = true;
-                controller.disconnect(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
                 PlayerTokenSerializer.deleteToken();
                 new EndGameView(playersScore, publicObjectiveCards, controller, stage);
             } catch (RemoteException e) {
