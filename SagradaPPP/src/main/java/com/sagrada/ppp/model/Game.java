@@ -588,18 +588,18 @@ public class Game implements Serializable{
         Random r = new Random();
         ArrayList<ToolCard> allToolCards = new ArrayList<>();
 
-        allToolCards.add(new ToolCard1());
+/*        allToolCards.add(new ToolCard1());
         allToolCards.add(new ToolCard2());
         allToolCards.add(new ToolCard3());
-        allToolCards.add(new ToolCard4());
+        allToolCards.add(new ToolCard4());*/
         allToolCards.add(new ToolCard5());
         allToolCards.add(new ToolCard6());
-        allToolCards.add(new ToolCard7());
+/*        allToolCards.add(new ToolCard7());
         allToolCards.add(new ToolCard8());
         allToolCards.add(new ToolCard9());
-        allToolCards.add(new ToolCard10());
+        allToolCards.add(new ToolCard10());*/
         allToolCards.add(new ToolCard11());
-        allToolCards.add(new ToolCard12());
+//        allToolCards.add(new ToolCard12());
 
         for(int i = 0; i < 3 ; i++){
             toolCards.add(allToolCards.remove( r.nextInt(allToolCards.size()) ));
@@ -771,6 +771,10 @@ public class Game implements Serializable{
             }
             else if (toolCard.getId() == 9 && dicePlaced) {
                 System.out.println("Trying to use tool card number 9 usable only on drafting.\nOperation denied.");
+                return false;
+            }
+            else if (toolCard.getId() == 11 && dicePlaced){
+                System.out.println("Trying to use tool card number 11 usable only on drafting.\nOperation denied.");
                 return false;
             }
            return player.getFavorTokens() >= toolCard.getCost();
