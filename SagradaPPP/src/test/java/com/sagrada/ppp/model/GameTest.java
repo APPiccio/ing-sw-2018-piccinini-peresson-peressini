@@ -1,10 +1,9 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.model;
 
-import com.sagrada.ppp.model.Game;
-import com.sagrada.ppp.model.WindowPanel;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,9 +17,22 @@ public class GameTest {
         game = new Game("user1");
         game.joinGame("user2", null);
         game.joinGame("user3" , null);
-        game.joinGame("user4" , null);
-        game.setTurn(1);
+        game.joinGame("user1" , null);
+        assertFalse(game.isJoinable());
     }
+
+/*
+    @Test
+    public void playersTest() {
+        ArrayList<Player> players = game.getPlayers();
+        assertEquals(players.stream().filter(x -> x.getPlayerStatus().equals(PlayerStatus.ACTIVE)).count(), game.getActivePlayersNumber());
+        for (Player player : players){
+            assertEquals(player.getUsername(), game.getPlayerUsername(player.getHashCode()));
+            assertEquals(player.getHashCode(), game.getPlayerHashCode(player.getUsername()));
+        }
+    }
+
+*/
 
     @Test
     public void panelExtraction(){

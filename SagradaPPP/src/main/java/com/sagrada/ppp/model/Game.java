@@ -149,7 +149,7 @@ public class Game implements Serializable{
                 if (justPlayedPlayer.hasToSkipSecondTurn() || justPlayedPlayer.getPlayerStatus().equals(PlayerStatus.INACTIVE)) {
                     if(justPlayedPlayer.hasToSkipSecondTurn()) {
                         System.out.println(players.get(getCurrentPlayerIndex()).getUsername() + " has to skip second turn " +
-                                "this round due to toolCard7 behaviour");
+                                "this round due to toolCard8 behaviour");
                     }
                     else {
                         System.out.println("Player should be inactive, actual player status = " + justPlayedPlayer.getPlayerStatus());
@@ -773,6 +773,10 @@ public class Game implements Serializable{
                 System.out.println("Trying to use tool card number 9 usable only on drafting.\nOperation denied.");
                 return false;
             }
+            else if (toolCard.getId() == 11 && dicePlaced){
+                System.out.println("Trying to use tool card number 11 usable only on drafting.\nOperation denied.");
+                return false;
+            }
            return player.getFavorTokens() >= toolCard.getCost();
         }
         return false;
@@ -1147,6 +1151,10 @@ public class Game implements Serializable{
             }
         }
         return result;
+    }
+
+    public void stopWaitingForPanelChoice(){
+        waitingForPanelChoice = false;
     }
 
     private synchronized void pingAllGameObservers(){

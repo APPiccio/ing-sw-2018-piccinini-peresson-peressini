@@ -11,7 +11,10 @@ import org.junit.runners.Suite.*;
         ColorTest.class,
         DiceBagTest.class,
         DiceTest.class,
-        RoundTrackTest.class
+        PlayerTest.class,
+        RoundTrackTest.class,
+        DicePlacedMessageTest.class,
+        EndTurnMessageTest.class
 })
 public class AllTests {
 
