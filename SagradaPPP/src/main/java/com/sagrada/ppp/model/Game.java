@@ -1153,6 +1153,10 @@ public class Game implements Serializable{
         return result;
     }
 
+    public void stopWaitingForPanelChoice(){
+        waitingForPanelChoice = false;
+    }
+
     private void pingAllGameObservers(){
         for (ArrayList<GameObserver> obs : gameObservers.values()){
             for(GameObserver gameObserver : obs){

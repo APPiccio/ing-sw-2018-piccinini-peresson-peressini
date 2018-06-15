@@ -18,7 +18,7 @@ public class WindowPanelTest {
         testGetLegalPostion();
     }
 
-    public WindowPanel generateBlankPanel(){
+    public static WindowPanel generateBlankPanel(){
         ArrayList<Cell> cells = new ArrayList<>();
         for(int i = 0; i < 20; i++){
             cells.add(new Cell());
