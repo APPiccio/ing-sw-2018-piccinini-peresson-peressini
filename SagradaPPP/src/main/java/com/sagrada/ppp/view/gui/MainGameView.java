@@ -767,6 +767,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
         Platform.runLater(() -> {
             try {
+                gameEnded = true;
+                controller.disconnect(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
                 new EndGameView(playersScore, publicObjectiveCards, controller, stage);
             } catch (RemoteException e) {
                 e.printStackTrace();
