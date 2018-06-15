@@ -149,7 +149,7 @@ public class Game implements Serializable{
                 if (justPlayedPlayer.hasToSkipSecondTurn() || justPlayedPlayer.getPlayerStatus().equals(PlayerStatus.INACTIVE)) {
                     if(justPlayedPlayer.hasToSkipSecondTurn()) {
                         System.out.println(players.get(getCurrentPlayerIndex()).getUsername() + " has to skip second turn " +
-                                "this round due to toolCard7 behaviour");
+                                "this round due to toolCard8 behaviour");
                     }
                     else {
                         System.out.println("Player should be inactive, actual player status = " + justPlayedPlayer.getPlayerStatus());

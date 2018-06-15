@@ -11,6 +11,7 @@ import org.junit.runners.Suite.*;
         ColorTest.class,
         DiceBagTest.class,
         DiceTest.class,
+        PlayerTest.class,
         RoundTrackTest.class
 })
 public class AllTests {

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Random;
 
 /**
- * This class represent a six-faced dice
+ * This class represents a six-faced dice
  */
 public class Dice implements Serializable {
 

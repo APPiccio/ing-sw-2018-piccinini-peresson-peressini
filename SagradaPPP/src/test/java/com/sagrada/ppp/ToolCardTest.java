@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class ToolCardTest {
 
-    @Test
+    /*@Test
     public void testAllToolCards() {
 
         card1();
@@ -189,7 +189,7 @@ public class ToolCardTest {
         //TODO
     }
 
-    /*@Test
+    *//*@Test
     public void card5v2() {
 
         //Game Class emulation
@@ -246,7 +246,7 @@ public class ToolCardTest {
         assertNotEquals(roundTrack, roundTrackCopy);
         assertNotEquals(dices.get(draftPoolDiceIndex), dicesCopy.get(draftPoolDiceIndex));
 
-    }*/
+    }*//*
 
     @Test
     public void card6() {
@@ -391,6 +391,6 @@ public class ToolCardTest {
             assertTrue(windowPanel.getCell(i).equals(windowPanelCopy.getCell(i)));
         }
 
-    }
+    }*/
 
 }

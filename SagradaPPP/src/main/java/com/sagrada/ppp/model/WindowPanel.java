@@ -1,19 +1,12 @@
 package com.sagrada.ppp.model;
 
-
 import com.sagrada.ppp.utils.PrinterFormatter;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.utils.WindowPanelParser;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-
 
 /**
  * WindowPanel is used to implement methods and attributes o
@@ -26,21 +19,24 @@ public class WindowPanel implements Serializable {
     private ArrayList<Cell> cells;
     private static ArrayList<WindowPanel> loadedPanels = new ArrayList<>();
 
-
     /**
      * @param windowPanel window pane to be copied
      */
     public WindowPanel(WindowPanel windowPanel){
+        if (windowPanel != null) {
+            this.panelName = windowPanel.getPanelName();
+            this.favorTokens = windowPanel.getFavorTokens();
+            this.cardID = windowPanel.getCardID();
 
-        this.panelName = windowPanel.getPanelName();
-        this.favorTokens = windowPanel.getFavorTokens();
-        this.cardID = windowPanel.getCardID();
+            this.cells = new ArrayList<>();
+            ArrayList<Cell> tempCells = windowPanel.getCells();
 
-        this.cells = new ArrayList<>();
-        ArrayList<Cell> tempCells = windowPanel.getCells();
-
-        for (Cell cell : tempCells){
-            this.cells.add(new Cell(cell));
+            for (Cell cell : tempCells){
+                this.cells.add(new Cell(cell));
+            }
+        }
+        else {
+            throw new NullPointerException("Null windowPanel received as parameter");
         }
     }
 
@@ -69,7 +65,7 @@ public class WindowPanel implements Serializable {
 
     }
     private static WindowPanel getPanel(int cardNumber, int side){
-        if(loadedPanels.size() == 0){
+        if(loadedPanels.isEmpty()){
             try {
                 loadedPanels = WindowPanelParser.getPanelsFromFile();
             } catch (IOException e) {
@@ -79,8 +75,8 @@ public class WindowPanel implements Serializable {
         return loadedPanels.get(((2*cardNumber)-side)-1);
     }
 
-    public static int getNumberOfPanels() {
-        if(loadedPanels.size() == 0){
+    static int getNumberOfPanels() {
+        if(loadedPanels.isEmpty()){
             try {
                 loadedPanels = WindowPanelParser.getPanelsFromFile();
             } catch (IOException e) {
@@ -106,10 +102,6 @@ public class WindowPanel implements Serializable {
 
     public String getPanelName() {
         return panelName;
-    }
-
-    public void setPanelName(String panelName) {
-        this.panelName = panelName;
     }
 
     public int getFavorTokens() {
@@ -182,7 +174,7 @@ public class WindowPanel implements Serializable {
      * @param ignorePosition flag showing if color restriction has to be avoided
      * @return true if the placement has been done successfully
      */
-    public boolean diceOk(Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
+    boolean diceOk(Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
         Cell cell = cells.get(i);
         if (cell.hasDiceOn()) {
             System.out.println("PLACEMENT ERROR >>> ANOTHER DICE IN THIS POSITION");
@@ -276,7 +268,7 @@ public class WindowPanel implements Serializable {
         return false;
     }
 
-    public boolean cellPairSimilarity(int row, int col, Dice dice){
+    private boolean cellPairSimilarity(int row, int col, Dice dice){
         if(validPosition(row,col)){
             Cell cell = getCell(row,col);
             if(cell.hasDiceOn()){
@@ -306,6 +298,12 @@ public class WindowPanel implements Serializable {
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
     public boolean equals(Object object){
         if (object == null) return false;
         if (object == this) return true;
@@ -319,9 +317,7 @@ public class WindowPanel implements Serializable {
      }
 
     public String toString(){
-
         return PrinterFormatter.printWindowPanelContent(this);
-
     }
 
     //get index of cells where the dice can be put without breaking rules
@@ -414,11 +410,11 @@ public class WindowPanel implements Serializable {
         return false;
     }
 
-    public int getEmptyCells() {
+    int getEmptyCells() {
         return (int) cells.stream().filter(x -> !x.hasDiceOn()).count();
     }
 
-    public int getPrivateScore(Color color) {
+    int getPrivateScore(Color color) {
         return cells.stream().filter(Cell::hasDiceOn)
                 .filter(x -> x.getDiceOn().getColor().equals(color))
                 .map(x -> x.getDiceOn().getValue())
