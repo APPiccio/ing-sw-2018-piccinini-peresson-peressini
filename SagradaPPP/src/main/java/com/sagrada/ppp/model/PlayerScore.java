@@ -16,7 +16,7 @@ public class PlayerScore implements Serializable {
     private int publicObjectiveCard3Points;
     private int totalPoints;
 
-    public PlayerScore() {
+    PlayerScore() {
         super();
     }
 
@@ -57,7 +57,7 @@ public class PlayerScore implements Serializable {
         return privateColor;
     }
 
-    public void setPrivateColor(Color privateColor) {
+    void setPrivateColor(Color privateColor) {
         this.privateColor = privateColor;
     }
 
@@ -73,7 +73,7 @@ public class PlayerScore implements Serializable {
         return favorTokenPoints;
     }
 
-    public void setFavorTokenPoints(int favorTokenPoints) {
+    void setFavorTokenPoints(int favorTokenPoints) {
         this.favorTokenPoints = favorTokenPoints;
     }
 
@@ -81,7 +81,7 @@ public class PlayerScore implements Serializable {
         return emptyCellsPoints;
     }
 
-    public void setEmptyCellsPoints(int emptyCellsPoints) {
+    void setEmptyCellsPoints(int emptyCellsPoints) {
         this.emptyCellsPoints = emptyCellsPoints;
     }
 
@@ -89,7 +89,7 @@ public class PlayerScore implements Serializable {
         return privateObjectiveCardPoints;
     }
 
-    public void setPrivateObjectiveCardPoints(int privateObjectiveCardPoints) {
+    void setPrivateObjectiveCardPoints(int privateObjectiveCardPoints) {
         this.privateObjectiveCardPoints = privateObjectiveCardPoints;
     }
 
@@ -97,7 +97,7 @@ public class PlayerScore implements Serializable {
         return publicObjectiveCard1Points;
     }
 
-    public void setPublicObjectiveCard1Points(int publicObjectiveCard1Points) {
+    void setPublicObjectiveCard1Points(int publicObjectiveCard1Points) {
         this.publicObjectiveCard1Points = publicObjectiveCard1Points;
     }
 
@@ -105,7 +105,7 @@ public class PlayerScore implements Serializable {
         return publicObjectiveCard2Points;
     }
 
-    public void setPublicObjectiveCard2Points(int publicObjectiveCard2Points) {
+    void setPublicObjectiveCard2Points(int publicObjectiveCard2Points) {
         this.publicObjectiveCard2Points = publicObjectiveCard2Points;
     }
 
@@ -113,7 +113,7 @@ public class PlayerScore implements Serializable {
         return publicObjectiveCard3Points;
     }
 
-    public void setPublicObjectiveCard3Points(int publicObjectiveCard3Points) {
+    void setPublicObjectiveCard3Points(int publicObjectiveCard3Points) {
         this.publicObjectiveCard3Points = publicObjectiveCard3Points;
     }
 
@@ -121,7 +121,7 @@ public class PlayerScore implements Serializable {
         return totalPoints;
     }
 
-    public void calculateTotalPoints(){
+    void calculateTotalPoints(){
         totalPoints =  favorTokenPoints + privateObjectiveCardPoints + publicObjectiveCard1Points +
                 publicObjectiveCard2Points + publicObjectiveCard3Points - emptyCellsPoints;
     }
