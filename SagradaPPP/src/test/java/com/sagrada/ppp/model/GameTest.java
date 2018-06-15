@@ -3,7 +3,6 @@ package com.sagrada.ppp.model;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 

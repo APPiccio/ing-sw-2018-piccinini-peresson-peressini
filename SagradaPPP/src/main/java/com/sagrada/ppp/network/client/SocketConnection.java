@@ -7,18 +7,15 @@ import java.io.IOException;
 
 public class SocketConnection implements ConnectionMode {
 
-    public SocketConnection(){
-        super();
-    }
-
     @Override
     public RemoteController getController() {
         try {
-            System.out.println("creating socket client controller");
+            System.out.println("Creating socket client controller");
             return new SocketClientController();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
+
 }
