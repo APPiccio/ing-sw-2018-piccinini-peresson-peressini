@@ -1,22 +1,21 @@
 package com.sagrada.ppp.model;
 
 import com.sagrada.ppp.WindowPanelTest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class DicePlacedMessageTest {
 
-    DicePlacedMessage dicePlacedMessage;
-    String username;
-    WindowPanel windowPanel;
-    ArrayList<Dice> draftPool;
+    private DicePlacedMessage dicePlacedMessage;
+    private String username;
+    private WindowPanel windowPanel;
+    private ArrayList<Dice> draftPool;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         username = "u_s_e_r";
         windowPanel = WindowPanelTest.generateBlankPanel();
         draftPool = new ArrayList<>();
@@ -29,9 +28,10 @@ public class DicePlacedMessageTest {
     }
 
     @Test
-    public void testContet() {
-        assertTrue(username.equals(dicePlacedMessage.username));
-        assertTrue(draftPool.equals(dicePlacedMessage.draftPool));
-        assertTrue(windowPanel.equals(dicePlacedMessage.panel));
+    public void testContent() {
+        assertEquals(username, dicePlacedMessage.username);
+        assertEquals(draftPool, dicePlacedMessage.draftPool);
+        assertEquals(windowPanel, dicePlacedMessage.panel);
     }
+
 }

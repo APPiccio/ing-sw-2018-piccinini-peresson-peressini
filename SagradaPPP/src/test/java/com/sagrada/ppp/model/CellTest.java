@@ -1,6 +1,6 @@
 package com.sagrada.ppp.model;
 
-import org.junit.Test;
+import org.junit.*;
 
 import static org.junit.Assert.*;
 
@@ -11,7 +11,8 @@ public class CellTest {
     private Cell numberedCell;
     private Cell coloredCell;
 
-    public CellTest() {
+    @Before
+    public void setUp() {
         dice = new Dice(Color.PURPLE, 4);
         blankCell = new Cell();
         numberedCell = new Cell(3);

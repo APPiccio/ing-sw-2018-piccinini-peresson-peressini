@@ -1,6 +1,6 @@
 package com.sagrada.ppp.model;
 
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,8 @@ public class DiceTest {
 
     private ArrayList<Color> colors = new ArrayList<>();
 
-    public DiceTest() {
+    @Before
+    public void setUp() {
         colors.add(Color.BLUE);
         colors.add(Color.GREEN);
         colors.add(Color.PURPLE);

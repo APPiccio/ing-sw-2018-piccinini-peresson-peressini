@@ -1,43 +1,8 @@
 package com.sagrada.ppp;
 
-import com.sagrada.ppp.cards.publicobjectivecards.*;
-import com.sagrada.ppp.model.WindowPanel;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 public class PublicObjectiveCardTest {
 
-    /*@Test
-    public void testAllPublicObjectiveCard() {
-        card1();
-        card2();
-        card3();
-        card4();
-        card5();
-        card6();
-        card7();
-        card8();
-        card9();
-        card10();
-    }
-
-    @Test
-    public void card1()  {
-        PublicObjectiveCard card = new PublicObjectiveCard1();
-        assertEquals(0, card.getScore(new WindowPanel(0,0)));
-        assertEquals(24, card.getScore(TestPanels.panel_210()));
-        assertEquals(12, card.getScore(TestPanels.panel_211()));
-        assertEquals(0, card.getScore(TestPanels.panel_212()));
-    }
-
-    @Test
-    public void card2() {
-        PublicObjectiveCard card = new PublicObjectiveCard2();
-        assertEquals(0, card.getScore(new WindowPanel(0,0)));
-        assertEquals(25, card.getScore(TestPanels.panel_220()));
-        assertEquals(15, card.getScore(TestPanels.panel_221()));
-        assertEquals(0, card.getScore(TestPanels.panel_222()));
-    }
+    /*
 
     @Test
     public void card3() {
@@ -123,8 +88,8 @@ public class PublicObjectiveCardTest {
         assertEquals(10, card.getScore(TestPanels.panel_192()));
         assertEquals(0, card.getScore(new WindowPanel(0,0)));
 
-        assertEquals(10,card.getScore(TestPanels.panel_212()));
-        assertEquals(6,card.getScore(TestPanels.panel_222()));
+        assertEquals(10,card.getScore(TestPanels.panel_1_2()));
+        assertEquals(6,card.getScore(TestPanels.panel_2_2()));
         assertEquals(12,card.getScore(TestPanels.panel_241()));
         assertEquals(13,card.getScore(TestPanels.panel_240()));
         assertEquals(0,card.getScore(TestPanels.panel_193()));

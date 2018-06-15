@@ -1,18 +1,216 @@
 package com.sagrada.ppp;
 
+import com.sagrada.ppp.model.Cell;
 import com.sagrada.ppp.model.Color;
 import com.sagrada.ppp.model.Dice;
 import com.sagrada.ppp.model.WindowPanel;
 import com.sagrada.ppp.utils.StaticValues;
 
+import java.util.ArrayList;
+
+import static com.sagrada.ppp.utils.StaticValues.NUMBER_OF_CELLS;
+
 public class TestPanels {
 
+    /**
+     * @return panel with: no color duplication in the same row, every color used, no 5 & 6 value
+     */
+    public static WindowPanel panel_1_0() {
+        WindowPanel panel = createBlankPanel();
 
+        panel.addDice(0,new Dice(Color.BLUE, 1));
+        panel.addDice(1,new Dice(Color.GREEN, 2));
+        panel.addDice(2,new Dice(Color.PURPLE, 1));
+        panel.addDice(3,new Dice(Color.RED, 2));
+        panel.addDice(4,new Dice(Color.YELLOW, 1));
+
+        panel.addDice(5,new Dice(Color.GREEN, 3));
+        panel.addDice(6,new Dice(Color.PURPLE, 4));
+        panel.addDice(7,new Dice(Color.RED, 3));
+        panel.addDice(8,new Dice(Color.YELLOW, 4));
+        panel.addDice(9,new Dice(Color.BLUE, 3));
+
+        panel.addDice(10,new Dice(Color.PURPLE, 1));
+        panel.addDice(11,new Dice(Color.RED, 2));
+        panel.addDice(12,new Dice(Color.YELLOW, 1));
+        panel.addDice(13,new Dice(Color.BLUE, 2));
+        panel.addDice(14,new Dice(Color.GREEN, 1));
+
+        panel.addDice(15,new Dice(Color.RED, 3));
+        panel.addDice(16,new Dice(Color.YELLOW, 4));
+        panel.addDice(17,new Dice(Color.BLUE, 3));
+        panel.addDice(18,new Dice(Color.GREEN, 4));
+        panel.addDice(19,new Dice(Color.PURPLE, 3));
+
+        return panel;
+    }
+
+    /**
+     * @return panel with: 1 row with hole, 1 row with color duplication
+     */
+    public static WindowPanel panel_1_1() {
+        WindowPanel panel = createBlankPanel();
+
+        panel.addDice(0, new Dice(Color.BLUE, 5));
+        panel.addDice(1,new Dice(Color.GREEN, 6));
+        panel.addDice(2, new Dice(Color.BLUE, 5));
+        panel.addDice(3,new Dice(Color.GREEN, 6));
+        panel.addDice(4, new Dice(Color.BLUE, 5));
+
+        panel.addDice(6,new Dice(Color.YELLOW, 1));
+        panel.addDice(7,new Dice(Color.GREEN, 2));
+        panel.addDice(8,new Dice(Color.BLUE, 1));
+        panel.addDice(9,new Dice(Color.RED, 2));
+
+        panel.addDice(10,new Dice(Color.GREEN, 5));
+        panel.addDice(11,new Dice(Color.BLUE, 6));
+        panel.addDice(12,new Dice(Color.YELLOW, 5));
+        panel.addDice(13,new Dice(Color.RED, 6));
+        panel.addDice(14,new Dice(Color.PURPLE, 5));
+
+        panel.addDice(15,new Dice(Color.PURPLE, 3));
+        panel.addDice(16,new Dice(Color.GREEN, 4));
+        panel.addDice(17,new Dice(Color.BLUE, 3));
+        panel.addDice(18,new Dice(Color.YELLOW, 4));
+        panel.addDice(19,new Dice(Color.RED, 3));
+
+        return panel;
+    }
+
+    /**
+     * @return panel with: no row with 5 different colors
+     */
+    public static WindowPanel panel_1_2() {
+        WindowPanel panel = createBlankPanel();
+
+        panel.addDice(0, new Dice(Color.BLUE, 5));
+        panel.addDice(1,new Dice(Color.GREEN, 6));
+        panel.addDice(2, new Dice(Color.BLUE, 5));
+        panel.addDice(3,new Dice(Color.GREEN, 6));
+        panel.addDice(4, new Dice(Color.BLUE, 5));
+
+        panel.addDice(5,new Dice(Color.PURPLE, 2));
+        panel.addDice(6,new Dice(Color.YELLOW, 1));
+        panel.addDice(7,new Dice(Color.GREEN, 2));
+        panel.addDice(8,new Dice(Color.PURPLE, 1));
+        panel.addDice(9,new Dice(Color.RED, 2));
+
+        panel.addDice(10,new Dice(Color.GREEN, 5));
+        panel.addDice(11,new Dice(Color.BLUE, 6));
+        panel.addDice(12,new Dice(Color.YELLOW, 5));
+        panel.addDice(13,new Dice(Color.GREEN, 6));
+        panel.addDice(14,new Dice(Color.YELLOW, 5));
+
+        panel.addDice(15,new Dice(Color.PURPLE, 3));
+        panel.addDice(16,new Dice(Color.GREEN, 4));
+        panel.addDice(17,new Dice(Color.RED, 3));
+        panel.addDice(18,new Dice(Color.YELLOW, 4));
+        panel.addDice(19,new Dice(Color.RED, 3));
+
+        return panel;
+    }
+
+    /**
+     * @return panel with: no color duplication in the same column
+     */
+    public static WindowPanel panel_2_0() {
+        WindowPanel panel = createBlankPanel();
+
+        panel.addDice(0, new Dice(Color.BLUE, 1));
+        panel.addDice(5,new Dice(Color.GREEN, 2));
+        panel.addDice(10, new Dice(Color.RED, 1));
+        panel.addDice(15,new Dice(Color.PURPLE, 2));
+
+        panel.addDice(1, new Dice(Color.GREEN, 3));
+        panel.addDice(6,new Dice(Color.YELLOW, 4));
+        panel.addDice(11,new Dice(Color.PURPLE, 3));
+        panel.addDice(16,new Dice(Color.RED, 4));
+
+        panel.addDice(2,new Dice(Color.BLUE, 5));
+        panel.addDice(7,new Dice(Color.GREEN, 6));
+        panel.addDice(12,new Dice(Color.RED, 5));
+        panel.addDice(17,new Dice(Color.PURPLE, 6));
+
+        panel.addDice(3,new Dice(Color.YELLOW, 1));
+        panel.addDice(8,new Dice(Color.BLUE, 3));
+        panel.addDice(13,new Dice(Color.GREEN, 1));
+        panel.addDice(18,new Dice(Color.RED, 3));
+
+        panel.addDice(4,new Dice(Color.GREEN, 2));
+        panel.addDice(9,new Dice(Color.RED, 4));
+        panel.addDice(14,new Dice(Color.YELLOW, 2));
+        panel.addDice(19,new Dice(Color.PURPLE, 4));
+
+        return panel;
+    }
+
+    /**
+     * @return panel with: 1 column with hole, 2 columns with repeated colors
+     */
+    public static WindowPanel panel_2_1() {
+        WindowPanel panel = createBlankPanel();
+
+        panel.addDice(0, new Dice(Color.BLUE, 1));
+        panel.addDice(5,new Dice(Color.GREEN, 2));
+        panel.addDice(10, new Dice(Color.RED, 1));
+        panel.addDice(15,new Dice(Color.BLUE, 2));
+
+        panel.addDice(1, new Dice(Color.GREEN, 3));
+        panel.addDice(6,new Dice(Color.YELLOW, 4));
+        panel.addDice(11,new Dice(Color.PURPLE, 3));
+        panel.addDice(16,new Dice(Color.RED, 4));
+
+        panel.addDice(2,new Dice(Color.BLUE, 5));
+        panel.addDice(7,new Dice(Color.GREEN, 6));
+        panel.addDice(12,new Dice(Color.RED, 5));
+        panel.addDice(17,new Dice(Color.PURPLE, 6));
+
+        panel.addDice(3,new Dice(Color.YELLOW, 1));
+        panel.addDice(8,new Dice(Color.BLUE, 3));
+        panel.addDice(13,new Dice(Color.GREEN, 1));
+        panel.addDice(18,new Dice(Color.RED, 3));
+
+        panel.addDice(4,new Dice(Color.GREEN, 2));
+        panel.addDice(14,new Dice(Color.YELLOW, 2));
+        panel.addDice(19,new Dice(Color.PURPLE, 4));
+
+        return panel;
+    }
+
+    /**
+     * @return panel with: no columns with 4 different colors
+     */
+    public static WindowPanel panel_2_2() {
+        WindowPanel panel = createBlankPanel();
+
+        panel.addDice(0, new Dice(Color.BLUE, 1));
+        panel.addDice(5,new Dice(Color.GREEN, 2));
+        panel.addDice(10, new Dice(Color.RED, 1));
+        panel.addDice(15,new Dice(Color.BLUE, 2));
+
+        panel.addDice(1, new Dice(Color.GREEN, 3));
+        panel.addDice(6,new Dice(Color.YELLOW, 4));
+        panel.addDice(16,new Dice(Color.RED, 4));
+
+        panel.addDice(2,new Dice(Color.BLUE, 5));
+        panel.addDice(7,new Dice(Color.GREEN, 6));
+        panel.addDice(12,new Dice(Color.BLUE, 5));
+        panel.addDice(17,new Dice(Color.PURPLE, 6));
+
+        panel.addDice(3,new Dice(Color.YELLOW, 1));
+        panel.addDice(13,new Dice(Color.GREEN, 1));
+        panel.addDice(18,new Dice(Color.RED, 3));
+
+        panel.addDice(4,new Dice(Color.GREEN, 2));
+        panel.addDice(14,new Dice(Color.YELLOW, 2));
+        panel.addDice(19,new Dice(Color.PURPLE, 4));
+
+        return panel;
+    }
 
     public static WindowPanel panel_50()  {
 
-
-        WindowPanel panel = new WindowPanel(0, 0);
+        WindowPanel panel = createBlankPanel();
 
         panel.addDice(0, new Dice(Color.BLUE, 1));
         panel.addDice(1, new Dice(Color.GREEN, 2));
@@ -45,7 +243,7 @@ public class TestPanels {
     public static WindowPanel panel_52()  {
 
 
-        WindowPanel panel = new WindowPanel(0, 0);
+        WindowPanel panel = createBlankPanel();
 
         panel.addDice(0, new Dice(Color.BLUE, 5));
         panel.addDice(1, new Dice(Color.GREEN, 2));
@@ -80,7 +278,7 @@ public class TestPanels {
     public static WindowPanel panel_51()  {
 
 
-        WindowPanel panel = new WindowPanel(0, 0);
+        WindowPanel panel = createBlankPanel();
 
         panel.addDice(0, new Dice(Color.BLUE, 1));
         panel.addDice(6, new Dice(Color.PURPLE, 2));
@@ -101,7 +299,7 @@ public class TestPanels {
 
     public static WindowPanel panel_60()  {
 
-        WindowPanel panel = new WindowPanel(0, 0);
+        WindowPanel panel = createBlankPanel();
 
         panel.addDice(0, new Dice(Color.BLUE, 3));
         panel.addDice(1, new Dice(Color.GREEN, 4));
@@ -134,7 +332,7 @@ public class TestPanels {
 
     public static WindowPanel panel_62()  {
 
-        WindowPanel panel = new WindowPanel(0, 0);
+        WindowPanel panel = createBlankPanel();
 
         panel.addDice(0, new Dice(Color.BLUE, 6));
         panel.addDice(1, new Dice(Color.GREEN, 4));
@@ -170,7 +368,7 @@ public class TestPanels {
     public static WindowPanel panel_61()  {
 
 
-        WindowPanel panel = new WindowPanel(0, 0);
+        WindowPanel panel = createBlankPanel();
 
         panel.addDice(0, new Dice(Color.BLUE, 3));
         panel.addDice(6, new Dice(Color.PURPLE, 4));
@@ -192,7 +390,7 @@ public class TestPanels {
     public static WindowPanel panel_70()  {
 
 
-        WindowPanel panel = new WindowPanel(0, 0);
+        WindowPanel panel = createBlankPanel();
 
         panel.addDice(0, new Dice(Color.BLUE, 5));
         panel.addDice(1, new Dice(Color.GREEN, 6));
@@ -226,7 +424,7 @@ public class TestPanels {
 
     public static WindowPanel panel_71()  {
 
-        WindowPanel panel = new WindowPanel(0, 0);
+        WindowPanel panel = createBlankPanel();
 
         panel.addDice(0, new Dice(Color.BLUE, 5));
         panel.addDice(6, new Dice(Color.PURPLE, 6));
@@ -248,7 +446,7 @@ public class TestPanels {
     public static WindowPanel panel_72()  {
 
 
-        WindowPanel panel = new WindowPanel(0, 0);
+        WindowPanel panel = createBlankPanel();
 
         panel.addDice(0, new Dice(Color.BLUE, 1));
         panel.addDice(1, new Dice(Color.GREEN, 6));
@@ -484,211 +682,6 @@ public class TestPanels {
         return panel;
     }
 
-
-    //NO color duplication in the same row, every color used, no 5 and 6 value
-
-    public static WindowPanel panel_210()  {
-
-
-        WindowPanel panel = new WindowPanel(0, 0);
-
-        panel.addDice(0,new Dice(Color.values()[0], 1));
-        panel.addDice(1,new Dice(Color.values()[1], 2));
-        panel.addDice(2,new Dice(Color.values()[2], 1));
-        panel.addDice(3,new Dice(Color.values()[3], 2));
-        panel.addDice(4,new Dice(Color.values()[4], 1));
-
-        panel.addDice(5,new Dice(Color.values()[1], 3));
-        panel.addDice(6,new Dice(Color.values()[2], 4));
-        panel.addDice(7,new Dice(Color.values()[3], 3));
-        panel.addDice(8,new Dice(Color.values()[4], 4));
-        panel.addDice(9,new Dice(Color.values()[0], 3));
-
-        panel.addDice(10,new Dice(Color.values()[2], 1));
-        panel.addDice(11,new Dice(Color.values()[3], 2));
-        panel.addDice(12,new Dice(Color.values()[4], 1));
-        panel.addDice(13,new Dice(Color.values()[0], 2));
-        panel.addDice(14,new Dice(Color.values()[1], 1));
-
-        panel.addDice(15,new Dice(Color.values()[3], 3));
-        panel.addDice(16,new Dice(Color.values()[4], 4));
-        panel.addDice(17,new Dice(Color.values()[0], 3));
-        panel.addDice(18,new Dice(Color.values()[1], 4));
-        panel.addDice(19,new Dice(Color.values()[2], 3));
-
-        return panel;
-
-    }
-
-    //1 ROW with hole, 1 ROW with color duplication
-    public static WindowPanel panel_211(){
-
-        WindowPanel panel = new WindowPanel(0, 0);
-
-        //Line with doubled color
-        panel.addDice(0, new Dice(Color.BLUE, 5));
-        panel.addDice(1,new Dice(Color.GREEN, 6));
-        panel.addDice(2, new Dice(Color.BLUE, 5));
-        panel.addDice(3,new Dice(Color.GREEN, 6));
-        panel.addDice(4, new Dice(Color.BLUE, 5));
-
-        //row with hole
-        panel.addDice(6,new Dice(Color.YELLOW, 1));
-        panel.addDice(7,new Dice(Color.GREEN, 2));
-        panel.addDice(8,new Dice(Color.BLUE, 1));
-        panel.addDice(9,new Dice(Color.RED, 2));
-
-        //valid row
-        panel.addDice(10,new Dice(Color.GREEN, 5));
-        panel.addDice(11,new Dice(Color.BLUE, 6));
-        panel.addDice(12,new Dice(Color.YELLOW, 5));
-        panel.addDice(13,new Dice(Color.RED, 6));
-        panel.addDice(14,new Dice(Color.PURPLE, 5));
-
-        //valid row
-        panel.addDice(15,new Dice(Color.PURPLE, 3));
-        panel.addDice(16,new Dice(Color.GREEN, 4));
-        panel.addDice(17,new Dice(Color.BLUE, 3));
-        panel.addDice(18,new Dice(Color.YELLOW, 4));
-        panel.addDice(19,new Dice(Color.RED, 3));
-
-        return panel;
-    }
-
-    //no row with 5 different colors
-    public static WindowPanel panel_212(){
-
-        WindowPanel panel = new WindowPanel(0, 0);
-
-        //GREEN duplicated
-        panel.addDice(0, new Dice(Color.BLUE, 5));
-        panel.addDice(1,new Dice(Color.GREEN, 6));
-        panel.addDice(2, new Dice(Color.BLUE, 5));
-        panel.addDice(3,new Dice(Color.GREEN, 6));
-        panel.addDice(4, new Dice(Color.BLUE, 5));
-
-        //PURPLE DUPLICATED
-        panel.addDice(5,new Dice(Color.PURPLE, 2));
-        panel.addDice(6,new Dice(Color.YELLOW, 1));
-        panel.addDice(7,new Dice(Color.GREEN, 2));
-        panel.addDice(8,new Dice(Color.PURPLE, 1));
-        panel.addDice(9,new Dice(Color.RED, 2));
-
-        //YELLOW DUPL
-        panel.addDice(10,new Dice(Color.GREEN, 5));
-        panel.addDice(11,new Dice(Color.BLUE, 6));
-        panel.addDice(12,new Dice(Color.YELLOW, 5));
-        panel.addDice(13,new Dice(Color.GREEN, 6));
-        panel.addDice(14,new Dice(Color.YELLOW, 5));
-
-        //RED
-        panel.addDice(15,new Dice(Color.PURPLE, 3));
-        panel.addDice(16,new Dice(Color.GREEN, 4));
-        panel.addDice(17,new Dice(Color.RED, 3));
-        panel.addDice(18,new Dice(Color.YELLOW, 4));
-        panel.addDice(19,new Dice(Color.RED, 3));
-
-        return panel;
-    }
-
-    //every column with no color duplication
-    public static WindowPanel panel_220()  {
-
-        WindowPanel panel = new WindowPanel(0, 0);
-
-        panel.addDice(0, new Dice(Color.BLUE, 1));
-        panel.addDice(5,new Dice(Color.GREEN, 2));
-        panel.addDice(10, new Dice(Color.RED, 1));
-        panel.addDice(15,new Dice(Color.PURPLE, 2));
-
-        panel.addDice(1, new Dice(Color.GREEN, 3));
-        panel.addDice(6,new Dice(Color.YELLOW, 4));
-        panel.addDice(11,new Dice(Color.PURPLE, 3));
-        panel.addDice(16,new Dice(Color.RED, 4));
-
-        panel.addDice(2,new Dice(Color.BLUE, 5));
-        panel.addDice(7,new Dice(Color.GREEN, 6));
-        panel.addDice(12,new Dice(Color.RED, 5));
-        panel.addDice(17,new Dice(Color.PURPLE, 6));
-
-        panel.addDice(3,new Dice(Color.YELLOW, 1));
-        panel.addDice(8,new Dice(Color.BLUE, 3));
-        panel.addDice(13,new Dice(Color.GREEN, 1));
-        panel.addDice(18,new Dice(Color.RED, 3));
-
-        panel.addDice(4,new Dice(Color.GREEN, 2));
-        panel.addDice(9,new Dice(Color.RED, 4));
-        panel.addDice(14,new Dice(Color.YELLOW, 2));
-        panel.addDice(19,new Dice(Color.PURPLE, 4));
-
-        return panel;
-    }
-
-    //1 col with hole, 2 with repeated color
-    public static WindowPanel panel_221() {
-
-        WindowPanel panel = new WindowPanel(0, 0);
-
-        //GREEN duplicated
-        panel.addDice(0, new Dice(Color.BLUE, 1));
-        panel.addDice(5,new Dice(Color.GREEN, 2));
-        panel.addDice(10, new Dice(Color.RED, 1));
-        panel.addDice(15,new Dice(Color.BLUE, 2));
-
-        panel.addDice(1, new Dice(Color.GREEN, 3));
-        panel.addDice(6,new Dice(Color.YELLOW, 4));
-        panel.addDice(11,new Dice(Color.PURPLE, 3));
-        panel.addDice(16,new Dice(Color.RED, 4));
-
-        panel.addDice(2,new Dice(Color.BLUE, 5));
-        panel.addDice(7,new Dice(Color.GREEN, 6));
-        panel.addDice(12,new Dice(Color.RED, 5));
-        panel.addDice(17,new Dice(Color.PURPLE, 6));
-
-        panel.addDice(3,new Dice(Color.YELLOW, 1));
-        panel.addDice(8,new Dice(Color.BLUE, 3));
-        panel.addDice(13,new Dice(Color.GREEN, 1));
-        panel.addDice(18,new Dice(Color.RED, 3));
-
-        panel.addDice(4,new Dice(Color.GREEN, 2));
-        panel.addDice(14,new Dice(Color.YELLOW, 2));
-        panel.addDice(19,new Dice(Color.PURPLE, 4));
-
-        return panel;
-    }
-
-    //no col with 4 different color
-    public static WindowPanel panel_222() {
-
-        WindowPanel panel = new WindowPanel(0, 0);
-
-        //GREEN duplicated
-        panel.addDice(0, new Dice(Color.BLUE, 1));
-        panel.addDice(5,new Dice(Color.GREEN, 2));
-        panel.addDice(10, new Dice(Color.RED, 1));
-        panel.addDice(15,new Dice(Color.BLUE, 2));
-
-        panel.addDice(1, new Dice(Color.GREEN, 3));
-        panel.addDice(6,new Dice(Color.YELLOW, 4));
-        panel.addDice(16,new Dice(Color.RED, 4));
-
-        panel.addDice(2,new Dice(Color.BLUE, 5));
-        panel.addDice(7,new Dice(Color.GREEN, 6));
-        panel.addDice(12,new Dice(Color.BLUE, 5));
-        panel.addDice(17,new Dice(Color.PURPLE, 6));
-
-        panel.addDice(3,new Dice(Color.YELLOW, 1));
-        panel.addDice(13,new Dice(Color.GREEN, 1));
-        panel.addDice(18,new Dice(Color.RED, 3));
-
-        panel.addDice(4,new Dice(Color.GREEN, 2));
-        panel.addDice(14,new Dice(Color.YELLOW, 2));
-        panel.addDice(19,new Dice(Color.PURPLE, 4));
-
-        return panel;
-    }
-
-
     //no value duplication in the same row
     public static WindowPanel panel_230() {
 
@@ -857,7 +850,7 @@ public class TestPanels {
 
     //no col with 4 different value
     public static WindowPanel panel_242() {
-        return TestPanels.panel_222();
+        return TestPanels.panel_2_2();
     }
 
     public static WindowPanel toolCardPanel_X() {
@@ -872,6 +865,14 @@ public class TestPanels {
 
         return panel;
 
+    }
+
+    public static WindowPanel createBlankPanel() {
+        ArrayList<Cell> cells = new ArrayList<>();
+        for (int i = 0; i < NUMBER_OF_CELLS; i++) {
+            cells.add(new Cell());
+        }
+        return new WindowPanel("blank", 0, 0, cells);
     }
 
 }
