@@ -1,6 +1,7 @@
 package com.sagrada.ppp.network.client;
 
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.view.CliView;
 import com.sagrada.ppp.view.gui.GuiView;
 import javafx.application.Application;
@@ -20,10 +21,11 @@ public class Client {
 
     public static void main( String[] args ) throws RemoteException {
 
+        StaticValues.readConstants();
         System.out.println("--> Connetting...");
         controller = null;
         Scanner scanner = new Scanner(System.in);
-        //TODO : make server able to reach client on socket and rmi simultaneously. Until that this code is useless
+        //TODO : make server able to reach client on socket and rmi simultaneously. Until than this code is useless
         System.out.println("Choose connection mode. Type rmi or socket");
         String connectionChoice = scanner.nextLine();
         //check on invalid choice

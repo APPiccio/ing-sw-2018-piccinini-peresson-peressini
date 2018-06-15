@@ -21,19 +21,20 @@ public class StaticValues {
     public static final int DICE_FACES = 6;
     public static final int MAX_USER_PER_GAME = 4;
     public static int NUMBER_OF_CARDS = 12;
-    public static final long TURN_DURATION = 120000;
+    public static long TURN_DURATION = 120000;
 
-    public static final String TOKEN_URL = "src/main/java/com/sagrada/ppp/utils/token.json";
+    public static long LOBBY_TIMER = 30000;
+
+    public static final String TOKEN_URL = "templates/token";
 
     public static final int COST_USED_TOOLCARD = 2;
     public static final int COST_UNUSED_TOOLCARD = 1;
-    public static int lobbyTimer = 0;
 
     //Connection static value
-    public static final int RMI_PORT = 1099;
-    public static final String REGISTRY_NAME = "SagradaRegistry";
-    public static final int SOCKET_PORT = 1996;
-    public static final String SERVER_ADDRESS = "localhost";
+    public static int RMI_PORT ;
+    public static String REGISTRY_NAME ;
+    public static int SOCKET_PORT ;
+    public static String SERVER_ADDRESS ;
     //public static final String SERVER_ADDRESS = "192.168.43.56";
 
     //Tool Card names
@@ -231,18 +232,22 @@ public class StaticValues {
 
     }
 
-    public static int getLobbyTimer(){
+    public static void readConstants(){
 
-        if(lobbyTimer > 0) return lobbyTimer;
         JSONTokener jsonTokener = null;
         try {
-            jsonTokener = new JSONTokener(new FileReader("src/main/java/com/sagrada/ppp/utils/config.json"));
+            jsonTokener = new JSONTokener(new FileReader("utils/config.json"));
+            JSONObject jsonObject = new JSONObject(jsonTokener);
+            LOBBY_TIMER = jsonObject.getInt("lobby_timer");
+            TURN_DURATION = jsonObject.getLong("TURN_TIMER");
+            RMI_PORT = jsonObject.getInt("RMI_PORT");
+            REGISTRY_NAME = jsonObject.getString("RMI_REGISTRY_NAME");
+            SOCKET_PORT = jsonObject.getInt("SOCKET_PORT");
+            SERVER_ADDRESS = jsonObject.getString("SERVER_ADDRESS");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        JSONObject jsonObject = new JSONObject(jsonTokener);
-        lobbyTimer = jsonObject.getInt("lobby_timer");
-        return lobbyTimer;
+
     }
 
     public static String getPublicObjectiveCardDescription(int id){

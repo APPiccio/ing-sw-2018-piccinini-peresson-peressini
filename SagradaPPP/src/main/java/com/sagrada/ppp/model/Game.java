@@ -1149,7 +1149,7 @@ public class Game implements Serializable{
         return result;
     }
 
-    private void pingAllGameObservers(){
+    private synchronized void pingAllGameObservers(){
         for (ArrayList<GameObserver> obs : gameObservers.values()){
             for(GameObserver gameObserver : obs){
                 try {
