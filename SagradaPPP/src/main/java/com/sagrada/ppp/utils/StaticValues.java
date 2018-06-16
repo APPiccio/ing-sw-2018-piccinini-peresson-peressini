@@ -27,43 +27,43 @@ public class StaticValues {
 
     public static final String TOKEN_URL = "templates/token";
 
-    public static final int COST_USED_TOOLCARD = 2;
-    public static final int COST_UNUSED_TOOLCARD = 1;
+    public static final int COST_USED_TOOL_CARD = 2;
+    public static final int COST_UNUSED_TOOL_CARD = 1;
 
     //Connection static value
-    public static int RMI_PORT ;
-    public static String REGISTRY_NAME ;
-    public static int SOCKET_PORT ;
-    public static String SERVER_ADDRESS ;
-    //public static final String SERVER_ADDRESS = "192.168.43.56";
+    public static int RMI_PORT;
+    public static String REGISTRY_NAME;
+    public static int SOCKET_PORT;
+    public static String SERVER_ADDRESS;
 
     //Tool Card names
-    public static final String TOOLCARD1_NAME = "Grozing Pliers";
-    public static final String TOOLCARD2_NAME = "Eglomise Brush";
-    public static final String TOOLCARD3_NAME = "Copper Foil Burnisher";
-    public static final String TOOLCARD4_NAME = "Lathekin";
-    public static final String TOOLCARD5_NAME = "Lens Cutter";
-    public static final String TOOLCARD6_NAME = "Flux Brush";
-    public static final String TOOLCARD7_NAME = "Glazing Hammer";
-    public static final String TOOLCARD8_NAME = "Running Pliers";
-    public static final String TOOLCARD9_NAME = "Cork-backed Straightedge";
-    public static final String TOOLCARD10_NAME = "Grinding Stone";
-    public static final String TOOLCARD11_NAME = "Flux Remover";
-    public static final String TOOLCARD12_NAME = "Tap Wheel";
+    public static final String TOOL_CARD_1_NAME = "Grozing Pliers";
+    public static final String TOOL_CARD_2_NAME = "Eglomise Brush";
+    public static final String TOOL_CARD_3_NAME = "Copper Foil Burnisher";
+    public static final String TOOL_CARD_4_NAME = "Lathekin";
+    public static final String TOOL_CARD_5_NAME = "Lens Cutter";
+    public static final String TOOL_CARD_6_NAME = "Flux Brush";
+    public static final String TOOL_CARD_7_NAME = "Glazing Hammer";
+    public static final String TOOL_CARD_8_NAME = "Running Pliers";
+    public static final String TOOL_CARD_9_NAME = "Cork-backed Straightedge";
+    public static final String TOOL_CARD_10_NAME = "Grinding Stone";
+    public static final String TOOL_CARD_11_NAME = "Flux Remover";
+    public static final String TOOL_CARD_12_NAME = "Tap Wheel";
 
-    public static final String PUBLICOBJECTIVECARD1_NAME = "Row Color Variety";
-    public static final String PUBLICOBJECTIVECARD2_NAME = "Column Color Variety";
-    public static final String PUBLICOBJECTIVECARD3_NAME = "Row Shade Variety";
-    public static final String PUBLICOBJECTIVECARD4_NAME = "Column Shade Variety";
-    public static final String PUBLICOBJECTIVECARD5_NAME = "Light Shades";
-    public static final String PUBLICOBJECTIVECARD6_NAME = "Medium Shades";
-    public static final String PUBLICOBJECTIVECARD7_NAME = "Deep Shades";
-    public static final String PUBLICOBJECTIVECARD8_NAME = "Shade Variety";
-    public static final String PUBLICOBJECTIVECARD9_NAME = "Color Diagonals";
-    public static final String PUBLICOBJECTIVECARD10_NAME = "Color Variety";
+    public static final String PUBLIC_OBJECTIVE_CARD_1_NAME = "Row Color Variety";
+    public static final String PUBLIC_OBJECTIVE_CARD_2_NAME = "Column Color Variety";
+    public static final String PUBLIC_OBJECTIVE_CARD_3_NAME = "Row Shade Variety";
+    public static final String PUBLIC_OBJECTIVE_CARD_4_NAME = "Column Shade Variety";
+    public static final String PUBLIC_OBJECTIVE_CARD_5_NAME = "Light Shades";
+    public static final String PUBLIC_OBJECTIVE_CARD_6_NAME = "Medium Shades";
+    public static final String PUBLIC_OBJECTIVE_CARD_7_NAME = "Deep Shades";
+    public static final String PUBLIC_OBJECTIVE_CARD_8_NAME = "Shade Variety";
+    public static final String PUBLIC_OBJECTIVE_CARD_9_NAME = "Color Diagonals";
+    public static final String PUBLIC_OBJECTIVE_CARD_10_NAME = "Color Variety";
 
     //Colors for print formatter
     // Reset
+
     public static final String RESET = "\033[0m";  // Text Reset
 
     // Regular Colors
@@ -250,8 +250,8 @@ public class StaticValues {
 
     }
 
-    public static String getPublicObjectiveCardDescription(int id){
-        switch (id){
+    public static String getPublicObjectiveCardDescription(int id) {
+        switch (id) {
             case 1:
                 return "6pts x Row with no repeated colors";
             case 2:
@@ -277,8 +277,8 @@ public class StaticValues {
         }
     }
 
-    public static String getToolCardDescription(int id){
-        switch (id){
+    public static String getToolCardDescription(int id) {
+        switch (id) {
             case 1:
                 return "After drafting, increase or decrease the value of the drafted die by 1 (1 may not change to 6, or 6 to 1)";
             case 2:

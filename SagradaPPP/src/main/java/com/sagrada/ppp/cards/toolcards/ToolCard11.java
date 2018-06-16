@@ -6,7 +6,7 @@ import com.sagrada.ppp.utils.StaticValues;
 public class ToolCard11 extends ToolCard {
 
     public ToolCard11() {
-        super(StaticValues.TOOLCARD11_NAME, 11, Color.PURPLE);
+        super(StaticValues.TOOL_CARD_11_NAME, 11, Color.PURPLE);
     }
 
 }

@@ -8,8 +8,17 @@ import org.junit.runners.Suite.*;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+        PublicObjectiveCardTest.class,
         PublicObjectiveCard1Test.class,
         PublicObjectiveCard2Test.class,
+        PublicObjectiveCard3Test.class,
+        PublicObjectiveCard4Test.class,
+        PublicObjectiveCard5Test.class,
+        PublicObjectiveCard6Test.class,
+        PublicObjectiveCard7Test.class,
+        PublicObjectiveCard8Test.class,
+        PublicObjectiveCard9Test.class,
+        PublicObjectiveCard10Test.class,
 
         CellTest.class,
         ColorTest.class,

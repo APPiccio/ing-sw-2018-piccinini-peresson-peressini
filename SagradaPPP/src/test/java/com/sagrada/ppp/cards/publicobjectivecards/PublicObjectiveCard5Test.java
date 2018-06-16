@@ -5,23 +5,21 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-public class PublicObjectiveCard1Test {
+public class PublicObjectiveCard5Test {
 
     private PublicObjectiveCard publicObjectiveCard;
 
     @Before
     public void setUp() {
-        publicObjectiveCard = new PublicObjectiveCard1();
+        publicObjectiveCard = new PublicObjectiveCard5();
     }
 
     @Test
     public void getScore() {
         assertEquals(0, publicObjectiveCard.getScore(TestPanels.createBlankPanel()));
-        assertEquals(24, publicObjectiveCard.getScore(TestPanels.panel_1_0()));
-        assertEquals(12, publicObjectiveCard.getScore(TestPanels.panel_1_1()));
-        assertEquals(0, publicObjectiveCard.getScore(TestPanels.panel_1_2()));
+        assertEquals(10*2, publicObjectiveCard.getScore(TestPanels.panel_5_0()));
+        assertEquals(5*2, publicObjectiveCard.getScore(TestPanels.panel_5_1()));
+        assertEquals(9*2, publicObjectiveCard.getScore(TestPanels.panel_5_2()));
     }
-
-
 
 }

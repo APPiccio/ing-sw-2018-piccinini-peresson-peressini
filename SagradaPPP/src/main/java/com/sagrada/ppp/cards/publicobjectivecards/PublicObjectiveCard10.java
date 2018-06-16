@@ -17,7 +17,7 @@ public class PublicObjectiveCard10 extends PublicObjectiveCard {
      * @see PublicObjectiveCard#PublicObjectiveCard(String, int)
      */
     public PublicObjectiveCard10() {
-        super(StaticValues.PUBLICOBJECTIVECARD10_NAME, 10);
+        super(StaticValues.PUBLIC_OBJECTIVE_CARD_10_NAME, 10);
     }
 
     /**
