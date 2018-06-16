@@ -27,7 +27,8 @@ import org.junit.runners.Suite.*;
         DiceTest.class,
         EndTurnMessageTest.class,
         PlayerTest.class,
-        RoundTrackTest.class
+        RoundTrackTest.class,
+        WindowPanelTest.class
 })
 public class AllTests {
 

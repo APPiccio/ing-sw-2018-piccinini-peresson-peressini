@@ -87,6 +87,11 @@ public class CellTest {
     public void equals() {
         assertFalse(coloredCell.equals(numberedCell));
         assertFalse(numberedCell.equals(coloredCell));
+        assertTrue(coloredCell.equals(coloredCell));
+        assertTrue(numberedCell.equals(numberedCell));
+
+        Cell cell = new Cell(coloredCell);
+        assertTrue(coloredCell.equals(cell));
 
         Dice testDice1 = new Dice(Color.GREEN, 6);
         Dice testDice2 = new Dice(Color.RED, 1);
@@ -105,6 +110,20 @@ public class CellTest {
         coloredCell.setDiceOn(testDice1);
 
         assertTrue(numberedCell.equals(coloredCell));
+
+        cell = null;
+        assertFalse(coloredCell.equals(cell));
+        assertFalse(numberedCell.equals(cell));
+        assertFalse(coloredCell.equals(testDice1));
+        assertFalse(numberedCell.equals(testDice2));
+
+        coloredCell = new Cell(Color.RED);
+        numberedCell = new Cell(6);
+
+        coloredCell.setDiceOn(testDice1);
+        numberedCell.setDiceOn(testDice1);
+
+        assertFalse(coloredCell.equals(numberedCell));
     }
 
     @Test

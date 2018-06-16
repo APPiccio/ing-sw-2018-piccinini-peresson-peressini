@@ -1,6 +1,6 @@
 package com.sagrada.ppp.model;
 
-import com.sagrada.ppp.WindowPanelTest;
+import com.sagrada.ppp.TestPanels;
 import org.junit.*;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class DicePlacedMessageTest {
     @Before
     public void setUp() {
         username = "u_s_e_r";
-        windowPanel = WindowPanelTest.generateBlankPanel();
+        windowPanel = TestPanels.createBlankPanel();
         draftPool = new ArrayList<>();
         draftPool.add(new Dice());
         draftPool.add(new Dice());
