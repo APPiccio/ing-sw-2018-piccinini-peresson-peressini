@@ -87,19 +87,18 @@ public class DiceBagTest {
         DiceBag diceBag = new DiceBag();
         DiceBag oldDiceBag = new DiceBag(diceBag);
 
-        assertTrue(diceBag.equals(diceBag));
+        assertEquals(diceBag, diceBag);
         assertNotEquals(diceBag.hashCode(), oldDiceBag.hashCode());
-        assertTrue(oldDiceBag.equals(diceBag));
+        assertEquals(oldDiceBag, diceBag);
 
         diceBag.addDice(new Dice(Color.YELLOW));
 
-        assertFalse(oldDiceBag.equals(diceBag));
+        assertNotEquals(oldDiceBag, diceBag);
 
-        diceBag = null;
-        assertFalse(oldDiceBag.equals(diceBag));
+        assertNotEquals(oldDiceBag, null);
 
         Cell cell = new Cell();
-        assertFalse(oldDiceBag.equals(cell));
+        assertNotEquals(oldDiceBag, cell);
     }
 
     @Test(expected = IllegalArgumentException.class)

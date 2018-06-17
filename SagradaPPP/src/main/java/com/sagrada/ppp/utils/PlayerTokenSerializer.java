@@ -1,10 +1,10 @@
 package com.sagrada.ppp.utils;
+
 import com.sagrada.ppp.model.JoinGameResult;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 
 /**
  * Saves an instance of JoinGameResult into a file.

@@ -85,37 +85,36 @@ public class CellTest {
 
     @Test
     public void equals() {
-        assertFalse(coloredCell.equals(numberedCell));
-        assertFalse(numberedCell.equals(coloredCell));
-        assertTrue(coloredCell.equals(coloredCell));
-        assertTrue(numberedCell.equals(numberedCell));
+        assertNotEquals(coloredCell, numberedCell);
+        assertNotEquals(numberedCell, coloredCell);
+        assertEquals(coloredCell, coloredCell);
+        assertEquals(numberedCell, numberedCell);
 
         Cell cell = new Cell(coloredCell);
-        assertTrue(coloredCell.equals(cell));
+        assertEquals(coloredCell, cell);
 
         Dice testDice1 = new Dice(Color.GREEN, 6);
         Dice testDice2 = new Dice(Color.RED, 1);
         numberedCell = new Cell(coloredCell);
 
-        assertTrue(numberedCell.equals(coloredCell));
+        assertEquals(numberedCell, coloredCell);
 
         numberedCell.setDiceOn(testDice1);
 
-        assertFalse(numberedCell.equals(coloredCell));
+        assertNotEquals(numberedCell, coloredCell);
 
         coloredCell.setDiceOn(testDice2);
 
-        assertFalse(numberedCell.equals(coloredCell));
+        assertNotEquals(numberedCell, coloredCell);
 
         coloredCell.setDiceOn(testDice1);
 
-        assertTrue(numberedCell.equals(coloredCell));
+        assertEquals(numberedCell, coloredCell);
 
-        cell = null;
-        assertFalse(coloredCell.equals(cell));
-        assertFalse(numberedCell.equals(cell));
-        assertFalse(coloredCell.equals(testDice1));
-        assertFalse(numberedCell.equals(testDice2));
+        assertNotEquals(coloredCell, null);
+        assertNotEquals(numberedCell, null);
+        assertNotEquals(coloredCell, testDice1);
+        assertNotEquals(numberedCell, testDice2);
 
         coloredCell = new Cell(Color.RED);
         numberedCell = new Cell(6);
@@ -123,7 +122,7 @@ public class CellTest {
         coloredCell.setDiceOn(testDice1);
         numberedCell.setDiceOn(testDice1);
 
-        assertFalse(coloredCell.equals(numberedCell));
+        assertNotEquals(coloredCell, numberedCell);
     }
 
     @Test

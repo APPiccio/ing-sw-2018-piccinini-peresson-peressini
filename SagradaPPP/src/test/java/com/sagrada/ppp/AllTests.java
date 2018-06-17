@@ -26,14 +26,14 @@ import org.junit.runners.Suite.*;
         DicePlacedMessageTest.class,
         DiceTest.class,
         EndTurnMessageTest.class,
-        PlayerTest.class,
-        RoundTrackTest.class,
-        WindowPanelTest.class,
         GameStartMessageTest.class,
         IsToolCardUsableResultTest.class,
         JoinGameResultTest.class,
         LeaveGameResultTest.class,
-        LobbyTimerTest.class
+        LobbyTimerTest.class,
+        PlayerTest.class,
+        RoundTrackTest.class,
+        WindowPanelTest.class
 })
 public class AllTests {
 
