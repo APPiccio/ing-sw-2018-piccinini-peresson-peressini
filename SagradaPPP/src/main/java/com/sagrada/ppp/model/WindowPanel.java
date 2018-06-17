@@ -8,9 +8,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * WindowPanel is used to implement methods and attributes o
- */
 public class WindowPanel implements Serializable {
 
     private String panelName;
@@ -20,50 +17,98 @@ public class WindowPanel implements Serializable {
     private static ArrayList<WindowPanel> loadedPanels = new ArrayList<>();
 
     /**
-     * @param windowPanel window pane to be copied
+     * @param windowPanel panel to be copied
      */
-    public WindowPanel(WindowPanel windowPanel){
+    public WindowPanel(WindowPanel windowPanel) {
         if (windowPanel != null) {
-            this.panelName = windowPanel.getPanelName();
-            this.favorTokens = windowPanel.getFavorTokens();
-            this.cardID = windowPanel.getCardID();
-
-            this.cells = new ArrayList<>();
-            ArrayList<Cell> tempCells = windowPanel.getCells();
-
-            for (Cell cell : tempCells){
-                this.cells.add(new Cell(cell));
-            }
+            panelName = windowPanel.getPanelName();
+            favorTokens = windowPanel.getFavorTokens();
+            cardID = windowPanel.getCardID();
+            cells = windowPanel.getCells();
         }
         else {
-            throw new NullPointerException("Null windowPanel received as parameter");
+            throw new NullPointerException("Null windowPanel received as parameter...");
         }
     }
 
     /**
      * Intended to be used only by the WindowPanelParser!
-     * @param panelName
-     * @param favorTokens
-     * @param cardID
-     * @param cells
+     * @param panelName windowPanel name
+     * @param favorTokens windowPanel difficulty
+     * @param cardID windowPanel ID
+     * @param cells windowPanel cells
      */
-    public WindowPanel(String panelName,int favorTokens, int cardID, ArrayList<Cell> cells){
+    public WindowPanel(String panelName, int favorTokens, int cardID, ArrayList<Cell> cells) {
         this.panelName = panelName;
         this.favorTokens = favorTokens;
         this.cardID = cardID;
         this.cells = cells;
     }
 
-
     /**
      * @param cardNumber is the ID of the physic card that has face up and face down, between 1 and 12
      * @param side front or rear of the card, 1 means face up, 0 means face down
      */
-    public WindowPanel(int cardNumber, int side)  {
-        this(getPanel(cardNumber,side));
-
-
+    public WindowPanel(int cardNumber, int side) {
+        this(getPanel(cardNumber, side));
     }
+
+    public String getPanelName() {
+        return panelName;
+    }
+
+    public int getFavorTokens() {
+        return favorTokens;
+    }
+
+    public int getCardID() {
+        return cardID;
+    }
+
+    /**
+     * @param i index of the cell
+     * @return a copy of the cell with index i in the windowPanel
+     */
+    public Cell getCell(int i) {
+        if (i < 0 || i > cells.size()) return null;
+        return new Cell(cells.get(i));
+    }
+
+    /**
+     * @param row row index of the cell
+     * @param col column index of the cell
+     * @return a copy of the cell with row index row and column index col in the windowPanel
+     */
+    public Cell getCell(int row, int col) {
+        if ((row < 0 || row >= StaticValues.PATTERN_ROW) || (col < 0 || col >= StaticValues.PATTERN_COL)) {
+            return null;
+        }
+        return new Cell(cells.get(row * StaticValues.PATTERN_COL + col));
+    }
+
+    /**
+     * @return a copy of the cells in the windowPanel
+     */
+    public ArrayList<Cell> getCells() {
+        ArrayList<Cell> h = new ArrayList<>();
+        for (Cell cell : cells) {
+            h.add(new Cell(cell));
+        }
+        return h;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     private static WindowPanel getPanel(int cardNumber, int side){
         if(loadedPanels.isEmpty()){
             try {
@@ -86,50 +131,6 @@ public class WindowPanel implements Serializable {
         return loadedPanels.size()/2;
     }
 
-
-    public Cell getCell(int row, int col) {
-        if ((row < 0 || row >= StaticValues.PATTERN_ROW) || (col < 0 || col >= StaticValues.PATTERN_COL)) {
-            //access denied to wrong cells
-            return null;
-        }
-        return new Cell(cells.get(row * StaticValues.PATTERN_COL + col));
-    }
-
-    public Cell getCell(int i) {
-        if (i < 0 || i > cells.size()) return null;
-        return new Cell(cells.get(i));
-    }
-
-    public String getPanelName() {
-        return panelName;
-    }
-
-    public int getFavorTokens() {
-        return favorTokens;
-    }
-
-    public void setFavorTokens(int favorTokens) {
-        this.favorTokens = favorTokens;
-    }
-
-    public int getCardID() {
-        return cardID;
-    }
-
-    public void setCardID(int cardID) {
-        this.cardID = cardID;
-    }
-
-    /**
-     * @return returns a copy of the cells on the pane
-     */
-    public ArrayList<Cell> getCells(){
-        ArrayList<Cell> h = new ArrayList<>();
-        for(Cell cell : cells){
-            h.add(new Cell(cell));
-        }
-        return h;
-    }
 
     /**
      * overload of addDice(int,Dice,bool,bool,bool) method, all restrictions are active.
@@ -278,20 +279,10 @@ public class WindowPanel implements Serializable {
         return false;
     }
 
-
-    public boolean addDiceOnCellWithPosition(int row, int col, Dice dice){
-        int i = row * StaticValues.PATTERN_COL + col;
-        if(diceOk(dice, i)){
-            cells.get(i).setDiceOn(dice);
-            return true;
-        }
-        return false;
-    }
-
     /**
      * @return true if there is no placed dices
      */
-    private boolean windowIsEmpty(){
+    private boolean windowIsEmpty() {
         for(Cell cell : cells){
             if (cell.hasDiceOn()) return false;
         }
@@ -320,8 +311,6 @@ public class WindowPanel implements Serializable {
         return PrinterFormatter.printWindowPanelContent(this);
     }
 
-    //get index of cells where the dice can be put without breaking rules
-
     /**
      * @param dice
      * @return array of the indexes where the dice can be put without breaking any rules
@@ -335,39 +324,6 @@ public class WindowPanel implements Serializable {
         }
         return h;
     }
-
-    /**
-     * @param dices generic subset of dices
-     * @param i target index position
-     * @return the indexes of "dices" that can be put in the "i" cell
-     */
-    public ArrayList<Integer> getLegalDicesFromSetAndCellIndex(ArrayList<Dice> dices, int i){
-        ArrayList<Integer> h = new ArrayList<>();
-        for(int j = 0; j < dices.size(); j++){
-            if(diceOk(dices.get(j), i)) {
-                h.add(j);
-            }
-        }
-        return h;
-    }
-
-    /**
-     * @param dices subset of dices
-     * @return dice from a set that can match a generic position in the panel (playable dice)
-     */
-    public ArrayList<Integer> getLegalDices(ArrayList<Dice> dices){
-        ArrayList<Integer> h = new ArrayList<>();
-        for(int j = 0; j < dices.size(); j++){
-            for(int i = 0; i < cells.size(); i++){
-                if (diceOk(dices.get(j), i)){
-                    h.add(j);
-                    break;
-                }
-            }
-        }
-        return h;
-    }
-
 
     /**
      * @param i cell index
@@ -388,7 +344,7 @@ public class WindowPanel implements Serializable {
      * @param ignoreValue ignore cell value restriction
      * @return true if the dice doesn't break any rules except positioning
      */
-    public boolean diceOkWithRestriction(Cell cell, Dice dice, boolean ignoreColor, boolean ignoreValue) {
+    private boolean diceOkWithRestriction(Cell cell, Dice dice, boolean ignoreColor, boolean ignoreValue) {
         if (!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
         if (ignoreColor&&ignoreValue) return true;
         if (ignoreColor) {

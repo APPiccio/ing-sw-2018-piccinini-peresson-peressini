@@ -1,6 +1,6 @@
 package com.sagrada.ppp.model;
 
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,8 @@ public class DiceTest {
 
     private ArrayList<Color> colors = new ArrayList<>();
 
-    public DiceTest() {
+    @Before
+    public void setUp() {
         colors.add(Color.BLUE);
         colors.add(Color.GREEN);
         colors.add(Color.PURPLE);
@@ -94,6 +95,7 @@ public class DiceTest {
     public void equals() {
         Dice dice = new Dice(Color.GREEN, 6);
 
+        assertTrue(dice.equals(dice));
         assertEquals(Color.GREEN, dice.getColor());
         assertEquals(6, dice.getValue());
 
@@ -108,6 +110,12 @@ public class DiceTest {
         tempDice.setColor(Color.BLUE);
 
         assertFalse(tempDice.equals(dice));
+
+        tempDice = null;
+        assertFalse(dice.equals(tempDice));
+
+        Cell cell = new Cell();
+        assertFalse(dice.equals(cell));
     }
 
     @Test
@@ -119,14 +127,25 @@ public class DiceTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void DiceException() {
+    public void DiceException1() {
         new Dice(Color.getRandomColor(), 777);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void setValueException() {
+    public void DiceException2() {
+        new Dice(Color.getRandomColor(), -1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setValueException1() {
         Dice dice = new Dice();
         dice.setValue(777);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void setValueException2() {
+        Dice dice = new Dice();
+        dice.setValue(-1);
     }
 
 }

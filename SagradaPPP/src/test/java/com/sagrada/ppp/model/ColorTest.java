@@ -1,6 +1,6 @@
 package com.sagrada.ppp.model;
 
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.HashMap;
 
@@ -10,7 +10,8 @@ public class ColorTest {
 
     private HashMap<String, Color> colors;
 
-    public ColorTest() {
+    @Before
+    public void setUp() {
         colors = new HashMap<>();
         colors.put("blue", Color.BLUE);
         colors.put("green", Color.GREEN);

@@ -1,7 +1,7 @@
 package com.sagrada.ppp.model;
 
 import com.sagrada.ppp.utils.StaticValues;
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.ArrayList;
 
@@ -12,14 +12,13 @@ public class RoundTrackTest {
     private ArrayList<Dice> dices;
     private RoundTrack roundTrack;
 
-    public RoundTrackTest() {
+    @Before
+    public void setUp() {
         dices = new ArrayList<>();
         dices.add(new Dice(Color.GREEN, 1));
         dices.add(new Dice(Color.RED, 2));
         dices.add(new Dice(Color.PURPLE, 3));
-    }
 
-    private void init() {
         roundTrack = new RoundTrack();
         for (int round = 1; round <= StaticValues.NUMBER_OF_ROUNDS; round++) {
             ArrayList<Dice> dices = new ArrayList<>();
@@ -32,7 +31,7 @@ public class RoundTrackTest {
 
     @Test
     public void setDicesOnRound() {
-        init();
+        setUp();
         for (int round = 1; round <= StaticValues.NUMBER_OF_ROUNDS; round++) {
             assertEquals(9, roundTrack.getDicesOnRound(round).size());
         }
@@ -51,7 +50,7 @@ public class RoundTrackTest {
 
     @Test
     public void getDice() {
-        init();
+        setUp();
         roundTrack.setDicesOnRound(1, dices);
 
         Dice dice = roundTrack.getDice(1, 0);
@@ -69,7 +68,7 @@ public class RoundTrackTest {
 
     @Test
     public void setDice() {
-        init();
+        setUp();
         assertNotNull(roundTrack.getDice(1, 0));
         assertNotNull(roundTrack.getDice(3, 4));
         assertNotNull(roundTrack.getDice(7, 7));
@@ -93,7 +92,7 @@ public class RoundTrackTest {
 
     @Test
     public void getDicesOnRound() {
-        init();
+        setUp();
         roundTrack.setDicesOnRound(1, dices);
 
         ArrayList<Dice> dicesOnRound = roundTrack.getDicesOnRound(1);
@@ -108,7 +107,7 @@ public class RoundTrackTest {
 
     @Test
     public void getCurrentRound_nextRound() {
-        init();
+        setUp();
         assertEquals(1, roundTrack.getCurrentRound());
 
         roundTrack.nextRound();
@@ -151,7 +150,7 @@ public class RoundTrackTest {
 
     @Test(expected = IllegalStateException.class)
     public void nextRoundException() {
-        init();
+        setUp();
         for (int i = 2; i <= StaticValues.NUMBER_OF_ROUNDS + 1; i++) {
             roundTrack.nextRound();
         }

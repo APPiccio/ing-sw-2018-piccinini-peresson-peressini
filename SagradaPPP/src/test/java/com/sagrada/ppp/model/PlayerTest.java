@@ -1,6 +1,6 @@
 package com.sagrada.ppp.model;
 
-import org.junit.Test;
+import org.junit.*;
 
 import static org.junit.Assert.*;
 
@@ -8,7 +8,8 @@ public class PlayerTest {
 
     private Player player;
 
-    public PlayerTest() {
+    @Before
+    public void setUp() {
         player = new Player("test");
     }
 
@@ -71,4 +72,5 @@ public class PlayerTest {
     @Test
     public void setPlayerStatus() {
     }
+
 }

@@ -151,7 +151,7 @@ public class ToolCardTest {
     @Test
     public void card4() {
 
-        WindowPanel windowPanel = TestPanels.panel_222();
+        WindowPanel windowPanel = TestPanels.panel_2_2();
         WindowPanel windowPanelCopy = new WindowPanel(windowPanel);
         LinkedHashMap<Integer, Integer> positions = new LinkedHashMap<>();
         positions.put(2, 9);
@@ -365,7 +365,7 @@ public class ToolCardTest {
     @Test
     public void card12() {
 
-        WindowPanel windowPanel = TestPanels.panel_222();
+        WindowPanel windowPanel = TestPanels.panel_2_2();
         WindowPanel windowPanelCopy = new WindowPanel(windowPanel);
         ToolCard toolCard12 = new ToolCard12();
 

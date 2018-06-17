@@ -1,6 +1,6 @@
 package com.sagrada.ppp.model;
 
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.ArrayList;
 
@@ -87,18 +87,31 @@ public class DiceBagTest {
         DiceBag diceBag = new DiceBag();
         DiceBag oldDiceBag = new DiceBag(diceBag);
 
+        assertTrue(diceBag.equals(diceBag));
         assertNotEquals(diceBag.hashCode(), oldDiceBag.hashCode());
         assertTrue(oldDiceBag.equals(diceBag));
 
         diceBag.addDice(new Dice(Color.YELLOW));
 
         assertFalse(oldDiceBag.equals(diceBag));
+
+        diceBag = null;
+        assertFalse(oldDiceBag.equals(diceBag));
+
+        Cell cell = new Cell();
+        assertFalse(oldDiceBag.equals(cell));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void extractDicesException() {
+    public void extractDicesException1() {
         DiceBag diceBag = new DiceBag();
         diceBag.extractDices(777);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void extractDicesException2() {
+        DiceBag diceBag = new DiceBag();
+        diceBag.extractDices(-1);
     }
 
     private int numberOfColor(DiceBag diceBag, Color color) {

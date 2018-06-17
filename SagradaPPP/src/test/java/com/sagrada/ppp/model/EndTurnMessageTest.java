@@ -1,23 +1,22 @@
 package com.sagrada.ppp.model;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class EndTurnMessageTest {
 
-    EndTurnMessage endTurnMessage;
-    Player previousPlayer;
-    Player currentPlayer;
-    ArrayList<Dice> draftPool;
-    RoundTrack roundTrack;
-    ArrayList<Player> players;
+    private EndTurnMessage endTurnMessage;
+    private Player previousPlayer;
+    private Player currentPlayer;
+    private ArrayList<Dice> draftPool;
+    private RoundTrack roundTrack;
+    private ArrayList<Player> players;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         previousPlayer = new Player("user1");
         currentPlayer = new Player("user2");
         players = new ArrayList<>();
@@ -35,10 +34,11 @@ public class EndTurnMessageTest {
 
     @Test
     public void testContent() {
-        assertTrue(draftPool.equals(endTurnMessage.draftpool));
-        assertTrue(roundTrack.equals(endTurnMessage.roundTrack));
-        assertTrue(currentPlayer.equals(endTurnMessage.currentPlayer));
-        assertTrue(previousPlayer.equals(endTurnMessage.previousPlayer));
-        assertTrue(players.equals(endTurnMessage.players));
+        assertEquals(draftPool, endTurnMessage.draftpool);
+        assertEquals(roundTrack, endTurnMessage.roundTrack);
+        assertEquals(currentPlayer, endTurnMessage.currentPlayer);
+        assertEquals(previousPlayer, endTurnMessage.previousPlayer);
+        assertEquals(players, endTurnMessage.players);
     }
+
 }

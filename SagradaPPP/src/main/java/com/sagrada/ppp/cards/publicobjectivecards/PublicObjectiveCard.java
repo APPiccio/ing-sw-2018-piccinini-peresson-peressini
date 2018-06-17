@@ -11,12 +11,6 @@ public abstract class PublicObjectiveCard implements Serializable {
     private int id;
     private String description;
 
-    public PublicObjectiveCard() {
-        this.name = null;
-        this.id = 0;
-        this.description = null;
-    }
-
     /**
      * @param name  name of the PublicObjectiveCard
      * @param id    number of the PublicObjectiveCard
@@ -37,10 +31,6 @@ public abstract class PublicObjectiveCard implements Serializable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     /**
      * @param playerWindowPanel windowPanel of the current player
      * @return                  number of points obtained according to the PublicObjectiveCard#
@@ -49,7 +39,7 @@ public abstract class PublicObjectiveCard implements Serializable {
 
     @Override
     public String toString() {
-        return "PUB OBJ ---> Card ID = " +
+        return "Public objective card ---> Card ID = " +
                 this.id + ", Card name: " + this.name + ", Description: " + this.description;
     }
 
