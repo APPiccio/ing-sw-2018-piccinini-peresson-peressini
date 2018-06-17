@@ -28,7 +28,12 @@ import org.junit.runners.Suite.*;
         EndTurnMessageTest.class,
         PlayerTest.class,
         RoundTrackTest.class,
-        WindowPanelTest.class
+        WindowPanelTest.class,
+        GameStartMessageTest.class,
+        IsToolCardUsableResultTest.class,
+        JoinGameResultTest.class,
+        LeaveGameResultTest.class,
+        LobbyTimerTest.class
 })
 public class AllTests {
 

@@ -20,12 +20,10 @@ public class LobbyTimer extends Thread {
             if(game.pingAllLobbyObservers()) {
                 game.notifyTimerChanges(TimerStatus.FINISH);
                 Runnable myrRunnable = () -> {
-                    game.init();
                     this.setName("gameThread");
-                };
+                    game.init(); };
                 new Thread(myrRunnable).start();
             }
-
         }
     }
 }
