@@ -114,5 +114,4 @@ public class Player implements Serializable {
     void setPlayerStatus(PlayerStatus active) {
         this.status = active;
     }
-
 }

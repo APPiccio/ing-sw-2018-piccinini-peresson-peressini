@@ -169,7 +169,11 @@ public class StartGameView implements EventHandler<MouseEvent> {
                     Player currentPlayer = reconnectionResult.gameStartMessage.currentPlayer;
                     mainGameView.init(currentPlayer.getPrivateColor(), reconnectionToken, reconnectionResult.gameStartMessage, controller, stage);
                 }else {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION,reconnectionResult.message);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setHeaderText(reconnectionResult.message);
+                    alert.setContentText(null);
+                    alert.initModality(Modality.APPLICATION_MODAL);
+                    alert.initOwner(stage);
                     alert.show();
                 }
             } catch (RemoteException e) {

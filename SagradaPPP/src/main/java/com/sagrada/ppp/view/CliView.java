@@ -754,10 +754,16 @@ public class CliView extends UnicastRemoteObject
         System.out.println("----------------------------------------");
         System.out.println("ROUND 1 - TURN " + currentTurn);
         System.out.println("PLAYERS AND PANELS :");
-        for(String username : gameStartMessage.chosenPanels.keySet()){
+        for(Player player: players){
+            System.out.println("PLAYER :" + username);
+            System.out.println(player.getPanel() + "\n");
+        }
+
+        //line to be deleted if everything works
+/*        for(String username : gameStartMessage.chosenPanels.keySet()){
             System.out.println("PLAYER :" + username);
             System.out.println(gameStartMessage.chosenPanels.get(username).toString() + "\n");
-        }
+        }*/
         System.out.println("----------------------------------------");
         System.out.println("Draft pool: ");
         for(int i = 0; i < draftPool.size(); i++){
@@ -774,13 +780,12 @@ public class CliView extends UnicastRemoteObject
         for(PublicObjectiveCard publicObjectiveCard : gameStartMessage.publicObjectiveCards){
             System.out.println(publicObjectiveCard.toString());
         }
-        orderedPlayersUsername = playersUsername;
         System.out.println("----------------------------------------");
-        if(gameStartMessage.playersUsername.get(0).equals(username)){
+        if(currentPlayer.getHashCode() == hashCode){
             System.out.println("It's your turn!");
         }
         else {
-            System.out.println("It's " + gameStartMessage.playersUsername.get(0) + "'s turn!");
+            System.out.println("It's " + currentPlayer.getUsername() + "'s turn!");
         }
     }
 

@@ -480,16 +480,12 @@ public class Game implements Serializable{
     }
 
     private void notifyGameStart(){
-        HashMap<String, WindowPanel> usernameToPanel = new HashMap<>();
-        for(Player player : players){
-            usernameToPanel.put(player.getUsername(), player.getPanel());
-        }
         pingAllGameObservers();
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {
                 try {
-                    observer.onGameStart(new GameStartMessage(usernameToPanel, draftPool, toolCards,
-                            publicObjectiveCards, getUsernames(),players,
+                    observer.onGameStart(new GameStartMessage(draftPool, toolCards,
+                            publicObjectiveCards,players,
                             roundTrack, players.get(getCurrentPlayerIndex())));
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -751,7 +747,15 @@ public class Game implements Serializable{
             if (!players.get(getCurrentPlayerIndex()).equals(player)){
                 return false;
             }
-            if (toolCard.getId() == 5 && roundTrack.getCurrentRound() == 1) {
+            if ((toolCard.getId() == 2 || toolCard.getId() == 3) && getPlayerByHashcode(playerHashCode).getPanel().getEmptyCells() > 19){
+                System.out.println("You haven't placed enough dices to use this toolcard!\nOperation denied.");
+                return false;
+            }
+            else if (toolCard.getId() == 4 && getPlayerByHashcode(playerHashCode).getPanel().getEmptyCells() > 18){
+                System.out.println("You haven't placed enough dices to use this toolcard!\nOperation denied.");
+                return false;
+            }
+            else if (toolCard.getId() == 5 && roundTrack.getCurrentRound() == 1) {
                 System.out.println("Trying to use tool card number 5 during first round.\nOperation denied.");
                 return false;
             }
@@ -775,6 +779,10 @@ public class Game implements Serializable{
             }
             else if (toolCard.getId() == 11 && dicePlaced){
                 System.out.println("Trying to use tool card number 11 usable only on drafting.\nOperation denied.");
+                return false;
+            }
+            else if (toolCard.getId() == 12 && roundTrack.getCurrentRound() == 1){
+                System.out.println("Can't use this toolcard during the first round!\nOperation denied.");
                 return false;
             }
            return player.getFavorTokens() >= toolCard.getCost();
@@ -1131,8 +1139,8 @@ public class Game implements Serializable{
         notifyReconnection(player);
         attachGameObserver(gameObserver, playerHashCode);
         return new ReconnectionResult(true, "Reconnection completed!",
-                new GameStartMessage(null, draftPool, toolCards, publicObjectiveCards,
-                        null, players, roundTrack, players.get(getCurrentPlayerIndex())));
+                new GameStartMessage(draftPool, toolCards, publicObjectiveCards,
+                        players, roundTrack, players.get(getCurrentPlayerIndex())));
     }
 
     public boolean pingAllLobbyObservers(){
