@@ -113,6 +113,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
     @Override
     public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
+        if(isLastPlayer) gameEnded = true;
 
         Platform.runLater(()->{
         if (playerAFK.getHashCode() == joinGameResult.getPlayerHashCode()) {
@@ -120,8 +121,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             Alert alert = new Alert(Alert.AlertType.NONE);
             alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
             if(isLastPlayer){
-                gameEnded = true;
-                alert.setHeaderText("You Loose");
+                alert.setHeaderText(null);
                 alert.setContentText("You went afk, leaving only one player!\nPress OK to close the game!");
                 alert.setTitle("AFK status");
                 alert.showAndWait();
@@ -133,16 +133,23 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 System.exit(0);
 
             }else {
-                alert.setHeaderText("You are AFK");
+                alert.setHeaderText(null);
                 alert.setContentText("Press OK to resume the game!");
                 alert.setTitle("AFK status");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
-                    try {
-                        controller.disableAFK(joinGameResult.getGameHashCode(), joinGameResult.getPlayerHashCode());
-                        afk = false;
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
+
+                    if (!gameEnded) {
+                        try {
+                            controller.disableAFK(joinGameResult.getGameHashCode(), joinGameResult.getPlayerHashCode());
+                            afk = false;
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        alert.setContentText("While you were afk, leaving only one player.\n YOU LOSE, press ok to close the game");
+                        alert.showAndWait();
+                        System.exit(0);
                     }
                 }
             }
@@ -773,9 +780,9 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
     @Override
     public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+        gameEnded = true;
         Platform.runLater(() -> {
             try {
-                gameEnded = true;
                 PlayerTokenSerializer.deleteToken();
                 new EndGameView(playersScore, publicObjectiveCards, controller, stage);
             } catch (RemoteException e) {
