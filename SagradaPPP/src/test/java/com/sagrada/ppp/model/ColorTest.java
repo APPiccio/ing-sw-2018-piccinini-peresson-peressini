@@ -18,7 +18,7 @@ public class ColorTest {
         colors.put("purple", Color.PURPLE);
         colors.put("red", Color.RED);
         colors.put("yellow", Color.YELLOW);
-        colors.put("blellow", null);
+        colors.put("test", null);
     }
 
     @Test

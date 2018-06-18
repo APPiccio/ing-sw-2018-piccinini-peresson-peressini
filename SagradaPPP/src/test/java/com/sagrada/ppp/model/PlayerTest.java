@@ -14,63 +14,46 @@ public class PlayerTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void Player() {
+    public void PlayerException() {
         new Player(player);
     }
 
     @Test
-    public void getUsername() {
+    public void Player() {
         assertEquals("test", player.getUsername());
-
-        player = new Player("test2");
-
-        assertNotEquals("test", player.getUsername());
-        assertEquals("test2", player.getUsername());
-    }
-
-    @Test
-    public void getPanel() {
-    }
-
-    @Test
-    public void setPanel() {
-    }
-
-    @Test
-    public void getFavorTokens() {
-    }
-
-    @Test
-    public void setFavorTokens() {
-    }
-
-    @Test
-    public void getPrivateColor() {
-    }
-
-    @Test
-    public void setPrivateColor() {
-    }
-
-    @Test
-    public void getHashCode() {
+        assertNull(player.getPanel());
+        assertEquals(0, player.getFavorTokens());
+        assertNull(player.getPrivateColor());
         assertEquals(player.hashCode(), player.getHashCode());
-    }
+        assertFalse(player.hasToSkipSecondTurn());
+        assertEquals(PlayerStatus.ACTIVE, player.getPlayerStatus());
 
-    @Test
-    public void hasToSkipSecondTurn() {
-    }
+        player.setPanel(new WindowPanel(1, 1));
 
-    @Test
-    public void setSkipSecondTurn() {
-    }
+        assertEquals("Kaleidoscopic Dream", player.getPanel().getPanelName());
+        assertEquals(1, player.getPanel().getCardID());
+        assertEquals(player.getFavorTokens(), player.getPanel().getFavorTokens());
 
-    @Test
-    public void getPlayerStatus() {
-    }
+        player.setFavorTokens(0);
+        assertEquals(0, player.getFavorTokens());
+        assertNotEquals(player.getFavorTokens(), player.getPanel().getFavorTokens());
 
-    @Test
-    public void setPlayerStatus() {
+        player.setPrivateColor(Color.GREEN);
+        assertEquals(Color.GREEN, player.getPrivateColor());
+
+        player.setSkipSecondTurn(true);
+        assertTrue(player.hasToSkipSecondTurn());
+
+        player.setPlayerStatus(PlayerStatus.INACTIVE);
+        assertEquals(PlayerStatus.INACTIVE, player.getPlayerStatus());
+
+        Player tempPlayer = new Player(player);
+
+        assertNotEquals(tempPlayer.hashCode(), player.hashCode());
+        assertEquals(tempPlayer.getHashCode(), player.getHashCode());
+
+        assertEquals(player.hashCode(), player.getHashCode());
+        assertNotEquals(tempPlayer.hashCode(), tempPlayer.getHashCode());
     }
 
 }

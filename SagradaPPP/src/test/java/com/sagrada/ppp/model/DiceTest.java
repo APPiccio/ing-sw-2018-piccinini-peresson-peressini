@@ -95,7 +95,7 @@ public class DiceTest {
     public void equals() {
         Dice dice = new Dice(Color.GREEN, 6);
 
-        assertTrue(dice.equals(dice));
+        assertEquals(dice, dice);
         assertEquals(Color.GREEN, dice.getColor());
         assertEquals(6, dice.getValue());
 
@@ -104,18 +104,17 @@ public class DiceTest {
         assertNotEquals(dice.hashCode(), tempDice.hashCode());
         assertEquals(dice.getValue(), tempDice.getValue());
         assertEquals(dice.getColor(), tempDice.getColor());
-        assertTrue(tempDice.equals(dice));
+        assertEquals(tempDice, dice);
 
         tempDice.setValue(3);
         tempDice.setColor(Color.BLUE);
 
-        assertFalse(tempDice.equals(dice));
+        assertNotEquals(tempDice, dice);
 
-        tempDice = null;
-        assertFalse(dice.equals(tempDice));
+        assertNotEquals(dice, null);
 
         Cell cell = new Cell();
-        assertFalse(dice.equals(cell));
+        assertNotEquals(dice, cell);
     }
 
     @Test
