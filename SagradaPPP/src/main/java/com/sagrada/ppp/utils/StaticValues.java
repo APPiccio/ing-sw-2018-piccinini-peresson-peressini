@@ -25,7 +25,7 @@ public class StaticValues {
 
     public static long LOBBY_TIMER = 30000;
 
-    public static final String TOKEN_URL = "templates/token";
+    public static final String TOKEN_URL = "utils/token";
 
     public static final int COST_USED_TOOL_CARD = 2;
     public static final int COST_UNUSED_TOOL_CARD = 1;

@@ -282,7 +282,6 @@ public class WindowPanel implements Serializable {
      */
     private boolean diceOkWithRestriction(Cell cell, Dice dice, boolean ignoreColor, boolean ignoreValue) {
         if (!cell.hasColorRestriction() && !cell.hasValueRestriction()) return true;
-        if (ignoreColor && ignoreValue) return true;
         if (ignoreColor) {
             if (cell.hasValueRestriction()) {
                 return dice.getValue() == cell.getValue();

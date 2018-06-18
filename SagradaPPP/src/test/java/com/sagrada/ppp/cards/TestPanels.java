@@ -1,9 +1,10 @@
-package com.sagrada.ppp;
+package com.sagrada.ppp.cards;
 
 import com.sagrada.ppp.model.Cell;
 import com.sagrada.ppp.model.Color;
 import com.sagrada.ppp.model.Dice;
 import com.sagrada.ppp.model.WindowPanel;
+import com.sagrada.ppp.utils.StaticValues;
 
 import java.util.ArrayList;
 
@@ -917,18 +918,24 @@ public class TestPanels {
         return TestPanels.panel_3_2();
     }
 
-    /*public static WindowPanel toolCardPanel_X() {
+    /**
+     * @return useful panel for toolCard number 2 & 3
+     */
+    public static WindowPanel toolCardPanel() {
         WindowPanel panel = new WindowPanel(10, StaticValues.FRONT_SIDE);
 
         panel.addDice(2, new Dice(Color.GREEN, 3));
 
-        panel.addDice(8,new Dice(Color.BLUE, 6));
+        panel.addDice(8, new Dice(Color.BLUE, 6));
 
-        panel.addDice(13,new Dice(Color.PURPLE, 5));
+        panel.addDice(13, new Dice(Color.PURPLE, 5));
 
         return panel;
-    }*/
+    }
 
+    /**
+     * @return an empty windowPanel
+     */
     public static WindowPanel createBlankPanel() {
         ArrayList<Cell> cells = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_CELLS; i++) {

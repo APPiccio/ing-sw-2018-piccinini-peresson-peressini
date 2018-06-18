@@ -12,7 +12,7 @@ public class GameTest {
 
     @Before
     public void init(){
-        game = new Game("user1",null);
+        game = new Game("user1", null);
         game.joinGame("user2", null);
         game.joinGame("user3" , null);
         game.joinGame("user1" , null);

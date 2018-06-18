@@ -13,14 +13,6 @@ public abstract class ToolCard implements Serializable {
     private boolean used;
     private String description;
 
-    public ToolCard() {
-        this.name = null;
-        this.id = 0;
-        this.color = null;
-        this.used = false;
-        this.description = null;
-    }
-
     protected ToolCard(String name, int id, Color color) {
         this.name = name;
         this.id = id;
@@ -47,14 +39,6 @@ public abstract class ToolCard implements Serializable {
      */
     public int getCost() {
         return used ? StaticValues.COST_USED_TOOL_CARD : StaticValues.COST_UNUSED_TOOL_CARD;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Color getColor() {
-        return color;
     }
 
     @Override

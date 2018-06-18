@@ -48,7 +48,7 @@ public class Game implements Serializable{
     */
 
     public Game(String username, Service service) {
-        service = service;
+        this.service = service;
         diceBag = new DiceBag();
         players = new ArrayList<>();
         draftPool = new ArrayList<>();
@@ -116,7 +116,10 @@ public class Game implements Serializable{
         System.out.println("Game is starting.. notify users of that");
         notifyGameStart();
         gameHandler();
-        service.deleteGame(this.hashCode());
+
+        if (service != null) {
+            service.deleteGame(this.hashCode());
+        }
     }
 
     /**

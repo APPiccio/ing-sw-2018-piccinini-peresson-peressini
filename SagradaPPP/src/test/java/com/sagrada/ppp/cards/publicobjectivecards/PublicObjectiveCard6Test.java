@@ -1,6 +1,6 @@
 package com.sagrada.ppp.cards.publicobjectivecards;
 
-import com.sagrada.ppp.TestPanels;
+import com.sagrada.ppp.cards.TestPanels;
 import org.junit.*;
 
 import static org.junit.Assert.*;

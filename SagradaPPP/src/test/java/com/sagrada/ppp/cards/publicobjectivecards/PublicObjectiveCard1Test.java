@@ -1,6 +1,6 @@
 package com.sagrada.ppp.cards.publicobjectivecards;
 
-import com.sagrada.ppp.TestPanels;
+import com.sagrada.ppp.cards.TestPanels;
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -21,7 +21,5 @@ public class PublicObjectiveCard1Test {
         assertEquals(12, publicObjectiveCard.getScore(TestPanels.panel_1_1()));
         assertEquals(0, publicObjectiveCard.getScore(TestPanels.panel_1_2()));
     }
-
-
 
 }

@@ -38,7 +38,7 @@ public class RoundTrack implements Serializable {
      * @param round int from 1 to Rounds, index of the array to set
      * @param dices array that will be set in the "round" location
      */
-    void setDicesOnRound(int round, ArrayList<Dice> dices) {
+    public void setDicesOnRound(int round, ArrayList<Dice> dices) {
         dicesOnTrack.set(round - 1, dices);
     }
 

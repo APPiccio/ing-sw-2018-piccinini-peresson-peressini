@@ -16,7 +16,7 @@ public class WindowPanelTest {
         windowPanel = new WindowPanel(1, 1);
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void nullWindowPanel() {
         new WindowPanel(null);
     }

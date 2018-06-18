@@ -13,7 +13,7 @@ public class PlayerTest {
         player = new Player("test");
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void PlayerException() {
         new Player(player);
     }

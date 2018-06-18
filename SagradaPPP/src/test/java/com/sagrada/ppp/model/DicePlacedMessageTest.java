@@ -1,6 +1,6 @@
 package com.sagrada.ppp.model;
 
-import com.sagrada.ppp.TestPanels;
+import com.sagrada.ppp.cards.TestPanels;
 import org.junit.*;
 
 import java.util.ArrayList;
