@@ -37,7 +37,10 @@ public class Player implements Serializable {
      */
     public Player(Player player) {
         this.username = player.username;
-        this.panel = new WindowPanel(player.panel);
+        if(player.panel == null)
+            this.panel = null;
+        else
+            this.panel = new WindowPanel(player.panel);
         this.favorTokens = player.favorTokens;
         this.privateColor = player.privateColor;
         this.hashCode = player.hashCode;

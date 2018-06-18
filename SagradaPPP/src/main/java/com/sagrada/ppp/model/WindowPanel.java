@@ -31,7 +31,11 @@ public class WindowPanel implements Serializable {
             cells = windowPanel.getCells();
         }
         else {
-            throw new NullPointerException("Null windowPanel received as parameter...");
+            try {
+                throw new NullPointerException("Null windowPanel received as parameter...");
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.sagrada.ppp;
 
 import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.model.*;
+import com.sagrada.ppp.network.server.ServiceTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.*;
@@ -33,7 +34,8 @@ import org.junit.runners.Suite.*;
         LobbyTimerTest.class,
         PlayerTest.class,
         RoundTrackTest.class,
-        WindowPanelTest.class
+        WindowPanelTest.class,
+        ServiceTest.class
 })
 public class AllTests {
 

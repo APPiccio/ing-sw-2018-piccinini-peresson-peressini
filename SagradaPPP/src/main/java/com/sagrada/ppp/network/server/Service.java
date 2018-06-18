@@ -13,10 +13,22 @@ import java.util.HashMap;
 public class Service {
 
     private HashMap<Integer , Game> games;
+    private static Service instance;
 
-    public Service(){
+
+    public static Service getInstance(){
+        if(instance != null){
+            return instance;
+        }else {
+            instance = new Service();
+            return instance;
+        }
+    }
+
+    private Service(){
         games = new HashMap<>();
         try {
+
             Controller controller = new Controller(this);
             Registry registry = LocateRegistry.createRegistry(StaticValues.RMI_PORT);
             registry.rebind(StaticValues.REGISTRY_NAME, controller);
@@ -25,6 +37,8 @@ public class Service {
             ServerThread serverThread = new ServerThread(this);
             serverThread.setName("ServerThread");
             serverThread.start();
+
+
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -34,26 +48,22 @@ public class Service {
      * @param username username of the player
      * @return the hashcode of the game right after the creation
      */
-    public int createGame(String username, LobbyObserver lobbyObserver, int playerHashCode){
-        Game game = new Game(username, this);
+    private int createGame(String username, LobbyObserver lobbyObserver, int playerHashCode){
+        Game game = new Game(username,this);
         games.put(game.hashCode(), game);
         game.attachLobbyObserver(lobbyObserver, playerHashCode);
         return game.hashCode();
     }
 
-    public ArrayList<Player> getPlayers(int gameHashCode){
-        return  games.get(gameHashCode).getPlayers();
-    }
-
     public synchronized LeaveGameResult leaveLobby(int gameHashCode, String username, LobbyObserver observer, GameObserver gameObserver){
         System.out.println(username + " is trying to leave....");
-        Game game = games.get(gameHashCode);
-        int playerHashCode = game.getPlayerHashCode(username);
         LeaveGameResult leaveGameResult = new LeaveGameResult(gameHashCode,LeaveGameResultStatus.SUCCESS);
-        System.out.println(username + " has left.");
-        detachLobbyObserver(gameHashCode,playerHashCode);
-        game.detachAllGameObservers(playerHashCode);
+        Game game = getGame(gameHashCode);
         if(game != null){
+            int playerHashCode = game.getPlayerHashCode(username);
+            System.out.println(username + " has left.");
+            detachLobbyObserver(gameHashCode,playerHashCode);
+            game.detachAllGameObservers(playerHashCode);
             game.leaveLobby(username, observer);
             if(game.getPlayers().isEmpty()){
                 leaveGameResult.setStatus(LeaveGameResultStatus.GAME_DELETED);
@@ -74,91 +84,83 @@ public class Service {
      */
     public synchronized JoinGameResult joinGame(String username, LobbyObserver lobbyObserver, GameObserver gameObserver){
         System.out.println(username + "is trying to connect..");
-        Game game = null;
         JoinGameResult joinGameResult = new JoinGameResult(-1,-1, null, null);
         for(Game x : games.values()){
             if (x.isJoinable()) {
                 joinGameResult.setPlayerHashCode(x.joinGame(username, lobbyObserver));
                 x.attachGameObserver(gameObserver, joinGameResult.getPlayerHashCode());
                 joinGameResult.setGameHashCode(x.hashCode());
-                joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
-                joinGameResult.setTimerStart(games.get(joinGameResult.getGameHashCode()).getLobbyTimerStartTime());
-                joinGameResult.setPlayersUsername(games.get(joinGameResult.getGameHashCode()).getUsernames());
+                joinGameResult.setUsername(getGame(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
+                joinGameResult.setTimerStart(getGame(joinGameResult.getGameHashCode()).getLobbyTimerStartTime());
+                joinGameResult.setPlayersUsername(getGame(joinGameResult.getGameHashCode()).getUsernames());
             }
             if(joinGameResult.getPlayerHashCode() != -1) break;
         }
         if(joinGameResult.getPlayerHashCode() == -1){
             //no joinable game, let's create a new one
             joinGameResult.setGameHashCode(createGame(username, lobbyObserver, joinGameResult.getPlayerHashCode()));
-            games.get(joinGameResult.getGameHashCode()).attachGameObserver(gameObserver, joinGameResult.getPlayerHashCode());
-            joinGameResult.setPlayerHashCode(games.get(joinGameResult.getGameHashCode()).getPlayerHashCode(username));
-            joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
-            joinGameResult.setTimerStart(games.get(joinGameResult.getGameHashCode()).getLobbyTimerStartTime());
-            joinGameResult.setPlayersUsername(games.get(joinGameResult.getGameHashCode()).getUsernames());
+            getGame(joinGameResult.getGameHashCode()).attachGameObserver(gameObserver, joinGameResult.getPlayerHashCode());
+            joinGameResult.setPlayerHashCode(getGame(joinGameResult.getGameHashCode()).getPlayerHashCode(username));
+            joinGameResult.setUsername(getGame(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
+            joinGameResult.setTimerStart(getGame(joinGameResult.getGameHashCode()).getLobbyTimerStartTime());
+            joinGameResult.setPlayersUsername(getGame(joinGameResult.getGameHashCode()).getUsernames());
         }
         notifyAll();
         return joinGameResult;
     }
-    public void attachGameObserver(int gameHashCode,GameObserver observer, int playerHashCode){
-        Game game = games.get(gameHashCode);
-        if (game!= null){
+    public void attachGameObserver(int gameHashCode,GameObserver observer, int playerHashCode) {
+        Game game = getGame(gameHashCode);
+        if (game != null) {
             game.attachGameObserver(observer, playerHashCode);
         }
     }
 
     public void attachLobbyObserver(int gameHashCode, LobbyObserver observer, int playerHashCode){
-        Game game = games.get(gameHashCode);
+        Game game = getGame(gameHashCode);
         if(game != null){
             game.attachLobbyObserver(observer, playerHashCode);
         }
     }
 
     public void detachLobbyObserver(int gameHashCode, int playerHashCode){
-        Game game = games.get(gameHashCode);
+        Game game = getGame(gameHashCode);
         if(game != null){
             game.detachLobbyObserver(playerHashCode);
         }
     }
 
     public String getUsername(int playerHashCode, int gameHashCode){
-        return games.get(gameHashCode).getPlayerUsername(playerHashCode);
-    }
-
-
-    public int getNumPlayers(int gameHashCode){
-        Game game = games.get(gameHashCode);
-        if(game != null){
-            return  game.getPlayers().size();
-        }
-        return -1;
+        return getGame(gameHashCode).getPlayerUsername(playerHashCode);
     }
 
 
     public void choosePanel(int gameHashCode, int playerHashCode, int panelIndex) {
         System.out.println("Received choice for " + playerHashCode);
-        games.get(gameHashCode).pairPanelToPlayer(playerHashCode, panelIndex);
-        games.get(gameHashCode).stopWaitingForPanelChoice();
+        getGame(gameHashCode).pairPanelToPlayer(playerHashCode, panelIndex);
+        getGame(gameHashCode).stopWaitingForPanelChoice();
     }
 
     public boolean disconnect(int gameHashCode, int playerHashCode) {
-        Game game = games.get(gameHashCode);
-        return game.disconnect(playerHashCode);
+        Game game = getGame(gameHashCode);
+        if(game != null)
+            return game.disconnect(playerHashCode);
+        return false;
     }
 
     public PlaceDiceResult placeDice(int gameHashCode, int playerHashCode, int diceIndex, int row, int col){
-        return games.get(gameHashCode).placeDice(playerHashCode, diceIndex, row , col);
+        return getGame(gameHashCode).placeDice(playerHashCode, diceIndex, row , col);
     }
 
     public void endTurn(int gameHashCode, int playerHashCode){
-        games.get(gameHashCode).setEndTurn(playerHashCode);
+        getGame(gameHashCode).setEndTurn(playerHashCode);
     }
 
     public void detachAllGameObserver(int gameHashCode, int playerHashCode){
-        games.get(gameHashCode).detachAllGameObservers(playerHashCode);
+        getGame(gameHashCode).detachAllGameObservers(playerHashCode);
     }
 
     public IsToolCardUsableResult isToolCardUsable(int gameHashCode, int playerHashCode, int toolCardIndex){
-        Game game = games.get(gameHashCode);
+        Game game = getGame(gameHashCode);
         if(game != null){
             return new IsToolCardUsableResult(game.isToolCardUsable(playerHashCode, toolCardIndex), game.getToolCardID(toolCardIndex));
         }
@@ -166,34 +168,42 @@ public class Service {
     }
 
     public UseToolCardResult useToolCard(int gameHashCode, int playerHashCode, ToolCardParameters toolCardParameters){
-        return games.get(gameHashCode).useToolCard(playerHashCode, toolCardParameters);
-    }
-
-    public int getToolCardID(int gameHashCode, int toolCardIndex){
-        return games.get(gameHashCode).getToolCardID(toolCardIndex);
+        return getGame(gameHashCode).useToolCard(playerHashCode, toolCardParameters);
     }
 
     public PlaceDiceResult specialDicePlacement(int gameHashCode, int playerHashCode, int cellIndex, Dice dice){
-        return games.get(gameHashCode).specialDicePlacement(playerHashCode, cellIndex, dice);
+        return getGame(gameHashCode).specialDicePlacement(playerHashCode, cellIndex, dice);
     }
 
     public ArrayList<Integer> getLegalPositions(int gameHashCode, int playerHashCode, Dice dice){
-        return games.get(gameHashCode).getLegalPositions(playerHashCode, dice);
+        return getGame(gameHashCode).getLegalPositions(playerHashCode, dice);
     }
 
     public void putDiceInDraftPool(int gameHashCode, Dice dice){
-        games.get(gameHashCode).putDiceInDraftPool(dice);
+        getGame(gameHashCode).putDiceInDraftPool(dice);
     }
 
     public ReconnectionResult reconnection(int playerHashCode, int gameHashCode, GameObserver gameObserver) {
-        Game game = games.get(gameHashCode);
+        Game game = getGame(gameHashCode);
         if (game == null) return new ReconnectionResult(false,
                 "Unable to reconnect: game does not exist.", null);
-        return games.get(gameHashCode).reconnection(playerHashCode, gameObserver);
+        return getGame(gameHashCode).reconnection(playerHashCode, gameObserver);
     }
 
     public void disableAFK(int gameHashCode, int playerHashCode){
-        games.get(gameHashCode).disableAFK(playerHashCode);
+        getGame(gameHashCode).disableAFK(playerHashCode);
+    }
+    private Game getGame(int gameHashCode){
+        Game game = games.get(gameHashCode);
+        if (game!= null) return game;
+        else {
+            try {
+                throw new IllegalArgumentException("Invalid Game Hash Code");
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
     public void deleteGame(int gameHashCode){

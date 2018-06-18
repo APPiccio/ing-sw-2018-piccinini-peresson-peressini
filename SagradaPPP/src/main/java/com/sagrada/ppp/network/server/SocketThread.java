@@ -18,7 +18,6 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     private boolean isStopped;
     private int gameHashCode;
     private int playerHashCode;
-    private String username;
 
 
 
@@ -92,7 +91,6 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         JoinGameResult joinGameResult = service.joinGame(joinGameRequest.username , this,this);
         this.playerHashCode = joinGameResult.getPlayerHashCode();
         this.gameHashCode = joinGameResult.getGameHashCode();
-        this.username = joinGameResult.getUsername();
         return new JoinGameResponse(joinGameResult);
     }
 

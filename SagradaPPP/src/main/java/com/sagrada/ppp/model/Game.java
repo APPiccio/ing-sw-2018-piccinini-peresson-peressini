@@ -32,7 +32,7 @@ public class Game implements Serializable{
     public Integer chosenPanelIndex;
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
-    private int turn;
+    private int turn = 1;
     private volatile boolean dicePlaced;
     private volatile boolean usedToolCard;
     private volatile boolean isSpecialTurn;
@@ -539,7 +539,6 @@ public class Game implements Serializable{
         HashMap<Integer, ArrayList<WindowPanel>> temp = new HashMap<>();
         ArrayList<Integer> notUsedPanel = new ArrayList<>();
         for(int i = 1; i <= WindowPanel.getNumberOfPanels(); i++ ){
-            System.out.println("unused panels" + i);
             notUsedPanel.add(i);
         }
         for(Player player : players){
@@ -632,7 +631,9 @@ public class Game implements Serializable{
 
     public boolean disconnect(int playerHashCode) {
         if(gameStatus.equals(GameStatus.INIT)){
-            leaveLobby(getPlayerByHashcode(playerHashCode).getUsername(),lobbyObservers.get(playerHashCode));
+            Player player = getPlayerByHashcode(playerHashCode);
+            if (player == null) return false;
+            leaveLobby(player.getUsername(),lobbyObservers.get(playerHashCode));
             return true;
         }else {
             Player player = getPlayerByHashcode(playerHashCode);
@@ -662,14 +663,15 @@ public class Game implements Serializable{
     }
 
     private void reorderPlayers() {
-
-        ArrayList<Player> h = new ArrayList<>();
-        players.add(players.get(0));
-        for(int i = 1; i < players.size() - 1; i++){
-            players.set(i-1, players.get(i));
-            h.add(players.get(i));
+        if(players.size() != 0) {
+            ArrayList<Player> h = new ArrayList<>();
+            players.add(players.get(0));
+            for (int i = 1; i < players.size() - 1; i++) {
+                players.set(i - 1, players.get(i));
+                h.add(players.get(i));
+            }
+            players.remove(players.size() - 2);
         }
-        players.remove(players.size()-2);
     }
 
     public void setTurn(int turn){
@@ -687,11 +689,15 @@ public class Game implements Serializable{
 
     public synchronized PlaceDiceResult placeDice(int playerHashCode, int diceIndex, int row, int col) {
         Player currentPlayer = getPlayerByHashcode(playerHashCode);
+        if (currentPlayer == null) return new PlaceDiceResult("Player not found!",false,null,draftPool);
         if (dicePlaced) return new PlaceDiceResult("Can't place two dice in the same turn!", false,currentPlayer.getPanel(), draftPool);
         if(players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult(
                 "Can't do game actions during others players turn", false,currentPlayer.getPanel(), draftPool);
         int index = (row * StaticValues.PATTERN_COL) + col;
-        boolean result = currentPlayer.getPanel().addDice(index,draftPool.get(diceIndex));
+        boolean result;
+        if(draftPool.size() != 0) {
+             result = currentPlayer.getPanel().addDice(index, draftPool.get(diceIndex));
+        }else result = false;
         System.out.println("place dice result = " + result);
         if(result) {
             dicePlaced = true;
@@ -724,7 +730,8 @@ public class Game implements Serializable{
     public void setEndTurn(int playerHashCode){
         if(players.get(getCurrentPlayerIndex()).hashCode() == playerHashCode){
             endTurn = true;
-            currentTimerTask.isValid = false;
+            if(currentTimerTask != null)
+                currentTimerTask.isValid = false;
         }
     }
 
@@ -745,7 +752,11 @@ public class Game implements Serializable{
     }
 
     public synchronized boolean isToolCardUsable(int playerHashCode, int toolCardIndex) {
-        ToolCard toolCard = toolCards.get(toolCardIndex);
+        ToolCard toolCard;
+        if (toolCards.size() != 0 && toolCardIndex < toolCards.size())
+            toolCard = toolCards.get(toolCardIndex);
+        else
+            return false;
         Player player = getPlayerByHashcode(playerHashCode);
         if (toolCard != null && player != null) {
             if (!players.get(getCurrentPlayerIndex()).equals(player)){
@@ -795,7 +806,10 @@ public class Game implements Serializable{
     }
 
     public int getToolCardID(int toolCardIndex){
-        return toolCards.get(toolCardIndex).getId();
+        if(toolCards.size() != 0)
+            return toolCards.get(toolCardIndex).getId();
+        else
+            return -1;
     }
 
     public synchronized UseToolCardResult useToolCard(int playerHashCode, ToolCardParameters toolCardParameters) {
@@ -908,6 +922,8 @@ public class Game implements Serializable{
                     case 10:
                         Dice dice = new Dice(draftPool.get(toolCardParameters.draftPoolDiceIndex));
                         System.out.println("Using toolCard10 with dice = " + dice);
+
+                        //TODO, remove this check
                         if (!toolCard10ParamsOk(dice)){
                             usedToolCard = false;
                             return new UseToolCardResult(false,toolCard.getId(),toolCard.getCost(), draftPool,roundTrack,players, null, null);
@@ -952,8 +968,11 @@ public class Game implements Serializable{
                         break;
                 }
             }
+            return new UseToolCardResult(false,toolCard.getId(),toolCard.getCost(), draftPool , roundTrack , players, null, null);
+        }else {
+            return new UseToolCardResult(false,0,0, draftPool , roundTrack , players, null, null);
         }
-        return new UseToolCardResult(false,toolCard.getId(),toolCard.getCost(), draftPool , roundTrack , players, null, null);
+
     }
     //todo move param check on toolcard
 
@@ -1068,10 +1087,15 @@ public class Game implements Serializable{
     }
 
     public PlaceDiceResult specialDicePlacement(int playerHashCode, int cellIndex, Dice dice){
+        boolean result;
         if (players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult("Somenthing went wrong!", false, null, null);
         Player player = getPlayerByHashcode(playerHashCode);
         WindowPanel panel = player.getPanel();
-        boolean result = panel.addDice(cellIndex, dice);
+        if (panel != null)
+            result = panel.addDice(cellIndex, dice);
+        else
+            result = false;
+
         if (result) {
             player.setPanel(panel);
             dicePlaced = true;
@@ -1080,7 +1104,11 @@ public class Game implements Serializable{
     }
 
     public ArrayList<Integer> getLegalPositions(int playerHashCode, Dice dice){
-        return getPlayerByHashcode(playerHashCode).getPanel().getLegalPosition(dice);
+        Player player = getPlayerByHashcode(playerHashCode);
+        if(player != null)
+            if(player.getPanel() != null)
+                return player.getPanel().getLegalPosition(dice);
+        return null;
     }
 
     public void putDiceInDraftPool(Dice dice){

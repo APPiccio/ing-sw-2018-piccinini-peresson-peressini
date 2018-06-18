@@ -15,7 +15,7 @@ public class LobbyTimerTest {
 
     @Before
     public void setUp() throws Exception {
-        game = new Game("CESARE_IL_SALUMIERE");
+        game = new Game("CESARE_IL_SALUMIERE",null);
         startTimer = System.currentTimeMillis();
         lobbyTimer = new LobbyTimer(startTimer, game);
         lobbyTimer.start();
