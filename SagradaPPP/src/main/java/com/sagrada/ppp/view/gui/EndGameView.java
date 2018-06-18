@@ -79,7 +79,7 @@ public class EndGameView extends UnicastRemoteObject {
     private void drawWindowPanels(ArrayList<PlayerScore> playersScore) {
         int i = 0;
         for (PlayerScore playerScore : playersScore) {
-            Image image = new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_" +
+            Image image = new Image(StaticValues.FILE_URI_PREFIX + "resources/graphics/PrivateCards/private_" +
                     playerScore.getPrivateColor().toString().toUpperCase() + ".png");
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(100);
@@ -107,7 +107,7 @@ public class EndGameView extends UnicastRemoteObject {
 
     private void drawPublicObjectiveCards(ArrayList<PublicObjectiveCard> publicObjectiveCards) {
         for (PublicObjectiveCard publicObjectiveCard : publicObjectiveCards) {
-            Image image = new Image(StaticValues.FILE_URI_PREFIX + "graphics/PublicCards/public_" +
+            Image image = new Image(StaticValues.FILE_URI_PREFIX + "resources/graphics/PublicCards/public_" +
                     publicObjectiveCard.getId() + ".png");
             ImageView imageView = new ImageView(image);
             imageView.setFitWidth(180);

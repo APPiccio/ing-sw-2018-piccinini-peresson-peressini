@@ -178,10 +178,9 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
         scene = new Scene(tabContainer, 1440, 900);
 
-        //URL url = this.getClass().getResource("SagradaStyleSheet.css");
         URL url = null;
         try {
-            url = new URL("file:src/main/resources/SagradaStyleSheet.css");
+            url = new URL(StaticValues.STYLE_SHEET_URL);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -430,7 +429,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             toolCardButton.setBackground(
                     new Background(
                             new BackgroundImage(
-                                    new Image(StaticValues.FILE_URI_PREFIX + "graphics/ToolCards/tool_"+toolCard.getId()+".png",150,204,true,true),
+                                    new Image(StaticValues.FILE_URI_PREFIX + "resources/graphics/ToolCards/tool_"+toolCard.getId()+".png",150,204,true,true),
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundPosition.CENTER,
@@ -461,7 +460,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             publicObjectiveButton.setBackground(
                     new Background(
                             new BackgroundImage(
-                                    new Image(StaticValues.FILE_URI_PREFIX + "graphics/PublicCards/public_"+publicObjectiveCard.getId()+".png",150,204,true,true),
+                                    new Image(StaticValues.FILE_URI_PREFIX + "resources/graphics/PublicCards/public_"+publicObjectiveCard.getId()+".png",150,204,true,true),
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundPosition.CENTER,

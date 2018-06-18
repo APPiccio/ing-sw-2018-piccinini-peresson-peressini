@@ -62,7 +62,7 @@ public class RoundTrackPane extends VBox {
             roundIndicator.setBackground(
                     new Background(
                             new BackgroundImage(
-                                    new Image(StaticValues.FILE_URI_PREFIX+"graphics/roundTrack_"+i+".png",width,height,true,true),
+                                    new Image(StaticValues.FILE_URI_PREFIX+"resources/graphics/roundTrack_"+i+".png",width,height,true,true),
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundPosition.CENTER,

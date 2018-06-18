@@ -21,7 +21,7 @@ public class WindowPanelParser {
 
     public static ArrayList<WindowPanel> getPanelsFromFile() throws IOException {
         ArrayList<WindowPanel> panels = new ArrayList<>();
-        File folder = new File("templates");
+        File folder = new File(StaticValues.TEMPLATES_URL);
         File[] files = folder.listFiles();
         if(files == null){
             throw new NullPointerException("No files inside the cards folder");
@@ -30,7 +30,7 @@ public class WindowPanelParser {
         fileList = fileList.stream().filter(x -> x.getName().matches("(panel)(\\d+)(.json)")).collect(Collectors.toList());
 
         for (int i = 1; i <= fileList.size();i++) {
-            File fileEntry = new File("templates/panel"+i+".json");
+            File fileEntry = new File(StaticValues.TEMPLATES_URL + "panel"+i+".json");
             if(!fileEntry.exists()){
                 throw new FileNotFoundException("Error during pattern cards loading, check file naming!");
             }
