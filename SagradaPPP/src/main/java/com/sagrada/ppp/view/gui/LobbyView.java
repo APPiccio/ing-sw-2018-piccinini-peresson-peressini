@@ -18,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -40,7 +41,13 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         scrollPane.getStyleClass().remove("scroll-pane");
         TabPane tabPane = new TabPane();
         VBox vBoxPlayersTab = new VBox();
-        URL url = this.getClass().getResource("SagradaStyleSheet.css");
+        //URL url = this.getClass().getResource("SagradaStyleSheet.css");
+        URL url = null;
+        try {
+            url = new URL("file:src/main/resources/SagradaStyleSheet.css");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         if (url == null) {
             System.out.println("Resource not found. Aborting.");
             System.exit(-1);

@@ -31,21 +31,11 @@ public class Service {
     }
 
     /**
-     * @param multiplayer bool to indicate game mode
      * @param username username of the player
      * @return the hashcode of the game right after the creation
      */
-    public int createGame(boolean multiplayer, String username, LobbyObserver lobbyObserver, int playerHashCode){
-        Game game;
-        if(multiplayer) {
-            game = new Game(username);
-        }
-        else{
-            //TO DO space intentionally left for single player implementation
-
-            //line to be removed in case of singleplayer implementation
-            game = new Game(username);
-        }
+    public int createGame(String username, LobbyObserver lobbyObserver, int playerHashCode){
+        Game game = new Game(username, this);
         games.put(game.hashCode(), game);
         game.attachLobbyObserver(lobbyObserver, playerHashCode);
         return game.hashCode();
@@ -99,7 +89,7 @@ public class Service {
         }
         if(joinGameResult.getPlayerHashCode() == -1){
             //no joinable game, let's create a new one
-            joinGameResult.setGameHashCode(createGame(true, username, lobbyObserver, joinGameResult.getPlayerHashCode()));
+            joinGameResult.setGameHashCode(createGame(username, lobbyObserver, joinGameResult.getPlayerHashCode()));
             games.get(joinGameResult.getGameHashCode()).attachGameObserver(gameObserver, joinGameResult.getPlayerHashCode());
             joinGameResult.setPlayerHashCode(games.get(joinGameResult.getGameHashCode()).getPlayerHashCode(username));
             joinGameResult.setUsername(games.get(joinGameResult.getGameHashCode()).getPlayerUsername(joinGameResult.getPlayerHashCode()));
@@ -204,6 +194,11 @@ public class Service {
 
     public void disableAFK(int gameHashCode, int playerHashCode){
         games.get(gameHashCode).disableAFK(playerHashCode);
+    }
+
+    public void deleteGame(int gameHashCode){
+        System.out.println("CLOSING GAME --> " + gameHashCode);
+        games.remove(gameHashCode);
     }
 
 }

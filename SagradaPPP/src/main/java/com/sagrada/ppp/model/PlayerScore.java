@@ -118,6 +118,7 @@ public class PlayerScore implements Serializable {
     }
 
     public int getTotalPoints() {
+        calculateTotalPoints();
         return totalPoints;
     }
 

@@ -21,6 +21,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 
@@ -37,11 +38,18 @@ public class StartGameView implements EventHandler<MouseEvent> {
         this.controller = controller;
         BorderPane borderPane = new BorderPane();
         Scene scene = new Scene(borderPane, 700*1436/2156, 700);
-        URL url = this.getClass().getResource("SagradaStyleSheet.css");
+        //URL url = this.getClass().getResource("/main/resources/SagradaStyleSheet.css");
+        URL url = null;
+        try {
+            url = new URL("file:src/main/resources/SagradaStyleSheet.css");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         if (url == null) {
             System.out.println("Resource not found. Aborting.");
             System.exit(-1);
         }
+
         String css = url.toExternalForm();
         scene.getStylesheets().add(css);
 

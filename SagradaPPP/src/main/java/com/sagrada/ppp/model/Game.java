@@ -2,6 +2,7 @@ package com.sagrada.ppp.model;
 
 import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
+import com.sagrada.ppp.network.server.Service;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.util.Pair;
 
@@ -39,13 +40,15 @@ public class Game implements Serializable{
     private volatile boolean turnTimeout;
     private MyTimerTask currentTimerTask;
     private volatile boolean gameEnded;
+    private Service service;
 
     /*
     TODO: Add a method that given the username string returns the desired players
     TODO: Add overloading methods that take a Player as a parameter instead of a String
     */
 
-    public Game(String username) {
+    public Game(String username, Service service) {
+        service = service;
         diceBag = new DiceBag();
         players = new ArrayList<>();
         draftPool = new ArrayList<>();
@@ -113,6 +116,7 @@ public class Game implements Serializable{
         System.out.println("Game is starting.. notify users of that");
         notifyGameStart();
         gameHandler();
+        service.deleteGame(this.hashCode());
     }
 
     /**

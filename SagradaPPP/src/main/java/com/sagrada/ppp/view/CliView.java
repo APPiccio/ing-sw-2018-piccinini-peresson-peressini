@@ -179,16 +179,6 @@ public class CliView extends UnicastRemoteObject
         inLobby();
     }
 
-    public void showCommandList(){
-        System.out.println("COMMANDS:");
-        System.out.println("\t" + COMMAND_QUIT + "\t" + STRING_COMMAND_QUIT);
-        System.out.println("\t" + COMMAND_CREATE_GAME + "\t" + STRING_COMMAND_CREATE_GAME);
-        System.out.println("\t" + COMMAND_SHOW_GAMES + "\t" + STRING_COMMAND_SHOW_GAMES);
-        System.out.println("\t" + COMMAND_JOIN_GAME + "\t" + STRING_COMMAND_JOIN_GAME);
-        System.out.println("\t" + COMMAND_LEAVE_GAME + "\t" + STRING_COMMAND_LEAVE_GAME);
-        System.out.println("\t" + COMMAND_HELP + "\t" + STRING_COMMAND_HELP);
-    }
-
     private void showLobbyCommandList(){
         System.out.println("\t" + StaticValues.COMMAND_QUIT + "\t" + StaticValues.STRING_COMMAND_QUIT);
         System.out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
@@ -200,6 +190,10 @@ public class CliView extends UnicastRemoteObject
         System.out.println("\t" + COMMAND_END_TURN + "\t" + StaticValues.STRING_COMMAND_END_TURN);
         System.out.println("\t" + StaticValues.COMMAND_USE_TOOLCARD + "\t" + StaticValues.STRING_COMMAND_USE_TOOLCARD);
         System.out.println("\t" + StaticValues.COMMAND_SHOW + "\t" + StaticValues.STRING_COMMAND_SHOW);
+        System.out.println("\t" + StaticValues.COMMAND_DISABLE_AFK + "\t" + StaticValues.STRING_COMMAND_DISABLE_AFK);
+        System.out.println("\t" + StaticValues.COMMAND_CONNECTION + "\t" + StaticValues.STRING_COMMAND_CONNECTION);
+        System.out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
+
     }
 
     //TODO add show list of active players when someone join the lobby
@@ -210,8 +204,8 @@ public class CliView extends UnicastRemoteObject
         printPlayersUsername();
         showLobbyCommandList();
         String command = scanner.nextLine();
-        while (!command.equals(COMMAND_QUIT) && !(command.equals("0") || command.equals("1") ||
-                command.equals("2") || command.equals("3")) && !isGameStarted){
+        while (!command.equals(COMMAND_QUIT) && (!(command.equals("0") || command.equals("1") ||
+                command.equals("2") || command.equals("3")) || waitingForPanels) && !isGameStarted){
             switch(command){
                 case StaticValues.COMMAND_LEAVE_GAME:
                     controller.leaveLobby(gameHashCode , username, this);
@@ -260,20 +254,15 @@ public class CliView extends UnicastRemoteObject
     public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
         playersScore.sort(Comparator.comparingInt(PlayerScore::getTotalPoints));
         Collections.reverse(playersScore);
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("USERNAME\t\tTOTAL\t\tTOKENS\t\tEMPTY CELLS\t\tPRIVATE\t\tPUB1\t\tPUB2\t\tPUB3\n");
-        stringBuilder.append("--------------------------------------------------------------------------------------------------\n");
-        for (PlayerScore playerScore : playersScore) {
-            stringBuilder.append(playerScore.getUsername()).append("\t\t");
-            stringBuilder.append(playerScore.getTotalPoints()).append("\t\t");
-            stringBuilder.append(playerScore.getFavorTokenPoints()).append("\t\t");
-            stringBuilder.append("-").append(playerScore.getEmptyCellsPoints()).append("\t\t");
-            stringBuilder.append(playerScore.getPrivateObjectiveCardPoints()).append("\t\t");
-            stringBuilder.append(playerScore.getPublicObjectiveCard1Points()).append("\t\t");
-            stringBuilder.append(playerScore.getPublicObjectiveCard2Points()).append("\t\t");
-            stringBuilder.append(playerScore.getPublicObjectiveCard3Points()).append("\n\n");
+        String format = "| %-15s | %-5d | %-5d | %-5d | %-5d | %-5d | %-5d | %-5d |%n";
+        System.out.format("+-----------------+-------+-------+-------+-------+-------+-------+-------+%n");
+        System.out.format("| USERNAME        | TOT   | TOKEN | EMPTY | PRIV  | PUB1  | PUB2  | PUB3  |%n");
+        System.out.format("+-----------------+-------+-------+-------+-------+-------+-------+-------+%n");
+        for(PlayerScore score : playersScore){
+            System.out.format(format, score.getUsername(), score.getTotalPoints(), score.getFavorTokenPoints(), score.getEmptyCellsPoints(), score.getPrivateObjectiveCardPoints(), score.getPublicObjectiveCard1Points(), score.getPublicObjectiveCard2Points(), score.getPublicObjectiveCard3Points());
+            System.out.format("+-----------------+-------+-------+-------+-------+-------+-------+-------+%n");
+
         }
-        System.out.println(stringBuilder.toString());
         System.exit(0);
     }
 
@@ -316,9 +305,7 @@ public class CliView extends UnicastRemoteObject
         System.out.println("--> You have been suspended due to inactivity. Turns will be skipped until your signal");
     }
 
-    //do stuff in game
     private void inGame(int panelIndex, String cmd) throws RemoteException {
-        //do something
         String command;
         if(cmd == null) {
             command = scanner.nextLine();
@@ -334,7 +321,6 @@ public class CliView extends UnicastRemoteObject
         command = param[0];
         while (!command.equals(StaticValues.COMMAND_QUIT)){
             switch (command) {
-
                 case StaticValues.COMMAND_PLACE_DICE:
                     if(currentPlayer.getHashCode() != hashCode){
                         System.out.println(PERMISSION_DENIED);
@@ -642,15 +628,21 @@ public class CliView extends UnicastRemoteObject
                     break;
 
                 case StaticValues.COMMAND_END_TURN:
-                    if(!currentPlayer.getUsername().equals(username)){
+                    if(!(currentPlayer.getHashCode() == hashCode)){
                         System.out.println(PERMISSION_DENIED);
                         break;
                     }
                     controller.endTurn(gameHashCode, hashCode);
                     break;
                 case StaticValues.COMMAND_DISABLE_AFK:
-                    controller.disableAFK(gameHashCode, hashCode);
-                    isAFK = false;
+                    if(isAFK) {
+                        controller.disableAFK(gameHashCode, hashCode);
+                        isAFK = false;
+                        System.out.println("You are now back online!");
+                    }
+                    else {
+                        System.out.println("Nothing to do, you're not AFK!");
+                    }
                     break;
                 case StaticValues.COMMAND_SHOW:
                     showGameSecondaryStuff();
@@ -688,7 +680,7 @@ public class CliView extends UnicastRemoteObject
 
     private Player getPlayerByHashCode(int playerHashCode) {
         for (Player player : players) {
-            if (player.getHashCode() == hashCode) return player;
+            if (player.getHashCode() == playerHashCode) return player;
         }
         return null;
 
@@ -758,12 +750,6 @@ public class CliView extends UnicastRemoteObject
             System.out.println("PLAYER :" + username);
             System.out.println(player.getPanel() + "\n");
         }
-
-        //line to be deleted if everything works
-/*        for(String username : gameStartMessage.chosenPanels.keySet()){
-            System.out.println("PLAYER :" + username);
-            System.out.println(gameStartMessage.chosenPanels.get(username).toString() + "\n");
-        }*/
         System.out.println("----------------------------------------");
         System.out.println("Draft pool: ");
         for(int i = 0; i < draftPool.size(); i++){
@@ -791,7 +777,8 @@ public class CliView extends UnicastRemoteObject
 
     @Override
     public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
-        System.out.println(dicePlacedMessage.username + "placed a dice (notification)");
+        System.out.println(dicePlacedMessage.username + " place a dice. Updating game status:");
+        showGameStatus();
     }
 
     @Override

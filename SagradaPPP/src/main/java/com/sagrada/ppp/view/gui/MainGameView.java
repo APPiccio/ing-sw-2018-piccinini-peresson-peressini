@@ -24,8 +24,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -178,7 +178,13 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
         scene = new Scene(tabContainer, 1440, 900);
 
-        URL url = this.getClass().getResource("SagradaStyleSheet.css");
+        //URL url = this.getClass().getResource("SagradaStyleSheet.css");
+        URL url = null;
+        try {
+            url = new URL("file:src/main/resources/SagradaStyleSheet.css");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         if (url == null) {
             System.out.println("Resource not found. Aborting.");
             System.exit(-1);
