@@ -1,15 +1,18 @@
 package com.sagrada.ppp.network.commands;
 
+import com.sagrada.ppp.model.GameStartMessage;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class GameStartNotificationTest {
 
-    private GameStartNotification gameStartNotification;
+    private Response gameStartNotification;
     @Test
     public void handle() {
-        gameStartNotification = new GameStartNotification(null);
+        GameStartMessage gameStartMessage = new GameStartMessage(null,null,null,null,null,null);
+        gameStartNotification = new GameStartNotification(gameStartMessage);
+
         ResponseHandler responseHandler = new ResponseHandler() {
             @Override
             public void handle(Response response) {
@@ -43,6 +46,7 @@ public class GameStartNotificationTest {
 
             @Override
             public void handle(GameStartNotification response) {
+                assertEquals(gameStartMessage,response.gameStartMessage);
                 assertEquals(gameStartNotification,response);
 
             }
@@ -117,5 +121,6 @@ public class GameStartNotificationTest {
 
             }
         };
+        gameStartNotification.handle(responseHandler);
     }
 }

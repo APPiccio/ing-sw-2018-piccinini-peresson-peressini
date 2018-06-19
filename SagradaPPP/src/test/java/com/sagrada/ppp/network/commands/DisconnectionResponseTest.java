@@ -5,10 +5,10 @@ import static org.junit.Assert.*;
 
 public class DisconnectionResponseTest {
 
-    private DisconnectionResponse disconnectionResponse;
+    private Response disconnectionResponse;
     @Test
     public void handle() {
-        disconnectionResponse = new DisconnectionResponse(false);
+
       ResponseHandler responseHandler = new ResponseHandler() {
           @Override
           public void handle(Response response) {
@@ -48,6 +48,7 @@ public class DisconnectionResponseTest {
           @Override
           public void handle(DisconnectionResponse response) {
               assertEquals(disconnectionResponse,response);
+              assertFalse(response.disconnectionResult);
 
           }
 
@@ -116,5 +117,7 @@ public class DisconnectionResponseTest {
 
           }
       };
+      disconnectionResponse = new DisconnectionResponse(false);
+      disconnectionResponse.handle(responseHandler);
     }
 }

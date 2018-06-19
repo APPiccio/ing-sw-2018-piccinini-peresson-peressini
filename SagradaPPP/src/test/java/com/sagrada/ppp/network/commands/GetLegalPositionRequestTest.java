@@ -1,15 +1,17 @@
 package com.sagrada.ppp.network.commands;
 
+import com.sagrada.ppp.model.Dice;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class GetLegalPositionRequestTest {
-    private GetLegalPositionRequest getLegalPositionRequest;
+    private Request getLegalPositionRequest;
 
     @Test
     public void handle() {
-        getLegalPositionRequest = new GetLegalPositionRequest(123,123,null);
+        Dice dice = new Dice();
+        getLegalPositionRequest = new GetLegalPositionRequest(123,456,dice);
         RequestHandler requestHandler = new RequestHandler() {
             @Override
             public Response handle(Request request) {
@@ -63,6 +65,9 @@ public class GetLegalPositionRequestTest {
 
             @Override
             public Response handle(GetLegalPositionRequest request) {
+                assertEquals(123,request.gameHashCode);
+                assertEquals(456,request.playerHashCode);
+                assertEquals(dice,request.dice);
                 assertEquals(getLegalPositionRequest,request);
                 return null;
             }
@@ -87,5 +92,6 @@ public class GetLegalPositionRequestTest {
                 return null;
             }
         };
+        getLegalPositionRequest.handle(requestHandler);
     }
 }

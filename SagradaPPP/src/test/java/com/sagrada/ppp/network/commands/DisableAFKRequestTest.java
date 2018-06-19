@@ -6,10 +6,10 @@ import static org.junit.Assert.*;
 
 public class DisableAFKRequestTest {
 
-    private DisableAFKRequest test;
+    private Request test;
     @Test
     public void handle() {
-        test = new DisableAFKRequest(123,123);
+        test = new DisableAFKRequest(123,456);
         RequestHandler requestHandler = new RequestHandler() {
             @Override
             public Response handle(Request request) {
@@ -83,9 +83,12 @@ public class DisableAFKRequestTest {
 
             @Override
             public Response handle(DisableAFKRequest request) {
+                assertEquals(123,request.gameHashCode);
+                assertEquals(456,request.playerHashCode);
                 assertEquals(test,request);
                 return null;
             }
         };
+        test.handle(requestHandler);
     }
 }

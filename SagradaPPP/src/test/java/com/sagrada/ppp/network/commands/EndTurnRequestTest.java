@@ -6,10 +6,10 @@ import static org.junit.Assert.*;
 
 public class EndTurnRequestTest {
 
-    private EndTurnRequest endTurnRequest;
+    private Request endTurnRequest;
     @Test
     public void handle() {
-        endTurnRequest = new EndTurnRequest(123,123);
+        endTurnRequest = new EndTurnRequest(123,456);
         RequestHandler requestHandler= new RequestHandler() {
             @Override
             public Response handle(Request request) {
@@ -43,6 +43,8 @@ public class EndTurnRequestTest {
 
             @Override
             public Response handle(EndTurnRequest request) {
+                assertEquals(123,request.gameHashCode);
+                assertEquals(456,request.playerHashCode);
                 assertEquals(endTurnRequest,request);
                 return null;
             }
@@ -87,5 +89,6 @@ public class EndTurnRequestTest {
                 return null;
             }
         };
+        endTurnRequest.handle(requestHandler);
     }
 }

@@ -5,11 +5,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class DisconnectionRequestTest {
-    private DisconnectionRequest disconnectionRequest;
+    private Request disconnectionRequest;
 
     @Test
     public void handle() {
-        disconnectionRequest = new DisconnectionRequest(123,123);
+        disconnectionRequest = new DisconnectionRequest(123,456);
         RequestHandler requestHandler = new RequestHandler() {
             @Override
             public Response handle(Request request) {
@@ -33,6 +33,8 @@ public class DisconnectionRequestTest {
 
             @Override
             public Response handle(DisconnectionRequest request) {
+                assertEquals(123,request.gameHashCode);
+                assertEquals(456,request.playerHashCode);
                 assertEquals(disconnectionRequest,request);
                 return null;
             }
@@ -87,5 +89,6 @@ public class DisconnectionRequestTest {
                 return null;
             }
         };
+        disconnectionRequest.handle(requestHandler);
     }
 }

@@ -6,11 +6,11 @@ import static org.junit.Assert.*;
 
 public class DetachGameObserverRequestTest {
 
-    DetachGameObserverRequest disconnectionRequest;
+    private Request disconnectionRequest;
     @Test
     public void handle() {
-        disconnectionRequest = new DetachGameObserverRequest(123,456);
-        new RequestHandler() {
+
+        RequestHandler requestHandler = new RequestHandler() {
             @Override
             public Response handle(Request request) {
                 return null;
@@ -33,7 +33,6 @@ public class DetachGameObserverRequestTest {
 
             @Override
             public Response handle(DisconnectionRequest request) {
-
                 return null;
             }
 
@@ -49,6 +48,8 @@ public class DetachGameObserverRequestTest {
 
             @Override
             public Response handle(DetachGameObserverRequest request) {
+                assertEquals(123,request.gameHashCode);
+                assertEquals(456,request.playerHashCode);
                 assertEquals(disconnectionRequest,request);
                 return null;
             }
@@ -88,5 +89,7 @@ public class DetachGameObserverRequestTest {
                 return null;
             }
         };
+        disconnectionRequest = new DetachGameObserverRequest(123,456);
+        disconnectionRequest.handle(requestHandler);
     }
 }

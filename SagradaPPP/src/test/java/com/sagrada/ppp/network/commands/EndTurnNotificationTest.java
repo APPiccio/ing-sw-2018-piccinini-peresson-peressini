@@ -1,14 +1,16 @@
 package com.sagrada.ppp.network.commands;
 
+import com.sagrada.ppp.model.EndTurnMessage;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class EndTurnNotificationTest {
 
-    private EndTurnNotification endTurnNotification;
+    private Response endTurnNotification;
     @Test
     public void handle() {
-        endTurnNotification = new EndTurnNotification(null);
+        EndTurnMessage endTurnMessage = new EndTurnMessage(null,null,null,1,null,null);
+        endTurnNotification = new EndTurnNotification(endTurnMessage);
         ResponseHandler responseHandler = new ResponseHandler() {
             @Override
             public void handle(Response response) {
@@ -62,6 +64,7 @@ public class EndTurnNotificationTest {
 
             @Override
             public void handle(EndTurnNotification response) {
+                assertEquals(endTurnMessage,response.endTurnMessage);
                 assertEquals(endTurnNotification,response);
             }
 
@@ -115,5 +118,6 @@ public class EndTurnNotificationTest {
 
             }
         };
+        endTurnNotification.handle(responseHandler);
     }
 }

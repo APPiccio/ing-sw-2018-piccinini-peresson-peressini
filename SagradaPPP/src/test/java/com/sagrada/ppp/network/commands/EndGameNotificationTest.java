@@ -1,15 +1,22 @@
 package com.sagrada.ppp.network.commands;
 
+import com.sagrada.ppp.model.Color;
+import com.sagrada.ppp.model.PlayerScore;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
 public class EndGameNotificationTest {
 
-    private EndGameNotification endGameNotification;
+    private Response endGameNotification;
     @Test
     public void handle() {
-        endGameNotification = new EndGameNotification(null);
+        ArrayList<PlayerScore> playerScores = new ArrayList<PlayerScore>(){{
+            add(new PlayerScore("1",1,Color.GREEN,null,1,
+                    1,1,1,1,1));
+        }};
         ResponseHandler responseHandler = new ResponseHandler() {
             @Override
             public void handle(Response response) {
@@ -68,6 +75,8 @@ public class EndGameNotificationTest {
 
             @Override
             public void handle(EndGameNotification response) {
+
+                assertEquals(playerScores,response.playersScore);
                 assertEquals(endGameNotification, response);
             }
 
@@ -116,5 +125,7 @@ public class EndGameNotificationTest {
 
             }
         };
+        endGameNotification = new EndGameNotification(playerScores);
+        endGameNotification.handle(responseHandler);
     }
 }
