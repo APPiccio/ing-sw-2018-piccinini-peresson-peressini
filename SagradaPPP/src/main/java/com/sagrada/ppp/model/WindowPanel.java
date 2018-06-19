@@ -340,7 +340,7 @@ public class WindowPanel implements Serializable {
     /**
      * @return number of empty cells in this panel
      */
-    int getEmptyCells() {
+    public int getEmptyCells() {
         return (int) cells.stream().filter(x -> !x.hasDiceOn()).count();
     }
 

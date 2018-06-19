@@ -10,6 +10,9 @@ public class CommandToolCard6 implements CommandToolCard {
         this.dice = dice;
     }
 
+    /**
+     * This method re-roll this.dice
+     */
     @Override
     public void useCard() {
         dice.throwDice();

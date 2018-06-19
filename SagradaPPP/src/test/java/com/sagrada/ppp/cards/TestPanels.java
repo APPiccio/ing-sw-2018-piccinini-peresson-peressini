@@ -919,7 +919,7 @@ public class TestPanels {
     }
 
     /**
-     * @return useful panel for toolCard number 2 & 3
+     * @return useful panel for toolCard number 2, 3, 8, 9
      */
     public static WindowPanel toolCardPanel() {
         WindowPanel panel = new WindowPanel(10, StaticValues.FRONT_SIDE);

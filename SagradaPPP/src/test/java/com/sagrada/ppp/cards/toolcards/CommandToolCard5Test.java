@@ -40,7 +40,7 @@ public class CommandToolCard5Test {
         }
 
         //Getting the two dices that will be swapped
-        int  draftPoolDiceIndex = new Random().nextInt(draftPool.size());
+        int draftPoolDiceIndex = new Random().nextInt(draftPool.size());
         Dice draftPoolDice = draftPool.get(draftPoolDiceIndex);
         int round = new Random().nextInt(7) + 1;
         int diceRoundTrackIndex = new Random().nextInt(roundTrack.getDicesOnRound(round).size());

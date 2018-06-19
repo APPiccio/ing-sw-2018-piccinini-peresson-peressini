@@ -14,6 +14,10 @@ public class CommandToolCard12 implements CommandToolCard {
         this.windowPanel = windowPanel;
     }
 
+    /**
+     * This method moves up to two dices from their oldDiceIndex position to their newDiceIndex position
+     */
+   @Override
     public void useCard() {
         for(Integer pos : positions.keySet())
             windowPanel.addDice(positions.get(pos), windowPanel.removeDice(pos));
