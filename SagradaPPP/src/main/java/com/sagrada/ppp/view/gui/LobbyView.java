@@ -41,10 +41,9 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         scrollPane.getStyleClass().remove("scroll-pane");
         TabPane tabPane = new TabPane();
         VBox vBoxPlayersTab = new VBox();
-        //URL url = this.getClass().getResource("SagradaStyleSheet.css");
         URL url = null;
         try {
-            url = new URL("file:src/main/resources/SagradaStyleSheet.css");
+            url = new URL(StaticValues.STYLE_SHEET_URL);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
+import com.sagrada.ppp.utils.StaticValues;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -57,10 +58,9 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
         this.controller = controller;
         this.stage = stage;
         this.joinGameResult = new JoinGameResult(joinGameResult);
-        //URL url = this.getClass().getResource("SagradaStyleSheet.css");
         URL url = null;
         try {
-            url = new URL("file:src/main/resources/SagradaStyleSheet.css");
+            url = new URL(StaticValues.STYLE_SHEET_URL);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -122,7 +122,7 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
         alert.setTitle("Private color");
         alert.setHeaderText(null);
         alert.setContentText("This is your Private Objective Card!\nChose your panel carefully!");
-        Image image = new Image("file:graphics/PrivateCards/private_" + privateColor + ".png");
+        Image image = new Image("file:resources/graphics/PrivateCards/private_" + privateColor + ".png");
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(230);
         imageView.setFitHeight(313);

@@ -113,6 +113,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
     @Override
     public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
+        if(isLastPlayer) gameEnded = true;
 
         Platform.runLater(()->{
         if (playerAFK.getHashCode() == joinGameResult.getPlayerHashCode()) {
@@ -120,8 +121,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             Alert alert = new Alert(Alert.AlertType.NONE);
             alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
             if(isLastPlayer){
-                gameEnded = true;
-                alert.setHeaderText("You Loose");
+                alert.setHeaderText(null);
                 alert.setContentText("You went afk, leaving only one player!\nPress OK to close the game!");
                 alert.setTitle("AFK status");
                 alert.showAndWait();
@@ -133,16 +133,23 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 System.exit(0);
 
             }else {
-                alert.setHeaderText("You are AFK");
+                alert.setHeaderText(null);
                 alert.setContentText("Press OK to resume the game!");
                 alert.setTitle("AFK status");
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK) {
-                    try {
-                        controller.disableAFK(joinGameResult.getGameHashCode(), joinGameResult.getPlayerHashCode());
-                        afk = false;
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
+
+                    if (!gameEnded) {
+                        try {
+                            controller.disableAFK(joinGameResult.getGameHashCode(), joinGameResult.getPlayerHashCode());
+                            afk = false;
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        alert.setContentText("While you were afk, leaving only one player.\n YOU LOSE, press ok to close the game");
+                        alert.showAndWait();
+                        System.exit(0);
                     }
                 }
             }
@@ -178,10 +185,9 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
         scene = new Scene(tabContainer, 1440, 900);
 
-        //URL url = this.getClass().getResource("SagradaStyleSheet.css");
         URL url = null;
         try {
-            url = new URL("file:src/main/resources/SagradaStyleSheet.css");
+            url = new URL(StaticValues.STYLE_SHEET_URL);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -430,7 +436,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             toolCardButton.setBackground(
                     new Background(
                             new BackgroundImage(
-                                    new Image(StaticValues.FILE_URI_PREFIX + "graphics/ToolCards/tool_"+toolCard.getId()+".png",150,204,true,true),
+                                    new Image(StaticValues.FILE_URI_PREFIX + "resources/graphics/ToolCards/tool_"+toolCard.getId()+".png",150,204,true,true),
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundPosition.CENTER,
@@ -461,7 +467,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             publicObjectiveButton.setBackground(
                     new Background(
                             new BackgroundImage(
-                                    new Image(StaticValues.FILE_URI_PREFIX + "graphics/PublicCards/public_"+publicObjectiveCard.getId()+".png",150,204,true,true),
+                                    new Image(StaticValues.FILE_URI_PREFIX + "resources/graphics/PublicCards/public_"+publicObjectiveCard.getId()+".png",150,204,true,true),
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundPosition.CENTER,
@@ -774,9 +780,9 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
     @Override
     public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+        gameEnded = true;
         Platform.runLater(() -> {
             try {
-                gameEnded = true;
                 PlayerTokenSerializer.deleteToken();
                 new EndGameView(playersScore, publicObjectiveCards, controller, stage);
             } catch (RemoteException e) {

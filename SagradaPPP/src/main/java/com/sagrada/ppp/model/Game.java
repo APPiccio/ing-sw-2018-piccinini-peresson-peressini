@@ -447,7 +447,7 @@ public class Game implements Serializable{
         return -1;
     }
 
-    private void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
+    private synchronized void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
         pingAllGameObservers();
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {

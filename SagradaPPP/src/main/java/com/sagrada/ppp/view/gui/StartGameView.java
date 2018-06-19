@@ -5,6 +5,7 @@ import com.sagrada.ppp.model.JoinGameResult;
 import com.sagrada.ppp.model.Player;
 import com.sagrada.ppp.model.ReconnectionResult;
 import com.sagrada.ppp.utils.PlayerTokenSerializer;
+import com.sagrada.ppp.utils.StaticValues;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.EventHandler;
@@ -38,10 +39,9 @@ public class StartGameView implements EventHandler<MouseEvent> {
         this.controller = controller;
         BorderPane borderPane = new BorderPane();
         Scene scene = new Scene(borderPane, 700*1436/2156, 700);
-        //URL url = this.getClass().getResource("/main/resources/SagradaStyleSheet.css");
         URL url = null;
         try {
-            url = new URL("file:src/main/resources/SagradaStyleSheet.css");
+            url = new URL(StaticValues.STYLE_SHEET_URL);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public class StartGameView implements EventHandler<MouseEvent> {
         borderPane.setBackground(
                 new Background(
                         new BackgroundImage(
-                                new Image("file:graphics/splash.png"),
+                                new Image("file:resources/graphics/splash.png"),
                                 BackgroundRepeat.NO_REPEAT,
                                 BackgroundRepeat.NO_REPEAT,
                                 BackgroundPosition.CENTER,
@@ -99,7 +99,7 @@ public class StartGameView implements EventHandler<MouseEvent> {
         stage.setTitle("Welcome to Sagrada");
         stage.setMinHeight(300);
         stage.setMinWidth(300*1400/2500);
-        stage.getIcons().add(new Image("file:graphics/icon.png"));
+        stage.getIcons().add(new Image("file:resources/graphics/icon.png"));
         stage.setResizable(false);
         stage.centerOnScreen();
         stage.show();

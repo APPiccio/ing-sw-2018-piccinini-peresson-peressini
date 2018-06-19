@@ -26,6 +26,8 @@ public class StaticValues {
     public static long LOBBY_TIMER = 30000;
 
     public static final String TOKEN_URL = "utils/token";
+    public static final String STYLE_SHEET_URL = "file:resources/SagradaStyleSheet.css";
+    public static final String TEMPLATES_URL = "resources/templates/";
 
     public static final int COST_USED_TOOL_CARD = 2;
     public static final int COST_UNUSED_TOOL_CARD = 1;
@@ -175,18 +177,18 @@ public class StaticValues {
 
     //AssetUrl
     public static final String FILE_URI_PREFIX = "file:";
-    public static final String BLANK_CELL_ASSET = "graphics/blank.png";
-    public static final String RED_CELL_ASSET = "graphics/red.png";
-    public static final String BLUE_CELL_ASSET = "graphics/blue.png";
-    public static final String YELLOW_CELL_ASSET = "graphics/yellow.png";
-    public static final String GREEN_CELL_ASSET = "graphics/green.png";
-    public static final String PURPLE_CELL_ASSET = "graphics/purple.png";
-    public static final String RESTRICTION_CELL_ASSET = "graphics/cell_"; //you need to add the index of the restriction
-    public static final String YELLOW_DICE_ASSET = "graphics/yellowDice_";
-    public static final String BLUE_DICE_ASSET = "graphics/blueDice_";
-    public static final String RED_DICE_ASSET = "graphics/redDice_";
-    public static final String GREEN_DICE_ASSET = "graphics/greenDice_";
-    public static final String PURPLE_DICE_ASSET = "graphics/purpleDice_";
+    public static final String BLANK_CELL_ASSET = "resources/graphics/blank.png";
+    public static final String RED_CELL_ASSET = "resources/graphics/red.png";
+    public static final String BLUE_CELL_ASSET = "resources/graphics/blue.png";
+    public static final String YELLOW_CELL_ASSET = "resources/graphics/yellow.png";
+    public static final String GREEN_CELL_ASSET = "resources/graphics/green.png";
+    public static final String PURPLE_CELL_ASSET = "resources/graphics/purple.png";
+    public static final String RESTRICTION_CELL_ASSET = "resources/graphics/cell_"; //you need to add the index of the restriction
+    public static final String YELLOW_DICE_ASSET = "resources/graphics/yellowDice_";
+    public static final String BLUE_DICE_ASSET = "resources/graphics/blueDice_";
+    public static final String RED_DICE_ASSET = "resources/graphics/redDice_";
+    public static final String GREEN_DICE_ASSET = "resources/graphics/greenDice_";
+    public static final String PURPLE_DICE_ASSET = "resources/graphics/purpleDice_";
     public static final String PNG_ASSET = ".png";
     public static final String JPG_ASSET = ".jpg";
 
