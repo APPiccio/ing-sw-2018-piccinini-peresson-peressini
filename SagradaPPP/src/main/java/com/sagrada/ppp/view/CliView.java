@@ -292,13 +292,17 @@ public class CliView extends UnicastRemoteObject
             isAFK = true;
             System.out.println("---> You have been suspended due to inactivity. Turns will be skipped until your signal");
             if(isLastPlayer){
-                System.out.println("\n\n\n\n\t\t\t\t ----> " + lastPlayer.getUsername() + " WIN <----");
+                System.out.println("\n\n\n\n\t\t\t\t ----> " + lastPlayer.getUsername() + " WIN <----\n\n\n\n");
                 System.exit(0);
             }
         }
         else{
-            if(isLastPlayer){
+            if(isLastPlayer && !isAFK){
                 System.out.println("\n\n\n\n\t\t\t\t ----> YOU WIN <----");
+                System.exit(0);
+            }
+            else {
+                System.out.println("\n\n\n\n\t\t\t\t ----> " + lastPlayer.getUsername() + " WIN <----\n\n\n\n");
                 System.exit(0);
             }
         }

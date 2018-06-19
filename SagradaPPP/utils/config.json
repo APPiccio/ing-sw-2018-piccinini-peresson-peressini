@@ -1,8 +1,8 @@
 {
-  "lobby_timer" : 1000,
-  "TURN_TIMER" : 100000,
+  "lobby_timer" : 20000,
+  "TURN_TIMER" : 60000,
   "RMI_PORT" : 1099,
   "RMI_REGISTRY_NAME" :  "SagradaRegistry",
   "SOCKET_PORT" :  1996,
-  "SERVER_ADDRESS" :  "192.168.43.188"
+  "SERVER_ADDRESS" :  "localhost"
 }

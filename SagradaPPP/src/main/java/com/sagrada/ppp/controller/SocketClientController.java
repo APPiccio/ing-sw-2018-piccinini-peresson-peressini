@@ -446,6 +446,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                         //TODO add stuff to close connection due to server crash
                         System.out.println("SERVER CRASH --> Closing notification thread");
                         closeConnection();
+                        System.exit(0);
                     }
                     else{
                         e.printStackTrace();
