@@ -22,7 +22,7 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
     @Override
     public LeaveGameResult leaveLobby(int gameHashCode, String username,
                                       LobbyObserver observer) throws RemoteException{
-        return service.leaveLobby(gameHashCode,username,observer,null);
+        return service.leaveLobby(gameHashCode,username,observer);
     }
 
     @Override

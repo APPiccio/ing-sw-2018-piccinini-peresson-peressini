@@ -7,6 +7,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Container used to group all the information needed by the clients, when the game starts.
+ */
 public class GameStartMessage implements Serializable {
     public ArrayList<Dice> draftpool;
     public ArrayList<ToolCard> toolCards;

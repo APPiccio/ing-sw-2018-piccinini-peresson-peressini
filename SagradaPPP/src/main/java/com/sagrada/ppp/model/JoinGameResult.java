@@ -3,6 +3,9 @@ package com.sagrada.ppp.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Container that group all the information about the connection of a client to a game!
+ */
 public class JoinGameResult implements Serializable {
     private int playerHashCode;
     private int gameHashCode;

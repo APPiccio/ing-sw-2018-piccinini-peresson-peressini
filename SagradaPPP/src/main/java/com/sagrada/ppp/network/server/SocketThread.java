@@ -96,7 +96,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
 
     @Override
     public Response handle(LeaveGameRequest request) {
-        LeaveGameResult leaveGameResult = service.leaveLobby(request.gameHashCode,request.username,this,this);
+        LeaveGameResult leaveGameResult = service.leaveLobby(request.gameHashCode,request.username,this);
         return new LeaveGameResponse(leaveGameResult);
     }
 

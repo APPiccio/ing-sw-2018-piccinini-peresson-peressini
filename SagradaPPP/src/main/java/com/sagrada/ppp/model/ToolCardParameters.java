@@ -2,6 +2,9 @@ package com.sagrada.ppp.model;
 
 import java.io.Serializable;
 
+/**
+ * Contains all the parameters needed to complete a tool card usage on the server.
+ */
 public class ToolCardParameters implements Serializable {
 
     public volatile Integer draftPoolDiceIndex;
@@ -16,6 +19,9 @@ public class ToolCardParameters implements Serializable {
     public volatile Integer diceValue;
     public volatile Boolean twoDiceAction;
 
+    /**
+     * Resets all the parameters to their default state.
+     */
     public void reset(){
         toolCardID = 0;
         draftPoolDiceIndex = null;

@@ -3,6 +3,9 @@ package com.sagrada.ppp.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Represents the RoundTrack of the game Sagrada.
+ */
 public class RoundTrack implements Serializable {
 
     private ArrayList<ArrayList<Dice>> dicesOnTrack;

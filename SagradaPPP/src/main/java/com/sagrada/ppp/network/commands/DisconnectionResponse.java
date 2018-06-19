@@ -2,6 +2,9 @@ package com.sagrada.ppp.network.commands;
 
 import java.io.Serializable;
 
+/**
+ * Response about the request of disconnection of a player
+ */
 public class DisconnectionResponse implements Serializable, Response {
 
     public boolean disconnectionResult;

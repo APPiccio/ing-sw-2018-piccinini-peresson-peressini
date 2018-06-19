@@ -2,6 +2,9 @@ package com.sagrada.ppp.model;
 
 import java.io.Serializable;
 
+/**
+ * Container that group all the information of a player leaving the game.
+ */
 public class LeaveGameResult  implements Serializable {
     private int gameHashCode;
     private LeaveGameResultStatus status;

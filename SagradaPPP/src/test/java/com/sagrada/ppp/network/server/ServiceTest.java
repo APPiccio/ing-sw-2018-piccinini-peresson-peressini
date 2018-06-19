@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,19 +17,19 @@ import static org.junit.Assert.*;
 public class ServiceTest {
 
     private Service service;
-    JoinGameResult joinGameResultTest;
-    LobbyObserver lobbyObserver;
-    GameObserver gameObserver;
-    JoinGameResult joinGameResult2;
-    JoinGameResult joinGameResult3;
-    JoinGameResult joinGameResult4;
-    private static boolean doOnce = true;
+    private JoinGameResult joinGameResultTest;
+    private LobbyObserver lobbyObserver;
+    private GameObserver gameObserver;
+
     @Before
     public void setUp() throws Exception {
         StaticValues.readConstants();
         if (service == null)
             service = Service.getInstance();
         //test Game
+        JoinGameResult joinGameResult2;
+        JoinGameResult joinGameResult3;
+        JoinGameResult joinGameResult4;
 
         joinGameResultTest = service.joinGame("test", lobbyObserver, gameObserver);
         joinGameResult2 = service.joinGame("test", lobbyObserver, gameObserver);
@@ -46,7 +48,6 @@ public class ServiceTest {
         assertEquals(joinGameResult4.getGameHashCode(), joinGameResultTest.getGameHashCode());
         assertEquals(joinGameResult4.getGameHashCode(), joinGameResult2.getGameHashCode());
         assertEquals(joinGameResult4.getGameHashCode(), joinGameResult3.getGameHashCode());
-        doOnce = false;
 
         lobbyObserver = new LobbyObserver() {
             @Override
@@ -125,7 +126,12 @@ public class ServiceTest {
     @After
     public void tearDown() throws Exception {
         service.deleteGame(joinGameResultTest.getGameHashCode());
+        service.deleteGame(123);
 
+    }
+    @Test(expected = RemoteException.class)
+    public void testRMI() throws Exception{
+        LocateRegistry.createRegistry(StaticValues.RMI_PORT);
     }
 
 
@@ -135,24 +141,24 @@ public class ServiceTest {
         service.joinGame("test1",lobbyObserver,gameObserver);
         service.joinGame("test2",lobbyObserver,gameObserver);
 
-        LeaveGameResult leaveGameResult1 = service.leaveLobby(joinGameResult1.getGameHashCode(),joinGameResult1.getUsername(),lobbyObserver,gameObserver);
+        LeaveGameResult leaveGameResult1 = service.leaveLobby(joinGameResult1.getGameHashCode(),joinGameResult1.getUsername(),lobbyObserver);
         assertEquals(joinGameResult1.getGameHashCode(),leaveGameResult1.getGameHashCode());
         assertEquals(LeaveGameResultStatus.SUCCESS,leaveGameResult1.getStatus());
 
 
 
-        LeaveGameResult leaveGameResult2 = service.leaveLobby(joinGameResult1.getGameHashCode(),"test1",lobbyObserver,gameObserver);
+        LeaveGameResult leaveGameResult2 = service.leaveLobby(joinGameResult1.getGameHashCode(),"test1",lobbyObserver);
         assertEquals(joinGameResult1.getGameHashCode(),leaveGameResult2.getGameHashCode());
         assertEquals(LeaveGameResultStatus.SUCCESS,leaveGameResult2.getStatus());
 
-        LeaveGameResult leaveGameResult3 = service.leaveLobby(joinGameResult1.getGameHashCode(),"test2",lobbyObserver,gameObserver);
+        LeaveGameResult leaveGameResult3 = service.leaveLobby(joinGameResult1.getGameHashCode(),"test2",lobbyObserver);
         assertEquals(joinGameResult1.getGameHashCode(),leaveGameResult3.getGameHashCode());
         assertEquals(LeaveGameResultStatus.GAME_DELETED,leaveGameResult3.getStatus());
 
     }
     @Test
     public void leaveLobbyException() {
-        LeaveGameResult leaveGameResultFail = service.leaveLobby(123,"test1",lobbyObserver,gameObserver);
+        LeaveGameResult leaveGameResultFail = service.leaveLobby(123,"test1",lobbyObserver);
         assertEquals(123,leaveGameResultFail.getGameHashCode());
         assertEquals(LeaveGameResultStatus.FAIL,leaveGameResultFail.getStatus());
     }
@@ -219,11 +225,13 @@ public class ServiceTest {
     @Test
     public void getUsername() {
         assertEquals("test",service.getUsername(joinGameResultTest.getPlayerHashCode(),joinGameResultTest.getGameHashCode()));
+        service.getUsername(joinGameResultTest.getPlayerHashCode(),123);
     }
 
     @Test
     public void choosePanel() {
         service.choosePanel(joinGameResultTest.getGameHashCode(),joinGameResultTest.getPlayerHashCode(),1);
+        service.choosePanel(123,123,1);
     }
 
     @Test
@@ -235,16 +243,20 @@ public class ServiceTest {
     @Test
     public void placeDice() {
         service.placeDice(joinGameResultTest.getGameHashCode(),joinGameResultTest.getPlayerHashCode(),1,1,1);
+        assertEquals("No game with this HashCode: " + 123,service.placeDice(123,
+                123,1,1,1).message);
     }
 
     @Test
     public void endTurn() {
         service.endTurn(joinGameResultTest.getGameHashCode(),joinGameResultTest.getPlayerHashCode());
+        service.endTurn(123,joinGameResultTest.getPlayerHashCode());
     }
 
     @Test
     public void detachAllGameObserver() {
         service.detachAllGameObserver(joinGameResultTest.getGameHashCode(),joinGameResultTest.getPlayerHashCode());
+        service.detachAllGameObserver(123,joinGameResultTest.getPlayerHashCode());
     }
 
     @Test
@@ -257,21 +269,27 @@ public class ServiceTest {
     public void useToolCard() {
         UseToolCardResult useToolCardResult = service.useToolCard(joinGameResultTest.getGameHashCode(),joinGameResultTest.getPlayerHashCode(),new ToolCardParameters());
         assertFalse(useToolCardResult.result);
+        assertEquals("No game with this HashCode: " + 123,service.useToolCard(123,
+                123,new ToolCardParameters()).msg);
     }
 
     @Test
     public void specialDicePlacement() {
         service.specialDicePlacement(joinGameResultTest.getGameHashCode(),joinGameResultTest.getPlayerHashCode(),1,new Dice());
+        assertEquals("No game with this HashCode: " + 123,service.specialDicePlacement(123,
+                123,1,new Dice()).message);
     }
 
     @Test
     public void getLegalPositions() {
         service.getLegalPositions(joinGameResultTest.getGameHashCode(),joinGameResultTest.getPlayerHashCode(),new Dice());
+        assertEquals(new ArrayList<Integer>(), service.getLegalPositions(123,joinGameResultTest.getPlayerHashCode(),new Dice()));
     }
 
     @Test
     public void putDiceInDraftPool() {
         service.putDiceInDraftPool(joinGameResultTest.getGameHashCode(),new Dice());
+        service.putDiceInDraftPool(123,new Dice());
     }
 
 
@@ -292,6 +310,7 @@ public class ServiceTest {
     @Test
     public void disableAFK() {
         service.disableAFK(joinGameResultTest.getGameHashCode(),joinGameResultTest.getPlayerHashCode());
+        service.disableAFK(123,joinGameResultTest.getPlayerHashCode());
 
     }
 

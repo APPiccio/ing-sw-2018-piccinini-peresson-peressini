@@ -24,6 +24,7 @@ public class LobbyTimerTest {
     @Test
     public void test() {
         StaticValues.readConstants();
+        StaticValues.LOBBY_TIMER = 1000;
         lobbyTimer.interrupt();
         try {
             Thread.sleep(StaticValues.LOBBY_TIMER);

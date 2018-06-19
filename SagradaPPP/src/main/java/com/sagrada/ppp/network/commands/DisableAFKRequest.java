@@ -2,6 +2,9 @@ package com.sagrada.ppp.network.commands;
 
 import java.io.Serializable;
 
+/**
+ * Request to disable a player's afk status
+ */
 public class DisableAFKRequest implements Serializable, Request {
 
     public int gameHashCode;

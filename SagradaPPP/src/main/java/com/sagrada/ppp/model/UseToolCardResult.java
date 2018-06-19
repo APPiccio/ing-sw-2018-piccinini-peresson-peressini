@@ -3,6 +3,9 @@ package com.sagrada.ppp.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Container that groups all the information of the usage of a tool card.
+ */
 public class UseToolCardResult implements Serializable {
 
     public boolean result;

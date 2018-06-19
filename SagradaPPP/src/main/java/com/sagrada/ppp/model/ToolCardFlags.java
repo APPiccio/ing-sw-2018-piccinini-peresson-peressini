@@ -1,5 +1,8 @@
 package com.sagrada.ppp.model;
 
+/**
+ * Class used to group all flags used to acquire all the information needed for a tool card.
+ */
 public class ToolCardFlags {
     public volatile boolean isDraftPoolDiceRequired;
     public volatile boolean isRoundTrackDiceRequired;
@@ -17,6 +20,9 @@ public class ToolCardFlags {
     public ToolCardFlags(){
     }
 
+    /**
+     * Resents all flags to false or a passive state.
+     */
     public void reset(){
         isDraftPoolDiceRequired = false;
         isPanelCellRequired = false;

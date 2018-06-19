@@ -2,6 +2,9 @@ package com.sagrada.ppp.model;
 
 import java.io.Serializable;
 
+/**
+ * Container that groups all the information about the reconnection of a player into a game.
+ */
 public class ReconnectionResult implements Serializable {
 
     public boolean result;

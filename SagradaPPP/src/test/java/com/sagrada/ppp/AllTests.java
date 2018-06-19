@@ -4,6 +4,7 @@ import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.cards.toolcards.ToolCardTest;
 import com.sagrada.ppp.model.*;
+import com.sagrada.ppp.network.commands.*;
 import com.sagrada.ppp.network.server.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -51,7 +52,24 @@ import org.junit.runners.Suite.*;
         PlayerTest.class,
         RoundTrackTest.class,
         WindowPanelTest.class,
-        ServiceTest.class
+        ServiceTest.class,
+
+        PlaceDiceResultTest.class,
+        ReconnectionResultTest.class,
+        ToolCardFlagsTest.class,
+        ToolCardParametersTest.class,
+        UseToolCardResultTest.class,
+
+        DetachGameObserverRequestTest.class,
+        DicePlacedNotificationTest.class,
+        DisableAFKRequestTest.class,
+        DisconnectionRequestTest.class,
+        DisconnectionResponseTest.class,
+        EndGameNotificationTest.class,
+        EndTurnNotificationTest.class,
+        EndTurnRequestTest.class,
+        GameStartNotificationTest.class,
+        GetLegalPositionRequestTest.class
 })
 public class AllTests {
 

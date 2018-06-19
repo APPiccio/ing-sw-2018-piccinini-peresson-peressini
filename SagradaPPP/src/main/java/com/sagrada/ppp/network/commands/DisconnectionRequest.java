@@ -2,6 +2,10 @@ package com.sagrada.ppp.network.commands;
 
 import java.io.Serializable;
 
+
+/**
+ * Request to disconnect a client
+ */
 public class DisconnectionRequest implements Serializable, Request {
 
     public int playerHashCode;

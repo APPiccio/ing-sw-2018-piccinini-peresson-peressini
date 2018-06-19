@@ -4,6 +4,9 @@ package com.sagrada.ppp.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * container that groups all the information about the placement of a dice.
+ */
 public class PlaceDiceResult implements Serializable {
     public String message;
     public boolean status;
