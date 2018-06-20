@@ -413,11 +413,6 @@ public class Game implements Serializable{
         }
         gameObservers.get(playerHashCode).add(observer);
     }
-
-    public void detachGameObserver(int playerHashCode, GameObserver gameObserver){
-        gameObservers.get(playerHashCode).remove(gameObserver);
-    }
-
     public void detachAllGameObservers(int playerHashCode){
         gameObservers.remove(playerHashCode);
     }
@@ -538,7 +533,7 @@ public class Game implements Serializable{
         }
     }
 
-    public HashMap<Integer, ArrayList<WindowPanel>> extractPanels() {
+    private HashMap<Integer, ArrayList<WindowPanel>> extractPanels() {
         HashMap<Integer, ArrayList<WindowPanel>> temp = new HashMap<>();
         ArrayList<Integer> notUsedPanel = new ArrayList<>();
         for(int i = 1; i <= WindowPanel.getNumberOfPanels(); i++ ){
@@ -576,14 +571,6 @@ public class Game implements Serializable{
             if(player.hashCode() == playerHashCode) return player.getPrivateColor();
         }
         return null;
-    }
-
-    public HashMap<Integer, Color> getPrivateObjectiveColors(){
-        HashMap<Integer, Color> result = new HashMap<>();
-        for(Player player : players){
-            result.put(player.hashCode(), player.getPrivateColor());
-        }
-        return result;
     }
 
     private void extractToolCards(){
@@ -677,11 +664,11 @@ public class Game implements Serializable{
         }
     }
 
-    public void setTurn(int turn){
+    private void setTurn(int turn){
         this.turn = turn;
     }
 
-    public int getCurrentPlayerIndex() {
+    private int getCurrentPlayerIndex() {
         if(turn > players.size()){
             return (players.size()-1) - (turn - players.size() - 1);
         }
@@ -1200,7 +1187,7 @@ public class Game implements Serializable{
         waitingForPanelChoice = false;
     }
 
-    private synchronized void pingAllGameObservers(){
+    public synchronized void pingAllGameObservers(){
         for (ArrayList<GameObserver> obs : gameObservers.values()){
             for(GameObserver gameObserver : obs){
                 try {

@@ -2,6 +2,12 @@ package com.sagrada.ppp.model;
 
 import java.io.Serializable;
 
+/**
+ * This class is the container of the player's score.
+ * It calculates the total score of the player only by adding up the singles attributes
+ *
+ * THIS CLASS HASN'T GOT ANY GAME CALCULATION LOGIC TO AVOID APPLICATION LOGIC EXPOSITIONS
+ */
 public class PlayerScore implements Serializable {
 
     private String username;
@@ -20,6 +26,19 @@ public class PlayerScore implements Serializable {
         super();
     }
 
+    /**
+     * NOTE THAT EVERY PARAM IS REFEREED TO THE SAME PLAYER
+     * @param username player username
+     * @param playerHashCode player ID
+     * @param privateColor player's private objective color
+     * @param windowPanel player's panel
+     * @param favorTokenPoints remaining favor token
+     * @param emptyCellsPoints panel's empty cells
+     * @param privateObjectiveCardPoints
+     * @param publicObjectiveCard1Points
+     * @param publicObjectiveCard2Points
+     * @param publicObjectiveCard3Points
+     */
     public PlayerScore(String username, int playerHashCode, Color privateColor, WindowPanel windowPanel,
                        int favorTokenPoints, int emptyCellsPoints, int privateObjectiveCardPoints,
                        int publicObjectiveCard1Points, int publicObjectiveCard2Points, int publicObjectiveCard3Points) {
@@ -122,6 +141,9 @@ public class PlayerScore implements Serializable {
         return totalPoints;
     }
 
+    /**
+     * update total score making a simple sum of each attribute
+     */
     void calculateTotalPoints(){
         totalPoints =  favorTokenPoints + privateObjectiveCardPoints + publicObjectiveCard1Points +
                 publicObjectiveCard2Points + publicObjectiveCard3Points - emptyCellsPoints;

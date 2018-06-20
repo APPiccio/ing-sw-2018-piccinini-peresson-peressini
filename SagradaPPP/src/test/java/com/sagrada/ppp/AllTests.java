@@ -33,6 +33,7 @@ import org.junit.runners.Suite.*;
         PublicObjectiveCard9Test.class,
         PublicObjectiveCard10Test.class,
 
+
         CellTest.class,
         ColorTest.class,
         DiceBagTest.class,
@@ -43,11 +44,11 @@ import org.junit.runners.Suite.*;
         IsToolCardUsableResultTest.class,
         JoinGameResultTest.class,
         LeaveGameResultTest.class,
-        LobbyTimerTest.class,
         PlayerTest.class,
         RoundTrackTest.class,
         WindowPanelTest.class,
-        ServiceTest.class
+        ServiceTest.class,
+        LobbyTimerTest.class
 })
 public class AllTests {
 

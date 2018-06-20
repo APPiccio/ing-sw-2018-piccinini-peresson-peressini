@@ -5,8 +5,13 @@ import com.sagrada.ppp.cards.toolcards.ToolCard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
+/**
+ * This class is used to package all the objects needed in order to notify
+ * the user of the game start (right after the lobby).
+ *
+ * It's also used for player reconnection
+ */
 public class GameStartMessage implements Serializable {
     public ArrayList<Dice> draftpool;
     public ArrayList<ToolCard> toolCards;
@@ -16,6 +21,14 @@ public class GameStartMessage implements Serializable {
     public Player currentPlayer;
     public RoundTrack roundTrack;
 
+    /**
+     * @param draftpool current game draftpool
+     * @param toolCards current game toolCards
+     * @param publicObjectiveCards current game publicObjCards
+     * @param players current list of players
+     * @param roundTrack current game roundtrack
+     * @param currentPlayer used to inform user of the current active player in case of reconnection
+     */
     public GameStartMessage(ArrayList<Dice> draftpool,
                             ArrayList<ToolCard> toolCards, ArrayList<PublicObjectiveCard> publicObjectiveCards,
                             ArrayList<Player> players,
