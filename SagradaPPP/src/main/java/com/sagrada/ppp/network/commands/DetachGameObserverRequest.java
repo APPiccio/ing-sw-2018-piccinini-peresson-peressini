@@ -1,9 +1,11 @@
 package com.sagrada.ppp.network.commands;
 
-import com.sagrada.ppp.model.GameObserver;
 
 import java.io.Serializable;
 
+/**
+ * Container for the request of detaching one of the client's GameObservers
+ */
 public class DetachGameObserverRequest implements Request, Serializable {
 
     public int gameHashCode;

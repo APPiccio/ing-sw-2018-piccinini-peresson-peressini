@@ -2,7 +2,7 @@ package com.sagrada.ppp.cards.toolcards;
 
 import com.sagrada.ppp.model.Dice;
 
-public class CommandToolCard10 implements CommandToolCard{
+public class CommandToolCard10 implements CommandToolCard {
 
     private Dice dice;
 
@@ -10,9 +10,12 @@ public class CommandToolCard10 implements CommandToolCard{
         this.dice = dice;
     }
 
-    public void useCard(){
-        if(dice != null){
-            dice.setValue(7 - dice.getValue());
-        }
+    /**
+     * This method flips this.dice to its opposite side
+     */
+    @Override
+    public void useCard() {
+        dice.setValue(7 - dice.getValue());
     }
+
 }

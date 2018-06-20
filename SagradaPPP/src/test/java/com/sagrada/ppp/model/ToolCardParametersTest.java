@@ -1,12 +1,13 @@
 package com.sagrada.ppp.model;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.*;
 
 import static org.junit.Assert.*;
 
 public class ToolCardParametersTest {
     ToolCardParameters toolCardParameters;
+
     @Before
     public void onSetup(){
         toolCardParameters = new ToolCardParameters();
@@ -22,8 +23,9 @@ public class ToolCardParametersTest {
         toolCardParameters.diceValue = -1;
         toolCardParameters.twoDiceAction = true;
     }
+
     @Test
-    public void reset() {
+    public void sesft(){
         toolCardParameters.reset();
         assertNull(toolCardParameters.draftPoolDiceIndex);
         assertNull(toolCardParameters.roundTrackDiceIndex);
@@ -36,6 +38,10 @@ public class ToolCardParametersTest {
         assertNull(toolCardParameters.actionSign);
         assertNull(toolCardParameters.diceValue);
         assertNull(toolCardParameters.twoDiceAction);
+
+    }
+    @Test
+    public void  nulld(){
 
     }
 }

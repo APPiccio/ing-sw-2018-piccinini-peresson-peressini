@@ -17,7 +17,7 @@ public class CommandToolCard1 implements CommandToolCard {
      */
     @Override
     public void useCard() {
-        if (dice != null && !((dice.getValue() == 6 && sign == +1) || (dice.getValue() == 1 && sign == -1))) {
+        if (!((dice.getValue() == 6 && sign == +1) || (dice.getValue() == 1 && sign == -1))) {
             dice.setValue(dice.getValue() + sign);
         }
     }

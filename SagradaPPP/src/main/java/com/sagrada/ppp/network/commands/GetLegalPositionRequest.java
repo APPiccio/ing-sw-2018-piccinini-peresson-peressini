@@ -4,6 +4,9 @@ import com.sagrada.ppp.model.Dice;
 
 import java.io.Serializable;
 
+/**
+ * Request sent by a client wanting all legal positions on his panel of a dice.
+ */
 public class GetLegalPositionRequest implements Request, Serializable {
 
     public int gameHashCode;

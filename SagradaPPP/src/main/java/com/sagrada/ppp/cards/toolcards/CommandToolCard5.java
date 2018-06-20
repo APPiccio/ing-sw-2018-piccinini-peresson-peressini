@@ -17,6 +17,9 @@ public class CommandToolCard5 implements CommandToolCard {
         this.diceRoundTrackIndex = diceRoundTrackIndex;
     }
 
+    /**
+     * This method swaps a draftPool dice with a dice in the roundTrack
+     */
     @Override
     public void useCard() {
         Dice tmpDice = roundTrack.getDice(roundIndex, diceRoundTrackIndex);

@@ -4,6 +4,9 @@ import com.sagrada.ppp.model.DicePlacedMessage;
 
 import java.io.Serializable;
 
+/**
+ * Response used to notify all client about the placement of a dice.
+ */
 public class DicePlacedNotification implements Response,Serializable {
 
     public DicePlacedMessage dicePlacedMessage;

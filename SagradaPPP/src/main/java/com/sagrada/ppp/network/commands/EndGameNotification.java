@@ -5,6 +5,10 @@ import com.sagrada.ppp.model.PlayerScore;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * End game notification.
+ * Is sent to all clients when the game ends.
+ */
 public class EndGameNotification implements Response, Serializable {
 
     public ArrayList<PlayerScore> playersScore;

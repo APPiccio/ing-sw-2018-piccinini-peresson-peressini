@@ -6,6 +6,9 @@ import java.util.LinkedHashMap;
 
 public class CommandToolCard4 implements CommandToolCard {
 
+    /**
+     * positions<oldDiceIndex, newDiceIndex>
+     */
     private LinkedHashMap<Integer, Integer> positions;
     private WindowPanel windowPanel;
 
@@ -14,6 +17,9 @@ public class CommandToolCard4 implements CommandToolCard {
         this.windowPanel = windowPanel;
     }
 
+    /**
+     * This method moves exactly two dices from their oldDiceIndex position to their newDiceIndex position
+     */
     @Override
     public void useCard() {
         for (Integer pos : positions.keySet()) {

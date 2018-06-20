@@ -13,12 +13,15 @@ public class CommandToolCard11 implements CommandToolCard {
         this.dice = dice;
     }
 
-    public void useCard(){
+    /**
+     * This method returns this.dice to the draftPool and extracts a new one
+     */
+    @Override
+    public void useCard() {
         diceBag.addDice(new Dice(dice));
         Dice ext = diceBag.extractRandomDice();
         dice.setValue(ext.getValue());
         dice.setColor(ext.getColor());
     }
-
 
 }

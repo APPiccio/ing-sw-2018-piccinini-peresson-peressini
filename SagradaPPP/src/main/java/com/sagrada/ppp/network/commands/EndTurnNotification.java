@@ -6,6 +6,10 @@ import com.sagrada.ppp.network.commands.ResponseHandler;
 
 import java.io.Serializable;
 
+/**
+ * Response sent to all clients.
+ * It contains all the information about the ending of a turn
+ */
 public class EndTurnNotification implements Response, Serializable {
 
     public EndTurnMessage endTurnMessage;

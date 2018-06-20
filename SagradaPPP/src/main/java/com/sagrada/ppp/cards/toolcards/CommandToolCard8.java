@@ -19,6 +19,9 @@ public class CommandToolCard8 implements CommandToolCard {
         this.draftPool = draftPool;
     }
 
+    /**
+     * This method simply places a draftPool dice in this.windowPanel, respecting all placement restrictions
+     */
     @Override
     public void useCard() {
         windowPanel.addDice(cellIndex, draftPool.remove(draftPoolDiceIndex) ,

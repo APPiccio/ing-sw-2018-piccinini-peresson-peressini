@@ -3,6 +3,9 @@ package com.sagrada.ppp.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * Container that groups all the information that the clients need when a turn ends.
+ */
 public class EndTurnMessage implements Serializable {
 
     public Player previousPlayer;

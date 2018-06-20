@@ -2,6 +2,7 @@ package com.sagrada.ppp.cards.toolcards;
 
 import com.sagrada.ppp.model.Dice;
 import com.sagrada.ppp.model.DiceBag;
+import com.sagrada.ppp.model.DiceBagTest;
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -15,6 +16,10 @@ public class CommandToolCard11Test {
         toolCard11 = new ToolCard11();
     }
 
+    /**
+     * No test to be performed here...
+     * @see DiceBagTest
+     */
     @Test
     public void useCard() {
         DiceBag diceBag = new DiceBag();
@@ -25,7 +30,6 @@ public class CommandToolCard11Test {
 
         toolCard11.use(new CommandToolCard11(diceBagCopy, diceCopy));
 
-        //Random dice throw test not particularly meaningful
         assertTrue(true);
     }
 

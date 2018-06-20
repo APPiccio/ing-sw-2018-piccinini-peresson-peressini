@@ -12,10 +12,14 @@ public class CommandToolCard7 implements CommandToolCard{
         this.draftPool = draftPool;
     }
 
+    /**
+     * Re-roll all dices in draftPool
+     */
     @Override
     public void useCard() {
-        for (Dice d:draftPool) {
+        for (Dice d : draftPool) {
             d.throwDice();
         }
     }
+
 }

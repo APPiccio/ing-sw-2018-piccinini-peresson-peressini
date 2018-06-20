@@ -5,6 +5,7 @@ import com.sagrada.ppp.cards.toolcards.ToolCard;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class is used to package all the objects needed in order to notify
