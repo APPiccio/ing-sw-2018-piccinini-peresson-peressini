@@ -55,7 +55,6 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     private Tab gameTab,settingsTab,logTab;
     private ScrollPane rightContainer;
     private HashMap<Integer,Tooltip> toolCardsToolTips;
-    private Scene scene;
     private boolean gameEnded = false;
     private boolean afk = false;
 
@@ -67,7 +66,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     private ArrayList<Dice> draftPool;
     private ArrayList<Player> players;
     private ArrayList<DiceButton> draftPoolDiceButtons;
-    private ArrayList<Button> toolCardButtons,publicCardButtons;
+    private ArrayList<Button> toolCardButtons;
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private EventHandler<MouseEvent> draftPoolDiceEventHandler;
@@ -88,7 +87,6 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         logTab = new Tab();
         mainGamePane = new GridPane();
         toolCardButtons = new ArrayList<>();
-        publicCardButtons = new ArrayList<>();
         opponentsWindowPanelsPane = new VBox();
         leftContainer = new VBox();
         roundTrackPane = new RoundTrackPane();
@@ -112,7 +110,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
 
     @Override
-    public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
+    public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) {
         if(isLastPlayer) gameEnded = true;
 
         Platform.runLater(()->{
@@ -183,7 +181,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
     private void draw(){
 
-        scene = new Scene(tabContainer, 1440, 900);
+        Scene scene = new Scene(tabContainer, 1440, 900);
 
         URL url = null;
         try {
@@ -372,13 +370,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         opponentsWindowPanelsPane.getChildren().add(new Label("OpponentsPanels:"));
         for (Player player : players) {
             if (player.getUsername().equals(joinGameResult.getUsername())) {
-                if(currentPlayerUser.equals(player.getUsername())) {
-                    gameStatus.setText("SAGRADA\nFavor Tokens Remaining: "
-                            + player.getFavorTokens());
-                }else {
-                    gameStatus.setText("SAGRADA\nFavor Tokens Remaining: "
-                            + player.getFavorTokens());
-                }
+                gameStatus.setText("SAGRADA\nFavor Tokens Remaining: "
+                        + player.getFavorTokens());
                 if(playerWindowPanel == null) {
                     playerWindowPanel = new WindowPanelPane(player.getPanel(), 330, 300);
 
@@ -458,7 +451,6 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         int count = 0;
         for(PublicObjectiveCard publicObjectiveCard : publicObjectiveCards){
             Button publicObjectiveButton = new Button();
-            publicCardButtons.add(publicObjectiveButton);
             publicObjectiveButton.setEffect(new DropShadow(10,Color.BLACK));
             Border border = new Border(new BorderStroke(Color.web("FFFFFF"),BorderStrokeStyle.SOLID,new CornerRadii(3),BorderStroke.MEDIUM));
             publicObjectiveButton.setBorder(border);
@@ -547,12 +539,12 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels,
                               HashMap<String,WindowPanel> panelsAlreadyChosen,
-                              com.sagrada.ppp.model.Color playerPrivateColor) throws RemoteException {
+                              com.sagrada.ppp.model.Color playerPrivateColor) {
             //Do nothing here
     }
 
     @Override
-    public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
+    public void onPlayerReconnection(Player reconnectingPlayer) {
         Platform.runLater(()-> {
             Alert alert = new Alert(Alert.AlertType.NONE);
             alert.setContentText(reconnectingPlayer.getUsername() + " has reconnected from the game!");
@@ -566,7 +558,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
+    public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer)  {
         Platform.runLater(()-> {
             Alert alert = new Alert(Alert.AlertType.NONE);
             alert.setTitle("Player Disconnected");
@@ -593,7 +585,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
+    public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage)  {
         Platform.runLater(()->{
 
             if(!toolCardUsedMessage.player.getUsername().equals(joinGameResult.getUsername())) {
@@ -606,16 +598,13 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 alert.show();
                 draftPool = toolCardUsedMessage.draftPool;
                 players.stream().filter(x -> x.getUsername().equals(toolCardUsedMessage.player.getUsername()))
-                        .findFirst().orElse(null).setPanel(toolCardUsedMessage.player.getPanel());
+                        .findFirst().ifPresent(x-> x.setPanel(toolCardUsedMessage.player.getPanel()));
                 drawDraftPool();
                 drawWindowPanels();
                 roundTrackPane.setRoundTrack(toolCardUsedMessage.roundTrack);
-                toolCardsToolTips.get(toolCardUsedMessage.toolCardID).setText(
-                        StaticValues.getToolCardDescription(toolCards.stream()
-                                .filter(x-> x.getId() == toolCardUsedMessage.toolCardID)
-                                .findFirst()
-                                .orElse(null)
-                                .getId()) + "\nCost: " + toolCardUsedMessage.toolCardCost);
+                toolCards.stream()
+                        .filter(x-> x.getId() == toolCardUsedMessage.toolCardID)
+                        .findFirst().ifPresent(x -> toolCardsToolTips.get(toolCardUsedMessage.toolCardID).setText( StaticValues.getToolCardDescription(x.getId()) + "\nCost: " + toolCardUsedMessage.toolCardCost));
             }
         });
     }
@@ -627,12 +616,13 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                     .filter(DiceButton::isSelected).findFirst().orElse(null);
             if (diceButtonSelected != null) {
                 Platform.runLater(() -> {
-                    PlaceDiceResult result = null;
+                    PlaceDiceResult result;
                     try {
                         result = controller.placeDice(joinGameResult.getGameHashCode(),
                                 joinGameResult.getPlayerHashCode(), draftPoolDiceButtons.indexOf(diceButtonSelected),
                                 row, col);
                     } catch (RemoteException e) {
+                        result = new PlaceDiceResult("Network Error",false,null,null);
                         e.printStackTrace();
                     }
                     if (result.status) {
@@ -723,17 +713,17 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
+    public void onGameStart(GameStartMessage gameStartMessage)  {
 
     }
 
     @Override
-    public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
+    public void onDicePlaced(DicePlacedMessage dicePlacedMessage) {
         Platform.runLater(()->{
             if(!dicePlacedMessage.username.equals(joinGameResult.getUsername())) {
                 draftPool = dicePlacedMessage.draftPool;
                 players.stream().filter(x -> x.getUsername().equals(dicePlacedMessage.username))
-                        .findFirst().orElse(null).setPanel(dicePlacedMessage.panel);
+                        .findFirst().ifPresent(x -> x.setPanel(dicePlacedMessage.panel));
                 drawDraftPool();
                 drawWindowPanels();
             }
@@ -742,7 +732,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+    public void onEndTurn(EndTurnMessage endTurnMessage)  {
        Platform.runLater(() -> {
             isToolCardUsed = false;
             roundTrack = endTurnMessage.roundTrack;
@@ -779,7 +769,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+    public void onEndGame(ArrayList<PlayerScore> playersScore) {
         gameEnded = true;
         Platform.runLater(() -> {
             try {
@@ -792,7 +782,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void isToolCardUsable(boolean result) throws RemoteException {
+    public void isToolCardUsable(boolean result) {
         Platform.runLater(() -> {
           if(!result){
               Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -808,7 +798,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void draftPoolDiceIndexRequired() throws RemoteException {
+    public void draftPoolDiceIndexRequired()  {
         Platform.runLater(()-> {
             for (DiceButton diceButton : draftPoolDiceButtons) {
                 if (diceButton.isSelected()) {
@@ -830,7 +820,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void panelDiceIndexRequired() throws RemoteException {
+    public void panelDiceIndexRequired() {
         Platform.runLater(() -> {
             for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(true);
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select a dice from your Panel");
@@ -843,7 +833,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void panelCellIndexRequired() throws RemoteException {
+    public void panelCellIndexRequired()  {
         Platform.runLater(()-> {
             for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(true);
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select a cell from your panel!");
@@ -856,7 +846,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void actionSignRequired() throws RemoteException {
+    public void actionSignRequired()  {
         Platform.runLater(() -> {
             toolCardFlags.reset();
             ArrayList<String> choices = new ArrayList<>();
@@ -890,7 +880,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void notifyUsageCompleted(UseToolCardResult useToolCardResult) throws RemoteException {
+    public void notifyUsageCompleted(UseToolCardResult useToolCardResult) {
         Platform.runLater(() -> {
             players = useToolCardResult.players;
             draftPool = useToolCardResult.draftpool;
@@ -899,12 +889,11 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(false);
             drawDraftPool();
             drawWindowPanels();
-            toolCardsToolTips.get(useToolCardResult.toolCardId).setText(
-                    StaticValues.getToolCardDescription(toolCards.stream()
+           toolCards.stream()
                             .filter(x-> x.getId() == useToolCardResult.toolCardId)
-                            .findFirst()
-                            .orElse(null)
-                            .getId()) + "\nCost: " + useToolCardResult.toolCardCost);
+                            .findFirst().ifPresent(x -> toolCardsToolTips.get(useToolCardResult.toolCardId).setText( StaticValues.getToolCardDescription(x.getId()) + "\nCost: " + useToolCardResult.toolCardCost));
+
+
             Alert alert = new Alert(Alert.AlertType.NONE);
             if(!gameEnded && !afk) {
                 if (useToolCardResult.result) {
@@ -930,7 +919,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void secondPanelDiceIndexRequired() throws RemoteException {
+    public void secondPanelDiceIndexRequired() {
         Platform.runLater(() -> {
             for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(true);
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select your second dice from your panel!");
@@ -945,7 +934,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void secondPanelCellIndexRequired() throws RemoteException {
+    public void secondPanelCellIndexRequired() {
         Platform.runLater(() -> {
             for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(true);
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Select the cell for your second dice!");
@@ -960,7 +949,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void diceValueRequired(com.sagrada.ppp.model.Color color) throws RemoteException {
+    public void diceValueRequired(com.sagrada.ppp.model.Color color) {
         Platform.runLater(() -> {
             toolCardFlags.reset();
             ArrayList<Integer> choices = new ArrayList<>();
@@ -989,7 +978,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void twoDiceActionRequired() throws RemoteException {
+    public void twoDiceActionRequired() {
         Platform.runLater(() -> {
             toolCardFlags.reset();
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -1017,7 +1006,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void roundTrackDiceIndexRequired() throws RemoteException {
+    public void roundTrackDiceIndexRequired() {
         //TODO here we are supposed to be in a round from 2 to 10
         Platform.runLater(() -> {
             toolCardFlags.reset();
@@ -1034,7 +1023,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void reRolledDiceActionRequired(Dice dice) throws RemoteException {
+    public void reRolledDiceActionRequired(Dice dice) {
         Platform.runLater(() -> {
             toolCardFlags.reset();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -1061,7 +1050,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     @Override
-    public void rmiPing() throws RemoteException {
+    public void rmiPing() {
         //do nothing here
     }
 }

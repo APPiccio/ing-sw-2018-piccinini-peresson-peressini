@@ -71,7 +71,9 @@ public class WindowPanel implements Serializable {
             try {
                 loadedPanels = WindowPanelParser.getPanelsFromFile();
             } catch (IOException e) {
+
                 e.printStackTrace();
+                System.exit(-1);
             }
         }
         return loadedPanels.get(((2 * cardNumber) - side) - 1);
@@ -86,6 +88,7 @@ public class WindowPanel implements Serializable {
                 loadedPanels = WindowPanelParser.getPanelsFromFile();
             } catch (IOException e) {
                 e.printStackTrace();
+                System.exit(-1);
             }
         }
         return loadedPanels.size()/2;
