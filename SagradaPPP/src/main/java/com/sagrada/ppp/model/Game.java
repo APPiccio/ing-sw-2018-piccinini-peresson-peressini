@@ -17,19 +17,20 @@ import java.util.concurrent.ThreadLocalRandom;
  * Each game has a unique instance of this class.
  * Allows to have multiple games on the same server.
  */
-public class Game implements Serializable{
+public class Game implements Serializable {
+
     private HashMap<Integer, LobbyObserver> lobbyObservers;
     private HashMap<Integer, ArrayList<GameObserver>> gameObservers;
     private ArrayList<Player> players;
-    private DiceBag diceBag;
+    private transient DiceBag diceBag;
     private ArrayList<Dice> draftPool;
     private RoundTrack roundTrack;
     private GameStatus gameStatus;
-    private LobbyTimer lobbyTimer;
+    private transient LobbyTimer lobbyTimer;
     private long lobbyTimerStartTime;
-    public volatile boolean waitingForPanelChoice;
-    public volatile boolean panelChoiceTimerExpired;
-    public Integer chosenPanelIndex;
+    private volatile boolean waitingForPanelChoice;
+    volatile boolean panelChoiceTimerExpired;
+    private Integer chosenPanelIndex;
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private int turn = 1;
@@ -38,9 +39,9 @@ public class Game implements Serializable{
     private volatile boolean isSpecialTurn;
     private volatile boolean endTurn;
     private volatile boolean turnTimeout;
-    private MyTimerTask currentTimerTask;
+    private transient MyTimerTask currentTimerTask;
     private volatile boolean gameEnded;
-    private Service service;
+    private transient Service service;
 
     /*
     TODO: Add a method that given the username string returns the desired players
@@ -113,7 +114,7 @@ public class Game implements Serializable{
         extractPublicObjCards();
         extractToolCards();
         draftPool.addAll(diceBag.extractDices(players.size() *2+1));
-        System.out.println("Game is starting.. notify users of that");
+        System.out.println("Game is starting... notify users of that");
         notifyGameStart();
         gameHandler();
 
@@ -247,7 +248,6 @@ public class Game implements Serializable{
         }
     }
 
-
     /**
      * Handles end turn mechanics,
      * notify each client the updated game status
@@ -257,7 +257,6 @@ public class Game implements Serializable{
         if (roundTrack.getCurrentRound() == 10){
             gameStatus = GameStatus.SCORE;
             System.out.println("WARNING --> 10 turns played");
-            return;
         }
         else{
             roundTrack.setDicesOnRound(roundTrack.getCurrentRound(), getDraftPool());
@@ -301,10 +300,8 @@ public class Game implements Serializable{
 
                 lobbyTimer.interrupt();
                 notifyTimerChanges(TimerStatus.FINISH);
-                Runnable myrunnable = () -> {
-                    init();
-                };
-                new Thread(myrunnable).start();
+                Runnable myRunnable = this::init;
+                new Thread(myRunnable).start();
 
             }
         }
@@ -351,7 +348,7 @@ public class Game implements Serializable{
         }
         return playersCopy;
     }
-    public int getActivePlayersNumber(){
+    int getActivePlayersNumber(){
         return (int) players.stream().filter(x -> x.getPlayerStatus()==PlayerStatus.ACTIVE).count();
     }
 
@@ -372,9 +369,8 @@ public class Game implements Serializable{
     /**
      * If a player leaves the lobby this method is called, its StartGameView Observer is removed, and the lobby timer is interrupted if less than 2 players remains in this game's lobby.
      * @param username identify the player who wants to leave the lobby
-     * @param observer observer to remove from observers list.
      */
-    public void leaveLobby(String username, LobbyObserver observer){
+    public void leaveLobby(String username){
         for(Player player : players){
             if (player.getUsername().equals(username)){
                 players.remove(player);
@@ -435,21 +431,12 @@ public class Game implements Serializable{
         return -1;
     }
 
-    private int getPlayerHashCodeByLobbyObserver(LobbyObserver lobbyObserver){
-        for(Integer hash : lobbyObservers.keySet()){
-            if(lobbyObservers.get(hash).equals(lobbyObserver)) return hash;
-        }
-        return -1;
-    }
-
     private synchronized void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
         pingAllGameObservers();
         for (ArrayList<GameObserver> observers : gameObservers.values()) {
             for (GameObserver observer : observers) {
                 try {
                     observer.onPanelChoice(playerHashCode, panels, panelsAlreadyChosen, color);
-                } catch (ConnectException e){
-
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
@@ -615,7 +602,7 @@ public class Game implements Serializable{
         }
     }
 
-    public void pairPanelToPlayer(int playerHashCode, int panelIndex) {
+    public void pairPanelToPlayer(int panelIndex) {
         chosenPanelIndex = panelIndex;
     }
 
@@ -623,7 +610,7 @@ public class Game implements Serializable{
         if(gameStatus.equals(GameStatus.INIT)){
             Player player = getPlayerByHashcode(playerHashCode);
             if (player == null) return false;
-            leaveLobby(player.getUsername(),lobbyObservers.get(playerHashCode));
+            leaveLobby(player.getUsername());
             return true;
         }else {
             Player player = getPlayerByHashcode(playerHashCode);
@@ -649,7 +636,6 @@ public class Game implements Serializable{
 
     private void toNextTurn() {
         setTurn(turn + 1);
-        //reorderPlayers();
     }
 
     private void reorderPlayers() {
@@ -757,7 +743,7 @@ public class Game implements Serializable{
                 return false;
             }
             else if (toolCard.getId() == 4 && getPlayerByHashcode(playerHashCode).getPanel().getEmptyCells() > 18){
-                System.out.println("You haven't placed enough dices to use this toolcard!\nOperation denied.");
+                System.out.println("You haven't placed enough dices to use this toolCard!\nOperation denied.");
                 return false;
             }
             else if (toolCard.getId() == 5 && roundTrack.getCurrentRound() == 1) {
@@ -966,16 +952,41 @@ public class Game implements Serializable{
     }
     //todo move param check on toolcard
 
-    private boolean toolCard9ParamsOk(Player player, ToolCardParameters toolCardParameters) {
+    private boolean toolCard1ParamsOk(ToolCardParameters toolCardParameters){
+        Dice dice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
+        if (dice == null) return false;
+        if (dice.getValue() == 1 && toolCardParameters.actionSign == -1) return false;
+        if (dice.getValue() == 6 && toolCardParameters.actionSign == +1) return false;
+        return true;
+    }
+
+    private boolean toolCard2ParamsOk(Player player, ToolCardParameters toolCardParameters){
         WindowPanel windowPanel = player.getPanel();
         if (windowPanel == null) return false;
         Cell cell = windowPanel.getCell(toolCardParameters.panelCellIndex);
         if (cell == null) return false;
-        Dice dice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
+        Cell diceCell = windowPanel.getCell(toolCardParameters.panelDiceIndex);
+        if (diceCell == null) return false;
+        Dice dice = diceCell.getDiceOn();
         if (dice == null) return false;
-        if (!(windowPanel.diceOk(dice,toolCardParameters.panelCellIndex,false,false,true))) return false;
-        return true;
+        windowPanel.removeDice(toolCardParameters.panelDiceIndex);
 
+        if (!player.getPanel().diceOk(dice,toolCardParameters.panelCellIndex,true,false,false)) return false;
+        return true;
+    }
+
+    private boolean toolCard3ParamsOk(Player player, ToolCardParameters toolCardParameters) {
+        WindowPanel windowPanel = player.getPanel();
+        if (windowPanel == null) return false;
+        Cell cell = windowPanel.getCell(toolCardParameters.panelCellIndex);
+        if (cell == null) return false;
+        Cell diceCell = windowPanel.getCell(toolCardParameters.panelDiceIndex);
+        if (diceCell == null) return false;
+        Dice dice = diceCell.getDiceOn();
+        if (dice == null) return false;
+        windowPanel.removeDice(toolCardParameters.panelDiceIndex);
+        if (!player.getPanel().diceOk(dice,toolCardParameters.panelCellIndex,false,true,false)) return false;
+        return true;
     }
 
     private boolean toolCard4ParamsOk(Player player, ToolCardParameters toolCardParameters) {
@@ -1000,45 +1011,20 @@ public class Game implements Serializable{
         return true;
     }
 
-    private boolean toolCard3ParamsOk(Player player, ToolCardParameters toolCardParameters) {
-        WindowPanel windowPanel = player.getPanel();
-        if (windowPanel == null) return false;
-        Cell cell = windowPanel.getCell(toolCardParameters.panelCellIndex);
-        if (cell == null) return false;
-        Cell diceCell = windowPanel.getCell(toolCardParameters.panelDiceIndex);
-        if (diceCell == null) return false;
-        Dice dice = diceCell.getDiceOn();
-        if (dice == null) return false;
-        windowPanel.removeDice(toolCardParameters.panelDiceIndex);
-        if (!player.getPanel().diceOk(dice,toolCardParameters.panelCellIndex,false,true,false)) return false;
-        return true;
-    }
-
-
-    private boolean toolCard1ParamsOk(ToolCardParameters toolCardParameters){
-        Dice dice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
-        if (dice == null) return false;
-        if (dice.getValue() == 1 && toolCardParameters.actionSign == -1) return false;
-        if (dice.getValue() == 6 && toolCardParameters.actionSign == +1) return false;
-        return true;
-    }
-    private boolean toolCard2ParamsOk(Player player, ToolCardParameters toolCardParameters){
-        WindowPanel windowPanel = player.getPanel();
-        if (windowPanel == null) return false;
-        Cell cell = windowPanel.getCell(toolCardParameters.panelCellIndex);
-        if (cell == null) return false;
-        Cell diceCell = windowPanel.getCell(toolCardParameters.panelDiceIndex);
-        if (diceCell == null) return false;
-        Dice dice = diceCell.getDiceOn();
-        if (dice == null) return false;
-        windowPanel.removeDice(toolCardParameters.panelDiceIndex);
-
-        if (!player.getPanel().diceOk(dice,toolCardParameters.panelCellIndex,true,false,false)) return false;
-        return true;
-    }
-
     private boolean toolCard5ParamsOk(Dice draftPoolDice) {
         return draftPoolDice != null;
+    }
+
+    private boolean toolCard9ParamsOk(Player player, ToolCardParameters toolCardParameters) {
+        WindowPanel windowPanel = player.getPanel();
+        if (windowPanel == null) return false;
+        Cell cell = windowPanel.getCell(toolCardParameters.panelCellIndex);
+        if (cell == null) return false;
+        Dice dice = draftPool.get(toolCardParameters.draftPoolDiceIndex);
+        if (dice == null) return false;
+        if (!(windowPanel.diceOk(dice,toolCardParameters.panelCellIndex,false,false,true))) return false;
+        return true;
+
     }
 
     private boolean toolCard10ParamsOk(Dice dice){
@@ -1054,31 +1040,26 @@ public class Game implements Serializable{
         Cell cell1end = player.getPanel().getCell(toolCardParameters.panelCellIndex);
         Dice dice = roundTrack.getDice(toolCardParameters.roundTrackRoundIndex, toolCardParameters.roundTrackDiceIndex);
         if (dice == null || cell1end == null || cell1start == null) return false;
-        System.out.println("prima print");
         Color color = dice.getColor();
         if((toolCardParameters.secondPanelCellIndex == toolCardParameters.panelCellIndex)||(toolCardParameters.panelCellIndex == toolCardParameters.secondPanelDiceIndex)) return false;
-        System.out.println("seconda print");
         if(!cell1start.hasDiceOn() || cell1end.hasDiceOn() || !cell1start.getDiceOn().getColor().equals(color)) return false;
         WindowPanel panel = player.getPanel();
         Dice movingDice1 = panel.removeDice(toolCardParameters.panelDiceIndex);
         if(!panel.addDice(toolCardParameters.panelCellIndex,movingDice1)) return false;
-        System.out.println(" terza print");
         if(toolCardParameters.twoDiceAction){
             Cell cell2start = player.getPanel().getCell(toolCardParameters.secondPanelDiceIndex);
             Cell cell2end = player.getPanel().getCell(toolCardParameters.secondPanelCellIndex);
             Dice movingDice2 = panel.removeDice(toolCardParameters.secondPanelDiceIndex);
             if(!panel.addDice(toolCardParameters.secondPanelCellIndex, movingDice2)) return false;
             if(cell2end == null || cell2start == null) return false;
-            System.out.println("quarta print");
             if(!cell2start.hasDiceOn() || cell2end.hasDiceOn() || !cell2start.getDiceOn().getColor().equals(color)) return false;
         }
-        System.out.println("ultima print");
         return true;
     }
 
     public PlaceDiceResult specialDicePlacement(int playerHashCode, int cellIndex, Dice dice){
         boolean result;
-        if (players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult("Somenthing went wrong!", false, null, null);
+        if (players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult("Something went wrong!", false, null, null);
         Player player = getPlayerByHashcode(playerHashCode);
         WindowPanel panel = player.getPanel();
         if (panel != null)
@@ -1165,14 +1146,14 @@ public class Game implements Serializable{
                         players, roundTrack, players.get(getCurrentPlayerIndex())));
     }
 
-    public boolean pingAllLobbyObservers(){
+    boolean pingAllLobbyObservers() {
         boolean result = true;
         for(Integer playerHashCode : lobbyObservers.keySet()){
             try {
                 lobbyObservers.get(playerHashCode).rmiPing();
             } catch (ConnectException e) {
                 System.out.println("--> detected player disconnection, username = " + getPlayerByHashcode(playerHashCode).getUsername());
-                leaveLobby(getPlayerByHashcode(playerHashCode).getUsername(), lobbyObservers.get(playerHashCode));
+                leaveLobby(getPlayerByHashcode(playerHashCode).getUsername());
                 if(players.size() < 2){
                     result = false;
                 }
@@ -1187,7 +1168,7 @@ public class Game implements Serializable{
         waitingForPanelChoice = false;
     }
 
-    public synchronized void pingAllGameObservers(){
+    synchronized void pingAllGameObservers(){
         for (ArrayList<GameObserver> obs : gameObservers.values()){
             for(GameObserver gameObserver : obs){
                 try {
@@ -1204,12 +1185,11 @@ public class Game implements Serializable{
         }
     }
 
+    private class MyTimerTask extends TimerTask {
 
-    private class MyTimerTask extends TimerTask{
+        volatile boolean isValid;
 
-        public volatile boolean isValid;
-
-        public MyTimerTask(){
+        MyTimerTask(){
             isValid = true;
         }
 

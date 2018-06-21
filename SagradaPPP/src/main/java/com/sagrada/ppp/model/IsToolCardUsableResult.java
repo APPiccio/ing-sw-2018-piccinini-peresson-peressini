@@ -3,7 +3,7 @@ package com.sagrada.ppp.model;
 import java.io.Serializable;
 
 /**
- * class container sent to the user after a request of toolcard usage
+ * class container sent to the user after a request of toolCard usage
  */
 public class IsToolCardUsableResult implements Serializable {
 

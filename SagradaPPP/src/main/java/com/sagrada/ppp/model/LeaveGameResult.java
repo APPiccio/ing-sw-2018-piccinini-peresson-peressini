@@ -19,8 +19,6 @@ public class LeaveGameResult  implements Serializable {
         this.status = status;
     }
 
-
-
     public int getGameHashCode() {
         return gameHashCode;
     }
