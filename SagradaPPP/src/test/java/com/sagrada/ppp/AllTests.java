@@ -53,7 +53,7 @@ import org.junit.runners.Suite.*;
         RoundTrackTest.class,
         WindowPanelTest.class,
         ServiceTest.class,
-        LobbyTimerTest.class
+        LobbyTimerTest.class,
         ServiceTest.class,
 
         PlaceDiceResultTest.class,

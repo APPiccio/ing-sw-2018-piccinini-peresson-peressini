@@ -714,7 +714,7 @@ public class Game implements Serializable{
         for(Player player : players){
             if(player.getHashCode() == hashCode) return player;
         }
-        return null;
+        throw new IllegalArgumentException("Invalid hashcode");
     }
 
     public void setEndTurn(int playerHashCode){

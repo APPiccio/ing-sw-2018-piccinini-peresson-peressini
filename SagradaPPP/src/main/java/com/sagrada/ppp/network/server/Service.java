@@ -25,7 +25,7 @@ public class Service {
     /**
      * @return returns always the same instance of service
      */
-    static Service getInstance(){
+    public static Service getInstance(){
         if(instance != null){
             return instance;
         }else {
