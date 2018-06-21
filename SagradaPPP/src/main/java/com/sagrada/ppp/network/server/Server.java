@@ -8,7 +8,7 @@ public class Server {
     public static void main(String[] args) {
 
         StaticValues.readConstants();
-        Service service = Service.getInstance();
+        Service.getInstance();
 
     }
 }
