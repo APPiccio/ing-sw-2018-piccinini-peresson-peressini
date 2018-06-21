@@ -95,8 +95,8 @@ public class CellTest {
 
         Dice testDice1 = new Dice(Color.GREEN, 6);
         Dice testDice2 = new Dice(Color.RED, 1);
-        numberedCell = new Cell(coloredCell);
 
+        numberedCell = new Cell(coloredCell);
         assertEquals(numberedCell, coloredCell);
 
         numberedCell.setDiceOn(testDice1);
@@ -121,8 +121,21 @@ public class CellTest {
 
         coloredCell.setDiceOn(testDice1);
         numberedCell.setDiceOn(testDice1);
-
         assertNotEquals(coloredCell, numberedCell);
+
+        Cell tempColoredCell = new Cell(Color.GREEN);
+        tempColoredCell.setDiceOn(testDice1);
+        assertNotEquals(coloredCell, tempColoredCell);
+
+        Cell tempNumberedCell = new Cell(2);
+        tempNumberedCell.setDiceOn(testDice1);
+        assertNotEquals(numberedCell, tempNumberedCell);
+
+        tempColoredCell = new Cell(coloredCell);
+        assertEquals(tempColoredCell, coloredCell);
+
+        tempNumberedCell = new Cell(numberedCell);
+        assertEquals(tempNumberedCell, numberedCell);
     }
 
     @Test

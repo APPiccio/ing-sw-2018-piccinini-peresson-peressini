@@ -1,4 +1,5 @@
 package com.sagrada.ppp.network.server;
+
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.controller.Controller;
@@ -8,8 +9,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
 
 /**
  * Singleton class
@@ -20,6 +19,7 @@ public class Service {
 
     private HashMap<Integer , Game> games;
     private static Service instance;
+    private static final String NO_GAME_WITH_THIS_HASHCODE = "No game with this HashCode: ";
 
 
     /**
@@ -213,7 +213,7 @@ public class Service {
      */
     public PlaceDiceResult placeDice(int gameHashCode, int playerHashCode, int diceIndex, int row, int col){
         Game game = getGame(gameHashCode);
-        if (game == null) return new PlaceDiceResult("No game with this HashCode: " + gameHashCode,false,null,null);
+        if (game == null) return new PlaceDiceResult(NO_GAME_WITH_THIS_HASHCODE + gameHashCode,false,null,null);
         return game.placeDice(playerHashCode, diceIndex, row , col);
     }
 
@@ -264,7 +264,7 @@ public class Service {
     public UseToolCardResult useToolCard(int gameHashCode, int playerHashCode, ToolCardParameters toolCardParameters){
         Game game = getGame(gameHashCode);
         if (game == null) return new UseToolCardResult(false,0,0,null,
-                null,null,null,"No game with this HashCode: " + gameHashCode);
+                null,null,null,NO_GAME_WITH_THIS_HASHCODE + gameHashCode);
         return game.useToolCard(playerHashCode, toolCardParameters);
     }
 
@@ -278,7 +278,7 @@ public class Service {
      */
     public PlaceDiceResult specialDicePlacement(int gameHashCode, int playerHashCode, int cellIndex, Dice dice){
         Game game = getGame(gameHashCode);
-        if (game == null) return new PlaceDiceResult("No game with this HashCode: " + gameHashCode,false,null,null);
+        if (game == null) return new PlaceDiceResult(NO_GAME_WITH_THIS_HASHCODE + gameHashCode,false,null,null);
         return game.specialDicePlacement(playerHashCode, cellIndex, dice);
     }
 

@@ -33,6 +33,10 @@ public class CommandToolCard9Test {
         toolCard9.use(new CommandToolCard9(player, 0, new Dice(Color.YELLOW, 4)));
 
         assertEquals(16, player.getPanel().getEmptyCells());
+
+        toolCard9.use(new CommandToolCard9(player, 15, new Dice(2)));
+
+        assertEquals(16, player.getPanel().getEmptyCells());
     }
 
 }
