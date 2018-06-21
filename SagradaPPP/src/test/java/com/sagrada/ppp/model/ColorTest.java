@@ -32,6 +32,12 @@ public class ColorTest {
        for (String color : colors.keySet()) {
            assertEquals(colors.get(color), Color.getColor(color));
        }
+
+       assertNull(Color.getColor("\0blue"));
+       assertNull(Color.getColor("\0green"));
+       assertNull(Color.getColor("\0purple"));
+       assertNull(Color.getColor("\0red"));
+       assertNull(Color.getColor("\0yellow"));
     }
 
 }
