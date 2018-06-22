@@ -11,8 +11,7 @@ public class StaticValues {
 
     public static final int NUMBER_OF_DICES_PER_COLOR = 18;
     public static final int FRONT_SIDE = 1;
-    public static final int BACK_SIDE = 0;
-    public static final String NULL_JSON_VALUE = "null";
+    static final String NULL_JSON_VALUE = "null";
     public static final int PATTERN_ROW = 4;
     public static final int PATTERN_COL = 5;
     public static final int NUMBER_OF_CELLS = 20;
@@ -20,14 +19,13 @@ public class StaticValues {
     public static final int NUMBER_OF_ROUNDS = 10;
     public static final int DICE_FACES = 6;
     public static final int MAX_USER_PER_GAME = 4;
-    public static int NUMBER_OF_CARDS = 12;
     public static long TURN_DURATION = 120000;
 
     public static long LOBBY_TIMER = 30000;
 
-    public static final String TOKEN_URL = "utils/token";
+    static final String TOKEN_URL = "utils/token";
     public static final String STYLE_SHEET_URL = "file:resources/SagradaStyleSheet.css";
-    public static final String TEMPLATES_URL = "resources/templates/";
+    static final String TEMPLATES_URL = "resources/templates/";
 
     public static final int COST_USED_TOOL_CARD = 2;
     public static final int COST_UNUSED_TOOL_CARD = 1;
@@ -65,89 +63,36 @@ public class StaticValues {
 
     //Colors for print formatter
     // Reset
-
-    public static final String RESET = "\033[0m";  // Text Reset
+    static final String RESET = "\033[0m";  // Text Reset
 
     // Regular Colors
-    public static final String BLACK = "\033[30m";   // BLACK
     public static final String RED = "\033[31m";     // RED
     public static final String GREEN = "\033[32m";   // GREEN
     public static final String YELLOW = "\033[33m";  // YELLOW
     public static final String BLUE = "\033[34m";    // BLUE
     public static final String PURPLE = "\033[35m";  // PURPLE
-    public static final String CYAN = "\033[36m";    // CYAN
-    public static final String WHITE = "\033[37m";   // WHITE
-
-    // Bold
-    public static final String BLACK_BOLD = "\033[30m";  // BLACK
-    public static final String RED_BOLD = "\033[31m";    // RED
-    public static final String GREEN_BOLD = "\033[32m";  // GREEN
-    public static final String YELLOW_BOLD = "\033[33m"; // YELLOW
-    public static final String BLUE_BOLD = "\033[34m";   // BLUE
-    public static final String PURPLE_BOLD = "\033[35m"; // PURPLE
-    public static final String CYAN_BOLD = "\033[36m";   // CYAN
-    public static final String WHITE_BOLD = "\033[37m";  // WHITE
-
-    // Underline
-    public static final String BLACK_UNDERLINED = "\033[30m";  // BLACK
-    public static final String RED_UNDERLINED = "\033[31m";    // RED
-    public static final String GREEN_UNDERLINED = "\033[32m";  // GREEN
-    public static final String YELLOW_UNDERLINED = "\033[33m"; // YELLOW
-    public static final String BLUE_UNDERLINED = "\033[34m";   // BLUE
-    public static final String PURPLE_UNDERLINED = "\033[35m"; // PURPLE
-    public static final String CYAN_UNDERLINED = "\033[36m";   // CYAN
-    public static final String WHITE_UNDERLINED = "\033[37m";  // WHITE
-
-    // Background
-    public static final String BLACK_BACKGROUND = "\033[40m";  // BLACK
-    public static final String RED_BACKGROUND = "\033[41m";    // RED
-    public static final String GREEN_BACKGROUND = "\033[42m";  // GREEN
-    public static final String YELLOW_BACKGROUND = "\033[43m"; // YELLOW
-    public static final String BLUE_BACKGROUND = "\033[44m";   // BLUE
-    public static final String PURPLE_BACKGROUND = "\033[45m"; // PURPLE
-    public static final String CYAN_BACKGROUND = "\033[46m";   // CYAN
-    public static final String WHITE_BACKGROUND = "\033[47m";  // WHITE
-
-    // High Intensity
-    public static final String BLACK_BRIGHT = "\033[90m";  // BLACK
-    public static final String RED_BRIGHT = "\033[91m";    // RED
-    public static final String GREEN_BRIGHT = "\033[92m";  // GREEN
-    public static final String YELLOW_BRIGHT = "\033[93m"; // YELLOW
-    public static final String BLUE_BRIGHT = "\033[94m";   // BLUE
-    public static final String PURPLE_BRIGHT = "\033[95m"; // PURPLE
-    public static final String CYAN_BRIGHT = "\033[96m";   // CYAN
-    public static final String WHITE_BRIGHT = "\033[97m";  // WHITE
 
     // Bold High Intensity
-    public static final String BLACK_BOLD_BRIGHT = "\033[90m"; // BLACK
-    public static final String RED_BOLD_BRIGHT = "\033[1;91m";   // RED
-    public static final String GREEN_BOLD_BRIGHT = "\033[1;92m"; // GREEN
-    public static final String YELLOW_BOLD_BRIGHT = "\033[1;93m";// YELLOW
-    public static final String BLUE_BOLD_BRIGHT = "\033[1;94m";  // BLUE
-    public static final String PURPLE_BOLD_BRIGHT = "\033[1;95m";// PURPLE
-    public static final String CYAN_BOLD_BRIGHT = "\033[1;96m";  // CYAN
-    public static final String WHITE_BOLD_BRIGHT = "\033[1;97m"; // WHITE
+    static final String BLACK_BOLD_BRIGHT = "\033[90m"; // BLACK
+    static final String RED_BOLD_BRIGHT = "\033[1;91m";   // RED
+    static final String GREEN_BOLD_BRIGHT = "\033[1;92m"; // GREEN
+    static final String YELLOW_BOLD_BRIGHT = "\033[1;93m";// YELLOW
+    static final String BLUE_BOLD_BRIGHT = "\033[1;94m";  // BLUE
+    static final String PURPLE_BOLD_BRIGHT = "\033[1;95m";// PURPLE
+    static final String WHITE_BOLD_BRIGHT = "\033[1;97m"; // WHITE
 
     // High Intensity backgrounds
-    public static final String BLACK_BACKGROUND_BRIGHT = "\033[100m";// BLACK
-    public static final String RED_BACKGROUND_BRIGHT = "\033[101m";// RED
-    public static final String GREEN_BACKGROUND_BRIGHT = "\033[102m";// GREEN
-    public static final String YELLOW_BACKGROUND_BRIGHT = "\033[103m";// YELLOW
-    public static final String BLUE_BACKGROUND_BRIGHT = "\033[104m";// BLUE
-    public static final String PURPLE_BACKGROUND_BRIGHT = "\033[105m"; // PURPLE
-    public static final String CYAN_BACKGROUND_BRIGHT = "\033[106m";  // CYAN
-    public static final String WHITE_BACKGROUND_BRIGHT = "\033[107m";   // WHITE
+    static final String RED_BACKGROUND_BRIGHT = "\033[101m";// RED
+    static final String GREEN_BACKGROUND_BRIGHT = "\033[102m";// GREEN
+    static final String YELLOW_BACKGROUND_BRIGHT = "\033[103m";// YELLOW
+    static final String BLUE_BACKGROUND_BRIGHT = "\033[104m";// BLUE
+    static final String PURPLE_BACKGROUND_BRIGHT = "\033[105m"; // PURPLE
+    static final String WHITE_BACKGROUND_BRIGHT = "\033[107m";   // WHITE
 
     // Cli View string command
     public static final String STRING_COMMAND_QUIT = "quit";
-    public static final String STRING_COMMAND_LOGIN = "login";
-    public static final String STRING_COMMAND_SHOW_GAMES = "show joinable multiplayer games";
-    public static final String STRING_COMMAND_CREATE_GAME = "create your own lobby";
-    public static final String STRING_COMMAND_JOIN_GAME = "join an existing lobby (write join lobbyName myUsername)";
     public static final String STRING_COMMAND_LEAVE_GAME = "leave lobby/game";
     public static final String STRING_COMMAND_HELP = "show commands list";
-    public static final String STRING_COMMAND_PLAYERS_IN_LOBBY = "show players connected to this lobby";
-    public static final String STRING_COMMAND_START_GAME = "start game";
     public static final String STRING_COMMAND_DISABLE_AFK = "'i am active again' signal";
 
     public static final String STRING_COMMAND_PLACE_DICE = "<dice_index> <cell_row> <cell_col> place the chosen dice in the panel";
@@ -158,18 +103,12 @@ public class StaticValues {
 
     // Cli View command
     public static final String COMMAND_QUIT = ":q";
-    public static final String COMMAND_LOGIN = ":login";
-    public static final String COMMAND_SHOW_GAMES = ":games";
-    public static final String COMMAND_CREATE_GAME = ":new";
-    public static final String COMMAND_JOIN_GAME = ":join";
     public static final String COMMAND_LEAVE_GAME = ":leave";
     public static final String COMMAND_HELP = ":help";
-    public static final String COMMAND_PLAYERS_IN_LOBBY = ":players";
-    public static final String COMMAND_START_GAME = ":start";
 
     public static final String COMMAND_PLACE_DICE = ":dice";
     public static final String COMMAND_END_TURN = ":end";
-    public static final String COMMAND_USE_TOOLCARD = ":toolcard";
+    public static final String COMMAND_USE_TOOL_CARD = ":toolCard";
     public static final String COMMAND_SHOW = ":show";
     public static final String COMMAND_CONNECTION = ":cmode";
     public static final String COMMAND_DISABLE_AFK = ":bazinga";
@@ -178,21 +117,18 @@ public class StaticValues {
     //AssetUrl
     public static final String FILE_URI_PREFIX = "file:";
     public static final String BLANK_CELL_ASSET = "resources/graphics/blank.png";
-    public static final String RED_CELL_ASSET = "resources/graphics/red.png";
-    public static final String BLUE_CELL_ASSET = "resources/graphics/blue.png";
-    public static final String YELLOW_CELL_ASSET = "resources/graphics/yellow.png";
-    public static final String GREEN_CELL_ASSET = "resources/graphics/green.png";
-    public static final String PURPLE_CELL_ASSET = "resources/graphics/purple.png";
-    public static final String RESTRICTION_CELL_ASSET = "resources/graphics/cell_"; //you need to add the index of the restriction
-    public static final String YELLOW_DICE_ASSET = "resources/graphics/yellowDice_";
-    public static final String BLUE_DICE_ASSET = "resources/graphics/blueDice_";
-    public static final String RED_DICE_ASSET = "resources/graphics/redDice_";
-    public static final String GREEN_DICE_ASSET = "resources/graphics/greenDice_";
-    public static final String PURPLE_DICE_ASSET = "resources/graphics/purpleDice_";
-    public static final String PNG_ASSET = ".png";
-    public static final String JPG_ASSET = ".jpg";
-
-
+    private static final String RED_CELL_ASSET = "resources/graphics/red.png";
+    private static final String BLUE_CELL_ASSET = "resources/graphics/blue.png";
+    private static final String YELLOW_CELL_ASSET = "resources/graphics/yellow.png";
+    private static final String GREEN_CELL_ASSET = "resources/graphics/green.png";
+    private static final String PURPLE_CELL_ASSET = "resources/graphics/purple.png";
+    private static final String RESTRICTION_CELL_ASSET = "resources/graphics/cell_"; //you need to add the index of the restriction
+    private static final String YELLOW_DICE_ASSET = "resources/graphics/yellowDice_";
+    private static final String BLUE_DICE_ASSET = "resources/graphics/blueDice_";
+    private static final String RED_DICE_ASSET = "resources/graphics/redDice_";
+    private static final String GREEN_DICE_ASSET = "resources/graphics/greenDice_";
+    private static final String PURPLE_DICE_ASSET = "resources/graphics/purpleDice_";
+    private static final String PNG_ASSET = ".png";
 
     public static String getAssetUri(Color color){
         switch (color){

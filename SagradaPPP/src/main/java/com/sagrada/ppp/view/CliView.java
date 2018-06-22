@@ -188,7 +188,7 @@ public class CliView extends UnicastRemoteObject
     private void showInGameCommandList(){
         System.out.println("\t" + StaticValues.COMMAND_PLACE_DICE + "\t" + StaticValues.STRING_COMMAND_PLACE_DICE);
         System.out.println("\t" + COMMAND_END_TURN + "\t" + StaticValues.STRING_COMMAND_END_TURN);
-        System.out.println("\t" + StaticValues.COMMAND_USE_TOOLCARD + "\t" + StaticValues.STRING_COMMAND_USE_TOOLCARD);
+        System.out.println("\t" + StaticValues.COMMAND_USE_TOOL_CARD + "\t" + StaticValues.STRING_COMMAND_USE_TOOLCARD);
         System.out.println("\t" + StaticValues.COMMAND_SHOW + "\t" + StaticValues.STRING_COMMAND_SHOW);
         System.out.println("\t" + StaticValues.COMMAND_DISABLE_AFK + "\t" + StaticValues.STRING_COMMAND_DISABLE_AFK);
         System.out.println("\t" + StaticValues.COMMAND_CONNECTION + "\t" + StaticValues.STRING_COMMAND_CONNECTION);
@@ -359,7 +359,7 @@ public class CliView extends UnicastRemoteObject
                     }
                     break;
 
-                case StaticValues.COMMAND_USE_TOOLCARD:
+                case StaticValues.COMMAND_USE_TOOL_CARD:
                     if (!currentPlayer.getUsername().equals(username)) {
                         System.out.println(PERMISSION_DENIED);
                         break;

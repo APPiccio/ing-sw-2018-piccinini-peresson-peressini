@@ -1,6 +1,5 @@
 package com.sagrada.ppp.model;
 
-
 /**
  * Simple ENUM used to identify LeaveGameResponse status
  */

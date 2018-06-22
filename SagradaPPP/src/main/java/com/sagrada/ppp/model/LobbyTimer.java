@@ -7,14 +7,14 @@ import com.sagrada.ppp.utils.StaticValues;
  */
 public class LobbyTimer extends Thread {
 
-    long startTime;
+    private long startTime;
     Game game;
 
     /**
      * @param startTime the starting time of the thread
      * @param game reference to the creator and runner of this object, needed to notify the game when the timer will be elapsed
      */
-    public LobbyTimer(long startTime, Game game){
+    LobbyTimer(long startTime, Game game){
         this.startTime = startTime;
         this.game = game;
     }

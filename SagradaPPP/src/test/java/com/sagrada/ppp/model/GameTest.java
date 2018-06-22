@@ -44,7 +44,7 @@ public class GameTest {
         hash2 = game.joinGame("cicche", null);
         hash3 = game.joinGame("next", null);
         assertFalse(game.isJoinable());
-        game.pairPanelToPlayer(hash1, 2);
+        game.pairPanelToPlayer(2);
         try {
             sleep(5000);
         } catch (InterruptedException e) {
@@ -104,7 +104,7 @@ public class GameTest {
         StaticValues.LOBBY_TIMER = 20000;
         Game game = new Game("ciao", null);
         int hash1 = game.joinGame("ciaaas" , null);
-        game.leaveLobby("ciaaas", null);
+        game.leaveLobby("ciaaas");
         ArrayList<String> usernames = game.getUsernames();
         assertTrue(!usernames.contains("ciaaas"));
     }
@@ -266,7 +266,7 @@ public class GameTest {
         game.attachGameObserver(gameObserver, hash4);
         game.attachLobbyObserver(lobbyObserver, hash4);
         game.joinGame("ciccio", null);
-        game.leaveLobby("ciccio", null);
+        game.leaveLobby("ciccio");
         int hash1 = game.joinGame("ciccio", null);
         int hash2 = game.joinGame("cicche", null);
         int hash3 = game.joinGame("next", null);
