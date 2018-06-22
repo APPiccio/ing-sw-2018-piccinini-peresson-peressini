@@ -14,7 +14,7 @@ public class ToolCard6 extends ToolCard {
 
     @Override
     public UseToolCardResult use(ToolCardParameterContainer container) {
-
+        setUsed();
         Dice reRoll = container.draftPool.get(container.toolCardParameters.draftPoolDiceIndex);
         container.draftPool.remove((int) container.toolCardParameters.draftPoolDiceIndex);
         new CommandToolCard6(reRoll).useCard();

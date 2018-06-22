@@ -14,6 +14,7 @@ public class ToolCard12 extends ToolCard {
 
     @Override
     public UseToolCardResult use(ToolCardParameterContainer container) {
+        setUsed();
         WindowPanel panel = new WindowPanel(container.player.getPanel());
         LinkedHashMap<Integer, Integer> positions = new LinkedHashMap<>();
         positions.put(container.toolCardParameters.panelDiceIndex , container.toolCardParameters.panelCellIndex);

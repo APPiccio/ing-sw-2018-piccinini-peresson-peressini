@@ -50,7 +50,6 @@ import org.junit.runners.Suite.*;
         JoinGameResultTest.class,
         LeaveGameResultTest.class,
         PlayerTest.class,
-        Game.class,
         RoundTrackTest.class,
         WindowPanelTest.class,
         ServiceTest.class,
