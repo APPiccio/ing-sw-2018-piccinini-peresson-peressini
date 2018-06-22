@@ -14,6 +14,7 @@ public class ToolCard4 extends ToolCard {
 
     @Override
     public UseToolCardResult use(ToolCardParameterContainer container) {
+        setUsed();
         LinkedHashMap<Integer,Integer> linkedHashMap = new LinkedHashMap<>();
         linkedHashMap.put(container.toolCardParameters.panelDiceIndex,container.toolCardParameters.panelCellIndex);
         linkedHashMap.put(container.toolCardParameters.secondPanelDiceIndex,container.toolCardParameters.secondPanelCellIndex);

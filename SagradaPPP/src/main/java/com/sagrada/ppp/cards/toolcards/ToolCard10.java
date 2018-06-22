@@ -14,6 +14,7 @@ public class ToolCard10 extends ToolCard {
 
     @Override
     public UseToolCardResult use(ToolCardParameterContainer container) {
+        setUsed();
         Dice dice = container.draftPool.get(container.toolCardParameters.draftPoolDiceIndex);
         new CommandToolCard10(dice).useCard();
         return new UseToolCardResult(true,this.getId(),this.getCost(), container.draftPool, container.roundTrack, container.players, null,null);

@@ -12,6 +12,7 @@ public class ToolCard9 extends ToolCard {
 
     @Override
     public UseToolCardResult use(ToolCardParameterContainer container) {
+        setUsed();
         new CommandToolCard9(container.player,container.toolCardParameters.panelCellIndex,container.draftPool.get(container.toolCardParameters.draftPoolDiceIndex)).useCard();
         return new UseToolCardResult(true,this.getId(),this.getCost(), container.draftPool, container.roundTrack, container.players, null,null);
     }
