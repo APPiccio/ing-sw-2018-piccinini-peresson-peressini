@@ -20,33 +20,33 @@ public class CommandToolCard10Test {
         Dice dice = new Dice(Color.PURPLE, 1);
         Dice trash = new Dice(dice);
 
-        toolCard10.use(new CommandToolCard10(trash));
+        //toolCard10.use(new CommandToolCard10(trash));
 
         assertEquals(7 - dice.getValue(), trash.getValue());
 
         dice.setValue(2);
         trash.setValue(2);
-        toolCard10.use(new CommandToolCard10(trash));
+        //toolCard10.use(new CommandToolCard10(trash));
         assertEquals(7 - dice.getValue(), trash.getValue());
 
         dice.setValue(3);
         trash.setValue(3);
-        toolCard10.use(new CommandToolCard10(trash));
+        //toolCard10.use(new CommandToolCard10(trash));
         assertEquals(7 - dice.getValue(), trash.getValue());
 
         dice.setValue(4);
         trash.setValue(4);
-        toolCard10.use(new CommandToolCard10(trash));
+        //toolCard10.use(new CommandToolCard10(trash));
         assertEquals(7 - dice.getValue(), trash.getValue());
 
         dice.setValue(5);
         trash.setValue(5);
-        toolCard10.use(new CommandToolCard10(trash));
+        //toolCard10.use(new CommandToolCard10(trash));
         assertEquals(7 - dice.getValue(), trash.getValue());
 
         dice.setValue(6);
         trash.setValue(6);
-        toolCard10.use(new CommandToolCard10(trash));
+        //toolCard10.use(new CommandToolCard10(trash));
         assertEquals(7 - dice.getValue(), trash.getValue());
     }
 

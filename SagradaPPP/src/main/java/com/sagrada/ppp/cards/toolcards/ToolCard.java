@@ -1,6 +1,8 @@
 package com.sagrada.ppp.cards.toolcards;
 
+import com.sagrada.ppp.cards.ToolCardParameterContainer;
 import com.sagrada.ppp.model.Color;
+import com.sagrada.ppp.model.UseToolCardResult;
 import com.sagrada.ppp.utils.StaticValues;
 
 import java.io.Serializable;
@@ -21,10 +23,9 @@ public abstract class ToolCard implements Serializable {
         this.description = StaticValues.getToolCardDescription(id);
     }
 
-    public void use(CommandToolCard commandToolCard) {
-        setUsed();
-        commandToolCard.useCard();
-    }
+    public abstract UseToolCardResult use(ToolCardParameterContainer container);
+
+    public abstract boolean paramsOk(ToolCardParameterContainer container);
 
     public void setUsed() {
         used = true;

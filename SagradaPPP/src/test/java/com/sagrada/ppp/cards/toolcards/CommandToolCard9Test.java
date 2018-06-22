@@ -26,15 +26,15 @@ public class CommandToolCard9Test {
 
         assertEquals(17, player.getPanel().getEmptyCells());
 
-        toolCard9.use(new CommandToolCard9(player, 19, new Dice(Color.YELLOW, 4)));
+        //toolCard9.use(new CommandToolCard9(player, 19, new Dice(Color.YELLOW, 4)));
 
         assertEquals(17, player.getPanel().getEmptyCells());
 
-        toolCard9.use(new CommandToolCard9(player, 0, new Dice(Color.YELLOW, 4)));
+        //toolCard9.use(new CommandToolCard9(player, 0, new Dice(Color.YELLOW, 4)));
 
         assertEquals(16, player.getPanel().getEmptyCells());
 
-        toolCard9.use(new CommandToolCard9(player, 15, new Dice(2)));
+        //toolCard9.use(new CommandToolCard9(player, 15, new Dice(2)));
 
         assertEquals(16, player.getPanel().getEmptyCells());
     }

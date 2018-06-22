@@ -25,7 +25,7 @@ public class CommandToolCard12Test {
 
         LinkedHashMap<Integer, Integer> positions = new LinkedHashMap<>();
         positions.put(12,11);
-        toolCard12.use(new CommandToolCard12(positions, windowPanelCopy));
+        //toolCard12.use(new CommandToolCard12(positions, windowPanelCopy));
 
         //Testing that non touched cells are equals to the original panel
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
@@ -40,7 +40,7 @@ public class CommandToolCard12Test {
         windowPanelCopy = new WindowPanel(windowPanel);
 
         positions.put(11,12);
-        toolCard12.use(new CommandToolCard12(positions, windowPanelCopy));
+        //toolCard12.use(new CommandToolCard12(positions, windowPanelCopy));
 
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
             assertEquals(windowPanel.getCell(i), windowPanelCopy.getCell(i));

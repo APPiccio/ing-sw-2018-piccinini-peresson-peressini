@@ -1,6 +1,6 @@
 {
   "lobby_timer" : 1000,
-  "TURN_TIMER" : 30000,
+  "TURN_TIMER" : 300000,
   "RMI_PORT" : 1099,
   "RMI_REGISTRY_NAME" :  "SagradaRegistry",
   "SOCKET_PORT" :  1996,

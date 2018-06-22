@@ -23,7 +23,7 @@ public class CommandToolCard2Test {
         WindowPanel windowPanelCopy = new WindowPanel(windowPanel);
         Pair<Integer, Integer> positions = new Pair<>(13, 6);
 
-        toolCard2.use(new CommandToolCard2(positions, windowPanelCopy));
+        //toolCard2.use(new CommandToolCard2(positions, windowPanelCopy));
 
         //Testing non-touched cells
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
