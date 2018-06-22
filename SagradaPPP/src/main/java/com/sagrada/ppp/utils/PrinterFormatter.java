@@ -21,7 +21,7 @@ public class PrinterFormatter {
     private static final char BOTTOM_RIGHT = (int) '┘';
     private static final char BOTTOM_CENTER = (int) '┴';
     private static final char BOTTOM_LEFT = (int) '└';
-    private static final String HORIZONTAL = "──────────";
+    private static final String HORIZONTAL = "─────────";
     private static final char VERTICAL = (int) '│';
 
 

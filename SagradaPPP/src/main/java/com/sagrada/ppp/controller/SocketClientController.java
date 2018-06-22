@@ -206,6 +206,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             waitingForResponse = true;
             out.writeObject(new DisconnectionRequest(gameHashCode,playerHashCode));
             out.reset();
+            notificationThread.interrupt();
             synchronized (responseLock) {
                 while (waitingForResponse) {
                     responseLock.wait();

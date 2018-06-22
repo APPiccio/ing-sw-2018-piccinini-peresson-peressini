@@ -38,7 +38,7 @@ import org.junit.runners.Suite.*;
         PublicObjectiveCard9Test.class,
         PublicObjectiveCard10Test.class,
 
-
+        ToolCardNotificationMessageTest.class,
         CellTest.class,
         ColorTest.class,
         DiceBagTest.class,
@@ -55,7 +55,7 @@ import org.junit.runners.Suite.*;
         ServiceTest.class,
         LobbyTimerTest.class,
         ServiceTest.class,
-
+        PlayerScoreTest.class,
         PlaceDiceResultTest.class,
         ReconnectionResultTest.class,
         ToolCardFlagsTest.class,
@@ -71,7 +71,8 @@ import org.junit.runners.Suite.*;
         EndTurnNotificationTest.class,
         EndTurnRequestTest.class,
         GameStartNotificationTest.class,
-        GetLegalPositionRequestTest.class
+        GetLegalPositionRequestTest.class,
+        GameTest.class
 })
 public class AllTests {
 
