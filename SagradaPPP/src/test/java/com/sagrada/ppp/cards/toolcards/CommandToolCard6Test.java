@@ -23,7 +23,7 @@ public class CommandToolCard6Test {
         assertEquals(oldDice.getColor(), newDice.getColor());
         assertEquals(oldDice.getValue(), newDice.getValue());
 
-        toolCard6.use(new CommandToolCard6(newDice));
+        //toolCard6.use(new CommandToolCard6(newDice));
 
         assertEquals(oldDice.getColor(), newDice.getColor());
         assertTrue(newDice.getValue() >= 1 || newDice.getValue() <=6);

@@ -49,7 +49,7 @@ public class CommandToolCard5Test {
         Dice oldDraftPoolDice = new Dice(draftPoolDice);
         Dice oldRoundTrackDice = new Dice(roundTrackDice);
 
-        toolCard5.use(new CommandToolCard5(draftPoolDice, roundTrack, round, diceRoundTrackIndex));
+        //toolCard5.use(new CommandToolCard5(draftPoolDice, roundTrack, round, diceRoundTrackIndex));
         roundTrackDice = new Dice(roundTrack.getDice(round, diceRoundTrackIndex));
 
         assertNotEquals(oldDraftPoolDice, draftPoolDice);

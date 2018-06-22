@@ -19,6 +19,11 @@ import java.util.stream.Collectors;
  */
 public class WindowPanelParser {
 
+    /**
+     * Creates the object instances of the panels contained in the resources/templates folder as json files.
+     * @return returns an array list containing all the instances of the class WindowPanel parsed from the json files.
+     * @throws IOException expose the exception of a file not found.
+     */
     public static ArrayList<WindowPanel> getPanelsFromFile() throws IOException {
         ArrayList<WindowPanel> panels = new ArrayList<>();
         File folder = new File(StaticValues.TEMPLATES_URL);
@@ -29,58 +34,59 @@ public class WindowPanelParser {
         List<File> fileList = Arrays.stream(files).collect(Collectors.toList());
         fileList = fileList.stream().filter(x -> x.getName().matches("(panel)(\\d+)(.json)")).collect(Collectors.toList());
 
+        if(fileList.size()%2 != 0){
+            throw new IOException("ERROR: there isn't an even number of panels in the templates folder. CLOSING SERVER!");
+        }
         for (int i = 1; i <= fileList.size();i++) {
             File fileEntry = new File(StaticValues.TEMPLATES_URL + "panel"+i+".json");
             if(!fileEntry.exists()){
-                throw new FileNotFoundException("Error during pattern cards loading, check file naming!");
+                throw new IOException("Error during pattern cards loading, check file naming!");
             }
             if (!fileEntry.isDirectory()) {
 
-
-                JSONTokener jsonTokener = null;
-
-                FileReader fileReader = null;
                 try {
-                    fileReader = new FileReader(fileEntry);
-                    jsonTokener = new JSONTokener(fileReader);
+                    FileReader fileReader = new FileReader(fileEntry);
+                    JSONTokener jsonTokener = new JSONTokener(fileReader);
+                    JSONObject jsonObject = new JSONObject(jsonTokener);
+                    JSONArray jsonArrayCells = jsonObject.getJSONArray("cells");
+                    ArrayList<Cell> cells = new ArrayList<>();
+
+                    //getting card name and favor token from JSON
+                    int cardID = jsonObject.getInt("cardID");
+                    int favorTokens = jsonObject.getInt("favorTokens");
+                    String panelName = jsonObject.getString("name");
+
+
+                    String color;
+                    String value;
+
+                    for (Object jsonArrayCell : jsonArrayCells) {
+                        JSONObject jsonCell = (JSONObject) jsonArrayCell;
+
+                        color = jsonCell.get("color").toString();
+                        value = jsonCell.get("value").toString();
+
+                        if (!color.equals(StaticValues.NULL_JSON_VALUE)) {
+                            //colored cell
+                            cells.add(new Cell(Color.getColor(color)));
+
+                        } else if (!value.equals(StaticValues.NULL_JSON_VALUE)) {
+                            //value cell
+                            cells.add(new Cell(Integer.parseInt(value)));
+                        } else {
+                            //blank cell
+                            cells.add(new Cell());
+                        }
+                    }
+                    WindowPanel panel = new WindowPanel(panelName, favorTokens, cardID, cells);
+                    panels.add(panel);
+                    fileReader.close();
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
 
-                JSONObject jsonObject = new JSONObject(jsonTokener);
-                JSONArray jsonArrayCells = jsonObject.getJSONArray("cells");
-                ArrayList<Cell> cells = new ArrayList<>();
 
-                //getting card name and favor token from JSON
-                int cardID = jsonObject.getInt("cardID");
-                int favorTokens = jsonObject.getInt("favorTokens");
-                String panelName = jsonObject.getString("name");
-
-
-                String color;
-                String value;
-
-                for (Object jsonArrayCell : jsonArrayCells) {
-                    JSONObject jsonCell = (JSONObject) jsonArrayCell;
-
-                    color = jsonCell.get("color").toString();
-                    value = jsonCell.get("value").toString();
-
-                    if (!color.equals(StaticValues.NULL_JSON_VALUE)) {
-                        //colored cell
-                        cells.add(new Cell(Color.getColor(color)));
-
-                    } else if (!value.equals(StaticValues.NULL_JSON_VALUE)) {
-                        //value cell
-                        cells.add(new Cell(Integer.parseInt(value)));
-                    } else {
-                        //blank cell
-                        cells.add(new Cell());
-                    }
-                }
-                WindowPanel panel = new WindowPanel(panelName, favorTokens, cardID, cells);
-                panels.add(panel);
-                fileReader.close();
 
             }
 

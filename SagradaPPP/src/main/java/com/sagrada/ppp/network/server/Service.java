@@ -84,7 +84,7 @@ public class Service {
             System.out.println(username + " has left.");
             detachLobbyObserver(gameHashCode,playerHashCode);
             game.detachAllGameObservers(playerHashCode);
-            game.leaveLobby(username, observer);
+            game.leaveLobby(username);
             if(game.getPlayers().isEmpty()){
                 leaveGameResult.setStatus(LeaveGameResultStatus.GAME_DELETED);
                 games.remove(gameHashCode);
@@ -185,7 +185,7 @@ public class Service {
         System.out.println("Received choice for " + playerHashCode);
         Game game = getGame(gameHashCode);
         if (game == null) return;
-        game.pairPanelToPlayer(playerHashCode, panelIndex);
+        game.pairPanelToPlayer(panelIndex);
         game.stopWaitingForPanelChoice();
     }
 

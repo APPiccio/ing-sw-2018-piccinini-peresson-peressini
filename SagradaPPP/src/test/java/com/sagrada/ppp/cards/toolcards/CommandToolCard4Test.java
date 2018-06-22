@@ -26,7 +26,7 @@ public class CommandToolCard4Test {
         positions.put(2, 9);
         positions.put(12, 11);
 
-        toolCard4.use(new CommandToolCard4(positions, windowPanelCopy));
+        //toolCard4.use(new CommandToolCard4(positions, windowPanelCopy));
 
         //Testing non-touched cells
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
@@ -43,7 +43,7 @@ public class CommandToolCard4Test {
         positions.remove(12);
         positions.put(9, 2);
         positions.put(11, 12);
-        toolCard4.use(new CommandToolCard4(positions, windowPanelCopy));
+        //toolCard4.use(new CommandToolCard4(positions, windowPanelCopy));
 
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
             assertEquals(windowPanel.getCell(i), windowPanelCopy.getCell(i));

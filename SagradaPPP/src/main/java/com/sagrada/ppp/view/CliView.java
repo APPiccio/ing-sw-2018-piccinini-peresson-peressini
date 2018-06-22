@@ -188,7 +188,7 @@ public class CliView extends UnicastRemoteObject
     private void showInGameCommandList(){
         System.out.println("\t" + StaticValues.COMMAND_PLACE_DICE + "\t" + StaticValues.STRING_COMMAND_PLACE_DICE);
         System.out.println("\t" + COMMAND_END_TURN + "\t" + StaticValues.STRING_COMMAND_END_TURN);
-        System.out.println("\t" + StaticValues.COMMAND_USE_TOOLCARD + "\t" + StaticValues.STRING_COMMAND_USE_TOOLCARD);
+        System.out.println("\t" + StaticValues.COMMAND_USE_TOOL_CARD + "\t" + StaticValues.STRING_COMMAND_USE_TOOLCARD);
         System.out.println("\t" + StaticValues.COMMAND_SHOW + "\t" + StaticValues.STRING_COMMAND_SHOW);
         System.out.println("\t" + StaticValues.COMMAND_DISABLE_AFK + "\t" + StaticValues.STRING_COMMAND_DISABLE_AFK);
         System.out.println("\t" + StaticValues.COMMAND_CONNECTION + "\t" + StaticValues.STRING_COMMAND_CONNECTION);
@@ -354,12 +354,12 @@ public class CliView extends UnicastRemoteObject
                             }
                         }
                         else {
-                            System.out.println("ERROR --> DICE NOT PLACED (" + result.status + ")");
+                            System.out.println("ERROR --> DICE NOT PLACED (" + false + ")");
                         }
                     }
                     break;
 
-                case StaticValues.COMMAND_USE_TOOLCARD:
+                case StaticValues.COMMAND_USE_TOOL_CARD:
                     if (!currentPlayer.getUsername().equals(username)) {
                         System.out.println(PERMISSION_DENIED);
                         break;
@@ -373,7 +373,7 @@ public class CliView extends UnicastRemoteObject
                         try {
                             toolCardIndex = Integer.parseInt(param[1]);
                         } catch (NumberFormatException e){
-                            toolCardIndex = -1;
+                            e.printStackTrace();
                         }
                         if (toolCardIndex >= 0 && toolCardIndex <= 2) {
                             System.out.println("TOOL CARD " + toolCardIndex + " USAGE:");
@@ -598,7 +598,7 @@ public class CliView extends UnicastRemoteObject
                             if (isToolCardActionEnded) {
                                 isToolCardActionEnded = false;
                                 isToolCardUsableFlag = false;
-                                //special action on toolcard 11
+                                //special action on tool card 11
                                 if(useToolCardResult.result){
                                     if(useToolCardResult.msg != null){
                                         System.out.println(useToolCardResult.msg);
@@ -686,7 +686,7 @@ public class CliView extends UnicastRemoteObject
         for (Player player : players) {
             if (player.getHashCode() == playerHashCode) return player;
         }
-        return null;
+        throw new IllegalArgumentException("Player Hash code not valid!");
 
     }
     //min included, max excluded

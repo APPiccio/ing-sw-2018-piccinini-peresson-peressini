@@ -71,7 +71,9 @@ public class WindowPanel implements Serializable {
             try {
                 loadedPanels = WindowPanelParser.getPanelsFromFile();
             } catch (IOException e) {
+
                 e.printStackTrace();
+                System.exit(-1);
             }
         }
         return loadedPanels.get(((2 * cardNumber) - side) - 1);
@@ -86,6 +88,7 @@ public class WindowPanel implements Serializable {
                 loadedPanels = WindowPanelParser.getPanelsFromFile();
             } catch (IOException e) {
                 e.printStackTrace();
+                System.exit(-1);
             }
         }
         return loadedPanels.size()/2;
@@ -169,7 +172,7 @@ public class WindowPanel implements Serializable {
      * @param ignorePosition flag showing if color restriction has to be avoided
      * @return true if the placement has been done successfully
      */
-    boolean diceOk(Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
+    public boolean diceOk(Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
         Cell cell = cells.get(i);
         if (cell.hasDiceOn()) {
             System.out.println("PLACEMENT ERROR >>> ANOTHER DICE IN THIS POSITION");
@@ -201,7 +204,7 @@ public class WindowPanel implements Serializable {
      * @param i index of the cell
      * @return true if the operation is successful
      */
-    private boolean diceOk(Dice dice, int i) {
+    public boolean diceOk(Dice dice, int i) {
         return diceOk(dice, i,
                 false, false, false);
     }
