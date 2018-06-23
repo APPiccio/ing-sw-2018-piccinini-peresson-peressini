@@ -1,17 +1,28 @@
 package com.sagrada.ppp.cards.toolcards;
 
+import com.sagrada.ppp.cards.ToolCardParameterContainer;
 import com.sagrada.ppp.model.Dice;
+import com.sagrada.ppp.model.ToolCardParameters;
 import org.junit.*;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
+//import static org.junit.assert.*;
 
 public class CommandToolCard6Test {
 
     private ToolCard toolCard6;
+    private ToolCardParameterContainer container;
 
     @Before
     public void setUp() {
         toolCard6 = new ToolCard6();
+        container = new ToolCardParameterContainer();
+        container.toolCardParameters = new ToolCardParameters();
     }
 
     @Test
@@ -22,9 +33,12 @@ public class CommandToolCard6Test {
         assertNotEquals(oldDice.hashCode(), newDice.hashCode());
         assertEquals(oldDice.getColor(), newDice.getColor());
         assertEquals(oldDice.getValue(), newDice.getValue());
-
-        //toolCard6.use(new CommandToolCard6(newDice));
-
+        ArrayList<Dice> draftPool = new ArrayList<>();
+        draftPool.add(newDice);
+        container.draftPool = draftPool;
+        container.toolCardParameters.draftPoolDiceIndex = 0;
+        assertTrue(toolCard6.paramsOk(container));
+        toolCard6.use(container);
         assertEquals(oldDice.getColor(), newDice.getColor());
         assertTrue(newDice.getValue() >= 1 || newDice.getValue() <=6);
     }

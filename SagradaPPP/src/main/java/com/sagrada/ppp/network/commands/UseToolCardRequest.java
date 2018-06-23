@@ -4,6 +4,9 @@ import com.sagrada.ppp.model.ToolCardParameters;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection. User request of toolCard usage.
+ */
 public class UseToolCardRequest implements Request, Serializable {
 
     public int gameHashCode;

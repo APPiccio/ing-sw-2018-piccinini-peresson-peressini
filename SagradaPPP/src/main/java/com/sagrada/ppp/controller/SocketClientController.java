@@ -450,7 +450,8 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                         System.exit(0);
                     }
                     else{
-                        e.printStackTrace();
+                        System.out.println("Closing client socket due to server crash");
+                        this.interrupt();
                     }
                 }catch (EOFException e){
                     System.out.println("Closing client socket due to server crash");

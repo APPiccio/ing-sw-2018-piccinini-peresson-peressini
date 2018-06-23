@@ -1,10 +1,8 @@
 package com.sagrada.ppp.cards.toolcards;
 
 import com.sagrada.ppp.cards.TestPanels;
-import com.sagrada.ppp.model.Color;
-import com.sagrada.ppp.model.Dice;
-import com.sagrada.ppp.model.WindowPanel;
-import com.sagrada.ppp.model.WindowPanelTest;
+import com.sagrada.ppp.cards.ToolCardParameterContainer;
+import com.sagrada.ppp.model.*;
 import org.junit.*;
 
 import java.util.ArrayList;
@@ -14,10 +12,15 @@ import static org.junit.Assert.*;
 public class CommandToolCard8Test {
 
     private ToolCard toolCard8;
+    private ToolCardParameterContainer container;
+    private Player player;
 
     @Before
     public void setUp() {
         toolCard8 = new ToolCard8();
+        container = new ToolCardParameterContainer();
+        container.toolCardParameters = new ToolCardParameters();
+        player = new Player("ciao");
     }
 
     /**
@@ -33,9 +36,13 @@ public class CommandToolCard8Test {
         for (int i = 0; i < 9; i++) {
             draftPool.add(new Dice(Color.PURPLE, 1));
         }
-
-        //toolCard8.use(new CommandToolCard8(1, windowPanel, 5, draftPool));
-
+        player.setPanel(windowPanel);
+        container.player = player;
+        container.draftPool = draftPool;
+        container.toolCardParameters.draftPoolDiceIndex = 5;
+        container.toolCardParameters.panelCellIndex = 1;
+        assertTrue(toolCard8.paramsOk(container));
+        toolCard8.use(container);
         assertTrue(true);
     }
 

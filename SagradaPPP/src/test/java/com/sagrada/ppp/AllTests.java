@@ -12,6 +12,7 @@ import org.junit.runners.Suite.*;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+
         ToolCardTest.class,
         CommandToolCard1Test.class,
         CommandToolCard2Test.class,

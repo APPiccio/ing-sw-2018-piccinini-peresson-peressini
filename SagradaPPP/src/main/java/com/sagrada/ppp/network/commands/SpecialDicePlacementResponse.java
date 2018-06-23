@@ -4,6 +4,10 @@ import com.sagrada.ppp.model.PlaceDiceResult;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection. Response to :
+ * @see SpecialDicePlacementRequest
+ */
 public class SpecialDicePlacementResponse implements Serializable, Response {
 
     public PlaceDiceResult result;
