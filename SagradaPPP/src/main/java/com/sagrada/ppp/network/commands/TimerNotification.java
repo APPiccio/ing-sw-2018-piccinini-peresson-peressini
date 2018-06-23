@@ -4,6 +4,10 @@ import com.sagrada.ppp.model.TimerStatus;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection.
+ * Used to notify client of timer changing.
+ */
 public class TimerNotification implements Response, Serializable {
 
     public long timerStart;

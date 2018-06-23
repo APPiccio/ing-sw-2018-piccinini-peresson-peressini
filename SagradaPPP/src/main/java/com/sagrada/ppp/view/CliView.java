@@ -301,7 +301,7 @@ public class CliView extends UnicastRemoteObject
                 System.out.println("\n\n\n\n\t\t\t\t ----> YOU WIN <----");
                 System.exit(0);
             }
-            else {
+            else if(lastPlayer != null) {
                 System.out.println("\n\n\n\n\t\t\t\t ----> " + lastPlayer.getUsername() + " WIN <----\n\n\n\n");
                 System.exit(0);
             }

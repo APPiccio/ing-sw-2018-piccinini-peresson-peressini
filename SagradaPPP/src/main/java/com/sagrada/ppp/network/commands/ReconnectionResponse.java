@@ -4,6 +4,10 @@ import com.sagrada.ppp.model.ReconnectionResult;
 
 import java.io.Serializable;
 
+/**
+ * network container class used in socket connection. Response to:
+ * @see ReconnectionRequest
+ */
 public class ReconnectionResponse implements Serializable, Response {
 
     public ReconnectionResult reconnectionResult;

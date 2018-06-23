@@ -821,6 +821,7 @@ public class Game implements Serializable {
                     }
                     player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
                     UseToolCardResult result = toolCard.use(container);
+                    if (result.result)  toolCard.setUsed();
                     notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack, toolCard.getCost());
                     return result;
                 }

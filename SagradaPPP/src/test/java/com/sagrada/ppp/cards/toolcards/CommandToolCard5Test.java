@@ -1,10 +1,9 @@
 package com.sagrada.ppp.cards.toolcards;
 
+import com.sagrada.ppp.cards.ToolCardParameterContainer;
+import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.model.Color;
-import com.sagrada.ppp.model.Dice;
-import com.sagrada.ppp.model.RoundTrack;
 import org.junit.*;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,10 +12,16 @@ import static org.junit.Assert.*;
 public class CommandToolCard5Test {
 
     private ToolCard toolCard5;
+    private ToolCardParameterContainer container;
+    private Player player;
 
     @Before
     public void setUp() {
         toolCard5 = new ToolCard5();
+        container = new ToolCardParameterContainer();
+        container.toolCardParameters = new ToolCardParameters();
+        player = new Player("ciao");
+        player.setPanel( new WindowPanel(1, 0));
     }
 
     @Test
@@ -49,7 +54,15 @@ public class CommandToolCard5Test {
         Dice oldDraftPoolDice = new Dice(draftPoolDice);
         Dice oldRoundTrackDice = new Dice(roundTrackDice);
 
-        //toolCard5.use(new CommandToolCard5(draftPoolDice, roundTrack, round, diceRoundTrackIndex));
+        container.roundTrack = roundTrack;
+        container.player = player;
+        container.draftPool = draftPool;
+        container.toolCardParameters.roundTrackRoundIndex = round;
+        container.toolCardParameters.roundTrackDiceIndex = diceRoundTrackIndex;
+        container.toolCardParameters.draftPoolDiceIndex = draftPoolDiceIndex;
+
+        assertTrue(toolCard5.paramsOk(container));
+        toolCard5.use(container);
         roundTrackDice = new Dice(roundTrack.getDice(round, diceRoundTrackIndex));
 
         assertNotEquals(oldDraftPoolDice, draftPoolDice);
