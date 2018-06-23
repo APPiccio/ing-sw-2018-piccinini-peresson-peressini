@@ -5,6 +5,9 @@ import com.sagrada.ppp.cards.publicobjectivecards.PublicObjectiveCard;
 import com.sagrada.ppp.cards.toolcards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.model.*;
+import com.sagrada.ppp.network.client.Client;
+import com.sagrada.ppp.network.client.ConnectionHandler;
+import com.sagrada.ppp.network.client.ConnectionModeEnum;
 import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
 import com.sagrada.ppp.view.ToolCardHandler;
@@ -35,24 +38,24 @@ import java.util.Optional;
 
 public class MainGameView extends UnicastRemoteObject implements GameObserver, GuiEventBus, ToolCardHandler {
 
-
     //TODO add toolcard cost to GUI and keep it up to date after usezzz
 
     private RoundTrack roundTrack;
     private GridPane mainGamePane;
     private VBox opponentsWindowPanelsPane;
     private VBox leftContainer;
-    private RoundTrackPane roundTrackPane;
+    private transient RoundTrackPane roundTrackPane;
     private VBox centerContainer;
     private HBox draftPoolPane;
-    private WindowPanelPane playerWindowPanel;
+    private transient WindowPanelPane playerWindowPanel;
     private GridPane toolCardsContainer;
     private GridPane publicCardsContainer;
     private HBox topContainer;
     private Insets defInset;
     private TabPane tabContainer;
     private Button skipButton;
-    private Tab gameTab,settingsTab,logTab;
+    private Tab gameTab;
+    private Tab settingsTab;
     private ScrollPane rightContainer;
     private HashMap<Integer,Tooltip> toolCardsToolTips;
     private boolean gameEnded = false;
@@ -73,18 +76,17 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     private EventHandler<MouseEvent> skipButtonEventHandler;
     private EventHandler<MouseEvent> toolCardClickEvent;
     private Label gameStatus;
-    private volatile  ToolCardFlags toolCardFlags;
+    private transient volatile  ToolCardFlags toolCardFlags;
     private boolean isToolCardUsed;
     private static final String ACTION_REQUIRED = "Action required";
+    private transient ConnectionModeEnum connectionModeEnum;
 
     MainGameView() throws RemoteException  {
-
 
         defInset = new Insets(10);
         tabContainer = new TabPane();
         gameTab = new Tab();
         settingsTab = new Tab();
-        logTab = new Tab();
         mainGamePane = new GridPane();
         toolCardButtons = new ArrayList<>();
         opponentsWindowPanelsPane = new VBox();
@@ -103,6 +105,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         gameStatus = new Label();
         toolCardFlags = new ToolCardFlags();
         toolCardsToolTips = new HashMap<>();
+        connectionModeEnum = Client.getConnectionModeEnum();
         //creating all Listeners
         createListeners();
 
@@ -242,7 +245,6 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         HBox.setMargin(privateObjectiveButton,defInset);
         HBox.setHgrow(privateObjectiveButton,Priority.ALWAYS);
         privateObjectiveButton.setBackground(new Background(new BackgroundFill(WindowPanelPane.getColor(privateColor),new CornerRadii(10),Insets.EMPTY)));
-        //privateCardImageView.setImage(new Image(StaticValues.FILE_URI_PREFIX + "graphics/PrivateCards/private_"+privateColor.toString().toLowerCase()+".png",150,204,true,true));
 
         gameStatus.setAlignment(Pos.CENTER);
         leftContainer.setAlignment(Pos.CENTER);
@@ -263,7 +265,6 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         draftPoolPane.setSpacing(5);
 
         drawDraftPool();
-       ///centerContainer.setBackground(                new Background(                    new BackgroundFill(                        Color.web("F0433A"),      new CornerRadii(5),                        Insets.EMPTY)));
         playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("C7F4FC"),BorderStrokeStyle.SOLID,
                 new CornerRadii(5),BorderStroke.MEDIUM)));
 
@@ -305,12 +306,54 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
         settingsTab.setClosable(false);
         settingsTab.setText("Settings");
+        VBox settingsVBox = new VBox();
+        settingsVBox.setSpacing(10);
+        settingsVBox.setAlignment(Pos.TOP_CENTER);
+        Label label = new Label("Change connection mode:");
+        Button button = new Button("Change!");
+        button.setOnAction(action -> {
+            ArrayList<String> choices = new ArrayList<>();
+            choices.add(ConnectionModeEnum.RMI.toString());
+            choices.add(ConnectionModeEnum.SOCKET.toString());
+            ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
+            dialog.setTitle(ACTION_REQUIRED);
+            dialog.setHeaderText(null);
+            dialog.setContentText("Chose your action: ");
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(stage);
+            Optional<String> result = dialog.showAndWait();
+            result.ifPresent(s -> Platform.runLater(() -> {
+                if (!(connectionModeEnum.toString()).equals(s)) {
+                    if (s.equals(choices.get(0))) {
+                        connectionModeEnum = ConnectionModeEnum.RMI;
+                        //if you are here, it means that you want to change socket -> rmi
+                        //close socket connection before changing connection mode
+                        try {
+                            controller.detachAllGameObserver(joinGameResult.getGameHashCode(), joinGameResult.getPlayerHashCode());
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        connectionModeEnum = ConnectionModeEnum.SOCKET;
+                    }
+                    ConnectionHandler connectionHandler = new ConnectionHandler(connectionModeEnum);
+                    controller = connectionHandler.getController();
+                    try {
+                        controller.attachGameObserver(joinGameResult.getGameHashCode(), this, joinGameResult.getPlayerHashCode());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }));
+        });
+        HBox connectionHBox = new HBox();
+        connectionHBox.setPadding(new Insets(10, 0, 0, 10));
+        connectionHBox.setSpacing(10);
+        connectionHBox.getChildren().addAll(label, button);
+        settingsVBox.getChildren().add(connectionHBox);
+        settingsTab.setContent(settingsVBox);
 
-        logTab.setClosable(false);
-        logTab.setText("Event Log");
-
-        tabContainer.getTabs().addAll(gameTab, logTab, settingsTab);
-
+        tabContainer.getTabs().addAll(gameTab, settingsTab);
 
         scene.getStylesheets().add(css);
         stage.setScene(scene);
