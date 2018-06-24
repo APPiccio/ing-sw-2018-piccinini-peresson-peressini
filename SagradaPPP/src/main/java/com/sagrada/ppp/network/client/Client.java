@@ -13,6 +13,7 @@ import java.util.Scanner;
 public class Client {
 
     private static RemoteController controller;
+    private static ConnectionModeEnum connectionModeEnum;
 
     public static void main(String[] args) throws RemoteException {
 
@@ -27,7 +28,6 @@ public class Client {
             connectionChoice = scanner.nextLine();
         }
 
-        ConnectionModeEnum connectionModeEnum;
         if (connectionChoice.equals("rmi")) {
             connectionModeEnum = ConnectionModeEnum.RMI;
         }
@@ -69,5 +69,7 @@ public class Client {
     public static RemoteController getController() {
         return controller;
     }
+
+    public static ConnectionModeEnum getConnectionModeEnum() { return connectionModeEnum; }
 
 }
