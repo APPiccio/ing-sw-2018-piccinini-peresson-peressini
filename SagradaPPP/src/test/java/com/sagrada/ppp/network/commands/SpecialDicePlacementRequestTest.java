@@ -90,5 +90,6 @@ public class SpecialDicePlacementRequestTest {
         };
 
         specialDicePlacementRequest = new SpecialDicePlacementRequest(132,123,132,null);
+        specialDicePlacementRequest.handle(handler);
     }
 }

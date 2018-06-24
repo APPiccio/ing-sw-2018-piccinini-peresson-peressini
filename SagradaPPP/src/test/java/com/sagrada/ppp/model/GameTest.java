@@ -2,7 +2,6 @@ package com.sagrada.ppp.model;
 
 import com.sagrada.ppp.network.server.Service;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sagrada.ppp.view.CliView;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,13 +28,58 @@ public class GameTest {
         int hash1 = game.joinGame("cicco", null);
         int hash2 = game.joinGame("cicco", null);
         int hash3 = game.joinGame("next", null);
-        try {
-            CliView observer = new CliView(null, null);
-            game.attachGameObserver(observer, hash2);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
+        GameObserver gameObserver = new GameObserver() {
+            @Override
+            public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color playerPrivateColor) throws RemoteException {
 
+            }
+
+            @Override
+            public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
+
+            }
+
+            @Override
+            public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
+
+            }
+
+            @Override
+            public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
+
+            }
+
+            @Override
+            public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+
+            }
+
+            @Override
+            public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+
+            }
+
+            @Override
+            public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
+
+            }
+
+            @Override
+            public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
+
+            }
+
+            @Override
+            public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
+
+            }
+
+            @Override
+            public void rmiPing() throws RemoteException {
+
+            }
+        };
+        game.attachGameObserver(gameObserver, hash2);
         assertFalse(game.isJoinable());
         assertEquals("cicco(1)", game.getPlayerUsername(hash2));
 
@@ -56,14 +100,81 @@ public class GameTest {
     public void ping_test(){
         //useless test because is on network code
         Game game = new Game("ciao", null);
-        CliView cliView = null;
-        try {
-            cliView = new CliView(null, null);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        game.attachGameObserver(cliView, 123);
-        game.attachLobbyObserver(cliView, 123);
+        LobbyObserver lobbyObserver = new LobbyObserver() {
+            @Override
+            public void onPlayerJoined(String username, ArrayList<String> Players, int numOfPlayers) throws RemoteException {
+
+            }
+
+            @Override
+            public void onPlayerLeave(String username, ArrayList<String> Players, int numOfPlayers) throws RemoteException {
+
+            }
+
+            @Override
+            public void onTimerChanges(long timerStart, TimerStatus timerStatus) throws RemoteException {
+
+            }
+
+            @Override
+            public void rmiPing() throws RemoteException {
+
+            }
+        };
+        GameObserver gameObserver = new GameObserver() {
+            @Override
+            public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color playerPrivateColor) throws RemoteException {
+
+            }
+
+            @Override
+            public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
+
+            }
+
+            @Override
+            public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
+
+            }
+
+            @Override
+            public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
+
+            }
+
+            @Override
+            public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+
+            }
+
+            @Override
+            public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+
+            }
+
+            @Override
+            public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
+
+            }
+
+            @Override
+            public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
+
+            }
+
+            @Override
+            public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
+
+            }
+
+            @Override
+            public void rmiPing() throws RemoteException {
+
+            }
+        };
+
+        game.attachGameObserver(gameObserver, 123);
+        game.attachLobbyObserver(lobbyObserver, 123);
         game.pingAllGameObservers();
         game.pingAllLobbyObservers();
         game.detachAllGameObservers(123);
@@ -76,18 +187,6 @@ public class GameTest {
         int hash1 = game.joinGame("cicco", null);
         int hash2 = game.joinGame("cicche", null);
         int hash3 = game.joinGame("next", null);
-        CliView cliView1 = null;
-        CliView cliView2 = null;
-        CliView cliView3 = null;
-        try{
-            cliView1 = new CliView(null, null);
-            cliView2 = new CliView(null, null);
-            cliView3 = new CliView(null, null);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-
-
         try {
             sleep(StaticValues.TURN_DURATION * 6);
         } catch (InterruptedException e) {

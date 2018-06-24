@@ -119,5 +119,6 @@ public class ReconnectionResponseTest {
         };
 
         reconnectionResponse = new ReconnectionResponse(null);
+        reconnectionResponse.handle(handler);
     }
 }
