@@ -117,23 +117,25 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
     }
 
     private void timerStarted(long remainingTime) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Timer");
-        alert.setHeaderText(null);
-        if (remainingTime == 1) {
-            alert.setContentText("Your game will start in " + remainingTime + " second!");
-            vBoxEventsTab.getChildren().add(
-                    new Label("Timer started! Game will start in " + remainingTime + " second.")
-            );
-        } else {
-            alert.setContentText("Your game will start in " + remainingTime + " seconds!");
-            vBoxEventsTab.getChildren().add(
-                    new Label("Timer started! Game will start in " + remainingTime + " seconds.")
-            );
-        }
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.initOwner(stage);
-        alert.show();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Timer");
+            alert.setHeaderText(null);
+            if (remainingTime == 1) {
+                alert.setContentText("Your game will start in " + remainingTime + " second!");
+                vBoxEventsTab.getChildren().add(
+                        new Label("Timer started! Game will start in " + remainingTime + " second.")
+                );
+            } else {
+                alert.setContentText("Your game will start in " + remainingTime + " seconds!");
+                vBoxEventsTab.getChildren().add(
+                        new Label("Timer started! Game will start in " + remainingTime + " seconds.")
+                );
+            }
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
+            alert.show();
+        });
     }
 
     private void timerEnded() {
@@ -142,20 +144,24 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        windowPanelsSelectionView.init(controller, stage, joinGameResult);
+        Platform.runLater(() -> {
+            windowPanelsSelectionView.init(controller, stage, joinGameResult);
+        });
     }
 
     private void timerInterrupted() {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Timer");
-        alert.setHeaderText(null);
-        alert.setContentText("Timer interrupted. Waiting for other players...");
-        vBoxEventsTab.getChildren().add(
-                new Label("Timer interrupted. Waiting for other players...")
-        );
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.initOwner(stage);
-        alert.show();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Timer");
+            alert.setHeaderText(null);
+            alert.setContentText("Timer interrupted. Waiting for other players...");
+            vBoxEventsTab.getChildren().add(
+                    new Label("Timer interrupted. Waiting for other players...")
+            );
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.initOwner(stage);
+            alert.show();
+        });
     }
 
     private void clearPlayers() {
@@ -204,19 +210,14 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
 
     @Override
     public void onTimerChanges(long timerStart, TimerStatus timerStatus) {
-        long remainingTime = ((StaticValues.LOBBY_TIMER + timerStart) - System.currentTimeMillis())/1000;
-        Platform.runLater(() -> {
-                    if (timerStatus.equals(TimerStatus.START)) {
-                        timerStarted(remainingTime);
-                    }
-                    else if (timerStatus.equals(TimerStatus.FINISH)) {
-                        timerEnded();
-                    }
-                    else if (timerStatus.equals(TimerStatus.INTERRUPT)) {
-                        timerInterrupted();
-                    }
-                }
-        );
+        long remainingTime = ((StaticValues.LOBBY_TIMER + timerStart) - System.currentTimeMillis()) / 1000;
+        if (timerStatus.equals(TimerStatus.START)) {
+            timerStarted(remainingTime);
+        } else if (timerStatus.equals(TimerStatus.FINISH)) {
+            timerEnded();
+        } else if (timerStatus.equals(TimerStatus.INTERRUPT)) {
+            timerInterrupted();
+        }
     }
 
     @Override

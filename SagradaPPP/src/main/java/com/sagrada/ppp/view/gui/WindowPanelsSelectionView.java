@@ -190,8 +190,8 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
     @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels,
                               HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
-        panelAvailable = panels;
         Platform.runLater(() -> {
+                    panelAvailable = panels;
                     if (panelsAlreadyChosen.size() != 0) {
                         chosenPanels(panelsAlreadyChosen);
                     }

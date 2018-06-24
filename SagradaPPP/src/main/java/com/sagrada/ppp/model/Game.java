@@ -422,14 +422,6 @@ public class Game implements Serializable {
         lobbyObservers.remove(playerHashCode);
     }
 
-    private int getPlayerHashCodeByGameObserver(GameObserver gameObserver){
-        for(Integer hash : gameObservers.keySet()){
-            for ( GameObserver obs : gameObservers.get(hash)){
-                if (obs.equals(gameObserver)) return hash;
-            }
-        }
-        return -1;
-    }
 
     private synchronized void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
         pingAllGameObservers();
@@ -700,7 +692,7 @@ public class Game implements Serializable {
         for(Player player : players){
             if(player.getHashCode() == hashCode) return player;
         }
-        throw new IllegalArgumentException("Invalid hashcode");
+        throw new IllegalArgumentException("Invalid hashcode = " + hashCode);
     }
 
     public void setEndTurn(int playerHashCode){
@@ -944,18 +936,14 @@ public class Game implements Serializable {
         waitingForPanelChoice = false;
     }
 
-    synchronized void pingAllGameObservers(){
-        for (ArrayList<GameObserver> obs : gameObservers.values()){
-            for(GameObserver gameObserver : obs){
+    void pingAllGameObservers(){
+        for(int hash : gameObservers.keySet()){
+            for(GameObserver gameObserver : gameObservers.get(hash)){
                 try {
-                    rmiPing(gameObserver);
-                } catch (ConnectException e){
+                    gameObserver.rmiPing();
+                } catch (RemoteException e) {
                     System.out.println("DISCONNECTING DUE TO PING DETECT");
-                    int hash = getPlayerHashCodeByGameObserver(gameObserver);
                     disconnect(hash);
-                }
-                catch (RemoteException e) {
-                    e.printStackTrace();
                 }
             }
         }
