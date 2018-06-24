@@ -2,6 +2,9 @@ package com.sagrada.ppp.network.commands;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection. Player request to leave the game
+ */
 public class LeaveGameRequest implements Request,Serializable {
     public String username;
     public int gameHashCode;

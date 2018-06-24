@@ -7,6 +7,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Class container used in socket connection. Used to notify user that someone has chose his panel and now it's the time
+ * that another player make his choice
+ */
 public class PanelChoiceNotification implements Response, Serializable {
 
     public int playerHashCode;

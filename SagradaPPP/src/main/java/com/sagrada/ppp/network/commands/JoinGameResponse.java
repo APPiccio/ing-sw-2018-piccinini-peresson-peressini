@@ -4,6 +4,10 @@ import com.sagrada.ppp.model.JoinGameResult;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection. Server response to :
+ * @see JoinGameRequest
+ */
 public class JoinGameResponse implements Response, Serializable {
     public JoinGameResult joinGameResult;
 

@@ -39,6 +39,45 @@ import org.junit.runners.Suite.*;
         PublicObjectiveCard9Test.class,
         PublicObjectiveCard10Test.class,
 
+
+        //command package test
+
+        DetachGameObserverRequestTest.class,
+        DicePlacedNotificationTest.class,
+        DisableAFKRequestTest.class,
+        DisconnectionRequestTest.class,
+        DisconnectionResponseTest.class,
+        EndGameNotificationTest.class,
+        EndTurnNotificationTest.class,
+        EndTurnRequestTest.class,
+        GameStartNotificationTest.class,
+        GetLegalPositionRequestTest.class,
+        GetLegalPositionResponseTest.class,
+        IsToolCardUsableRequestTest.class,
+        IsToolCardUsableResponseTest.class,
+        JoinGameRequestTest.class,
+        JoinGameResponseTest.class,
+        LeaveGameRequestTest.class,
+        LeaveGameResponseTest.class,
+        PanelChoiceNotificationTest.class,
+        PanelChoiceRequestTest.class,
+        PlaceDiceRequestTest.class,
+        PlaceDiceResponseTest.class,
+        PlayerAFKNotificationTest.class,
+        PlayerDisconnectionNotificationTest.class,
+        PlayerEventNotificationTest.class,
+        PlayerReconnectionNotificationTest.class,
+        PutDiceInDraftPoolRequestTest.class,
+        ReconnectionRequestTest.class,
+        ReconnectionResponseTest.class,
+        SpecialDicePlacementRequestTest.class,
+        SpecialDicePlacementResponseTest.class,
+        TimerNotificationTest.class,
+        UsedToolCardNotificationTest.class,
+        UseToolCardRequest.class,
+        UseToolCardResponse.class,
+
+        //model package test
         ToolCardNotificationMessageTest.class,
         CellTest.class,
         ColorTest.class,
@@ -63,16 +102,7 @@ import org.junit.runners.Suite.*;
         ToolCardParametersTest.class,
         UseToolCardResultTest.class,
 
-        DetachGameObserverRequestTest.class,
-        DicePlacedNotificationTest.class,
-        DisableAFKRequestTest.class,
-        DisconnectionRequestTest.class,
-        DisconnectionResponseTest.class,
-        EndGameNotificationTest.class,
-        EndTurnNotificationTest.class,
-        EndTurnRequestTest.class,
-        GameStartNotificationTest.class,
-        GetLegalPositionRequestTest.class,
+
         GameTest.class
 })
 public class AllTests {

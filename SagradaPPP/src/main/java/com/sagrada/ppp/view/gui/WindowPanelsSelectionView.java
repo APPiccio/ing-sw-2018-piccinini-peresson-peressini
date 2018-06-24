@@ -32,18 +32,23 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
     private HBox hBox1;
     private HBox hBox2;
     private VBox vBoxEvents;
-    private Color privateColor;
-    private JoinGameResult joinGameResult;
-    private ArrayList<WindowPanel> panelAvailable;
+    private volatile Color privateColor;
+    private volatile JoinGameResult joinGameResult;
+    private volatile ArrayList<WindowPanel> panelAvailable;
     private ArrayList<Button> buttons;
-    private boolean receivedMyPanels;
-    private boolean userHasChosen;
+    private volatile boolean receivedMyPanels;
+    private volatile boolean userHasChosen;
     private static final String SELECT = "Select";
 
     WindowPanelsSelectionView() throws RemoteException {
         this.hBox2 = new HBox();
         this.hBox1 = new HBox();
         this.vBoxEvents = new VBox();
+        receivedMyPanels = false;
+        userHasChosen = false;
+        panelAvailable = null;
+        joinGameResult = null;
+        privateColor = null;
     }
 
 
@@ -185,10 +190,8 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
     @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels,
                               HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
-
-
+        panelAvailable = panels;
         Platform.runLater(() -> {
-                    panelAvailable = panels;
                     if (panelsAlreadyChosen.size() != 0) {
                         chosenPanels(panelsAlreadyChosen);
                     }

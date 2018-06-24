@@ -6,6 +6,10 @@ import com.sagrada.ppp.model.LeaveGameResult;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection. Server response to :
+ * @see LeaveGameRequest
+ */
 public class LeaveGameResponse implements Response, Serializable {
     public LeaveGameResult leaveGameResult;
 

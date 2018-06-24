@@ -622,8 +622,6 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                     alert.show();
                 }
             }
-
-
         });
     }
 

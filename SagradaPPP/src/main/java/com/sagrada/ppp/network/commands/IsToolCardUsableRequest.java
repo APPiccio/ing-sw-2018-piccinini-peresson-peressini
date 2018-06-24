@@ -2,6 +2,9 @@ package com.sagrada.ppp.network.commands;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection. Used by client to check the usability of a specific toolCard.
+ */
 public class IsToolCardUsableRequest implements Request, Serializable {
 
     public int gameHashCode;

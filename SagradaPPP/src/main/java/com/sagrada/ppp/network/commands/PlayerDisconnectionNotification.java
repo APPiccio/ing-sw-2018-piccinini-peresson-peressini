@@ -4,6 +4,9 @@ import com.sagrada.ppp.model.Player;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection. As the name said, used to notify player disconnection
+ */
 public class PlayerDisconnectionNotification implements Response, Serializable {
 
     public Player disconnectingPlayer;

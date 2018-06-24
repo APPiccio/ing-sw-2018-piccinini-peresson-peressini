@@ -98,7 +98,6 @@ public class Game implements Serializable {
             notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerPrivateColor(playerHashCode));
             PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(System.currentTimeMillis(), this);
             panelChoiceTimer.start();
-
             //TODO syncronize this!
             while(waitingForPanelChoice && !panelChoiceTimerExpired){
             }

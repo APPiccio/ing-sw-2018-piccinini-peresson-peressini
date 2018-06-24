@@ -6,6 +6,10 @@ import com.sagrada.ppp.network.commands.ResponseHandler;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection. Used to notify that a player has been inactive for a while and now
+ * is currently disabled.
+ */
 public class PlayerAFKNotification implements Serializable, Response {
 
     public Player player;

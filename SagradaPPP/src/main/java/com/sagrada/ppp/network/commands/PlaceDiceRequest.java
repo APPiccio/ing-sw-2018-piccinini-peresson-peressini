@@ -2,6 +2,9 @@ package com.sagrada.ppp.network.commands;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection. Used by client in order to ask for a dice placement
+ */
 public class PlaceDiceRequest implements Serializable, Request {
 
     public int gameHashCode;

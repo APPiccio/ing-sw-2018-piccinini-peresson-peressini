@@ -142,8 +142,6 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-
-
         windowPanelsSelectionView.init(controller, stage, joinGameResult);
     }
 

@@ -4,6 +4,10 @@ import com.sagrada.ppp.model.IsToolCardUsableResult;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection. Server response to:
+ * @see IsToolCardUsableRequest
+ */
 public class IsToolCardUsableResponse implements Response, Serializable {
 
     public IsToolCardUsableResult isToolCardUsableResult;

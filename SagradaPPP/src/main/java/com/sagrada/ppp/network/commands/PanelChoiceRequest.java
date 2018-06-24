@@ -3,6 +3,9 @@ package com.sagrada.ppp.network.commands;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection. Used by players to notify their panel choice.
+ */
 public class PanelChoiceRequest implements Request, Serializable {
 
     public int gameHashCode;

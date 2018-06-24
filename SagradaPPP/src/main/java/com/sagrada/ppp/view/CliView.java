@@ -878,9 +878,11 @@ public class CliView extends UnicastRemoteObject
     }
 
     private void showGameSecondaryStuff(){
-        System.out.println("----------------------------------------");
-        System.out.println("Round Track: ");
-        System.out.println(roundTrack.toString());
+        if(roundTrack != null) {
+            System.out.println("----------------------------------------");
+            System.out.println("Round Track: ");
+            System.out.println(roundTrack.toString());
+        }
         System.out.println("----------------------------------------");
         System.out.println("Tool Cards:");
         for(ToolCard toolCard : toolCards){

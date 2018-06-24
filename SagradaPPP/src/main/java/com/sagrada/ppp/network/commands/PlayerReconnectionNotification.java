@@ -4,6 +4,9 @@ import com.sagrada.ppp.model.Player;
 
 import java.io.Serializable;
 
+/**
+ * Class container used in socket connection, during player reconnection attempt
+ */
 public class PlayerReconnectionNotification implements Response, Serializable {
 
     public Player reconnectingPlayer;
