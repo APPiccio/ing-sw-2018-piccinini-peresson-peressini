@@ -66,6 +66,16 @@ public class CommandToolCard10Test {
         assertTrue(toolCard10.paramsOk(container));
         toolCard10.use(container);
         assertEquals(7 - dice.getValue(), trash.getValue());
+
+        //Testing paramsOk
+
+        draftPool = new ArrayList<>();
+        draftPool.add(null);
+
+        //null dice from draftPool
+        container.toolCardParameters.draftPoolDiceIndex = 0;
+        container.draftPool = draftPool;
+        assertFalse(toolCard10.paramsOk(container));
     }
 
 }

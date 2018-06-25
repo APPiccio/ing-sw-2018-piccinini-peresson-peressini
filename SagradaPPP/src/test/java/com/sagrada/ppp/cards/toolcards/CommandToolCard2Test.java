@@ -3,11 +3,9 @@ package com.sagrada.ppp.cards.toolcards;
 import com.sagrada.ppp.cards.TestPanels;
 import com.sagrada.ppp.cards.ToolCardParameterContainer;
 import com.sagrada.ppp.model.Player;
-import com.sagrada.ppp.model.PlayerScore;
 import com.sagrada.ppp.model.ToolCardParameters;
 import com.sagrada.ppp.model.WindowPanel;
 import com.sagrada.ppp.utils.StaticValues;
-import javafx.util.Pair;
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -49,6 +47,54 @@ public class CommandToolCard2Test {
         //Testing changes
         assertEquals(windowPanel.getCell(13).getDiceOn().getValue(), windowPanelCopy.getCell(6).getDiceOn().getValue());
         assertEquals(windowPanel.getCell(13).getDiceOn().getColor(), windowPanelCopy.getCell(6).getDiceOn().getColor());
+
+        //Testing paramsOk
+
+        //null windowPanel
+        player.setPanel(null);
+        container.toolCardParameters.panelDiceIndex = 13;
+        container.toolCardParameters.panelCellIndex = 6;
+        container.player = player;
+        assertFalse(toolCard2.paramsOk(container));
+
+        windowPanelCopy = new WindowPanel(windowPanel);
+        player.setPanel(windowPanelCopy);
+
+        //Invalid cell
+        container.toolCardParameters.panelCellIndex = -777;
+        container.toolCardParameters.panelDiceIndex = 13;
+        container.player = player;
+        assertFalse(toolCard2.paramsOk(container));
+
+        //Invalid cell
+        container.toolCardParameters.panelCellIndex = 42;
+        container.toolCardParameters.panelDiceIndex = 13;
+        container.player = player;
+        assertFalse(toolCard2.paramsOk(container));
+
+        //Invalid cell
+        container.toolCardParameters.panelCellIndex = 6;
+        container.toolCardParameters.panelDiceIndex = -777;
+        container.player = player;
+        assertFalse(toolCard2.paramsOk(container));
+
+        //Invalid cell
+        container.toolCardParameters.panelCellIndex = 6;
+        container.toolCardParameters.panelDiceIndex = 42;
+        container.player = player;
+        assertFalse(toolCard2.paramsOk(container));
+
+
+        container.toolCardParameters.panelCellIndex = 6;
+        container.toolCardParameters.panelDiceIndex = 19;
+        container.player = player;
+        assertFalse(toolCard2.paramsOk(container));
+
+        //Invalid placement
+        container.toolCardParameters.panelCellIndex = 19;
+        container.toolCardParameters.panelDiceIndex = 13;
+        container.player = player;
+        assertFalse(toolCard2.paramsOk(container));
     }
 
 }

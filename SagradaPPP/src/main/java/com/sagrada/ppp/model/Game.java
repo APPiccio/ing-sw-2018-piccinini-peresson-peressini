@@ -5,7 +5,6 @@ import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.network.server.Service;
 import com.sagrada.ppp.utils.StaticValues;
-import javafx.util.Pair;
 
 import java.io.Serializable;
 import java.rmi.ConnectException;

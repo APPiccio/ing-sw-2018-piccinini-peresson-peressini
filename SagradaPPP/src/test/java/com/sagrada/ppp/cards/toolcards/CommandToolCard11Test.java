@@ -45,6 +45,21 @@ public class CommandToolCard11Test {
         assertTrue(toolCard11.paramsOk(container));
         toolCard11.use(container);
         assertTrue(true);
+
+        //Testing paramsOk
+
+        diceBagCopy = new DiceBag();
+        for (int i = 0; i < 90; i++) {
+            diceBagCopy.extractRandomDice();
+        }
+        assertEquals(0, diceBagCopy.size());
+
+        //empty diceBag
+        container.diceBag = diceBagCopy;
+        container.draftPool = new ArrayList<>();
+        container.draftPool.add(diceCopy);
+        container.toolCardParameters.draftPoolDiceIndex = 0;
+        assertFalse(toolCard11.paramsOk(container));
     }
 
 }

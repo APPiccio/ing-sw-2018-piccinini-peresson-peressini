@@ -74,6 +74,18 @@ public class CommandToolCard5Test {
         assertEquals(2, roundTrackDice.getValue());
         assertEquals(Color.PURPLE, draftPoolDice.getColor());
         assertEquals(5, draftPoolDice.getValue());
+
+        //Testing paramsOk
+        container.roundTrack = roundTrack;
+        container.player = player;
+        container.draftPool = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            container.draftPool.add(null);
+        }
+        container.toolCardParameters.roundTrackRoundIndex = round;
+        container.toolCardParameters.roundTrackDiceIndex = diceRoundTrackIndex;
+        container.toolCardParameters.draftPoolDiceIndex = draftPoolDiceIndex;
+        assertFalse(toolCard5.paramsOk(container));
     }
 
 }

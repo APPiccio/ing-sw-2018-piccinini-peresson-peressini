@@ -74,8 +74,8 @@ import org.junit.runners.Suite.*;
         SpecialDicePlacementResponseTest.class,
         TimerNotificationTest.class,
         UsedToolCardNotificationTest.class,
-        UseToolCardRequest.class,
-        UseToolCardResponse.class,
+        UseToolCardRequestTest.class,
+        UseToolCardResponseTest.class,
 
         //model package test
         ToolCardNotificationMessageTest.class,

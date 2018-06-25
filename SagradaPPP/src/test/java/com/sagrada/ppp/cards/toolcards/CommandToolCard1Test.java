@@ -128,6 +128,7 @@ public class CommandToolCard1Test {
         toolCard1.use(container);
         assertEquals(dice.getValue() - 1, tempDice.getValue());
 
+        //Trying to decrement a dice of value 1
         dice.setValue(1);
         tempDice.setValue(1);
         container.toolCardParameters.actionSign = -1;
@@ -137,6 +138,7 @@ public class CommandToolCard1Test {
         toolCard1.use(container);
         assertNotEquals(dice.getValue() - 1, tempDice.getValue());
 
+        //Trying to increment a dice of value 6
         dice.setValue(6);
         tempDice.setValue(6);
         container.toolCardParameters.actionSign = +1;
@@ -146,6 +148,7 @@ public class CommandToolCard1Test {
         toolCard1.use(container);
         assertNotEquals(dice.getValue() + 1, tempDice.getValue());
 
+        //null dice
         container.draftPool = new ArrayList<>();
         container.draftPool.add(null);
         assertFalse(toolCard1.paramsOk(container));

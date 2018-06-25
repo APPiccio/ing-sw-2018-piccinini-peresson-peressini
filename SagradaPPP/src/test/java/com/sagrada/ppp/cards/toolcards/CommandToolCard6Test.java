@@ -7,11 +7,7 @@ import org.junit.*;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-
-//import static org.junit.assert.*;
+import static org.junit.Assert.*;
 
 public class CommandToolCard6Test {
 
@@ -41,6 +37,13 @@ public class CommandToolCard6Test {
         toolCard6.use(container);
         assertEquals(oldDice.getColor(), newDice.getColor());
         assertTrue(newDice.getValue() >= 1 || newDice.getValue() <=6);
+
+        //Testing paramsOk
+        draftPool = new ArrayList<>();
+        draftPool.add(null);
+        container.draftPool = draftPool;
+        container.toolCardParameters.draftPoolDiceIndex = 0;
+        assertFalse(toolCard6.paramsOk(container));
     }
 
 }
