@@ -95,7 +95,7 @@ public class Game implements Serializable {
                 }
             }
             //TODO change getPrivateColor with getPlayerByHashCode.getPrivateColor
-            notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerPrivateColor(playerHashCode));
+            notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerByHashcode(playerHashCode).getPrivateColor());
             PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(System.currentTimeMillis(), this);
             panelChoiceTimer.start();
             //TODO syncronize this!
@@ -542,14 +542,6 @@ public class Game implements Serializable {
             int index = ThreadLocalRandom.current().nextInt(0, notUsedColor.size());
             player.setPrivateColor(Color.values()[notUsedColor.remove(index)]);
         }
-    }
-
-
-    private Color getPlayerPrivateColor(int playerHashCode){
-        for(Player player : players){
-            if(player.hashCode() == playerHashCode) return player.getPrivateColor();
-        }
-        return null;
     }
 
     private void extractToolCards(){
