@@ -32,7 +32,6 @@ public class ToolCard3 extends ToolCard {
         Dice dice = diceCell.getDiceOn();
         if (dice == null) return false;
         windowPanel.removeDice(toolCardParameters.panelDiceIndex);
-        if (!player.getPanel().diceOk(dice,toolCardParameters.panelCellIndex,false,true,false)) return false;
-        return true;
+        return player.getPanel().diceOk(dice, toolCardParameters.panelCellIndex, false, true, false);
     }
 }

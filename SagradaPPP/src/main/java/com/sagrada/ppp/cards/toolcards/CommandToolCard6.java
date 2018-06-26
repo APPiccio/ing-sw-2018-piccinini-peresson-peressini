@@ -6,7 +6,7 @@ public class CommandToolCard6 implements CommandToolCard {
 
     private Dice dice;
 
-    public CommandToolCard6(Dice dice) {
+    CommandToolCard6(Dice dice) {
         this.dice = dice;
     }
 

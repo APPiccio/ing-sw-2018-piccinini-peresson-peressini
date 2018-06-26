@@ -10,7 +10,7 @@ public class CommandToolCard5 implements CommandToolCard {
     private int roundIndex;
     private int diceRoundTrackIndex;
 
-    public CommandToolCard5(Dice draftPoolDice, RoundTrack roundTrack, int roundIndex, int diceRoundTrackIndex) {
+    CommandToolCard5(Dice draftPoolDice, RoundTrack roundTrack, int roundIndex, int diceRoundTrackIndex) {
         this.draftPoolDice = draftPoolDice;
         this.roundTrack = roundTrack;
         this.roundIndex = roundIndex;

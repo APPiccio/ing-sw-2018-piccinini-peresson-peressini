@@ -43,7 +43,6 @@ public class ToolCard4 extends ToolCard {
         Dice secondDice = secondDiceCell.getDiceOn();
         if (secondDice == null) return false;
         windowPanel.removeDice(toolCardParameters.secondPanelDiceIndex);
-        if (!windowPanel.addDice(toolCardParameters.secondPanelCellIndex,secondDice)) return false;
-        return true;
+        return windowPanel.addDice(toolCardParameters.secondPanelCellIndex, secondDice);
     }
 }

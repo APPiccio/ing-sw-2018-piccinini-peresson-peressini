@@ -7,7 +7,7 @@ public class CommandToolCard1 implements CommandToolCard {
     private Dice dice;
     private int sign;
 
-    public CommandToolCard1(Dice dice, int sign) {
+    CommandToolCard1(Dice dice, int sign) {
         this.dice = dice;
         this.sign = sign;
     }

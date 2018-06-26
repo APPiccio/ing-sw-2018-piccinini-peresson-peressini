@@ -11,7 +11,7 @@ public class CommandToolCard2 implements CommandToolCard {
     private Pair<Integer, Integer> positions;
     private WindowPanel windowPanel;
 
-    public CommandToolCard2(Pair<Integer, Integer> positions, WindowPanel windowPanel) {
+    CommandToolCard2(Pair<Integer, Integer> positions, WindowPanel windowPanel) {
         this.positions = positions;
         this.windowPanel = windowPanel;
     }
