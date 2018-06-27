@@ -87,6 +87,30 @@ public class CommandToolCard12Test {
         windowPanelCopy = new WindowPanel(windowPanel);
         player.setPanel(windowPanelCopy);
 
+        //secondPanelCellIndex = panelCellIndex
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = true;
+        container.toolCardParameters.secondPanelDiceIndex = 2;
+        container.toolCardParameters.secondPanelCellIndex = 11;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //panelDiceIndex = secondPanelDiceIndex
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = true;
+        container.toolCardParameters.secondPanelDiceIndex = 12;
+        container.toolCardParameters.secondPanelCellIndex = 9;
+        assertFalse(toolCard12.paramsOk(container));
+
         //cell1start null
         container.player = player;
         container.roundTrack = roundTrack;
@@ -104,6 +128,46 @@ public class CommandToolCard12Test {
         container.toolCardParameters.roundTrackDiceIndex = 0;
         container.toolCardParameters.panelDiceIndex = 12;
         container.toolCardParameters.panelCellIndex = 777;
+        container.toolCardParameters.twoDiceAction = false;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //!cell1start.hasDiceOn()
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 8;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = false;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //cell1end.hasDiceOn()
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 19;
+        container.toolCardParameters.twoDiceAction = false;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //cell1start has not the same color of the dice in the roundTrack
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 1;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = false;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //Placement error dice 1
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 0;
+        container.toolCardParameters.panelCellIndex = 11;
         container.toolCardParameters.twoDiceAction = false;
         assertFalse(toolCard12.paramsOk(container));
 
@@ -130,26 +194,94 @@ public class CommandToolCard12Test {
         container.toolCardParameters.secondPanelDiceIndex = 2;
         container.toolCardParameters.secondPanelCellIndex = 777;
         assertFalse(toolCard12.paramsOk(container));
-    }
 
-    /*@Test(expected = NullPointerException.class)
-    public void nullDiceInRoundTrack() {
-        //Inserting a null dice in the first round of the roundTrack
-        RoundTrack roundTrack = new RoundTrack();
-        ArrayList<Dice> dices = new ArrayList<>();
-        dices.add(null);
-        roundTrack.setDicesOnRound(1, dices);
-
-        //Trying to get a null dice
-        player.setPanel(TestPanels.panel_2_2());
+        //!cell2start.hasDiceOn()
         container.player = player;
         container.roundTrack = roundTrack;
         container.toolCardParameters.roundTrackRoundIndex = 1;
         container.toolCardParameters.roundTrackDiceIndex = 0;
         container.toolCardParameters.panelDiceIndex = 12;
         container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = true;
+        container.toolCardParameters.secondPanelDiceIndex = 8;
+        container.toolCardParameters.secondPanelCellIndex = 9;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //cell2end.hasDiceOn()
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = true;
+        container.toolCardParameters.secondPanelDiceIndex = 2;
+        container.toolCardParameters.secondPanelCellIndex = 19;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //cell2start has not the same color of the dice in the roundTrack
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = true;
+        container.toolCardParameters.secondPanelDiceIndex = 1;
+        container.toolCardParameters.secondPanelCellIndex = 9;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //Placement error dice 2
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = true;
+        container.toolCardParameters.secondPanelDiceIndex = 15;
+        container.toolCardParameters.secondPanelCellIndex = 9;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //Trying to access an invalid round
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 0;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 11;
         container.toolCardParameters.twoDiceAction = false;
-        toolCard12.paramsOk(container);
-    }*/
+        assertFalse(toolCard12.paramsOk(container));
+
+        //Trying to access an invalid round
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 20;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = false;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //Trying to access a non-valid position of the round selected
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = -1;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = false;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //Trying to access a non-valid position of the round selected
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 1;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = false;
+        assertFalse(toolCard12.paramsOk(container));
+    }
 
 }

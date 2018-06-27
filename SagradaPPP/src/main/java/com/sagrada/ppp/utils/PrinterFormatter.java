@@ -23,7 +23,6 @@ public class PrinterFormatter {
     private static final String HORIZONTAL = "─────────";
     private static final char VERTICAL = (int) '│';
 
-
     /**
      * @param panel: panel from witch this function creates it's visual representation
      * @return string containing a visual representation of a panel.
@@ -96,8 +95,6 @@ public class PrinterFormatter {
         result.append(RESET);
         return result.toString();
     }
-
-
 
     private static String getColoredString(Color color, String msg){
         return getCommonString(color, msg, GREEN_BOLD_BRIGHT, RED_BOLD_BRIGHT, BLUE_BOLD_BRIGHT, YELLOW_BOLD_BRIGHT, PURPLE_BOLD_BRIGHT);

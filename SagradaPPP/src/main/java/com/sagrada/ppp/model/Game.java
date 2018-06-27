@@ -442,7 +442,7 @@ public class Game implements Serializable {
         gameObservers.computeIfAbsent(playerHashCode, k -> new ArrayList<>());
         gameObservers.get(playerHashCode).add(observer);
     }
-    public void detachAllGameObservers(int playerHashCode){
+    public void detachAllGameObservers(int playerHashCode) {
         gameObservers.remove(playerHashCode);
     }
 
