@@ -1,6 +1,5 @@
 package com.sagrada.ppp.utils;
 
-import com.sagrada.ppp.*;
 import com.sagrada.ppp.model.Cell;
 import com.sagrada.ppp.model.Color;
 import com.sagrada.ppp.model.Dice;
@@ -59,7 +58,7 @@ public class PrinterFormatter {
             };
 
             //add top table row
-            result.append(String.format(top,horizontalRow));
+            result.append(String.format(top, (Object[]) horizontalRow));
             ArrayList<Cell> cells = panel.getCells();
 
             int i = 0;
@@ -85,13 +84,13 @@ public class PrinterFormatter {
                 if(i < PATTERN_COL - 1) i++;
                 else {
                     rowCounter++;
-                    result.append(String.format(format,rowValue));
-                    result.append(String.format(format,rowColor));
-                    if(rowCounter < PATTERN_ROW)result.append(String .format(mid,horizontalRow));
+                    result.append(String.format(format, (Object[]) rowValue));
+                    result.append(String.format(format, (Object[]) rowColor));
+                    if(rowCounter < PATTERN_ROW)result.append(String .format(mid, (Object[]) horizontalRow));
                     i = 0;
                 }
             }
-            result.append(String.format(bottom,horizontalRow));
+            result.append(String.format(bottom, (Object[]) horizontalRow));
 
         }
         result.append(RESET);
@@ -101,38 +100,29 @@ public class PrinterFormatter {
 
 
     private static String getColoredString(Color color, String msg){
-        switch (color){
-            case GREEN:
-                return GREEN_BOLD_BRIGHT + msg + RESET;
-            case RED:
-                return RED_BOLD_BRIGHT + msg + RESET;
-            case BLUE:
-                return BLUE_BOLD_BRIGHT + msg + RESET;
-            case YELLOW:
-                return YELLOW_BOLD_BRIGHT + msg + RESET;
-            case PURPLE:
-                return PURPLE_BOLD_BRIGHT + msg + RESET;
-                default:
-                    return RESET;
-        }
+        return getCommonString(color, msg, GREEN_BOLD_BRIGHT, RED_BOLD_BRIGHT, BLUE_BOLD_BRIGHT, YELLOW_BOLD_BRIGHT, PURPLE_BOLD_BRIGHT);
 
     }
     private static String getColoredBkgrnd(Color color,String msg){
+        return getCommonString(color, msg, GREEN_BACKGROUND_BRIGHT, RED_BACKGROUND_BRIGHT, BLUE_BACKGROUND_BRIGHT, YELLOW_BACKGROUND_BRIGHT, PURPLE_BACKGROUND_BRIGHT);
+
+    }
+
+    private static String getCommonString(Color color, String msg, String greenBackgroundBright, String redBackgroundBright, String blueBackgroundBright, String yellowBackgroundBright, String purpleBackgroundBright) {
         switch (color){
             case GREEN:
-                return GREEN_BACKGROUND_BRIGHT + msg + RESET;
+                return greenBackgroundBright + msg + RESET;
             case RED:
-                return RED_BACKGROUND_BRIGHT + msg + RESET;
+                return redBackgroundBright + msg + RESET;
             case BLUE:
-                return BLUE_BACKGROUND_BRIGHT + msg + RESET;
+                return blueBackgroundBright + msg + RESET;
             case YELLOW:
-                return YELLOW_BACKGROUND_BRIGHT + msg + RESET;
+                return yellowBackgroundBright + msg + RESET;
             case PURPLE:
-                return PURPLE_BACKGROUND_BRIGHT + msg + RESET;
+                return purpleBackgroundBright + msg + RESET;
             default:
                 return RESET;
         }
-
     }
 
     private static String center(String msg, int length, char paddingChar, boolean pr){

@@ -15,6 +15,12 @@ public class WindowPanel implements Serializable {
     private int cardID;
     private ArrayList<Cell> cells;
 
+
+    static void unloadPanels(){
+        loadedPanels = new ArrayList<>();
+    }
+
+
     /**
      * loadedPanels contains all the panels parsed from .json files in the 'templates' folder
      */
@@ -66,16 +72,8 @@ public class WindowPanel implements Serializable {
      * @param side front or rear of the card, 1 means face up, 0 means face down
      * @return the corresponding windowPanel parsed from .json file
      */
-    private static WindowPanel getPanel(int cardNumber, int side) {
-        if (loadedPanels.isEmpty()) {
-            try {
-                loadedPanels = WindowPanelParser.getPanelsFromFile();
-            } catch (IOException e) {
-
-                e.printStackTrace();
-                System.exit(-1);
-            }
-        }
+    static WindowPanel getPanel(int cardNumber, int side) {
+        if (loadedPanels.isEmpty()) loadPanels();
         return loadedPanels.get(((2 * cardNumber) - side) - 1);
     }
 
@@ -83,15 +81,17 @@ public class WindowPanel implements Serializable {
      * @return the number of windowPanel to be parsed contained in the 'templates' folder
      */
     static int getNumberOfPanels() {
-        if (loadedPanels.isEmpty()) {
-            try {
-                loadedPanels = WindowPanelParser.getPanelsFromFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.exit(-1);
-            }
-        }
+        if (loadedPanels.isEmpty()) loadPanels();
         return loadedPanels.size()/2;
+    }
+
+    static void loadPanels() {
+        try {
+            loadedPanels = WindowPanelParser.getPanelsFromFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            //System.exit(-1);
+        }
     }
 
     public String getPanelName() {

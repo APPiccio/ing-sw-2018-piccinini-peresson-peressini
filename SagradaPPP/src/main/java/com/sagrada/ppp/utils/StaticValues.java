@@ -25,7 +25,7 @@ public class StaticValues {
 
     static final String TOKEN_URL = "utils/token";
     public static final String STYLE_SHEET_URL = "file:resources/SagradaStyleSheet.css";
-    static final String TEMPLATES_URL = "resources/templates/";
+    public static String TEMPLATES_URL = "resources/templates/";
 
     public static final int COST_USED_TOOL_CARD = 2;
     public static final int COST_UNUSED_TOOL_CARD = 1;

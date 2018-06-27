@@ -254,6 +254,68 @@ public class GameTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        GameObserver gameObserver = new GameObserver() {
+            @Override
+            public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color playerPrivateColor) throws RemoteException {
+
+            }
+
+            @Override
+            public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
+
+            }
+
+            @Override
+            public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
+                ArrayList<String> usernames = new ArrayList<>();
+                usernames.add("cicco");
+                usernames.add("ciao");
+                usernames.add("cicche");
+                usernames.add("next");
+                assertTrue(usernames.contains(dicePlacedMessage.username));
+            }
+
+            @Override
+            public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
+
+            }
+
+            @Override
+            public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+
+            }
+
+            @Override
+            public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+
+            }
+
+            @Override
+            public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
+
+            }
+
+            @Override
+            public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
+
+            }
+
+            @Override
+            public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
+
+            }
+
+            @Override
+            public void rmiPing() throws RemoteException {
+
+            }
+        };
+
+        game.attachGameObserver(gameObserver, hash1);
+        game.attachGameObserver(gameObserver, hash2);
+        game.attachGameObserver(gameObserver, hash3);
+        game.attachGameObserver(gameObserver, hash4);
         boolean result = false;
         PlaceDiceResult placeDiceResult;
         for(Player player : game.getPlayers()) {
@@ -387,6 +449,8 @@ public class GameTest {
         while (System.currentTimeMillis() < gameStartTime + 10 * StaticValues.TURN_DURATION * 8 + 1000){
             for(Player player : game.getPlayers()){
                 game.disableAFK(player.getHashCode());
+                game.setDicePlaced(true);
+                game.setUsedToolCard(true);
             }
             try {
                 sleep(StaticValues.TURN_DURATION * 2);
@@ -698,5 +762,12 @@ public class GameTest {
         player2.setPanel(TestPanels.createBlankPanel());
         assertEquals(14, game.getLegalPositions(player2.getHashCode(), new Dice()).size());
 
+    }
+
+    @Test
+    public void minor_condition() {
+        Game game = new Game(null, null);
+        assertTrue(game.getPlayers().isEmpty());
+        game.reorderPlayers();
     }
 }

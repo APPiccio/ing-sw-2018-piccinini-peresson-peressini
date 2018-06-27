@@ -111,6 +111,10 @@ public class Game implements Serializable {
     void setDraftPool(ArrayList<Dice> draftPool){
         this.draftPool = draftPool;
     }
+
+    void setUsedToolCard(boolean usedToolCard){
+        this.usedToolCard = usedToolCard;
+    }
     /**
      * Handles the setup of a game
      */
@@ -354,10 +358,8 @@ public class Game implements Serializable {
      * @return string containing player's username
      */
     public String getPlayerUsername(int hashCode){
-        for(Player player : players){
-            if (player.hashCode() == hashCode) return player.getUsername();
-        }
-        return null;
+        return players.stream().filter(x -> x.getHashCode() == hashCode)
+                .map(Player::getUsername).findFirst().orElse(null);
     }
 
 
@@ -405,20 +407,19 @@ public class Game implements Serializable {
      * @param username identify the player who wants to leave the lobby
      */
     public void leaveLobby(String username){
-        for(Player player : players){
-            if (player.getUsername().equals(username)){
-                players.remove(player);
-                detachLobbyObserver(player.getHashCode());
-                notifyPlayerLeave(username,getUsernames(),players.size());
-                if(players.size() < 2){
-                    if(lobbyTimer != null) {
-                        lobbyTimer.interrupt();
-                    }
-                    lobbyTimerStartTime = 0;
-                    notifyTimerChanges(TimerStatus.INTERRUPT);
-                }
-                return;
+
+        Player player = players.stream().filter(x -> x.getUsername().equals(username)).findFirst().orElse(null);
+        if(player == null) return;
+
+        players.remove(player);
+        detachLobbyObserver(player.getHashCode());
+        notifyPlayerLeave(username,getUsernames(),players.size());
+        if(players.size() < 2){
+            if(lobbyTimer != null) {
+                lobbyTimer.interrupt();
             }
+            lobbyTimerStartTime = 0;
+            notifyTimerChanges(TimerStatus.INTERRUPT);
         }
     }
 
@@ -438,9 +439,7 @@ public class Game implements Serializable {
 
     public void attachGameObserver(GameObserver observer, int playerHashCode){
         if(observer == null) return;
-        if(gameObservers.get(playerHashCode) == null){
-            gameObservers.put(playerHashCode, new ArrayList<>());
-        }
+        gameObservers.computeIfAbsent(playerHashCode, k -> new ArrayList<>());
         gameObservers.get(playerHashCode).add(observer);
     }
     public void detachAllGameObservers(int playerHashCode){
@@ -657,8 +656,8 @@ public class Game implements Serializable {
         setTurn(turn + 1);
     }
 
-    private void reorderPlayers() {
-        if(players.size() != 0) {
+    void reorderPlayers() {
+        if(!players.isEmpty()) {
             ArrayList<Player> h = new ArrayList<>();
             players.add(players.get(0));
             for (int i = 1; i < players.size() - 1; i++) {
@@ -972,6 +971,7 @@ public class Game implements Serializable {
             }
         }
     }
+
 
     private class MyTimerTask extends TimerTask {
 

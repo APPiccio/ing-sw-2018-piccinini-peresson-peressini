@@ -1,8 +1,10 @@
 package com.sagrada.ppp.model;
 
+import com.sagrada.ppp.cards.TestPanels;
 import com.sagrada.ppp.utils.StaticValues;
 import org.junit.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -14,6 +16,12 @@ public class WindowPanelTest {
     @Before
     public void setUp() {
         windowPanel = new WindowPanel(1, 1);
+    }
+
+    @Test
+    public void unloadingPanels() {
+        WindowPanel.unloadPanels();
+        WindowPanel.getNumberOfPanels();
     }
 
     @Test
@@ -273,4 +281,15 @@ public class WindowPanelTest {
         assertNotEquals(windowPanel, tempWindowPanel);
     }
 
+    @Test
+    public void cellPairSimilarity() {
+        WindowPanel windowPanel = TestPanels.createBlankPanel();
+        windowPanel.addDice(0, new Dice(Color.GREEN, 1));
+        assertFalse(windowPanel.addDice(5, new Dice(Color.GREEN)));
+    }
+
+    @Test
+    public void toString_test() {
+        System.out.println(windowPanel.toString());
+    }
 }
