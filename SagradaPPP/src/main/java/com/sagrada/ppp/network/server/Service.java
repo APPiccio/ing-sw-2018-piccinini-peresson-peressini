@@ -186,7 +186,6 @@ public class Service {
         Game game = getGame(gameHashCode);
         if (game == null) return;
         game.pairPanelToPlayer(panelIndex);
-        game.stopWaitingForPanelChoice();
     }
 
     /**

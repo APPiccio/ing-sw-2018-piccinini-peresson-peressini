@@ -8,6 +8,7 @@ import com.sagrada.ppp.utils.StaticValues;
 import javafx.util.Pair;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -73,6 +74,44 @@ public class Game implements Serializable {
         gameEnded = false;
     }
 
+
+    /**
+     * Constructor method used only by test (created following tutor guidelines)
+     * @param players
+     * @param gameObservers
+     */
+    public Game(ArrayList<Player> players, HashMap<Integer, ArrayList<GameObserver>> gameObservers, ArrayList<ToolCard> toolCards){
+        this.players = players;
+        this.gameObservers = gameObservers;
+        this.gameStatus = GameStatus.ACTIVE;
+        this.lobbyObservers = new HashMap<>();
+        this.toolCards = toolCards;
+        this.turn = 2;
+        this.roundTrack = new RoundTrack();
+    }
+
+
+    /**This method is used only by test
+     * @param round
+     */
+    void setRound(int round){
+        roundTrack = new RoundTrack();
+        for(int i = 0; i < round - 1; i++){
+            roundTrack.nextRound();
+        }
+    }
+
+    void setDicePlaced(boolean dicePlaced){
+        this.dicePlaced = dicePlaced;
+    }
+
+    void setDiceBag(DiceBag diceBag){
+        this.diceBag = diceBag;
+    }
+
+    void setDraftPool(ArrayList<Dice> draftPool){
+        this.draftPool = draftPool;
+    }
     /**
      * Handles the setup of a game
      */
@@ -127,10 +166,6 @@ public class Game implements Serializable {
      * Handling turns and rounds mechanics.
      * From round 1 to round 10 and foreach round handles players turn, according to game rules
      */
-    private void rmiPing(GameObserver gameObserver) throws RemoteException {
-            gameObserver.rmiPing();
-    }
-
     private void gameHandler() {
         Player justPlayedPlayer = null;
 
@@ -596,6 +631,7 @@ public class Game implements Serializable {
 
     public void pairPanelToPlayer(int panelIndex) {
         chosenPanelIndex = panelIndex;
+        waitingForPanelChoice = false;
     }
 
     public boolean disconnect(int playerHashCode) {
@@ -642,7 +678,7 @@ public class Game implements Serializable {
         }
     }
 
-    private void setTurn(int turn){
+    void setTurn(int turn){
         this.turn = turn;
     }
 
@@ -721,20 +757,25 @@ public class Game implements Serializable {
 
     public synchronized boolean isToolCardUsable(int playerHashCode, int toolCardIndex) {
         ToolCard toolCard;
-        if (toolCards.size() != 0 && toolCardIndex < toolCards.size())
+        if (!toolCards.isEmpty() && toolCardIndex < toolCards.size())
             toolCard = toolCards.get(toolCardIndex);
         else
             return false;
-        Player player = getPlayerByHashcode(playerHashCode);
+        Player player = null;
+        try {
+            player = getPlayerByHashcode(playerHashCode);
+        }catch (IllegalArgumentException e){
+            System.out.println("Invalid player is trying to use a toolcard");
+        }
         if (toolCard != null && player != null) {
-            if (!players.get(getCurrentPlayerIndex()).equals(player)){
+            if (player.getHashCode() != players.get(getCurrentPlayerIndex()).getHashCode()){
                 return false;
             }
-            if ((toolCard.getId() == 2 || toolCard.getId() == 3) && getPlayerByHashcode(playerHashCode).getPanel().getEmptyCells() > 19){
+            if ((toolCard.getId() == 2 || toolCard.getId() == 3) && player.getPanel().getEmptyCells() > 19){
                 System.out.println("You haven't placed enough dices to use this toolcard!\nOperation denied.");
                 return false;
             }
-            else if (toolCard.getId() == 4 && getPlayerByHashcode(playerHashCode).getPanel().getEmptyCells() > 18){
+            else if (toolCard.getId() == 4 && player.getPanel().getEmptyCells() > 18){
                 System.out.println("You haven't placed enough dices to use this toolCard!\nOperation denied.");
                 return false;
             }
@@ -774,7 +815,7 @@ public class Game implements Serializable {
     }
 
     public int getToolCardID(int toolCardIndex){
-        if(toolCards.size() != 0)
+        if(!toolCards.isEmpty())
             return toolCards.get(toolCardIndex).getId();
         else
             return -1;
@@ -794,31 +835,28 @@ public class Game implements Serializable {
     public synchronized UseToolCardResult useToolCard(int playerHashCode, ToolCardParameters toolCardParameters) {
         if(players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new UseToolCardResult(false,0,0,draftPool , roundTrack , players, null, null);
         ToolCard toolCard = toolCards.stream().filter( x -> x.getId() == toolCardParameters.toolCardID).findFirst().orElse(null);
-        if(toolCard != null){
+        if(toolCard != null) {
             Player player = getPlayerByHashcode(playerHashCode);
-            if (player != null) {
-                System.out.println(player.getUsername() + " is using toolCard ID = " + toolCard.getId());
-                usedToolCard = true;
-                ToolCardParameterContainer container = getToolCardParameters(toolCardParameters,playerHashCode);
-                if (!toolCard.paramsOk(container)){
-                    usedToolCard = false;
-                    return new UseToolCardResult(false,toolCard.getId(),toolCard.getCost(), draftPool, roundTrack, players, null,null);
-                }else {
-                    if(toolCard.getId() == 8){
-                        players.get(getCurrentPlayerIndex()).setSkipSecondTurn(true);
-                        isSpecialTurn = true;
-                    }if (toolCard.getId() == 9){
-                        dicePlaced = true;
-                    }
-                    player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
-                    UseToolCardResult result = toolCard.use(container);
-                    if (result.result)  toolCard.setUsed();
-                    notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack, toolCard.getCost());
-                    return result;
+            System.out.println(player.getUsername() + " is using toolCard ID = " + toolCard.getId());
+            usedToolCard = true;
+            ToolCardParameterContainer container = getToolCardParameters(toolCardParameters, playerHashCode);
+            if (!toolCard.paramsOk(container)) {
+                usedToolCard = false;
+                return new UseToolCardResult(false, toolCard.getId(), toolCard.getCost(), draftPool, roundTrack, players, null, null);
+            } else {
+                if (toolCard.getId() == 8) {
+                    players.get(getCurrentPlayerIndex()).setSkipSecondTurn(true);
+                    isSpecialTurn = true;
                 }
-
+                if (toolCard.getId() == 9) {
+                    dicePlaced = true;
+                }
+                player.setFavorTokens(player.getFavorTokens() - toolCard.getCost());
+                UseToolCardResult result = toolCard.use(container);
+                if (result.result) toolCard.setUsed();
+                notifyUsedToolCard(toolCardParameters.toolCardID, player, draftPool, roundTrack, toolCard.getCost());
+                return result;
             }
-            return new UseToolCardResult(false,toolCard.getId(),toolCard.getCost(), draftPool , roundTrack , players, null, null);
         }else {
             return new UseToolCardResult(false,0,0, draftPool , roundTrack , players, null, null);
         }
@@ -844,10 +882,9 @@ public class Game implements Serializable {
 
     public ArrayList<Integer> getLegalPositions(int playerHashCode, Dice dice){
         Player player = getPlayerByHashcode(playerHashCode);
-        if(player != null)
-            if(player.getPanel() != null)
-                return player.getPanel().getLegalPosition(dice);
-        return null;
+        if(player.getPanel() != null)
+            return player.getPanel().getLegalPosition(dice);
+        return new ArrayList<>();
     }
 
     public void putDiceInDraftPool(Dice dice){
@@ -930,10 +967,6 @@ public class Game implements Serializable {
             }
         }
         return result;
-    }
-
-    public void stopWaitingForPanelChoice(){
-        waitingForPanelChoice = false;
     }
 
     void pingAllGameObservers(){
