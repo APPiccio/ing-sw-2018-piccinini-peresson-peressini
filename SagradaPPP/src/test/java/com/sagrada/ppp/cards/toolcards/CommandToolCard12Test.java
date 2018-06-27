@@ -87,30 +87,6 @@ public class CommandToolCard12Test {
         windowPanelCopy = new WindowPanel(windowPanel);
         player.setPanel(windowPanelCopy);
 
-        //secondPanelCellIndex = panelCellIndex
-        container.player = player;
-        container.roundTrack = roundTrack;
-        container.toolCardParameters.roundTrackRoundIndex = 1;
-        container.toolCardParameters.roundTrackDiceIndex = 0;
-        container.toolCardParameters.panelDiceIndex = 12;
-        container.toolCardParameters.panelCellIndex = 11;
-        container.toolCardParameters.twoDiceAction = true;
-        container.toolCardParameters.secondPanelDiceIndex = 2;
-        container.toolCardParameters.secondPanelCellIndex = 11;
-        assertFalse(toolCard12.paramsOk(container));
-
-        //panelDiceIndex = secondPanelDiceIndex
-        container.player = player;
-        container.roundTrack = roundTrack;
-        container.toolCardParameters.roundTrackRoundIndex = 1;
-        container.toolCardParameters.roundTrackDiceIndex = 0;
-        container.toolCardParameters.panelDiceIndex = 12;
-        container.toolCardParameters.panelCellIndex = 11;
-        container.toolCardParameters.twoDiceAction = true;
-        container.toolCardParameters.secondPanelDiceIndex = 12;
-        container.toolCardParameters.secondPanelCellIndex = 9;
-        assertFalse(toolCard12.paramsOk(container));
-
         //cell1start null
         container.player = player;
         container.roundTrack = roundTrack;
@@ -281,6 +257,30 @@ public class CommandToolCard12Test {
         container.toolCardParameters.panelDiceIndex = 12;
         container.toolCardParameters.panelCellIndex = 11;
         container.toolCardParameters.twoDiceAction = false;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //secondPanelCellIndex = panelCellIndex
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = true;
+        container.toolCardParameters.secondPanelDiceIndex = 2;
+        container.toolCardParameters.secondPanelCellIndex = 11;
+        assertFalse(toolCard12.paramsOk(container));
+
+        //panelDiceIndex = secondPanelDiceIndex
+        container.player = player;
+        container.roundTrack = roundTrack;
+        container.toolCardParameters.roundTrackRoundIndex = 1;
+        container.toolCardParameters.roundTrackDiceIndex = 0;
+        container.toolCardParameters.panelDiceIndex = 12;
+        container.toolCardParameters.panelCellIndex = 11;
+        container.toolCardParameters.twoDiceAction = true;
+        container.toolCardParameters.secondPanelDiceIndex = 12;
+        container.toolCardParameters.secondPanelCellIndex = 9;
         assertFalse(toolCard12.paramsOk(container));
     }
 
