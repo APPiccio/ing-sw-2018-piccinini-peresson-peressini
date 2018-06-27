@@ -1,6 +1,8 @@
 package com.sagrada.ppp.network.commands;
 
-public interface Response {
+import java.io.Serializable;
+
+public interface Response extends Serializable {
 
     void handle(ResponseHandler handler);
 }
