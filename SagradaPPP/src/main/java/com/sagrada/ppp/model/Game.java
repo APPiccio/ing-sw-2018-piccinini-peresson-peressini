@@ -627,12 +627,10 @@ public class Game implements Serializable {
     public boolean disconnect(int playerHashCode) {
         if(gameStatus.equals(GameStatus.INIT)){
             Player player = getPlayerByHashcode(playerHashCode);
-            if (player == null) return false;
             leaveLobby(player.getUsername());
             return true;
         }else {
             Player player = getPlayerByHashcode(playerHashCode);
-            if (player == null) return false;
             System.out.println("detaching : " + playerHashCode);
             detachLobbyObserver(playerHashCode);
             detachAllGameObservers(playerHashCode);
@@ -683,13 +681,12 @@ public class Game implements Serializable {
 
     public synchronized PlaceDiceResult placeDice(int playerHashCode, int diceIndex, int row, int col) {
         Player currentPlayer = getPlayerByHashcode(playerHashCode);
-        if (currentPlayer == null) return new PlaceDiceResult("Player not found!",false,null,draftPool);
         if (dicePlaced) return new PlaceDiceResult("Can't place two dice in the same turn!", false,currentPlayer.getPanel(), draftPool);
         if(players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult(
                 "Can't do game actions during others players turn", false,currentPlayer.getPanel(), draftPool);
         int index = (row * StaticValues.PATTERN_COL) + col;
         boolean result;
-        if(draftPool.size() != 0) {
+        if(!draftPool.isEmpty()) {
              result = currentPlayer.getPanel().addDice(index, draftPool.get(diceIndex));
         }else result = false;
         System.out.println("place dice result = " + result);

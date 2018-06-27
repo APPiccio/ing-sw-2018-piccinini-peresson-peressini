@@ -741,9 +741,11 @@ public class CliView extends UnicastRemoteObject
         this.draftPool = dicePlacedMessage.draftPool;
         Player player = players.stream().filter(x -> x.getUsername().equals(dicePlacedMessage.username))
                 .findFirst().orElse(null);
-        player.setPanel(dicePlacedMessage.panel);
-        out.println(dicePlacedMessage.username + " place a dice. Updating game status:");
-        showPlayerStatus(player);
+        if(player != null) {
+            player.setPanel(dicePlacedMessage.panel);
+            out.println(dicePlacedMessage.username + " place a dice. Updating game status:");
+            showPlayerStatus(player);
+        }
         showDraftPool();
     }
 
