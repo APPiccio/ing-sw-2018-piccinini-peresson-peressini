@@ -23,7 +23,7 @@ public class StaticValues {
 
     public static long LOBBY_TIMER = 30000;
 
-    static final String TOKEN_URL = "utils/token";
+    static String TOKEN_URL = "utils/token";
     public static final String STYLE_SHEET_URL = "file:resources/SagradaStyleSheet.css";
     public static String TEMPLATES_URL = "resources/templates/";
 

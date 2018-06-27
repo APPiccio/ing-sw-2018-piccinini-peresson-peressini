@@ -6,6 +6,10 @@ import com.sagrada.ppp.cards.toolcards.ToolCardTest;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
 import com.sagrada.ppp.network.server.*;
+import com.sagrada.ppp.utils.PlayerTokenSerializer;
+import com.sagrada.ppp.utils.PlayerTokenSerializerTest;
+import com.sagrada.ppp.utils.PrinterFormatterTest;
+import com.sagrada.ppp.utils.StaticValuesTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.*;
@@ -38,6 +42,11 @@ import org.junit.runners.Suite.*;
         PublicObjectiveCard8Test.class,
         PublicObjectiveCard9Test.class,
         PublicObjectiveCard10Test.class,
+
+        //utils test
+        PlayerTokenSerializerTest.class,
+        StaticValuesTest.class,
+        PrinterFormatterTest.class,
 
 
         //command package test

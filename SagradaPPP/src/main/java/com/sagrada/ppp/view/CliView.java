@@ -10,6 +10,7 @@ import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
+import static java.lang.System.out;
 
 import java.io.Serializable;
 
@@ -26,12 +27,7 @@ public class CliView extends UnicastRemoteObject
     private transient int gameHashCode;
     private transient ArrayList<String> playersUsername;
     private transient boolean waitingForPanels;
-    private transient ArrayList<WindowPanel> panels;
-    private transient boolean gameReady;
-    private transient WindowPanel myPanel;
-    private transient boolean keyboardPressed;
     private transient ArrayList<Dice> draftPool;
-    private transient ArrayList<String> orderedPlayersUsername;
     private transient boolean isGameStarted;
     private transient ArrayList<Player> players;
     private transient ArrayList<ToolCard> toolCards;
@@ -40,8 +36,6 @@ public class CliView extends UnicastRemoteObject
     private transient Player currentPlayer;
     private transient boolean usedToolCard;
     private transient boolean placedDice;
-    private transient boolean specialTurn;
-    transient ConnectionHandler connectionHandler;
     private transient ConnectionModeEnum connectionModeEnum;
     private transient volatile boolean isToolCardActionEnded;
     private transient volatile boolean isEndedTurn;
@@ -55,16 +49,14 @@ public class CliView extends UnicastRemoteObject
     private int currentRound;
     private JoinGameResult joinGameResult;
     private boolean isAFK;
+    private final String TABLE_SEPARATOR = "+-----------------+-------+-------+-------+-------+-------+-------+-------+%n";
 
     public CliView(RemoteController controller, ConnectionModeEnum connectionModeEnum) throws RemoteException{
         this.scanner = new Scanner(System.in);
         this.controller = controller;
         playersUsername = new ArrayList<>();
         waitingForPanels = true;
-        gameReady = false;
-        keyboardPressed = true;
         isGameStarted = false;
-        specialTurn = false;
         placedDice = false;
         usedToolCard = false;
         this.connectionModeEnum = connectionModeEnum;
@@ -77,10 +69,10 @@ public class CliView extends UnicastRemoteObject
 
     public void init() throws RemoteException {
         if (PlayerTokenSerializer.isTokenPresent()) {
-            System.out.println("Do you want to resume the previous game? (y/n)");
+            out.println("Do you want to resume the previous game? (y/n)");
             String in = scanner.nextLine();
             while(!in.equals("y") && !in.equals("n")){
-                System.out.println("Invalid answer, type y (yes) or n (no)");
+                out.println("Invalid answer, type y (yes) or n (no)");
                 in = scanner.nextLine();
             }
             if (in.equals("y")){
@@ -88,18 +80,18 @@ public class CliView extends UnicastRemoteObject
                 ReconnectionResult reconnectionResult = controller.reconnection(jgr.getPlayerHashCode(),
                         jgr.getGameHashCode(), this);
                 if (!reconnectionResult.result) {
-                    System.out.println(reconnectionResult.message);
+                    out.println(reconnectionResult.message);
                     do {
-                        System.out.println("Do you want to retry?");
+                        out.println("Do you want to retry?");
                         in = scanner.nextLine();
                         while (!in.equals("y") && !in.equals("n")) {
-                            System.out.println("Invalid answer, type y (yes) or n (no)");
+                            out.println("Invalid answer, type y (yes) or n (no)");
                             in = scanner.nextLine();
                         }
                         if (in.equals("y")) {
                             reconnectionResult = controller.reconnection(jgr.getPlayerHashCode(),
                                     jgr.getGameHashCode(), this);
-                            System.out.println(reconnectionResult.message);
+                            out.println(reconnectionResult.message);
                         }
                     } while (!reconnectionResult.result && !in.equals("n"));
                     if (in.equals("n")) {
@@ -122,7 +114,7 @@ public class CliView extends UnicastRemoteObject
                     }
                 }
                 else {
-                    System.out.println(reconnectionResult.message);
+                    out.println(reconnectionResult.message);
                     hashCode = jgr.getPlayerHashCode();
                     gameHashCode = jgr.getGameHashCode();
                     username = jgr.getUsername();
@@ -149,17 +141,17 @@ public class CliView extends UnicastRemoteObject
     }
 
     private void start() throws RemoteException {
-        System.out.println("Welcome to SAGRADA");
-        System.out.println("Please enter your username! This can't be empty or with spaces.");
+        out.println("Welcome to SAGRADA");
+        out.println("Please enter your username! This can't be empty or with spaces.");
         username = scanner.nextLine();
         while (username.length() <= 0 || username.contains(" ")) {
-            System.out.println("Error, try again! This can't be empty or with spaces.");
+            out.println("Error, try again! This can't be empty or with spaces.");
             username = scanner.nextLine();
         }
 
         this.joinGameResult = controller.joinGame(username, this);
         while (hashCode < 0){
-            System.out.println("Join failed. Trying new attempt...");
+            out.println("Join failed. Trying new attempt...");
             joinGameResult = controller.joinGame(username, this);
         }
         controller.attachGameObserver(joinGameResult.getGameHashCode(),this, joinGameResult.getPlayerHashCode());
@@ -169,38 +161,38 @@ public class CliView extends UnicastRemoteObject
         username = joinGameResult.getUsername();
         long lobbyTimerStartTime = joinGameResult.getTimerStart();
         playersUsername = joinGameResult.getPlayersUsername();
-        System.out.println("Join completed. You are now identified as : " + username);
+        out.println("Join completed. You are now identified as : " + username);
 
         if(lobbyTimerStartTime != 0){
             long remainingTime = ((lobbyTimerStartTime + StaticValues.LOBBY_TIMER) -
                     System.currentTimeMillis())/1000;
-            System.out.println("---> The game will start in " + remainingTime + " seconds");
+            out.println("---> The game will start in " + remainingTime + " seconds");
         }
         inLobby();
     }
 
     private void showLobbyCommandList(){
-        System.out.println("\t" + StaticValues.COMMAND_QUIT + "\t" + StaticValues.STRING_COMMAND_QUIT);
-        System.out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
-        System.out.println("\t" + StaticValues.COMMAND_LEAVE_GAME + "\t" + StaticValues.STRING_COMMAND_LEAVE_GAME);
+        out.println("\t" + StaticValues.COMMAND_QUIT + "\t" + StaticValues.STRING_COMMAND_QUIT);
+        out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
+        out.println("\t" + StaticValues.COMMAND_LEAVE_GAME + "\t" + StaticValues.STRING_COMMAND_LEAVE_GAME);
     }
 
     private void showInGameCommandList(){
-        System.out.println("\t" + StaticValues.COMMAND_PLACE_DICE + "\t" + StaticValues.STRING_COMMAND_PLACE_DICE);
-        System.out.println("\t" + COMMAND_END_TURN + "\t" + StaticValues.STRING_COMMAND_END_TURN);
-        System.out.println("\t" + StaticValues.COMMAND_USE_TOOL_CARD + "\t" + StaticValues.STRING_COMMAND_USE_TOOLCARD);
-        System.out.println("\t" + StaticValues.COMMAND_SHOW + "\t" + StaticValues.STRING_COMMAND_SHOW);
-        System.out.println("\t" + StaticValues.COMMAND_DISABLE_AFK + "\t" + StaticValues.STRING_COMMAND_DISABLE_AFK);
-        System.out.println("\t" + StaticValues.COMMAND_CONNECTION + "\t" + StaticValues.STRING_COMMAND_CONNECTION);
-        System.out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
+        out.println("\t" + StaticValues.COMMAND_PLACE_DICE + "\t" + StaticValues.STRING_COMMAND_PLACE_DICE);
+        out.println("\t" + COMMAND_END_TURN + "\t" + StaticValues.STRING_COMMAND_END_TURN);
+        out.println("\t" + StaticValues.COMMAND_USE_TOOL_CARD + "\t" + StaticValues.STRING_COMMAND_USE_TOOLCARD);
+        out.println("\t" + StaticValues.COMMAND_SHOW + "\t" + StaticValues.STRING_COMMAND_SHOW);
+        out.println("\t" + StaticValues.COMMAND_DISABLE_AFK + "\t" + StaticValues.STRING_COMMAND_DISABLE_AFK);
+        out.println("\t" + StaticValues.COMMAND_CONNECTION + "\t" + StaticValues.STRING_COMMAND_CONNECTION);
+        out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
 
     }
 
     //TODO add show list of active players when someone join the lobby
     private void inLobby() throws RemoteException {
-        System.out.println("Congratulations , you are now in lobby!");
-        System.out.println("--> Game ID = " + gameHashCode);
-        System.out.println("--> Your ID = " + hashCode + " as " + username + "\n");
+        out.println("Congratulations , you are now in lobby!");
+        out.println("--> Game ID = " + gameHashCode);
+        out.println("--> Your ID = " + hashCode + " as " + username + "\n");
         printPlayersUsername();
         showLobbyCommandList();
         String command = scanner.nextLine();
@@ -209,23 +201,22 @@ public class CliView extends UnicastRemoteObject
             switch(command){
                 case StaticValues.COMMAND_LEAVE_GAME:
                     controller.leaveLobby(gameHashCode , username, this);
-                    System.out.println("Back to main menu");
+                    out.println("Back to main menu");
                     return;
                 case StaticValues.COMMAND_HELP :
                     showLobbyCommandList();
                     break;
                 default:
-                    System.out.println("Unknown command. Please retry.");
+                    out.println("Unknown command. Please retry.");
                     showLobbyCommandList();
                     break;
             }
-            System.out.println("Insert command:");
+            out.println("Insert command:");
             command = scanner.nextLine();
         }
         if(command.equals("0") || command.equals("1") || command.equals("2") || command.equals("3") && !isGameStarted) {
             //TODO handle response to server and panel choice
             int panelIndex = Integer.parseInt(command);
-            myPanel = panels.get(panelIndex);
             controller.choosePanel(gameHashCode, hashCode, panelIndex);
             inGame(panelIndex, null);
 
@@ -239,48 +230,47 @@ public class CliView extends UnicastRemoteObject
 
     public void onPlayerJoined(String username,ArrayList<String> players ,int numOfPlayers) throws RemoteException {
         playersUsername = players;
-        System.out.println(username + " has joined the game!\n");
+        out.println(username + " has joined the game!\n");
         printPlayersUsername();
     }
 
     @Override
     public void onPlayerLeave(String username, ArrayList<String> players, int numOfPlayers) throws RemoteException {
         playersUsername = players;
-        System.out.println(username + " has left the game!");
+        out.println(username + " has left the game!");
         printPlayersUsername();
     }
 
     @Override
-    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+    public void onEndGame(ArrayList<PlayerScore> playersScore){
         playersScore.sort(Comparator.comparingInt(PlayerScore::getTotalPoints));
         Collections.reverse(playersScore);
         String format = "| %-15s | %-5d | %-5d | %-5d | %-5d | %-5d | %-5d | %-5d |%n";
-        System.out.format("+-----------------+-------+-------+-------+-------+-------+-------+-------+%n");
-        System.out.format("| USERNAME        | TOT   | TOKEN | EMPTY | PRIV  | PUB1  | PUB2  | PUB3  |%n");
-        System.out.format("+-----------------+-------+-------+-------+-------+-------+-------+-------+%n");
+        out.format(TABLE_SEPARATOR);
+        out.format("| USERNAME        | TOT   | TOKEN | EMPTY | PRIV  | PUB1  | PUB2  | PUB3  |%n");
+        out.format(TABLE_SEPARATOR);
         for(PlayerScore score : playersScore){
-            System.out.format(format, score.getUsername(), score.getTotalPoints(), score.getFavorTokenPoints(), score.getEmptyCellsPoints(), score.getPrivateObjectiveCardPoints(), score.getPublicObjectiveCard1Points(), score.getPublicObjectiveCard2Points(), score.getPublicObjectiveCard3Points());
-            System.out.format("+-----------------+-------+-------+-------+-------+-------+-------+-------+%n");
+            out.format(format, score.getUsername(), score.getTotalPoints(), score.getFavorTokenPoints(), score.getEmptyCellsPoints(), score.getPrivateObjectiveCardPoints(), score.getPublicObjectiveCard1Points(), score.getPublicObjectiveCard2Points(), score.getPublicObjectiveCard3Points());
+            out.format(TABLE_SEPARATOR);
 
         }
         System.exit(0);
     }
 
     @Override
-    public void onTimerChanges(long timerStart, TimerStatus timerStatus) throws RemoteException {
+    public void onTimerChanges(long timerStart, TimerStatus timerStatus){
         long duration = ((StaticValues.LOBBY_TIMER + timerStart) - System.currentTimeMillis())/1000;
         if(timerStatus.equals(TimerStatus.START)){
-            System.out.println("---> Timer started! The game will start in " + duration + " seconds");
+            out.println("---> Timer started! The game will start in " + duration + " seconds");
         }
         else {
             if(timerStatus.equals(TimerStatus.INTERRUPT)){
-                System.out.println("---> Timer interrupted! Waiting for other players...");
+                out.println("---> Timer interrupted! Waiting for other players...");
             }
             else {
                 if(timerStatus.equals(TimerStatus.FINISH)){
                     PlayerTokenSerializer.serialize(joinGameResult);
-                    System.out.println("---> Countdown completed or full lobby. The game will start soon");
-                    gameReady = true;
+                    out.println("---> Countdown completed or full lobby. The game will start soon");
                 }
             }
         }
@@ -290,23 +280,24 @@ public class CliView extends UnicastRemoteObject
     public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
         if(hashCode == playerAFK.getHashCode()){
             isAFK = true;
-            System.out.println("---> You have been suspended due to inactivity. Turns will be skipped until your signal");
+            out.println("---> You have been suspended due to inactivity. Turns will be skipped until your signal");
             if(isLastPlayer){
-                System.out.println("\n\n\n\n\t\t\t\t ----> " + lastPlayer.getUsername() + " WIN <----\n\n\n\n");
+                out.println("\n\n\n\n\t\t\t\t ----> " + lastPlayer.getUsername() + " WIN <----\n\n\n\n");
                 System.exit(0);
             }
         }
         else{
             if(isLastPlayer && !isAFK){
-                System.out.println("\n\n\n\n\t\t\t\t ----> YOU WIN <----");
+                out.println("\n\n\n\n\t\t\t\t ----> YOU WIN <----");
                 System.exit(0);
             }
             else if(lastPlayer != null) {
-                System.out.println("\n\n\n\n\t\t\t\t ----> " + lastPlayer.getUsername() + " WIN <----\n\n\n\n");
+                out.println("\n\n\n\n\t\t\t\t ----> " + lastPlayer.getUsername() + " WIN <----\n\n\n\n");
                 System.exit(0);
             }
+            out.println("---> " + playerAFK.getUsername() + " has been suspended due to inactivity. His turns will be skipped " +
+                    "until is back online!");
         }
-        System.out.println("--> You have been suspended due to inactivity. Turns will be skipped until your signal");
     }
 
     private void inGame(int panelIndex, String cmd) throws RemoteException {
@@ -318,7 +309,7 @@ public class CliView extends UnicastRemoteObject
             command = cmd;
         }
         while (!isGameStarted){
-            System.out.println("Invalid command, waiting for other players panel choice.");
+            out.println("Invalid command, waiting for other players panel choice.");
             command = scanner.nextLine();
         }
         String[] param = command.split(" ");
@@ -327,15 +318,15 @@ public class CliView extends UnicastRemoteObject
             switch (command) {
                 case StaticValues.COMMAND_PLACE_DICE:
                     if(currentPlayer.getHashCode() != hashCode){
-                        System.out.println(PERMISSION_DENIED);
+                        out.println(PERMISSION_DENIED);
                         break;
                     }
 
                     if(placedDice){
-                        System.out.println("Permission denied, you have already placed a dice in this turn!");
+                        out.println("Permission denied, you have already placed a dice in this turn!");
                     }
                     if (param.length != 4){
-                        System.out.println("ERROR --> Unknown command!");
+                        out.println("ERROR --> Unknown command!");
                     }
                     else {
                         PlaceDiceResult result = controller.placeDice(gameHashCode, hashCode,
@@ -344,28 +335,24 @@ public class CliView extends UnicastRemoteObject
                             getPlayerByHashCode(hashCode).setPanel(result.panel);
                             placedDice = true;
                             draftPool = result.draftPool;
-                            System.out.println("Dice placed correctly. Panel updated :");
+                            out.println("Dice placed correctly. Panel updated :");
 
-                            System.out.println(getPlayerByHashCode(hashCode).getPanel());
-                            System.out.println("----------------------------------------");
-                            System.out.println("Draft pool: ");
-                            for(int i = 0; i < draftPool.size(); i++){
-                                System.out.println("ID = " + i + " ---> " + draftPool.get(i).toString());
-                            }
+                            out.println(getPlayerByHashCode(hashCode).getPanel());
+                            showDraftPool();
                         }
                         else {
-                            System.out.println("ERROR --> DICE NOT PLACED (" + false + ")");
+                            out.println("ERROR --> DICE NOT PLACED (" + false + ")");
                         }
                     }
                     break;
 
                 case StaticValues.COMMAND_USE_TOOL_CARD:
                     if (!currentPlayer.getUsername().equals(username)) {
-                        System.out.println(PERMISSION_DENIED);
+                        out.println(PERMISSION_DENIED);
                         break;
                     }
                     if (usedToolCard) {
-                        System.out.println("Already used tool card in this turn! Unable to do it again");
+                        out.println("Already used tool card in this turn! Unable to do it again");
                         break;
                     }
                     if(param.length == 2){
@@ -376,7 +363,7 @@ public class CliView extends UnicastRemoteObject
                             e.printStackTrace();
                         }
                         if (toolCardIndex >= 0 && toolCardIndex <= 2) {
-                            System.out.println("TOOL CARD " + toolCardIndex + " USAGE:");
+                            out.println("TOOL CARD " + toolCardIndex + " USAGE:");
                             usedToolCard = true;
                             isToolCardUsableFlag = true;
                             controller.isToolCardUsable(gameHashCode, hashCode, toolCardIndex, this);
@@ -385,12 +372,12 @@ public class CliView extends UnicastRemoteObject
                                 if (toolCardFlags.isDraftPoolDiceRequired) {
                                     toolCardFlags.isDraftPoolDiceRequired = false;
                                     do {
-                                        System.out.println("Select a dice from draft pool!");
+                                        out.println("Select a dice from draft pool!");
                                         command = scanner.nextLine();
                                         if(checkCommandRange(0, draftPool.size(), command)){
                                             break;
                                         }else {
-                                            System.out.println("Invalid value!");
+                                            out.println("Invalid value!");
                                         }
                                     } while (!isEndedTurn);
                                     if (isEndedTurn) break;
@@ -400,28 +387,12 @@ public class CliView extends UnicastRemoteObject
 
                                 if (toolCardFlags.isPanelCellRequired) {
                                     toolCardFlags.isPanelCellRequired = false;
-                                    System.out.println("Select a cell from your panel!");
-                                    do {
-                                        System.out.println(INSERT_ROW);
-                                        command = scanner.nextLine();
-                                        if(checkCommandRange(0,StaticValues.PATTERN_ROW, command)){
-                                            break;
-                                        }else {
-                                            System.out.println("Invalid value!");
-                                        }
-                                    } while (!isEndedTurn);
+                                    out.println("Select a cell from your panel!");
+                                    command = common_input_row();
                                     if (isEndedTurn) break;
                                     int rowIndex = Integer.parseInt(command.split(" ")[0]);
 
-                                    do {
-                                        System.out.println(INSERT_COLUMN);
-                                        command = scanner.nextLine();
-                                        if(checkCommandRange(0, StaticValues.PATTERN_COL,command)){
-                                            break;
-                                        }else {
-                                            System.out.println("Invalid value!");
-                                        }
-                                    } while (!isEndedTurn);
+                                    command = common_input();
                                     if (isEndedTurn) break;
                                     int columnIndex = Integer.parseInt(command.split(" ")[0]);
                                     controller.setPanelCellIndex(hashCode,
@@ -430,28 +401,12 @@ public class CliView extends UnicastRemoteObject
 
                                 if (toolCardFlags.isPanelDiceRequired) {
                                     toolCardFlags.isPanelDiceRequired = false;
-                                    System.out.println("Select a dice from your panel!");
-                                    do {
-                                        System.out.println(INSERT_ROW);
-                                        command = scanner.nextLine();
-                                        if(checkCommandRange(0, StaticValues.PATTERN_ROW,command)){
-                                            break;
-                                        }else {
-                                            System.out.println("Invalid value!");
-                                        }
-                                    } while (!isEndedTurn);
+                                    out.println("Select a dice from your panel!");
+                                    command = common_input_row();
                                     if (isEndedTurn) break;
                                     int rowIndex = Integer.parseInt(command.split(" ")[0]);
 
-                                    do {
-                                        System.out.println(INSERT_COLUMN);
-                                        command = scanner.nextLine();
-                                        if(checkCommandRange(0, StaticValues.PATTERN_COL,command)){
-                                            break;
-                                        }else {
-                                            System.out.println("Invalid value!");
-                                        }
-                                    } while (!isEndedTurn);
+                                    command = common_input();
                                     if (isEndedTurn) break;
                                     int columnIndex = Integer.parseInt(command.split(" ")[0]);
                                     controller.setPanelDiceIndex(hashCode,
@@ -461,24 +416,24 @@ public class CliView extends UnicastRemoteObject
                                 if (toolCardFlags.isRoundTrackDiceRequired) {
                                     toolCardFlags.isRoundTrackDiceRequired = false;
                                     do {
-                                        System.out.println("Select a round from the round track!");
+                                        out.println("Select a round from the round track!");
                                         command = scanner.nextLine();
                                         if(checkCommandRange(1, currentRound, command)){
                                             break;
                                         }else {
-                                            System.out.println("Invalid value!");
+                                            out.println("Invalid value!");
                                         }
                                     } while (!isEndedTurn);
                                     if (isEndedTurn) break;
                                     int roundIndex = Integer.parseInt(command.split(" ")[0]);
 
                                     do {
-                                        System.out.println("Select a dice from the selected round!");
+                                        out.println("Select a dice from the selected round!");
                                         command = scanner.nextLine();
                                         if(checkCommandRange(0,roundTrack.getDicesOnRound(roundIndex).size(), command)){
                                             break;
                                         }else {
-                                            System.out.println("Invalid value!");
+                                            out.println("Invalid value!");
                                         }
                                     } while (!isEndedTurn);
                                     if (isEndedTurn) break;
@@ -488,12 +443,12 @@ public class CliView extends UnicastRemoteObject
 
                                 if (toolCardFlags.isActionSignRequired){
                                     toolCardFlags.isActionSignRequired = false;
-                                    System.out.println("You want to decrease or increase the dice value?");
-                                    System.out.println("type \t'-' -> -1");
-                                    System.out.println("type \t'+' -> +1");
+                                    out.println("You want to decrease or increase the dice value?");
+                                    out.println("type \t'-' -> -1");
+                                    out.println("type \t'+' -> +1");
                                     command = scanner.nextLine();
                                     while(!(command.equals("+") || command.equals("-"))){
-                                        System.out.println("Unknown command, please retry");
+                                        out.println("Unknown command, please retry");
                                         command = scanner.nextLine();
                                     }
                                     if (isEndedTurn) break;
@@ -506,28 +461,12 @@ public class CliView extends UnicastRemoteObject
                                 }
                                 if(toolCardFlags.isSecondPanelDiceRequired){
                                     toolCardFlags.isSecondPanelDiceRequired = false;
-                                    System.out.println("Chose a Dice from your panel!");
-                                    do {
-                                        System.out.println(INSERT_ROW);
-                                        command = scanner.nextLine();
-                                        if(checkCommandRange(0,StaticValues.PATTERN_ROW, command)){
-                                            break;
-                                        }else {
-                                            System.out.println("Invalid value!");
-                                        }
-                                    }while (!isEndedTurn);
+                                    out.println("Chose a Dice from your panel!");
+                                    command = common_input_row();
                                     if (isEndedTurn) break;
                                     int rowIndex = Integer.parseInt(command.split(" ")[0]);
 
-                                    do {
-                                        System.out.println(INSERT_COLUMN);
-                                        command = scanner.nextLine();
-                                        if(checkCommandRange(0, StaticValues.PATTERN_COL,command)){
-                                            break;
-                                        }else {
-                                            System.out.println("Invalid value!");
-                                        }
-                                    } while (!isEndedTurn);
+                                    command = common_input();
                                     if (isEndedTurn) break;
                                     int columnIndex = Integer.parseInt(command.split(" ")[0]);
                                     controller.setSecondPanelDiceIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
@@ -535,39 +474,31 @@ public class CliView extends UnicastRemoteObject
                                 if(toolCardFlags.isSecondPanelCellRequired){
                                     toolCardFlags.isSecondPanelCellRequired = false;
                                     do {
-                                        System.out.println("Chose a Cell from your panel!");
-                                        System.out.println(INSERT_ROW);
+                                        out.println("Chose a Cell from your panel!");
+                                        out.println(INSERT_ROW);
                                         command = scanner.nextLine();
                                         if(checkCommandRange(0,StaticValues.PATTERN_ROW, command)){
                                             break;
                                         }else {
-                                            System.out.println("Invalid value!");
+                                            out.println("Invalid value!");
                                         }
 
                                     } while (!isEndedTurn);
                                     if (isEndedTurn) break;
                                     int rowIndex = Integer.parseInt(command.split(" ")[0]);
 
-                                    do {
-                                        System.out.println(INSERT_COLUMN);
-                                        command = scanner.nextLine();
-                                        if(checkCommandRange(0,StaticValues.PATTERN_COL, command)){
-                                            break;
-                                        }else {
-                                            System.out.println("Invalid value!");
-                                        }
-                                    } while (!isEndedTurn);
+                                    command = common_input();
                                     if (isEndedTurn) break;
                                     int columnIndex = Integer.parseInt(command.split(" ")[0]);
                                     controller.setSecondPanelCellIndex(hashCode, rowIndex*(StaticValues.PATTERN_COL) + columnIndex);
                                 }
                                 if(toolCardFlags.isDiceValueRequired){
                                     toolCardFlags.isDiceValueRequired = false;
-                                    System.out.println("You have drafted a " + toolCardFlags.colorDiceValueRequired +" dice");
-                                    System.out.println("Now choose the value");
+                                    out.println("You have drafted a " + toolCardFlags.colorDiceValueRequired +" dice");
+                                    out.println("Now choose the value");
                                     String inputValue = scanner.nextLine();
                                     while(!(inputValue.equals("1") || inputValue.equals("2") || inputValue.equals("3") || inputValue.equals("4") || inputValue.equals("5") || inputValue.equals("6"))){
-                                        System.out.println("Invalid choice, please retry:");
+                                        out.println("Invalid choice, please retry:");
                                         inputValue = scanner.nextLine();
                                     }
                                     controller.setDiceValue(hashCode, Integer.parseInt(inputValue));
@@ -575,15 +506,15 @@ public class CliView extends UnicastRemoteObject
 
                                 if (toolCardFlags.isReRolledDiceActionRequired) {
                                     toolCardFlags.isReRolledDiceActionRequired = false;
-                                    System.out.println("Your new dice drafted is: " + toolCardFlags.reRolledDice.toString());
+                                    out.println("Your new dice drafted is: " + toolCardFlags.reRolledDice.toString());
                                 }
 
                                 if(toolCardFlags.isTwoDiceActionRequired){
                                     toolCardFlags.isTwoDiceActionRequired = false;
-                                    System.out.println("Do you want to place another dice? (y/n)");
+                                    out.println("Do you want to place another dice? (y/n)");
                                     String inputChoice = scanner.nextLine();
                                     while (!(inputChoice.equals("y")) && !(inputChoice.equals("n"))){
-                                        System.out.println("Unknown command, type y or n");
+                                        out.println("Unknown command, type y or n");
                                         inputChoice = scanner.nextLine();
                                     }
                                     if(inputChoice.equals("y")){
@@ -601,21 +532,21 @@ public class CliView extends UnicastRemoteObject
                                 //special action on tool card 11
                                 if(useToolCardResult.result){
                                     if(useToolCardResult.msg != null){
-                                        System.out.println(useToolCardResult.msg);
+                                        out.println(useToolCardResult.msg);
                                         showGameStatus();
                                     }
                                     else {
-                                        System.out.println("Tool card used successfully! This is the update game status:");
+                                        out.println("Tool card used successfully! This is the update game status:");
                                         showGameStatus();
                                     }
                                 }
                                 else {
-                                    System.out.println("Unable to use tool card. Game status unchanged");
+                                    out.println("Unable to use tool card. Game status unchanged");
                                     usedToolCard = false;
                                 }
                             }
                             else {
-                                System.out.println("There's a time and place for everything, but not now.");
+                                out.println("There's a time and place for everything, but not now.");
                                 usedToolCard = false;
                             }
 
@@ -623,17 +554,17 @@ public class CliView extends UnicastRemoteObject
                             //check su comandi ricevuti dal while precendete
                         }
                         else {
-                            System.out.println("UNKNOWN COMMAND");
+                            out.println("UNKNOWN COMMAND");
                         }
                     }
                     else {
-                        System.out.println("UNKNOWN COMMAND!");
+                        out.println("UNKNOWN COMMAND!");
                     }
                     break;
 
                 case StaticValues.COMMAND_END_TURN:
                     if(!(currentPlayer.getHashCode() == hashCode)){
-                        System.out.println(PERMISSION_DENIED);
+                        out.println(PERMISSION_DENIED);
                         break;
                     }
                     controller.endTurn(gameHashCode, hashCode);
@@ -642,10 +573,10 @@ public class CliView extends UnicastRemoteObject
                     if(isAFK) {
                         controller.disableAFK(gameHashCode, hashCode);
                         isAFK = false;
-                        System.out.println("You are now back online!");
+                        out.println("You are now back online!");
                     }
                     else {
-                        System.out.println("Nothing to do, you're not AFK!");
+                        out.println("Nothing to do, you're not AFK!");
                     }
                     break;
                 case StaticValues.COMMAND_SHOW:
@@ -660,15 +591,15 @@ public class CliView extends UnicastRemoteObject
                             changeConnectionMode(ConnectionModeEnum.SOCKET);
                         }
                         else{
-                            System.out.println("Unknown command!");
+                            out.println("Unknown command!");
                         }
                     }
                     else{
-                        System.out.println("Unknown command!");
+                        out.println("Unknown command!");
                     }
                     break;
                 default:
-                    System.out.println("Command not found : " + command);
+                    out.println("Command not found : " + command);
                     break;
             }
             command = scanner.nextLine();
@@ -676,10 +607,38 @@ public class CliView extends UnicastRemoteObject
             command = param[0];
         }
 
-        System.out.println("Disconnecting...");
+        out.println("Disconnecting...");
         boolean disconnectionResult = controller.disconnect(gameHashCode, hashCode);
-        System.out.println("Disconnection result: " + disconnectionResult);
+        out.println("Disconnection result: " + disconnectionResult);
         System.exit(0);
+    }
+
+    private String common_input_row() {
+        String command;
+        do {
+            out.println(INSERT_ROW);
+            command = scanner.nextLine();
+            if(checkCommandRange(0, StaticValues.PATTERN_ROW,command)){
+                break;
+            }else {
+                out.println("Invalid value!");
+            }
+        } while (!isEndedTurn);
+        return command;
+    }
+
+    private String common_input() {
+        String command;
+        do {
+            out.println(INSERT_COLUMN);
+            command = scanner.nextLine();
+            if(checkCommandRange(0, StaticValues.PATTERN_COL,command)){
+                break;
+            }else {
+                out.println("Invalid value!");
+            }
+        } while (!isEndedTurn);
+        return command;
     }
 
     private Player getPlayerByHashCode(int playerHashCode) {
@@ -704,34 +663,32 @@ public class CliView extends UnicastRemoteObject
     }
 
     private void printPlayersUsername(){
-        System.out.println(playersUsername.size() + " ACTIVE PLAYERS IN GAME");
+        out.println(playersUsername.size() + " ACTIVE PLAYERS IN GAME");
         for(String user : playersUsername){
-            System.out.println("--->" + user);
+            out.println("---> " + user);
         }
-        System.out.println("\n");
+        out.println("\n");
     }
 
     @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) throws RemoteException {
 
         if(panelsAlreadyChosen.size() != 0){
-            System.out.println("ALREADY CHOSEN PANEL:");
+            out.println("ALREADY CHOSEN PANEL:");
             for(String u : panelsAlreadyChosen.keySet()){
-                System.out.println("---> " +u + " panel :");
-                System.out.println(panelsAlreadyChosen.get(u));
+                out.println("---> " +u + " panel :");
+                out.println(panelsAlreadyChosen.get(u));
             }
         }
         if(playerHashCode == hashCode){
-            keyboardPressed = false;
-            System.out.println("WARNING --> Your Private Objective Color is " + color + "! Keep it in mind while choosing yout panel.");
+            out.println("WARNING --> Your Private Objective Color is " + color + "! Keep it in mind while choosing yout panel.");
             waitingForPanels = false;
-            this.panels = panels;
-            System.out.println("Please choose your pattern card! (hint: type a number between 0 and 3 to choose the panel you like)");
+            out.println("Please choose your pattern card! (hint: type a number between 0 and 3 to choose the panel you like)");
             for(int i = 0; i < panels.size() ; i++){
-                System.out.println("---> PANEL " + i);
-                System.out.println(panels.get(i).toString());
+                out.println("---> PANEL " + i);
+                out.println(panels.get(i).toString());
             }
-            System.out.println("Enter now your choice:");
+            out.println("Enter now your choice:");
         }
     }
 
@@ -745,48 +702,53 @@ public class CliView extends UnicastRemoteObject
         this.draftPool = gameStartMessage.draftpool;
         this.publicObjectiveCards = gameStartMessage.publicObjectiveCards;
         this.toolCards = gameStartMessage.toolCards;
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        System.out.println("GAME STARTED");
-        System.out.println("----------------------------------------");
-        System.out.println("ROUND 1 - TURN " + currentTurn);
-        System.out.println("PLAYERS AND PANELS :");
+        out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        out.println("GAME STARTED");
+        out.println("----------------------------------------");
+        out.println("ROUND 1 - TURN " + currentTurn);
+        out.println("PLAYERS AND PANELS :");
         for(Player player: players){
-            System.out.println("PLAYER :" + player.getUsername());
-            System.out.println(player.getPanel() + "\n");
+            out.println("PLAYER :" + player.getUsername());
+            out.println(player.getPanel() + "\n");
         }
-        System.out.println("----------------------------------------");
-        System.out.println("Draft pool: ");
+        out.println("----------------------------------------");
+        out.println("Draft pool: ");
         for(int i = 0; i < draftPool.size(); i++){
-            System.out.println("ID = " + i + " ---> " + draftPool.get(i).toString());
+            out.println("ID = " + i + " ---> " + draftPool.get(i).toString());
         }
 
-        System.out.println("----------------------------------------");
-        System.out.println("Tool Cards:");
+        out.println("----------------------------------------");
+        out.println("Tool Cards:");
         for(ToolCard toolCard : gameStartMessage.toolCards){
-            System.out.println(toolCard.toString());
+            out.println(toolCard.toString());
         }
-        System.out.println("----------------------------------------");
-        System.out.println("Public Objective Cards:");
+        out.println("----------------------------------------");
+        out.println("Public Objective Cards:");
         for(PublicObjectiveCard publicObjectiveCard : gameStartMessage.publicObjectiveCards){
-            System.out.println(publicObjectiveCard.toString());
+            out.println(publicObjectiveCard.toString());
         }
-        System.out.println("----------------------------------------");
+        out.println("----------------------------------------");
         if(currentPlayer.getHashCode() == hashCode){
-            System.out.println("It's your turn!");
+            out.println("It's your turn!");
         }
         else {
-            System.out.println("It's " + currentPlayer.getUsername() + "'s turn!");
+            out.println("It's " + currentPlayer.getUsername() + "'s turn!");
         }
     }
 
     @Override
-    public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
-        System.out.println(dicePlacedMessage.username + " place a dice. Updating game status:");
-        showGameStatus();
+    public void onDicePlaced(DicePlacedMessage dicePlacedMessage) {
+        this.draftPool = dicePlacedMessage.draftPool;
+        Player player = players.stream().filter(x -> x.getUsername().equals(dicePlacedMessage.username))
+                .findFirst().orElse(null);
+        player.setPanel(dicePlacedMessage.panel);
+        out.println(dicePlacedMessage.username + " place a dice. Updating game status:");
+        showPlayerStatus(player);
+        showDraftPool();
     }
 
     @Override
-    public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
+    public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) {
         //If it's my toolcard notification, discard it. you arleady know what you have done
         if(toolCardUsedMessage.player.getHashCode() == hashCode) return;
         this.draftPool = toolCardUsedMessage.draftPool;
@@ -801,15 +763,14 @@ public class CliView extends UnicastRemoteObject
         for(Player x : players){
             if (x.getHashCode() == toolCardUsedMessage.player.getHashCode()) players.set(players.indexOf(x),toolCardUsedMessage.player);
         }
-        System.out.println(toolCardUsedMessage.player.getUsername() + " has used toolcard #" + toolCardUsedMessage.toolCardID + ", updating game status:");
+        out.println(toolCardUsedMessage.player.getUsername() + " has used toolcard #" + toolCardUsedMessage.toolCardID + ", updating game status:");
         showGameStatus();
     }
 
     @Override
-    public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+    public void onEndTurn(EndTurnMessage endTurnMessage) {
         placedDice = false;
         usedToolCard = false;
-        specialTurn = false;
         this.draftPool = endTurnMessage.draftpool;
         this.players = endTurnMessage.players;
         this.roundTrack = endTurnMessage.roundTrack;
@@ -817,81 +778,84 @@ public class CliView extends UnicastRemoteObject
         currentTurn = endTurnMessage.turn;
         currentRound = endTurnMessage.roundTrack.getCurrentRound();
         if(endTurnMessage.previousPlayer.getUsername().equals(username)){
-            System.out.println("Your turn is ended!");
+            out.println("Your turn is ended!");
         }
         else{
-            System.out.println(endTurnMessage.previousPlayer.getUsername() + "'s turn is ended! Player status:");
-            //showPlayerStatus(endTurnMessage.previousPlayer);
+            out.println(endTurnMessage.previousPlayer.getUsername() + "'s turn is ended!");
         }
-        System.out.println("----------------------------------------");
-        System.out.println("NOW STARTING --> ROUND = " + currentRound + " - TURN = " + currentTurn);
+        out.println("----------------------------------------");
+        out.println("NOW STARTING --> ROUND = " + currentRound + " - TURN = " + currentTurn);
         showGameStatus();
         if(endTurnMessage.currentPlayer.getHashCode() == hashCode) {
-            System.out.println("It's your turn!");
+            out.println("It's your turn!");
             showInGameCommandList();
         }
         else {
-            System.out.println("It's " + endTurnMessage.currentPlayer.getUsername() + "'s turn!");
+            out.println("It's " + endTurnMessage.currentPlayer.getUsername() + "'s turn!");
         }
     }
 
     @Override
     public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
-        System.out.println("---> " + reconnectingPlayer.getUsername() + " is back online!");
+        out.println("---> " + reconnectingPlayer.getUsername() + " is back online!");
     }
 
     @Override
     public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
-        System.out.println("---> " + disconnectingPlayer.getUsername() + " is now offline! " +
+        out.println("---> " + disconnectingPlayer.getUsername() + " is now offline! " +
                 "He will automatically passed every turns until the next reconnection");
         if(isLastPlayer){
-            System.out.println("You are the only active player in game!");
-            System.out.println("\n\n\n\n\t\t\t\t ----> YOU WIN <----");
+            out.println("You are the only active player in game!");
+            out.println("\n\n\n\n\t\t\t\t ----> YOU WIN <----");
             System.exit(0);
         }
     }
 
     private void showPlayerStatus(Player player){
         if(player.getUsername().equals(username)){
-            System.out.println("Your's status:");
+            out.println("Your's status:");
         }
         else {
-            System.out.println(player.getUsername() + "'s status:");
+            out.println(player.getUsername() + "'s status:");
         }
-        System.out.println(player.getPanel());
-        System.out.println(player.getFavorTokens());
-        System.out.println("----------------------------------------");
+        out.println(player.getPanel());
+        out.println(player.getFavorTokens());
+        out.println("----------------------------------------");
 
     }
 
     private void showGameStatus(){
-        System.out.println("----------------------------------------");
+        out.println("----------------------------------------");
         for(Player player : players){
             showPlayerStatus(player);
         }
-        System.out.println("----------------------------------------");
-        System.out.println("Draft pool: ");
-        for(int i = 0; i < draftPool.size(); i++){
-            System.out.println("ID = " + i + " ---> " + draftPool.get(i).toString());
-        }
+        showDraftPool();
         showGameSecondaryStuff();
+    }
+
+    private void showDraftPool(){
+        out.println("----------------------------------------");
+        out.println("Draft pool: ");
+        for(int i = 0; i < draftPool.size(); i++){
+            out.println("ID = " + i + " ---> " + draftPool.get(i).toString());
+        }
     }
 
     private void showGameSecondaryStuff(){
         if(roundTrack != null) {
-            System.out.println("----------------------------------------");
-            System.out.println("Round Track: ");
-            System.out.println(roundTrack.toString());
+            out.println("----------------------------------------");
+            out.println("Round Track: ");
+            out.println(roundTrack.toString());
         }
-        System.out.println("----------------------------------------");
-        System.out.println("Tool Cards:");
+        out.println("----------------------------------------");
+        out.println("Tool Cards:");
         for(ToolCard toolCard : toolCards){
-            System.out.println(toolCard.toString());
+            out.println(toolCard.toString());
         }
-        System.out.println("----------------------------------------");
-        System.out.println("Public Objective Cards:");
+        out.println("----------------------------------------");
+        out.println("Public Objective Cards:");
         for(PublicObjectiveCard publicObjectiveCard : publicObjectiveCards){
-            System.out.println(publicObjectiveCard.toString());
+            out.println(publicObjectiveCard.toString());
         }
     }
 
