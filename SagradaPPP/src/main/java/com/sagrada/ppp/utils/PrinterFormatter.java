@@ -1,6 +1,5 @@
 package com.sagrada.ppp.utils;
 
-import com.sagrada.ppp.*;
 import com.sagrada.ppp.model.Cell;
 import com.sagrada.ppp.model.Color;
 import com.sagrada.ppp.model.Dice;
@@ -23,7 +22,6 @@ public class PrinterFormatter {
     private static final char BOTTOM_LEFT = (int) '└';
     private static final String HORIZONTAL = "─────────";
     private static final char VERTICAL = (int) '│';
-
 
     /**
      * @param panel: panel from witch this function creates it's visual representation
@@ -97,8 +95,6 @@ public class PrinterFormatter {
         result.append(RESET);
         return result.toString();
     }
-
-
 
     private static String getColoredString(Color color, String msg){
         switch (color){

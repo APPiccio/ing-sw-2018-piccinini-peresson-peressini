@@ -443,7 +443,7 @@ public class Game implements Serializable {
         }
         gameObservers.get(playerHashCode).add(observer);
     }
-    public void detachAllGameObservers(int playerHashCode){
+    public void detachAllGameObservers(int playerHashCode) {
         gameObservers.remove(playerHashCode);
     }
 
