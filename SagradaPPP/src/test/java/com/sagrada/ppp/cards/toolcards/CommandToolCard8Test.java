@@ -44,6 +44,52 @@ public class CommandToolCard8Test {
         assertTrue(toolCard8.paramsOk(container));
         toolCard8.use(container);
         assertTrue(true);
+
+        //Testing paramsOk
+        windowPanel = TestPanels.toolCardPanel();
+
+        //null windowPanel
+        player.setPanel(null);
+        container.player = player;
+        container.draftPool = draftPool;
+        container.toolCardParameters.draftPoolDiceIndex = 5;
+        container.toolCardParameters.panelCellIndex = 1;
+        assertFalse(toolCard8.paramsOk(container));
+
+        //Invalid cell
+        player.setPanel(windowPanel);
+        container.player = player;
+        container.draftPool = draftPool;
+        container.toolCardParameters.draftPoolDiceIndex = 5;
+        container.toolCardParameters.panelCellIndex = -777;
+        assertFalse(toolCard8.paramsOk(container));
+
+        //Invalid cell
+        player.setPanel(windowPanel);
+        container.player = player;
+        container.draftPool = draftPool;
+        container.toolCardParameters.draftPoolDiceIndex = 5;
+        container.toolCardParameters.panelCellIndex = 42;
+        assertFalse(toolCard8.paramsOk(container));
+
+        //null dice from draftPool
+        player.setPanel(windowPanel);
+        container.player = player;
+        container.draftPool = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            container.draftPool.add(null);
+        }
+        container.toolCardParameters.draftPoolDiceIndex = 5;
+        container.toolCardParameters.panelCellIndex = 1;
+        assertFalse(toolCard8.paramsOk(container));
+
+        //Placement error
+        player.setPanel(windowPanel);
+        container.player = player;
+        container.draftPool = draftPool;
+        container.toolCardParameters.draftPoolDiceIndex = 5;
+        container.toolCardParameters.panelCellIndex = 19;
+        assertFalse(toolCard8.paramsOk(container));
     }
 
 }

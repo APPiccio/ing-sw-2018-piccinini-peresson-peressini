@@ -34,7 +34,6 @@ public class ToolCard2 extends ToolCard {
         if (dice == null) return false;
         windowPanel.removeDice(toolCardParameters.panelDiceIndex);
 
-        if (!player.getPanel().diceOk(dice,toolCardParameters.panelCellIndex,true,false,false)) return false;
-        return true;
+        return player.getPanel().diceOk(dice, toolCardParameters.panelCellIndex, true, false, false);
     }
 }

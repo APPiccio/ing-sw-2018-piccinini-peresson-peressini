@@ -26,7 +26,6 @@ public class ToolCard1 extends ToolCard {
         dice = container.draftPool.get(container.toolCardParameters.draftPoolDiceIndex);
         if (dice == null) return false;
         if (dice.getValue() == 1 && container.toolCardParameters.actionSign == -1) return false;
-        if (dice.getValue() == 6 && container.toolCardParameters.actionSign == +1) return false;
-        return true;
+        return dice.getValue() != 6 || container.toolCardParameters.actionSign != +1;
     }
 }

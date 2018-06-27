@@ -9,7 +9,7 @@ public class CommandToolCard12 implements CommandToolCard {
     private LinkedHashMap<Integer, Integer> positions;
     private WindowPanel windowPanel;
 
-    public CommandToolCard12(LinkedHashMap<Integer,Integer> positions, WindowPanel windowPanel){
+    CommandToolCard12(LinkedHashMap<Integer, Integer> positions, WindowPanel windowPanel){
         this.positions = positions;
         this.windowPanel = windowPanel;
     }

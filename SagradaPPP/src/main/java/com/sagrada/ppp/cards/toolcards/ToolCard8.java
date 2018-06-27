@@ -27,7 +27,6 @@ public class ToolCard8 extends ToolCard {
         if (cell == null) return false;
         Dice dice = container.draftPool.get(container.toolCardParameters.draftPoolDiceIndex);
         if (dice == null) return false;
-        if (!(windowPanel.diceOk(dice,container.toolCardParameters.panelCellIndex))) return false;
-        return true;
+        return windowPanel.diceOk(dice, container.toolCardParameters.panelCellIndex);
     }
 }

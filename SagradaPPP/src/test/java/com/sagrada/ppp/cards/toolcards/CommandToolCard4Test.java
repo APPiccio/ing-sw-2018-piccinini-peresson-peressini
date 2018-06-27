@@ -8,8 +8,6 @@ import com.sagrada.ppp.model.WindowPanel;
 import com.sagrada.ppp.utils.StaticValues;
 import org.junit.*;
 
-import java.util.LinkedHashMap;
-
 import static org.junit.Assert.*;
 
 public class CommandToolCard4Test {
@@ -61,6 +59,88 @@ public class CommandToolCard4Test {
         for (int i = 0; i < StaticValues.NUMBER_OF_CELLS; i++) {
             assertEquals(windowPanel.getCell(i), windowPanelCopy.getCell(i));
         }
+
+        //Testing paramsOk
+        player.setPanel(null);
+        container.toolCardParameters.panelDiceIndex = 2;
+        container.toolCardParameters.panelCellIndex = 9;
+        container.toolCardParameters.secondPanelDiceIndex = 12;
+        container.toolCardParameters.secondPanelCellIndex = 11;
+        container.player = player;
+        assertFalse(toolCard4.paramsOk(container));
+
+        windowPanelCopy = new WindowPanel(windowPanel);
+        player.setPanel(windowPanelCopy);
+
+        container.toolCardParameters.panelDiceIndex = 2;
+        container.toolCardParameters.panelCellIndex = -777;
+        container.toolCardParameters.secondPanelDiceIndex = 12;
+        container.toolCardParameters.secondPanelCellIndex = 11;
+        container.player = player;
+        assertFalse(toolCard4.paramsOk(container));
+
+        container.toolCardParameters.panelDiceIndex = 2;
+        container.toolCardParameters.panelCellIndex = 42;
+        container.toolCardParameters.secondPanelDiceIndex = 12;
+        container.toolCardParameters.secondPanelCellIndex = 11;
+        container.player = player;
+        assertFalse(toolCard4.paramsOk(container));
+
+        container.toolCardParameters.panelDiceIndex = 2;
+        container.toolCardParameters.panelCellIndex = 9;
+        container.toolCardParameters.secondPanelDiceIndex = 12;
+        container.toolCardParameters.secondPanelCellIndex = -777;
+        container.player = player;
+        assertFalse(toolCard4.paramsOk(container));
+
+        container.toolCardParameters.panelDiceIndex = 2;
+        container.toolCardParameters.panelCellIndex = 9;
+        container.toolCardParameters.secondPanelDiceIndex = 12;
+        container.toolCardParameters.secondPanelCellIndex = 42;
+        container.player = player;
+        assertFalse(toolCard4.paramsOk(container));
+
+        container.toolCardParameters.panelDiceIndex = 42;
+        container.toolCardParameters.panelCellIndex = 9;
+        container.toolCardParameters.secondPanelDiceIndex = 12;
+        container.toolCardParameters.secondPanelCellIndex = 11;
+        container.player = player;
+        assertFalse(toolCard4.paramsOk(container));
+
+        container.toolCardParameters.panelDiceIndex = 2;
+        container.toolCardParameters.panelCellIndex = 9;
+        container.toolCardParameters.secondPanelDiceIndex = -777;
+        container.toolCardParameters.secondPanelCellIndex = 11;
+        container.player = player;
+        assertFalse(toolCard4.paramsOk(container));
+
+        container.toolCardParameters.panelDiceIndex = 8;
+        container.toolCardParameters.panelCellIndex = 9;
+        container.toolCardParameters.secondPanelDiceIndex = 12;
+        container.toolCardParameters.secondPanelCellIndex = 11;
+        container.player = player;
+        assertFalse(toolCard4.paramsOk(container));
+
+        container.toolCardParameters.panelDiceIndex = 2;
+        container.toolCardParameters.panelCellIndex = 0;
+        container.toolCardParameters.secondPanelDiceIndex = 12;
+        container.toolCardParameters.secondPanelCellIndex = 11;
+        container.player = player;
+        assertFalse(toolCard4.paramsOk(container));
+
+        container.toolCardParameters.panelDiceIndex = 2;
+        container.toolCardParameters.panelCellIndex = 9;
+        container.toolCardParameters.secondPanelDiceIndex = 8;
+        container.toolCardParameters.secondPanelCellIndex = 11;
+        container.player = player;
+        assertFalse(toolCard4.paramsOk(container));
+
+        container.toolCardParameters.panelDiceIndex = 2;
+        container.toolCardParameters.panelCellIndex = 9;
+        container.toolCardParameters.secondPanelDiceIndex = 12;
+        container.toolCardParameters.secondPanelCellIndex = 0;
+        container.player = player;
+        assertFalse(toolCard4.paramsOk(container));
     }
 
 }

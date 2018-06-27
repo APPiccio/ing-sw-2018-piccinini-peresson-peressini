@@ -8,7 +8,7 @@ public class CommandToolCard11 implements CommandToolCard {
     private DiceBag diceBag;
     private Dice dice;
 
-    public CommandToolCard11(DiceBag diceBag, Dice dice) {
+    CommandToolCard11(DiceBag diceBag, Dice dice) {
         this.diceBag = diceBag;
         this.dice = dice;
     }

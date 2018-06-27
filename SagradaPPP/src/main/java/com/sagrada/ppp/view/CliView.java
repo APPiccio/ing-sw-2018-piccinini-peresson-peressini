@@ -751,7 +751,7 @@ public class CliView extends UnicastRemoteObject
         System.out.println("ROUND 1 - TURN " + currentTurn);
         System.out.println("PLAYERS AND PANELS :");
         for(Player player: players){
-            System.out.println("PLAYER :" + username);
+            System.out.println("PLAYER :" + player.getUsername());
             System.out.println(player.getPanel() + "\n");
         }
         System.out.println("----------------------------------------");

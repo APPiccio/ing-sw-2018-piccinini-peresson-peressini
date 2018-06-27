@@ -51,6 +51,29 @@ public class CommandToolCard9Test {
         container.toolCardParameters.panelCellIndex = 15;
         assertFalse(toolCard9.paramsOk(container));
         assertEquals(16, player.getPanel().getEmptyCells());
+
+        //Testing paramsOk
+
+        //Invalid cell
+        container.toolCardParameters.panelCellIndex = 42;
+        assertFalse(toolCard9.paramsOk(container));
+
+        //Invalid cell
+        container.toolCardParameters.panelCellIndex = -777;
+        assertFalse(toolCard9.paramsOk(container));
+
+        //null windowPanel
+        container.player.setPanel(null);
+        assertFalse(toolCard9.paramsOk(container));
+
+        //null dice from draftPool
+        container.player.setPanel(TestPanels.toolCardPanel());
+        draftPool = new ArrayList<>();
+        draftPool.add(null);
+        container.draftPool = draftPool;
+        container.toolCardParameters.draftPoolDiceIndex = 0;
+        container.toolCardParameters.panelCellIndex = 19;
+        assertFalse(toolCard9.paramsOk(container));
     }
 
 }

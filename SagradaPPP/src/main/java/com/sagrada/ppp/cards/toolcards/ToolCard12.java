@@ -41,10 +41,10 @@ public class ToolCard12 extends ToolCard {
         if(toolCardParameters.twoDiceAction){
             Cell cell2start = panel.getCell(toolCardParameters.secondPanelDiceIndex);
             Cell cell2end = panel.getCell(toolCardParameters.secondPanelCellIndex);
+            if(cell2end == null || cell2start == null) return false;
             Dice movingDice2 = panel.removeDice(toolCardParameters.secondPanelDiceIndex);
             if(!panel.addDice(toolCardParameters.secondPanelCellIndex, movingDice2)) return false;
-            if(cell2end == null || cell2start == null) return false;
-            if(!cell2start.hasDiceOn() || cell2end.hasDiceOn() || !cell2start.getDiceOn().getColor().equals(color)) return false;
+            return cell2start.hasDiceOn() && !cell2end.hasDiceOn() && cell2start.getDiceOn().getColor().equals(color);
         }
         return true;
     }

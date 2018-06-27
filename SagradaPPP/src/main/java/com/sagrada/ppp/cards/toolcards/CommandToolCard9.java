@@ -10,7 +10,7 @@ public class CommandToolCard9 implements CommandToolCard {
     private int panelIndex;
     private Dice draftPoolDice;
 
-    public CommandToolCard9(Player player, int panelIndex, Dice draftPoolDice) {
+    CommandToolCard9(Player player, int panelIndex, Dice draftPoolDice) {
         this.player = player;
         this.panelIndex = panelIndex;
         this.draftPoolDice = draftPoolDice;
@@ -22,7 +22,8 @@ public class CommandToolCard9 implements CommandToolCard {
     @Override
     public void useCard() {
         WindowPanel panel = player.getPanel();
-        if (panel.noDiceNear(panelIndex) && panel.addDice(panelIndex, draftPoolDice, false, false, true)) {
+        if (panel.noDiceNear(panelIndex)) {
+            panel.addDice(panelIndex, draftPoolDice, false, false, true);
             player.setPanel(panel);
         }
     }

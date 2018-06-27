@@ -4,7 +4,6 @@ import com.sagrada.ppp.cards.ToolCardParameterContainer;
 import com.sagrada.ppp.model.Color;
 import com.sagrada.ppp.model.Dice;
 import com.sagrada.ppp.model.DiceTest;
-import com.sagrada.ppp.model.ToolCardParameters;
 import org.junit.*;
 
 import java.util.ArrayList;
