@@ -58,10 +58,6 @@ public class Game implements Serializable {
     private volatile boolean gameEnded;
     private transient Service service;
 
-    /*
-    TODO: Add a method that given the username string returns the desired players
-    TODO: Add overloading methods that take a Player as a parameter instead of a String
-    */
 
     public Game(String username, Service service) {
         this.service = service;
