@@ -16,17 +16,27 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Core class of the game
  * Each game has a unique instance of this class.
- * Allows to have multiple games on the same server.
+ * This allows to have multiple games on the same server.
  */
 public class Game implements Serializable {
 
+    /**
+     * contains the list of subscribed lobby observers paired with the ID of their owner
+     */
     private HashMap<Integer, LobbyObserver> lobbyObservers;
+    /**
+     * Same as lobbyObserver but with the possibility to have more then one gameObserver per user
+     */
     private HashMap<Integer, ArrayList<GameObserver>> gameObservers;
     private ArrayList<Player> players;
     private transient DiceBag diceBag;
     private ArrayList<Dice> draftPool;
     private RoundTrack roundTrack;
     private GameStatus gameStatus;
+
+    /**
+     * Timer related to lobby behaviour
+     */
     private transient LobbyTimer lobbyTimer;
     private long lobbyTimerStartTime;
     private volatile boolean waitingForPanelChoice;
@@ -35,6 +45,10 @@ public class Game implements Serializable {
     private ArrayList<ToolCard> toolCards;
     private ArrayList<PublicObjectiveCard> publicObjectiveCards;
     private int turn = 1;
+
+    /**
+     * flag used to characterize game status, as their name say
+     */
     private volatile boolean dicePlaced;
     private volatile boolean usedToolCard;
     private volatile boolean isSpecialTurn;
@@ -173,10 +187,7 @@ public class Game implements Serializable {
         Player justPlayedPlayer = null;
 
         for(int i = 1; i <= 10; i++){
-            for (Player player : players) {
-                player.setSkipSecondTurn(false);
-            }
-
+            players.forEach(x -> x.setSkipSecondTurn(false));
             for(int j = 1; j <= players.size()*2; j++){
                 System.out.println("BEGIN TURN = " + j + ", ROUND = " + i);
                 endTurn = false;
@@ -231,6 +242,7 @@ public class Game implements Serializable {
                     if (j != players.size() * 2) notifyEndTurn(justPlayedPlayer, players.get(getCurrentPlayerIndex()));
                 }
             }
+            if (gameEnded) return;
             toNextRound();
             setTurn(1);
             if(i != 10) notifyEndTurn(justPlayedPlayer, players.get(getCurrentPlayerIndex()));
