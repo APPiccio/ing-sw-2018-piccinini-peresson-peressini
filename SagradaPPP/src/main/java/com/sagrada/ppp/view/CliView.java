@@ -327,7 +327,7 @@ public class CliView extends UnicastRemoteObject
                         out.println("Permission denied, you have already placed a dice in this turn!");
                     }
                     if (param.length != 4 || invalidParams(param, 1)){
-                        out.println("ERROR --> Unknown command!");
+                        out.println("ERROR --> Wrong command format");
                     }
                     else {
                         PlaceDiceResult result = controller.placeDice(gameHashCode, hashCode,
@@ -564,12 +564,10 @@ public class CliView extends UnicastRemoteObject
                     break;
 
                 case StaticValues.COMMAND_END_TURN:
-                    out.println("arrivo");
                     if(currentPlayer.getHashCode() != hashCode){
                         out.println(PERMISSION_DENIED);
                         break;
                     }
-                    out.println("dopoif");
                     controller.endTurn(gameHashCode, hashCode);
                     break;
                 case StaticValues.COMMAND_DISABLE_AFK:
@@ -642,9 +640,9 @@ public class CliView extends UnicastRemoteObject
         availableStrings.add("7");
         availableStrings.add("8");
         for(int i = startingIndex; i < params.length; i++){
-            if (!availableStrings.contains(params[i])) return false;
+            if (!availableStrings.contains(params[i])) return true;
         }
-        return true;
+        return false;
     }
 
     private String common_input() {
