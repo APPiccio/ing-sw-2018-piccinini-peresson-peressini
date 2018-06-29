@@ -87,6 +87,11 @@ public class PlaceDiceRequestTest {
             public Response handle(DisableAFKRequest request) {
                 return null;
             }
+
+            @Override
+            public Response handle(ChangeConnectionRequest request) {
+                return null;
+            }
         };
 
         placeDiceRequest = new PlaceDiceRequest(1,2,3,4,5);

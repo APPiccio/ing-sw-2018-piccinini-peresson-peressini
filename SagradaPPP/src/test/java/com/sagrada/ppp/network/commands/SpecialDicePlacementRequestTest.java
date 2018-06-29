@@ -87,6 +87,11 @@ public class SpecialDicePlacementRequestTest {
             public Response handle(DisableAFKRequest request) {
                 return null;
             }
+
+            @Override
+            public Response handle(ChangeConnectionRequest request) {
+                return null;
+            }
         };
 
         specialDicePlacementRequest = new SpecialDicePlacementRequest(132,123,132,null);

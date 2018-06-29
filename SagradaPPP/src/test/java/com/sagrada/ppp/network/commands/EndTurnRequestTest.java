@@ -88,6 +88,11 @@ public class EndTurnRequestTest {
             public Response handle(DisableAFKRequest request) {
                 return null;
             }
+
+            @Override
+            public Response handle(ChangeConnectionRequest request) {
+                return null;
+            }
         };
         endTurnRequest.handle(requestHandler);
     }

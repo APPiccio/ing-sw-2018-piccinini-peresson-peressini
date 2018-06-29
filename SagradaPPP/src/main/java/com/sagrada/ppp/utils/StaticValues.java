@@ -108,7 +108,7 @@ public class StaticValues {
 
     public static final String COMMAND_PLACE_DICE = ":dice";
     public static final String COMMAND_END_TURN = ":end";
-    public static final String COMMAND_USE_TOOL_CARD = ":toolCard";
+    public static final String COMMAND_USE_TOOL_CARD = ":toolcard";
     public static final String COMMAND_SHOW = ":show";
     public static final String COMMAND_CONNECTION = ":cmode";
     public static final String COMMAND_DISABLE_AFK = ":bazinga";

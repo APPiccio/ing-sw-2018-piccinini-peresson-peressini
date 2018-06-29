@@ -17,4 +17,5 @@ public interface RequestHandler {
     Response handle(PutDiceInDraftPoolRequest request);
     Response handle(ReconnectionRequest request);
     Response handle(DisableAFKRequest request);
+    Response handle(ChangeConnectionRequest request);
 }

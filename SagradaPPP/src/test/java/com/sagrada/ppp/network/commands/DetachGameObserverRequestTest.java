@@ -88,6 +88,11 @@ public class DetachGameObserverRequestTest {
             public Response handle(DisableAFKRequest request) {
                 return null;
             }
+
+            @Override
+            public Response handle(ChangeConnectionRequest request) {
+                return null;
+            }
         };
         disconnectionRequest = new DetachGameObserverRequest(123,456);
         disconnectionRequest.handle(requestHandler);

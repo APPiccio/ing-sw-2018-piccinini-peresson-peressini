@@ -88,6 +88,11 @@ public class DisableAFKRequestTest {
                 assertEquals(test,request);
                 return null;
             }
+
+            @Override
+            public Response handle(ChangeConnectionRequest request) {
+                return null;
+            }
         };
         test.handle(requestHandler);
     }

@@ -3,6 +3,7 @@ package com.sagrada.ppp.view;
 import com.sagrada.ppp.cards.publicobjectivecards.PublicObjectiveCard;
 import com.sagrada.ppp.cards.toolcards.ToolCard;
 import com.sagrada.ppp.controller.RemoteController;
+import com.sagrada.ppp.controller.SocketClientController;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.client.ConnectionHandler;
 import com.sagrada.ppp.network.client.ConnectionModeEnum;
@@ -325,7 +326,7 @@ public class CliView extends UnicastRemoteObject
                     if(placedDice){
                         out.println("Permission denied, you have already placed a dice in this turn!");
                     }
-                    if (param.length != 4){
+                    if (param.length != 4 || invalidParams(param, 1)){
                         out.println("ERROR --> Unknown command!");
                     }
                     else {
@@ -563,10 +564,12 @@ public class CliView extends UnicastRemoteObject
                     break;
 
                 case StaticValues.COMMAND_END_TURN:
-                    if(!(currentPlayer.getHashCode() == hashCode)){
+                    out.println("arrivo");
+                    if(currentPlayer.getHashCode() != hashCode){
                         out.println(PERMISSION_DENIED);
                         break;
                     }
+                    out.println("dopoif");
                     controller.endTurn(gameHashCode, hashCode);
                     break;
                 case StaticValues.COMMAND_DISABLE_AFK:
@@ -625,6 +628,23 @@ public class CliView extends UnicastRemoteObject
             }
         } while (!isEndedTurn);
         return command;
+    }
+
+    private boolean invalidParams(String[] params, int startingIndex){
+        ArrayList<String> availableStrings = new ArrayList<>();
+        availableStrings.add("0");
+        availableStrings.add("1");
+        availableStrings.add("2");
+        availableStrings.add("3");
+        availableStrings.add("4");
+        availableStrings.add("5");
+        availableStrings.add("6");
+        availableStrings.add("7");
+        availableStrings.add("8");
+        for(int i = startingIndex; i < params.length; i++){
+            if (!availableStrings.contains(params[i])) return false;
+        }
+        return true;
     }
 
     private String common_input() {
@@ -862,13 +882,21 @@ public class CliView extends UnicastRemoteObject
     }
 
     private void changeConnectionMode(ConnectionModeEnum connectionModeEnum){
-        if(this.connectionModeEnum.equals(connectionModeEnum)) return;
+        if(this.connectionModeEnum.equals(connectionModeEnum)) {
+            System.out.println("This is already your connection mode. Nothing to be done.");
+            System.out.println("Enter a new command: ");
+            return;
+        }
         this.connectionModeEnum = connectionModeEnum;
         if(connectionModeEnum.equals(ConnectionModeEnum.RMI)){
             //if you are here, it means that you want to change socket -> rmi
             //close socket connection before changing connection mode
+            SocketClientController socketClientController = (SocketClientController) controller;
+            socketClientController.isChangingConnection(gameHashCode, hashCode);
+        }
+        else{
             try {
-                controller.detachAllGameObserver(gameHashCode,hashCode);
+                controller.detachAllGameObserver(gameHashCode, hashCode);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -876,6 +904,7 @@ public class CliView extends UnicastRemoteObject
         ConnectionHandler connectionHandler = new ConnectionHandler(connectionModeEnum);
         controller = connectionHandler.getController();
         try {
+            System.out.println("attaching per =" + hashCode);
             controller.attachGameObserver(gameHashCode, this, hashCode);
         } catch (RemoteException e) {
             e.printStackTrace();

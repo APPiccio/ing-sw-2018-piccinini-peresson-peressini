@@ -6,11 +6,13 @@ import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.network.server.Service;
 import com.sagrada.ppp.utils.StaticValues;
 
+import javax.swing.*;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.Timer;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -447,11 +449,21 @@ public class Game implements Serializable {
 
     public void attachGameObserver(GameObserver observer, int playerHashCode){
         if(observer == null) return;
-        gameObservers.computeIfAbsent(playerHashCode, k -> new ArrayList<>());
+        System.out.println("received hashcode = " + playerHashCode);
+        System.out.println("obs hashcode = " + observer.hashCode());
+        if(!gameObservers.keySet().contains(playerHashCode)) gameObservers.put(playerHashCode, new ArrayList<>());
         gameObservers.get(playerHashCode).add(observer);
+        for(Integer hash : gameObservers.keySet()){
+            for(GameObserver gameObserver : gameObservers.get(hash)){
+                System.out.println(hash + " - " + gameObserver.hashCode());
+            }
+        }
+
     }
     public void detachAllGameObservers(int playerHashCode) {
-        gameObservers.remove(playerHashCode);
+        System.out.println("hashcode = " + playerHashCode);
+        gameObservers.keySet().forEach(System.out::println);
+        gameObservers.put(playerHashCode, new ArrayList<>());
     }
 
     public void attachLobbyObserver(LobbyObserver observer, int playerHashCode){

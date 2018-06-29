@@ -87,6 +87,11 @@ public class PanelChoiceRequestTest {
             public Response handle(DisableAFKRequest request) {
                 return null;
             }
+
+            @Override
+            public Response handle(ChangeConnectionRequest request) {
+                return null;
+            }
         };
 
         panelChoiceRequest = new PanelChoiceRequest(1,2,3);

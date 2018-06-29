@@ -87,6 +87,11 @@ public class LeaveGameRequestTest {
             public Response handle(DisableAFKRequest request) {
                 return null;
             }
+
+            @Override
+            public Response handle(ChangeConnectionRequest request) {
+                return null;
+            }
         };
 
         leaveGameRequest = new LeaveGameRequest("ciao", 123);

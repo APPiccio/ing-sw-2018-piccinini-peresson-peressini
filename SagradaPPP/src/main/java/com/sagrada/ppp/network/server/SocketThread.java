@@ -18,6 +18,7 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     private boolean isStopped;
     private int gameHashCode;
     private int playerHashCode;
+    private volatile boolean isChangingConnection;
 
 
 
@@ -58,9 +59,14 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
             }
 
             catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("Closing socket... gamehashcode = " + gameHashCode + " - playerHashCode = " + playerHashCode );
-                System.out.println("DISCONNECTION RESULT = " + service.disconnect(gameHashCode, playerHashCode));
+                if(!isChangingConnection) {
+                    e.printStackTrace();
+                    System.out.println("Closing socket... gamehashcode = " + gameHashCode + " - playerHashCode = " + playerHashCode);
+                    System.out.println("DISCONNECTION RESULT = " + service.disconnect(gameHashCode, playerHashCode));
+                }
+                else {
+                    System.out.println("Closing socket due to connection mode change by " + playerHashCode);
+                }
                 return;
             }
             catch (ClassNotFoundException e) {
@@ -298,5 +304,10 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
         //do nothing here.. only to keep inheritance
     }
 
-
+    @Override
+    public Response handle(ChangeConnectionRequest request) {
+        this.isChangingConnection = true;
+        service.detachAllGameObserver(request.gameHashCode, request.playerHashCode);
+        return null;
+    }
 }
