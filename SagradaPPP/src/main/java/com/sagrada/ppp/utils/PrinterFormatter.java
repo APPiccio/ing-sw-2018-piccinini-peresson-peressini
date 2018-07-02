@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import static com.sagrada.ppp.utils.StaticValues.*;
 
 public class PrinterFormatter {
+    private PrinterFormatter(){
+        super();
+    }
 
     private static final char TOP_RIGHT = (int) '┐';
     private static final char TOP_LEFT = (int) '┌';
@@ -66,18 +69,18 @@ public class PrinterFormatter {
             for (Cell c:cells) {
                 if(c.hasDiceOn()){
                     Dice d = c.getDiceOn();
-                    rowValue[i] = getColoredString(d.getColor(),center(" " + d.getValue(),9,' ',true));
-                    rowColor[i] = getColoredString(d.getColor(),center(d.getColor().toString(),9,' ',true));
+                    rowValue[i] = getColoredString(d.getColor(),center(" " + d.getValue(),9,' '));
+                    rowColor[i] = getColoredString(d.getColor(),center(d.getColor().toString(),9,' '));
                 }else if(c.hasColorRestriction()){
-                    rowValue[i] =getColoredBkgrnd(c.getColor(),center(c.getColor().toString(),9,' ',true));
-                    rowColor[i] = getColoredBkgrnd(c.getColor(),center("CELL",9,' ',true));
+                    rowValue[i] =getColoredBkgrnd(c.getColor(),center(c.getColor().toString(),9,' '));
+                    rowColor[i] = getColoredBkgrnd(c.getColor(),center("CELL",9,' '));
                 }else if(c.hasValueRestriction()){
-                    rowValue[i] = WHITE_BOLD_BRIGHT + center(Integer.toString(c.getValue()),9, ' ',true) + RESET;
-                    rowColor[i] = WHITE_BOLD_BRIGHT +center( "CELL" ,9, ' ',true)+ RESET;
+                    rowValue[i] = WHITE_BOLD_BRIGHT + center(Integer.toString(c.getValue()),9, ' ') + RESET;
+                    rowColor[i] = WHITE_BOLD_BRIGHT +center( "CELL" ,9, ' ')+ RESET;
                 }else {
 
-                    rowValue[i] = WHITE_BACKGROUND_BRIGHT + center("BLANK" ,9, ' ',true)+ RESET;
-                    rowColor[i] = WHITE_BACKGROUND_BRIGHT + center("CELL" ,9, ' ',true)+ RESET;
+                    rowValue[i] = WHITE_BACKGROUND_BRIGHT + center("BLANK" ,9, ' ')+ RESET;
+                    rowColor[i] = WHITE_BACKGROUND_BRIGHT + center("CELL" ,9, ' ')+ RESET;
 
                 }
                 if(i < PATTERN_COL - 1) i++;
@@ -105,6 +108,16 @@ public class PrinterFormatter {
 
     }
 
+    /**
+     * @param color chosen color for the output.
+     * @param msg message to color
+     * @param greenBackgroundBright green ASCII escape code.
+     * @param redBackgroundBright red ASCII escape code.
+     * @param blueBackgroundBright blue ASCII escape code.
+     * @param yellowBackgroundBright yellow ASCII escape code.
+     * @param purpleBackgroundBright purple ASCII escape code.
+     * @return colored string.
+     */
     private static String getCommonString(Color color, String msg, String greenBackgroundBright, String redBackgroundBright, String blueBackgroundBright, String yellowBackgroundBright, String purpleBackgroundBright) {
         switch (color){
             case GREEN:
@@ -122,7 +135,13 @@ public class PrinterFormatter {
         }
     }
 
-    private static String center(String msg, int length, char paddingChar, boolean pr){
+    /**
+     * @param msg message to center
+     * @param length length of the final string
+     * @param paddingChar char to use to center the message.
+     * @return centered string
+     */
+    private static String center(String msg, int length, char paddingChar){
         int pad = length-msg.length();
 
         StringBuilder pBuilder = new StringBuilder();
@@ -132,9 +151,7 @@ public class PrinterFormatter {
 
         /* If s.length is odd */
         if (pad%2 == 1)
-            /* Pad one extra either right or left */
-            if (pr) msg = msg + paddingChar;
-            else msg = paddingChar + msg;
+            msg = paddingChar + msg;
         return (p+msg+p);
     }
 

@@ -8,6 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class StaticValues {
+    private StaticValues(){
+        super();
+    }
 
     public static final int NUMBER_OF_DICES_PER_COLOR = 18;
     public static final int FRONT_SIDE = 1;

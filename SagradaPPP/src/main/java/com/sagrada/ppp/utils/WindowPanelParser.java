@@ -19,6 +19,10 @@ import java.util.stream.Collectors;
  */
 public class WindowPanelParser {
 
+    private WindowPanelParser(){
+        super();
+    }
+
     /**
      * Creates the object instances of the panels contained in the resources/templates folder as json files.
      * @return returns an array list containing all the instances of the class WindowPanel parsed from the json files.
