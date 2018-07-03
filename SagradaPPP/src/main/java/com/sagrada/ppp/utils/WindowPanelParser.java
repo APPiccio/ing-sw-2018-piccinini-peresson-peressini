@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class WindowPanelParser {
 
     private WindowPanelParser(){
-        super();
+        //do nothing here, static class
     }
 
     /**

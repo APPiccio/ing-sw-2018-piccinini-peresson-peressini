@@ -9,7 +9,7 @@ import java.io.FileReader;
 
 public class StaticValues {
     private StaticValues(){
-        super();
+        //static class, do nothing here
     }
 
     public static final int NUMBER_OF_DICES_PER_COLOR = 18;
