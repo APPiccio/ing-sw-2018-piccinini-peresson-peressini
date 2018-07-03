@@ -38,8 +38,6 @@ import java.util.Optional;
 
 public class MainGameView extends UnicastRemoteObject implements GameObserver, GuiEventBus, ToolCardHandler {
 
-    //TODO add toolcard cost to GUI and keep it up to date after usezzz
-
     private RoundTrack roundTrack;
     private GridPane mainGamePane;
     private VBox opponentsWindowPanelsPane;
