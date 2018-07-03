@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import static java.lang.System.out;
+
 public class WindowPanel implements Serializable {
 
     private String panelName;
@@ -90,7 +92,7 @@ public class WindowPanel implements Serializable {
             loadedPanels = WindowPanelParser.getPanelsFromFile();
         } catch (IOException e) {
             e.printStackTrace();
-            //System.exit(-1);
+            System.exit(-1);
         }
     }
 
@@ -152,7 +154,7 @@ public class WindowPanel implements Serializable {
             cells.get(i).setDiceOn(dice);
             return true;
         }
-        System.out.println("PLACING ERROR >>> CELL " + i + " - WRONG DICE PLACEMENT, IF IS NOT INTENDED FIX IT");
+        out.println("PLACING ERROR >>> CELL " + i + " - WRONG DICE PLACEMENT, IF IS NOT INTENDED FIX IT");
         return false;
     }
 
@@ -175,27 +177,27 @@ public class WindowPanel implements Serializable {
     public boolean diceOk(Dice dice, int i, boolean ignoreColor, boolean ignoreValue, boolean ignorePosition) {
         Cell cell = cells.get(i);
         if (cell.hasDiceOn()) {
-            System.out.println("PLACEMENT ERROR >>> ANOTHER DICE IN THIS POSITION");
+            out.println("PLACEMENT ERROR >>> ANOTHER DICE IN THIS POSITION");
             return false;
         }
         if (windowIsEmpty()) {
             if (!borderPosition(i)) {
-                System.out.println("PLACEMENT ERROR >>> WINDOW EMPTY AND NO BORDER POSITION");
+                out.println("PLACEMENT ERROR >>> WINDOW EMPTY AND NO BORDER POSITION");
                 return false;
             }
         }
         else {
             if (noDiceNear(i) && !ignorePosition) {
-                System.out.println("PLACEMENT ERROR >>> NO DICE NEAR");
+                out.println("PLACEMENT ERROR >>> NO DICE NEAR");
                 return false;
             }
             if (hasSimilarDiceAttached(dice, i)) {
-                System.out.println("PLACEMENT ERROR >>> SIMILAR ATTACHED");
+                out.println("PLACEMENT ERROR >>> SIMILAR ATTACHED");
                 return false;
             }
         }
         if (diceOkWithRestriction(cell, dice, ignoreColor, ignoreValue)) return true;
-        System.out.println("PLACEMENT ERROR >>> INVALID DICE FOR THIS CELL DUE TO RESTRICTION");
+        out.println("PLACEMENT ERROR >>> INVALID DICE FOR THIS CELL DUE TO RESTRICTION");
         return false;
     }
 

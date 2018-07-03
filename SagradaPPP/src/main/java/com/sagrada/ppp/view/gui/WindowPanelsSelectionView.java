@@ -24,6 +24,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class WindowPanelsSelectionView extends UnicastRemoteObject implements GameObserver, EventHandler<MouseEvent> {
 
@@ -166,7 +167,8 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
 
     private void chosenPanels(HashMap<String, WindowPanel> panels) {
         vBoxEvents.getChildren().clear();
-        for (String u : panels.keySet()) {
+        for (Iterator<String> iterator = panels.keySet().iterator(); iterator.hasNext(); ) {
+            String u = iterator.next();
             vBoxEvents.getChildren().add(new Label(u + " has chosen \"" + panels.get(u).getPanelName() + "\"!"));
             vBoxEvents.getChildren().add(new WindowPanelPane(new WindowPanel(panels.get(u)), 200, 200));
         }
@@ -184,7 +186,7 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
 
     @Override
     public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
-
+        //do nothing here
     }
 
     @Override
@@ -267,12 +269,12 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
 
     @Override
     public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
-
+        //do nothing here
     }
 
     @Override
     public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
-
+        //do nothing here
     }
 
     @Override

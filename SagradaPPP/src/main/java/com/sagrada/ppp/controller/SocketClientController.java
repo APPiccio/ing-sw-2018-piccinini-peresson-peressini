@@ -25,7 +25,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     private transient LeaveGameResult leaveGameResult;
     private transient boolean disconnectionResult;
     private transient PlaceDiceResult placeDiceResult;
-    private transient volatile ToolCardParameters toolCardParameters;
     private transient ToolCardThreadController toolCardThread;
     private transient volatile IsToolCardUsableResult isToolCardUsableResult;
     private transient volatile UseToolCardResult useToolCardResult;
@@ -44,7 +43,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         notificationThread.setName("notificationThread");
         notificationThread.start();
         responseLock = new Object();
-        toolCardParameters = new ToolCardParameters();
+        ToolCardParameters toolCardParameters = new ToolCardParameters();
     }
 
 

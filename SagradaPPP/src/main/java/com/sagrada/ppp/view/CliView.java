@@ -11,6 +11,7 @@ import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
+import static java.lang.System.*;
 import static java.lang.System.out;
 
 import java.io.Serializable;
@@ -51,9 +52,11 @@ public class CliView extends UnicastRemoteObject
     private JoinGameResult joinGameResult;
     private boolean isAFK;
     private final String TABLE_SEPARATOR = "+-----------------+-------+-------+-------+-------+-------+-------+-------+%n";
+    private final String PRINT_SEPARATOR = "----------------------------------------";
+    private final String INVALID_VALUE_OUTPUT = "Invalid value!";
 
     public CliView(RemoteController controller, ConnectionModeEnum connectionModeEnum) throws RemoteException{
-        this.scanner = new Scanner(System.in);
+        this.scanner = new Scanner(in);
         this.controller = controller;
         playersUsername = new ArrayList<>();
         waitingForPanels = true;
@@ -111,7 +114,7 @@ public class CliView extends UnicastRemoteObject
                         roundTrack = reconnectionResult.gameStartMessage.roundTrack;
                         isGameStarted = true;
                         showGameStatus();
-                        inGame(0, null);
+                        inGame(null);
                     }
                 }
                 else {
@@ -127,7 +130,7 @@ public class CliView extends UnicastRemoteObject
                     roundTrack = reconnectionResult.gameStartMessage.roundTrack;
                     isGameStarted = true;
                     showGameStatus();
-                    inGame(0, null);
+                    inGame(null);
                 }
 
             }
@@ -166,7 +169,7 @@ public class CliView extends UnicastRemoteObject
 
         if(lobbyTimerStartTime != 0){
             long remainingTime = ((lobbyTimerStartTime + StaticValues.LOBBY_TIMER) -
-                    System.currentTimeMillis())/1000;
+                    currentTimeMillis())/1000;
             out.println("---> The game will start in " + remainingTime + " seconds");
         }
         inLobby();
@@ -219,12 +222,12 @@ public class CliView extends UnicastRemoteObject
             //TODO handle response to server and panel choice
             int panelIndex = Integer.parseInt(command);
             controller.choosePanel(gameHashCode, hashCode, panelIndex);
-            inGame(panelIndex, null);
+            inGame(null);
 
         }
         else{
             if(isGameStarted){
-                inGame(0, command);
+                inGame(command);
             }
         }
     }
@@ -255,12 +258,12 @@ public class CliView extends UnicastRemoteObject
             out.format(TABLE_SEPARATOR);
 
         }
-        System.exit(0);
+        exit(0);
     }
 
     @Override
     public void onTimerChanges(long timerStart, TimerStatus timerStatus){
-        long duration = ((StaticValues.LOBBY_TIMER + timerStart) - System.currentTimeMillis())/1000;
+        long duration = ((StaticValues.LOBBY_TIMER + timerStart) - currentTimeMillis())/1000;
         if(timerStatus.equals(TimerStatus.START)){
             out.println("---> Timer started! The game will start in " + duration + " seconds");
         }
@@ -284,31 +287,26 @@ public class CliView extends UnicastRemoteObject
             out.println("---> You have been suspended due to inactivity. Turns will be skipped until your signal");
             if(isLastPlayer){
                 out.println("\n\n\n\n\t\t\t\t ----> " + lastPlayer.getUsername() + " WIN <----\n\n\n\n");
-                System.exit(0);
+                exit(0);
             }
         }
         else{
             if(isLastPlayer && !isAFK){
                 out.println("\n\n\n\n\t\t\t\t ----> YOU WIN <----");
-                System.exit(0);
+                exit(0);
             }
             else if(lastPlayer != null) {
                 out.println("\n\n\n\n\t\t\t\t ----> " + lastPlayer.getUsername() + " WIN <----\n\n\n\n");
-                System.exit(0);
+                exit(0);
             }
             out.println("---> " + playerAFK.getUsername() + " has been suspended due to inactivity. His turns will be skipped " +
                     "until is back online!");
         }
     }
 
-    private void inGame(int panelIndex, String cmd) throws RemoteException {
+    private void inGame(String cmd) throws RemoteException {
         String command;
-        if(cmd == null) {
-            command = scanner.nextLine();
-        }
-        else{
-            command = cmd;
-        }
+        command = cmd == null ? scanner.nextLine() : cmd;
         while (!isGameStarted){
             out.println("Invalid command, waiting for other players panel choice.");
             command = scanner.nextLine();
@@ -378,7 +376,7 @@ public class CliView extends UnicastRemoteObject
                                         if(checkCommandRange(0, draftPool.size(), command)){
                                             break;
                                         }else {
-                                            out.println("Invalid value!");
+                                            out.println(INVALID_VALUE_OUTPUT);
                                         }
                                     } while (!isEndedTurn);
                                     if (isEndedTurn) break;
@@ -422,7 +420,7 @@ public class CliView extends UnicastRemoteObject
                                         if(checkCommandRange(1, currentRound, command)){
                                             break;
                                         }else {
-                                            out.println("Invalid value!");
+                                            out.println(INVALID_VALUE_OUTPUT);
                                         }
                                     } while (!isEndedTurn);
                                     if (isEndedTurn) break;
@@ -434,7 +432,7 @@ public class CliView extends UnicastRemoteObject
                                         if(checkCommandRange(0,roundTrack.getDicesOnRound(roundIndex).size(), command)){
                                             break;
                                         }else {
-                                            out.println("Invalid value!");
+                                            out.println(INVALID_VALUE_OUTPUT);
                                         }
                                     } while (!isEndedTurn);
                                     if (isEndedTurn) break;
@@ -481,7 +479,7 @@ public class CliView extends UnicastRemoteObject
                                         if(checkCommandRange(0,StaticValues.PATTERN_ROW, command)){
                                             break;
                                         }else {
-                                            out.println("Invalid value!");
+                                            out.println(INVALID_VALUE_OUTPUT);
                                         }
 
                                     } while (!isEndedTurn);
@@ -611,7 +609,7 @@ public class CliView extends UnicastRemoteObject
         out.println("Disconnecting...");
         boolean disconnectionResult = controller.disconnect(gameHashCode, hashCode);
         out.println("Disconnection result: " + disconnectionResult);
-        System.exit(0);
+        exit(0);
     }
 
     private String common_input_row() {
@@ -622,7 +620,7 @@ public class CliView extends UnicastRemoteObject
             if(checkCommandRange(0, StaticValues.PATTERN_ROW,command)){
                 break;
             }else {
-                out.println("Invalid value!");
+                out.println(INVALID_VALUE_OUTPUT);
             }
         } while (!isEndedTurn);
         return command;
@@ -653,7 +651,7 @@ public class CliView extends UnicastRemoteObject
             if(checkCommandRange(0, StaticValues.PATTERN_COL,command)){
                 break;
             }else {
-                out.println("Invalid value!");
+                out.println(INVALID_VALUE_OUTPUT);
             }
         } while (!isEndedTurn);
         return command;
@@ -693,8 +691,9 @@ public class CliView extends UnicastRemoteObject
 
         if(panelsAlreadyChosen.size() != 0){
             out.println("ALREADY CHOSEN PANEL:");
-            for(String u : panelsAlreadyChosen.keySet()){
-                out.println("---> " +u + " panel :");
+            for (Iterator<String> iterator = panelsAlreadyChosen.keySet().iterator(); iterator.hasNext(); ) {
+                String u = iterator.next();
+                out.println("---> " + u + " panel :");
                 out.println(panelsAlreadyChosen.get(u));
             }
         }
@@ -722,30 +721,30 @@ public class CliView extends UnicastRemoteObject
         this.toolCards = gameStartMessage.toolCards;
         out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         out.println("GAME STARTED");
-        out.println("----------------------------------------");
+        out.println(PRINT_SEPARATOR);
         out.println("ROUND 1 - TURN " + currentTurn);
         out.println("PLAYERS AND PANELS :");
         for(Player player: players){
             out.println("PLAYER :" + player.getUsername());
             out.println(player.getPanel() + "\n");
         }
-        out.println("----------------------------------------");
+        out.println(PRINT_SEPARATOR);
         out.println("Draft pool: ");
         for(int i = 0; i < draftPool.size(); i++){
             out.println("ID = " + i + " ---> " + draftPool.get(i).toString());
         }
 
-        out.println("----------------------------------------");
+        out.println(PRINT_SEPARATOR);
         out.println("Tool Cards:");
         for(ToolCard toolCard : gameStartMessage.toolCards){
             out.println(toolCard.toString());
         }
-        out.println("----------------------------------------");
+        out.println(PRINT_SEPARATOR);
         out.println("Public Objective Cards:");
         for(PublicObjectiveCard publicObjectiveCard : gameStartMessage.publicObjectiveCards){
             out.println(publicObjectiveCard.toString());
         }
-        out.println("----------------------------------------");
+        out.println(PRINT_SEPARATOR);
         if(currentPlayer.getHashCode() == hashCode){
             out.println("It's your turn!");
         }
@@ -756,6 +755,7 @@ public class CliView extends UnicastRemoteObject
 
     @Override
     public void onDicePlaced(DicePlacedMessage dicePlacedMessage) {
+        if(username.equals(dicePlacedMessage.username)) return;
         this.draftPool = dicePlacedMessage.draftPool;
         Player player = players.stream().filter(x -> x.getUsername().equals(dicePlacedMessage.username))
                 .findFirst().orElse(null);
@@ -803,7 +803,7 @@ public class CliView extends UnicastRemoteObject
         else{
             out.println(endTurnMessage.previousPlayer.getUsername() + "'s turn is ended!");
         }
-        out.println("----------------------------------------");
+        out.println(PRINT_SEPARATOR);
         out.println("NOW STARTING --> ROUND = " + currentRound + " - TURN = " + currentTurn);
         showGameStatus();
         if(endTurnMessage.currentPlayer.getHashCode() == hashCode) {
@@ -827,7 +827,7 @@ public class CliView extends UnicastRemoteObject
         if(isLastPlayer){
             out.println("You are the only active player in game!");
             out.println("\n\n\n\n\t\t\t\t ----> YOU WIN <----");
-            System.exit(0);
+            exit(0);
         }
     }
 
@@ -840,12 +840,12 @@ public class CliView extends UnicastRemoteObject
         }
         out.println(player.getPanel());
         out.println(player.getFavorTokens());
-        out.println("----------------------------------------");
+        out.println(PRINT_SEPARATOR);
 
     }
 
     private void showGameStatus(){
-        out.println("----------------------------------------");
+        out.println(PRINT_SEPARATOR);
         for(Player player : players){
             showPlayerStatus(player);
         }
@@ -854,7 +854,7 @@ public class CliView extends UnicastRemoteObject
     }
 
     private void showDraftPool(){
-        out.println("----------------------------------------");
+        out.println(PRINT_SEPARATOR);
         out.println("Draft pool: ");
         for(int i = 0; i < draftPool.size(); i++){
             out.println("ID = " + i + " ---> " + draftPool.get(i).toString());
@@ -863,16 +863,16 @@ public class CliView extends UnicastRemoteObject
 
     private void showGameSecondaryStuff(){
         if(roundTrack != null) {
-            out.println("----------------------------------------");
+            out.println(PRINT_SEPARATOR);
             out.println("Round Track: ");
             out.println(roundTrack.toString());
         }
-        out.println("----------------------------------------");
+        out.println(PRINT_SEPARATOR);
         out.println("Tool Cards:");
         for(ToolCard toolCard : toolCards){
             out.println(toolCard.toString());
         }
-        out.println("----------------------------------------");
+        out.println(PRINT_SEPARATOR);
         out.println("Public Objective Cards:");
         for(PublicObjectiveCard publicObjectiveCard : publicObjectiveCards){
             out.println(publicObjectiveCard.toString());
@@ -881,8 +881,8 @@ public class CliView extends UnicastRemoteObject
 
     private void changeConnectionMode(ConnectionModeEnum connectionModeEnum){
         if(this.connectionModeEnum.equals(connectionModeEnum)) {
-            System.out.println("This is already your connection mode. Nothing to be done.");
-            System.out.println("Enter a new command: ");
+            out.println("This is already your connection mode. Nothing to be done.");
+            out.println("Enter a new command: ");
             return;
         }
         this.connectionModeEnum = connectionModeEnum;
@@ -902,7 +902,7 @@ public class CliView extends UnicastRemoteObject
         ConnectionHandler connectionHandler = new ConnectionHandler(connectionModeEnum);
         controller = connectionHandler.getController();
         try {
-            System.out.println("attaching per =" + hashCode);
+            out.println("attaching per =" + hashCode);
             controller.attachGameObserver(gameHashCode, this, hashCode);
         } catch (RemoteException e) {
             e.printStackTrace();

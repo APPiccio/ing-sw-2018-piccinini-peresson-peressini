@@ -286,7 +286,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                     useToolCardResult.result = specialDicePlacement.status;
                     for (Player player : useToolCardResult.players) {
                         if (player.getHashCode() == playerHashCode) {
-                            System.out.println(specialDicePlacement.panel);
                             player.setPanel(specialDicePlacement.panel);
                         }
                     }
@@ -359,9 +358,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                             player.setPanel(placeDiceResult.panel);
                         }
                     }
-                    //comment this line because of rmi's unicast behaviour. The server update on draftPool has been
-                    //automatically notified to the view by RMI
-                    //useToolCardResult.draftpool.remove((int) toolCardParameters.panelCellIndex);
                 }
                 else {
                     service.putDiceInDraftPool(gameHashCode, dice);
