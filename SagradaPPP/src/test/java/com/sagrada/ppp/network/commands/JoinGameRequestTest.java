@@ -86,6 +86,11 @@ public class JoinGameRequestTest {
             public Response handle(DisableAFKRequest request) {
                 return null;
             }
+
+            @Override
+            public Response handle(ChangeConnectionRequest request) {
+                return null;
+            }
         };
         joinGameRequest = new JoinGameRequest("asd");
         joinGameRequest.handle(handler);

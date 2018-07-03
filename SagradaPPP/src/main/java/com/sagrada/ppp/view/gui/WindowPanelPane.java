@@ -22,7 +22,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
     private Label name,tokens;
     private GuiEventBus eventBus;
     private double width,height;
-    private final static boolean drawVectorCells = true;
+    private final static boolean DRAW_VECTOR_CELLS = true;
 
 
     public WindowPanelPane(WindowPanel panel, double height, double width) {
@@ -152,7 +152,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
 
         private CellPane drawCell(){
             if(cell.hasColorRestriction()){
-                if (!drawVectorCells) {
+                if (!DRAW_VECTOR_CELLS) {
                     this.setBackground(
                             new Background(
                                     new BackgroundImage(
@@ -165,7 +165,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
                     this.setBackground(new Background(new BackgroundFill(getColor(cell.getColor()),new CornerRadii(cornerRadius), Insets.EMPTY)));
                 }
             }else if(cell.hasValueRestriction()){
-                if (!drawVectorCells) {
+                if (!DRAW_VECTOR_CELLS) {
                     this.setBackground(
                             new Background(
                                     new BackgroundImage(
@@ -185,7 +185,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
                     this.setCenter(text);
                 }
             }else {
-                if (!drawVectorCells) {
+                if (!DRAW_VECTOR_CELLS) {
                     this.setBackground(
                             new Background(
                                     new BackgroundImage(

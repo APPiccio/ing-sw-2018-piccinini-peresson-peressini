@@ -87,6 +87,11 @@ public class ReconnectionRequestTest {
             public Response handle(DisableAFKRequest request) {
                 return null;
             }
+
+            @Override
+            public Response handle(ChangeConnectionRequest request) {
+                return null;
+            }
         };
 
         reconnectionRequest = new ReconnectionRequest(1,1,null);

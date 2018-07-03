@@ -87,6 +87,11 @@ public class IsToolCardUsableRequestTest {
             public Response handle(DisableAFKRequest request) {
                 return null;
             }
+
+            @Override
+            public Response handle(ChangeConnectionRequest request) {
+                return null;
+            }
         };
 
         isToolCardUsableRequest = new IsToolCardUsableRequest(123, 12, 10);

@@ -18,6 +18,7 @@ public class PlayerTokenSerializerTest {
         joinGameResult = new JoinGameResult(123,456,"cadrega", null);
     }
 
+
     @Test
     public void isTokenPresent() {
         PlayerTokenSerializer.deleteToken();
@@ -26,6 +27,7 @@ public class PlayerTokenSerializerTest {
 
     @Test
     public void serialize() {
+        PlayerTokenSerializer.serialize(joinGameResult);
         PlayerTokenSerializer.serialize(joinGameResult);
         assertTrue(PlayerTokenSerializer.isTokenPresent());
     }

@@ -120,6 +120,7 @@ public class Service {
             //no joinable game, let's create a new one
             Game game = createGame(username, lobbyObserver, joinGameResult.getPlayerHashCode());
             joinGameResult.setGameHashCode(game.hashCode());
+            joinGameResult.setPlayerHashCode(game.getPlayerHashCode(username));
             game.attachGameObserver(gameObserver, joinGameResult.getPlayerHashCode());
             joinGameResult.setPlayerHashCode(game.getPlayerHashCode(username));
             joinGameResult.setUsername(game.getPlayerUsername(joinGameResult.getPlayerHashCode()));

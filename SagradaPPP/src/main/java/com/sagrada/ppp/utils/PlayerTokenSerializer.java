@@ -12,6 +12,9 @@ import java.nio.file.Paths;
  */
 public class PlayerTokenSerializer {
 
+    private PlayerTokenSerializer(){
+        //uncallable method, static class
+    }
 
     public static boolean isTokenPresent() {
         File f = new File(StaticValues.TOKEN_URL);

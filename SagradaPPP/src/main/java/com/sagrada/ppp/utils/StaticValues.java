@@ -8,6 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class StaticValues {
+    private StaticValues(){
+        //static class, do nothing here
+    }
 
     public static final int NUMBER_OF_DICES_PER_COLOR = 18;
     public static final int FRONT_SIDE = 1;
@@ -108,7 +111,7 @@ public class StaticValues {
 
     public static final String COMMAND_PLACE_DICE = ":dice";
     public static final String COMMAND_END_TURN = ":end";
-    public static final String COMMAND_USE_TOOL_CARD = ":toolCard";
+    public static final String COMMAND_USE_TOOL_CARD = ":toolcard";
     public static final String COMMAND_SHOW = ":show";
     public static final String COMMAND_CONNECTION = ":cmode";
     public static final String COMMAND_DISABLE_AFK = ":bazinga";

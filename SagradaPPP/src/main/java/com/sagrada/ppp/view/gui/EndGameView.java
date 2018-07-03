@@ -24,20 +24,19 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class EndGameView extends UnicastRemoteObject {
+/**
+ * Class that manages the end game, showing scores, private and public objectives
+ */
+class EndGameView extends UnicastRemoteObject {
 
     private VBox leftVBox;
     private VBox rightVBox;
     private VBox topVBox;
     private HBox publicObjectiveCardsHBox;
     private TableView<PlayerScore> tableView;
-    private transient RemoteController controller;
-    private Stage stage;
 
-    EndGameView(ArrayList<PlayerScore> playersScore, ArrayList<PublicObjectiveCard> publicObjectiveCards,
-                RemoteController controller, Stage stage) throws RemoteException {
-        this.controller = controller;
-        this.stage = stage;
+    EndGameView(ArrayList<PlayerScore> playersScore, ArrayList<PublicObjectiveCard> publicObjectiveCards, Stage stage) throws RemoteException {
+        Stage stage1 = stage;
         BorderPane borderPane = new BorderPane();
         borderPane.setPadding(new Insets(10, 10, 10, 10));
 
@@ -70,10 +69,10 @@ public class EndGameView extends UnicastRemoteObject {
         drawResultTable(playersScore, publicObjectiveCards);
         borderPane.setCenter(topVBox);
 
-        stage.setScene(new Scene(borderPane, 1920, 1080));
-        stage.setTitle("Results");
-        stage.centerOnScreen();
-        stage.show();
+        stage1.setScene(new Scene(borderPane, 1920, 1080));
+        stage1.setTitle("Results");
+        stage1.centerOnScreen();
+        stage1.show();
     }
 
     private void drawWindowPanels(ArrayList<PlayerScore> playersScore) {

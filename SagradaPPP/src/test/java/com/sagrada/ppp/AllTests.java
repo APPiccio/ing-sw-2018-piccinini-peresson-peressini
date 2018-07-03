@@ -6,7 +6,6 @@ import com.sagrada.ppp.cards.toolcards.ToolCardTest;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.network.commands.*;
 import com.sagrada.ppp.network.server.*;
-import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.PlayerTokenSerializerTest;
 import com.sagrada.ppp.utils.PrinterFormatterTest;
 import com.sagrada.ppp.utils.StaticValuesTest;
@@ -50,7 +49,7 @@ import org.junit.runners.Suite.*;
 
 
         //command package test
-
+        ChangeConnectionRequestTest.class,
         DetachGameObserverRequestTest.class,
         DicePlacedNotificationTest.class,
         DisableAFKRequestTest.class,
