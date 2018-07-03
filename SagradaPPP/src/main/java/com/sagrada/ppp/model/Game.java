@@ -344,6 +344,7 @@ public class Game implements Serializable {
         }
         else{
             if(players.size() == 4){
+
                 //starting game
 
                 lobbyTimer.interrupt();
@@ -463,7 +464,7 @@ public class Game implements Serializable {
     public void detachAllGameObservers(int playerHashCode) {
         System.out.println("hashcode = " + playerHashCode);
         gameObservers.keySet().forEach(System.out::println);
-        gameObservers.put(playerHashCode, new ArrayList<>());
+        gameObservers.replace(playerHashCode, new ArrayList<>());
     }
 
     public void attachLobbyObserver(LobbyObserver observer, int playerHashCode){

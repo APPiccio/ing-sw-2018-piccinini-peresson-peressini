@@ -223,10 +223,11 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
                     MainGameView mainGameView = null;
                     try {
                         mainGameView = new MainGameView();
+                        mainGameView.init(privateColor, joinGameResult, gameStartMessage, controller, stage);
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-                    mainGameView.init(privateColor, joinGameResult, gameStartMessage, controller, stage);
+
                 }
         );
     }
