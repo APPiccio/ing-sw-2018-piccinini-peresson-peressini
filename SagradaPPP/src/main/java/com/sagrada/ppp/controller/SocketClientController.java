@@ -348,6 +348,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
 
     @Override
     public void handle(PlayerReconnectionNotification response) {
+        System.out.println("sono nella response = " + response.reconnectingPlayer.getUsername());
         for(GameObserver gameObserver : gameObservers){
             try {
                 gameObserver.onPlayerReconnection(response.reconnectingPlayer);

@@ -17,6 +17,6 @@ public class PlayerReconnectionNotification implements Response, Serializable {
 
     @Override
     public void handle(ResponseHandler handler) {
-
+        this.handle(handler);
     }
 }
