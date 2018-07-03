@@ -5,6 +5,7 @@ import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.network.server.Service;
 import com.sagrada.ppp.utils.StaticValues;
+import com.sun.jdi.IntegerType;
 
 import javax.swing.*;
 import java.io.Serializable;
@@ -977,16 +978,18 @@ public class Game implements Serializable {
     }
 
     void pingAllGameObservers(){
+        ArrayList<Integer> toBeRemoved = new ArrayList<>();
         for(int hash : gameObservers.keySet()){
             for(GameObserver gameObserver : gameObservers.get(hash)){
                 try {
                     gameObserver.rmiPing();
                 } catch (RemoteException e) {
                     System.out.println("DISCONNECTING DUE TO PING DETECT");
-                    disconnect(hash);
+                    toBeRemoved.add(hash);
                 }
             }
         }
+        toBeRemoved.forEach(this::disconnect);
     }
 
 
