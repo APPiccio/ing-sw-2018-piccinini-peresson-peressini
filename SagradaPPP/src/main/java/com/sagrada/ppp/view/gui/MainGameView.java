@@ -36,9 +36,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 
+/**
+ * Class managing the main game view.
+ */
 public class MainGameView extends UnicastRemoteObject implements GameObserver, GuiEventBus, ToolCardHandler {
-
-    //TODO add toolcard cost to GUI and keep it up to date after usezzz
 
     private RoundTrack roundTrack;
     private GridPane mainGamePane;
@@ -518,8 +519,13 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             count++;
         }
     }
+
+    /**
+     * Creates listeners for the draft pool buttons, skip turn button and tool cards buttons
+     */
     private void createListeners(){
         draftPoolDiceEventHandler = event -> {
+            //managing the scaling effect on draft pool.
             DiceButton clickedButton = ((DiceButton) event.getSource());
             if (clickedButton.isSelected()) {
                 clickedButton.setSelected(false);
@@ -650,9 +656,17 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         });
     }
 
+    /**
+     * Handles the click of an empty cell, this function is called only by the player's instance of WindowPanel
+     * @param row row of the clicked cell
+     * @param col column of the clicked cell
+     */
     @Override
     public void onCellClicked(int row, int col) {
         if (!(toolCardFlags.isPanelCellRequired || toolCardFlags.isSecondPanelCellRequired)) {
+
+            //normal dice placement handling
+
             DiceButton diceButtonSelected = draftPoolDiceButtons.stream()
                     .filter(DiceButton::isSelected).findFirst().orElse(null);
             if (diceButtonSelected != null) {
@@ -683,6 +697,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 });
             }
             else {
+                //tool card handling
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
@@ -720,6 +735,11 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         }
     }
 
+    /**
+     * Called by WindowPanelPane when a cell with a dice is clicked
+     * @param row row of the clicked cell
+     * @param col column of the clicked cell
+     */
     @Override
     public void onDiceClicked(int row, int col) {
         if (toolCardFlags.isPanelDiceRequired) {
@@ -815,7 +835,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         Platform.runLater(() -> {
             try {
                 PlayerTokenSerializer.deleteToken();
-                new EndGameView(playersScore, publicObjectiveCards, controller, stage);
+                new EndGameView(playersScore, publicObjectiveCards, stage);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }

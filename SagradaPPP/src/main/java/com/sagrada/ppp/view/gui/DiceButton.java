@@ -7,12 +7,24 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 
+/**
+ * A button that represent a dice.
+ */
 public class DiceButton extends Button {
 
 
+    /**
+     * Attribute used to indicate the selected state of a button.
+     */
     private boolean selected = false;
     private int index;
     private Dice dice;
+
+    /**
+     * @param dice dice to mimic
+     * @param diceWidth width of the button
+     * @param diceHeight height of the button
+     */
     public DiceButton(Dice dice,double diceWidth,double diceHeight) {
         this.dice = dice;
         this.setPrefSize(diceWidth,diceHeight);
