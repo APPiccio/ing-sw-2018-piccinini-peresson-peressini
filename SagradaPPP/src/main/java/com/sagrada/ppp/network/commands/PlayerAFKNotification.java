@@ -1,8 +1,6 @@
 package com.sagrada.ppp.network.commands;
 
 import com.sagrada.ppp.model.Player;
-import com.sagrada.ppp.network.commands.Response;
-import com.sagrada.ppp.network.commands.ResponseHandler;
 
 import java.io.Serializable;
 

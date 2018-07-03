@@ -389,7 +389,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     }
 
     void init(com.sagrada.ppp.model.Color privateColor, JoinGameResult joinGameResult, GameStartMessage gameStartMessage
-            , RemoteController controller, Stage stage) {
+            , RemoteController controller, Stage stage,boolean reconnection) {
         this.controller = controller;
         this.stage = stage;
         this.privateColor = privateColor;
@@ -399,14 +399,21 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
         this.players = gameStartMessage.players;
         this.publicObjectiveCards = gameStartMessage.publicObjectiveCards;
         this.currentPlayerUser = gameStartMessage.currentPlayer.getUsername();
-        try {
-            this.controller.attachGameObserver(this.joinGameResult.getGameHashCode(),this, joinGameResult.getPlayerHashCode());
-        } catch (RemoteException e) {
-            e.printStackTrace();
+        if(!reconnection) {
+            try {
+                this.controller.attachGameObserver(this.joinGameResult.getGameHashCode(), this, joinGameResult.getPlayerHashCode());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
 
         draw();
+    }
+
+    void init(com.sagrada.ppp.model.Color privateColor, JoinGameResult joinGameResult, GameStartMessage gameStartMessage
+            , RemoteController controller, Stage stage){
+        init(privateColor,joinGameResult,gameStartMessage,controller,stage,false);
     }
 
     private void drawWindowPanels(){
@@ -805,27 +812,32 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             drawWindowPanels();
 
 
-            if(!gameEnded && !afk) {
-                if (endTurnMessage.currentPlayer.getUsername().equals(joinGameResult.getUsername())) {
+
+            if (endTurnMessage.currentPlayer.getUsername().equals(joinGameResult.getUsername())) {
+                playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("1EA896"), BorderStrokeStyle.SOLID,
+                        new CornerRadii(5), BorderStroke.MEDIUM)));
+                if(!gameEnded && !afk) {
                     skipButton.setDisable(false);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "It's your turn!");
-                    playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("1EA896"), BorderStrokeStyle.SOLID,
-                            new CornerRadii(5), BorderStroke.MEDIUM)));
+
                     alert.setHeaderText(null);
                     alert.initModality(Modality.APPLICATION_MODAL);
                     alert.initOwner(stage);
                     alert.show();
-                } else if (endTurnMessage.previousPlayer.getUsername().equals(joinGameResult.getUsername())) {
+                }
+            } else if (endTurnMessage.previousPlayer.getUsername().equals(joinGameResult.getUsername())) {
+                playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("FF715B"), BorderStrokeStyle.SOLID,
+                        new CornerRadii(5), BorderStroke.MEDIUM)));
+                if(!gameEnded && !afk) {
                     skipButton.setDisable(true);
                     Alert alert = new Alert(Alert.AlertType.INFORMATION, "Your turn is ended!");
-                    playerWindowPanel.setBorder(new Border(new BorderStroke(Color.web("FF715B"), BorderStrokeStyle.SOLID,
-                            new CornerRadii(5), BorderStroke.MEDIUM)));
                     alert.setHeaderText(null);
                     alert.initModality(Modality.APPLICATION_MODAL);
                     alert.initOwner(stage);
                     alert.show();
                 }
             }
+
         });
     }
 

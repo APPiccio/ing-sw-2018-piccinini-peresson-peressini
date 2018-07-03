@@ -60,7 +60,6 @@ public class WindowPanelParser {
                     int favorTokens = jsonObject.getInt("favorTokens");
                     String panelName = jsonObject.getString("name");
 
-
                     String color;
                     String value;
 

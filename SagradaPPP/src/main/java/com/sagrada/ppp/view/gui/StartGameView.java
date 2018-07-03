@@ -175,7 +175,7 @@ public class StartGameView implements EventHandler<MouseEvent> {
                 ReconnectionResult reconnectionResult = controller.reconnection(reconnectionToken.getPlayerHashCode(),reconnectionToken.getGameHashCode(),mainGameView);
                 if(reconnectionResult.result) {
                     Player currentPlayer = reconnectionResult.gameStartMessage.currentPlayer;
-                    mainGameView.init(currentPlayer.getPrivateColor(), reconnectionToken, reconnectionResult.gameStartMessage, controller, stage);
+                    mainGameView.init(currentPlayer.getPrivateColor(), reconnectionToken, reconnectionResult.gameStartMessage, controller, stage,true);
                 }else {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setHeaderText(reconnectionResult.message);
