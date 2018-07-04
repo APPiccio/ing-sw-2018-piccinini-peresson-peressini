@@ -419,11 +419,12 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
     private void drawWindowPanels(){
         opponentsWindowPanelsPane.getChildren().clear();
         Label topLabel = new Label("Opponents' panels:");
+        topLabel.getStyleClass().remove("label");
         topLabel.getStyleClass().add("opponentsLabel");
-        opponentsWindowPanelsPane.getChildren().add(new Label("OpponentsPanels:"));
+        opponentsWindowPanelsPane.getChildren().add(topLabel);
         for (Player player : players) {
             if (player.getUsername().equals(joinGameResult.getUsername())) {
-                gameStatus.setText("SAGRADA\nFavor Tokens Remaining: "
+                gameStatus.setText(joinGameResult.getUsername() + "\nFavor Tokens Remaining:\t"
                         + player.getFavorTokens());
                 if(playerWindowPanel == null) {
                     playerWindowPanel = new WindowPanelPane(player.getPanel(), 330, 300);
@@ -434,8 +435,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             }else {
                 Label username = new Label("#" + players.indexOf(player) + " " + player.getUsername()
                         +"\t Remaining Tokens : " + player.getFavorTokens() );
-                //username.setTextFill(Color.BLACK);
-                //username.setAlignment(Pos.CENTER);
+                username.getStyleClass().remove("label");
                 username.getStyleClass().add("opponentsLabel");
                 opponentsWindowPanelsPane.getChildren().add(username);
                 WindowPanelPane pane = new WindowPanelPane(player.getPanel(),200,170);

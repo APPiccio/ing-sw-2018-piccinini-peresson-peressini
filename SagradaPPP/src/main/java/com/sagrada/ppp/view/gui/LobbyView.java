@@ -106,7 +106,7 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         borderPane.setCenter(tabPane);
 
         stage.setScene(scene);
-        stage.setTitle("Players StartGameView");
+        stage.setTitle("Lobby");
         stage.show();
     }
 

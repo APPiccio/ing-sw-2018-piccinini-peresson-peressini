@@ -69,7 +69,7 @@ public class StartGameView implements EventHandler<MouseEvent> {
         centerContainer.setSpacing(20);
         centerContainer.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(centerContainer,Pos.CENTER);
-        play = new Button("Play SAGRADA");
+        play = new Button("Play");
         play.getStyleClass().add("sagradabutton");
         centerContainer.getChildren().add(play);
         borderPane.setCenter(centerContainer);

@@ -784,7 +784,8 @@ public class CliView extends UnicastRemoteObject
             if (x.getHashCode() == toolCardUsedMessage.player.getHashCode()) players.set(players.indexOf(x),toolCardUsedMessage.player);
         }
         out.println(toolCardUsedMessage.player.getUsername() + " has used toolcard #" + toolCardUsedMessage.toolCardID + ", updating game status:");
-        showGameStatus();
+        showPlayerStatus(toolCardUsedMessage.player);
+        showDraftPool();
     }
 
     @Override
@@ -862,7 +863,7 @@ public class CliView extends UnicastRemoteObject
     }
 
     private void showGameSecondaryStuff(){
-        if(roundTrack != null) {
+        if(roundTrack != null && roundTrack.getCurrentRound() != 1) {
             out.println(PRINT_SEPARATOR);
             out.println("Round Track: ");
             out.println(roundTrack.toString());
