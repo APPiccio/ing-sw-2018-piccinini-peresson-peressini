@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import static java.lang.System.*;
+
 public class WindowPanelsSelectionView extends UnicastRemoteObject implements GameObserver, EventHandler<MouseEvent> {
 
     private transient RemoteController controller;
@@ -71,8 +73,8 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
             e.printStackTrace();
         }
         if (url == null) {
-            System.out.println("Resource not found. Aborting.");
-            System.exit(-1);
+            out.println("Resource not found. Aborting.");
+            exit(-1);
         }
 
         hBox1.setSpacing(10);
@@ -115,7 +117,7 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
         scene.getStylesheets().add(css);
         this.stage.setOnCloseRequest(t -> {
             Platform.exit();
-            System.exit(0);
+            exit(0);
         });
         this.stage.setScene(scene);
         this.stage.setTitle("Panel selection");
@@ -260,7 +262,7 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
         }
     }
 
-    public void showAlertTimeout(){
+    private void showAlertTimeout(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Panel choice timer timeout");
         alert.setHeaderText(null);

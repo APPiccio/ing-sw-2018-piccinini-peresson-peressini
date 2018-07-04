@@ -24,6 +24,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
+import static java.lang.System.*;
+
 public class LobbyView extends UnicastRemoteObject implements LobbyObserver, EventHandler<MouseEvent> {
 
     private VBox vBoxPlayers;
@@ -48,8 +50,8 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
             e.printStackTrace();
         }
         if (url == null) {
-            System.out.println("Resource not found. Aborting.");
-            System.exit(-1);
+            out.println("Resource not found. Aborting.");
+            exit(-1);
         }
         String css = url.toExternalForm();
         scene.getStylesheets().add(css);
@@ -67,7 +69,7 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
                 e.printStackTrace();
             }
             Platform.exit();
-            System.exit(0);
+            exit(0);
         });
 
 
@@ -78,7 +80,7 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
 
         if (joinGameResult.getPlayersUsername().size() == 3) {
             long remainingTime = ((joinGameResult.getTimerStart() + StaticValues.LOBBY_TIMER) -
-                    System.currentTimeMillis())/1000;
+                    currentTimeMillis())/1000;
             timerStarted(remainingTime);
         }
 
@@ -210,7 +212,7 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
 
     @Override
     public void onTimerChanges(long timerStart, TimerStatus timerStatus, long duration) {
-        long remainingTime = ((duration + timerStart) - System.currentTimeMillis()) / 1000;
+        long remainingTime = ((duration + timerStart) - currentTimeMillis()) / 1000;
         if (timerStatus.equals(TimerStatus.START)) {
             timerStarted(remainingTime);
         } else if (timerStatus.equals(TimerStatus.FINISH)) {

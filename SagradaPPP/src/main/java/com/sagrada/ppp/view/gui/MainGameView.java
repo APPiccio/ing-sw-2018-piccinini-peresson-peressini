@@ -35,6 +35,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
+import static java.lang.System.*;
 
 /**
  * Class managing the main game view.
@@ -130,9 +131,10 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 try {
                     controller.disconnect(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                    exit(0);
                 }
-                System.exit(0);
+                exit(0);
 
             }else {
                 alert.setHeaderText(null);
@@ -146,12 +148,13 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                             controller.disableAFK(joinGameResult.getGameHashCode(), joinGameResult.getPlayerHashCode());
                             afk = false;
                         } catch (RemoteException e) {
-                            e.printStackTrace();
+                            out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                            exit(0);
                         }
                     }else {
                         alert.setContentText("While you were afk, leaving only one player.\n YOU LOSE, press ok to close the game");
                         alert.showAndWait();
-                        System.exit(0);
+                        exit(0);
                     }
                 }
             }
@@ -177,7 +180,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
                 alert.initOwner(stage);
                 alert.showAndWait();
-                System.exit(0);
+                exit(0);
             }
 
     });
@@ -194,8 +197,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             e.printStackTrace();
         }
         if (url == null) {
-            System.out.println("Resource not found. Aborting.");
-            System.exit(-1);
+            out.println("Resource not found. Aborting.");
+            exit(-1);
         }
         String css = url.toExternalForm();
         Label toolCardsTitle = new Label("Tool Cards");
@@ -332,7 +335,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                         try {
                             controller.detachAllGameObserver(joinGameResult.getGameHashCode(), joinGameResult.getPlayerHashCode());
                         } catch (RemoteException e) {
-                            e.printStackTrace();
+                            out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                            exit(0);
                         }
                     } else {
                         connectionModeEnum = ConnectionModeEnum.SOCKET;
@@ -342,7 +346,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                     try {
                         controller.attachGameObserver(joinGameResult.getGameHashCode(), this, joinGameResult.getPlayerHashCode());
                     } catch (RemoteException e) {
-                        e.printStackTrace();
+                        out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                        exit(0);
                     }
                 }
             }));
@@ -380,10 +385,11 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             try {
                 controller.disconnect(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
             } catch (RemoteException e) {
-                e.printStackTrace();
+                out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                exit(0);
             }
             Platform.exit();
-            System.exit(0);
+            exit(0);
         });
 
     }
@@ -403,7 +409,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             try {
                 this.controller.attachGameObserver(this.joinGameResult.getGameHashCode(), this, joinGameResult.getPlayerHashCode());
             } catch (RemoteException e) {
-                e.printStackTrace();
+                out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                exit(0);
             }
         }
 
@@ -555,12 +562,13 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             }
             if (toolCardFlags.isDraftPoolDiceRequired){
                 try {
-                    System.out.println("Index draft pool: " + draftPoolDiceButtons.indexOf(clickedButton));
+                    out.println("Index draft pool: " + draftPoolDiceButtons.indexOf(clickedButton));
                     controller.setDraftPoolDiceIndex(joinGameResult.getPlayerHashCode(),draftPoolDiceButtons
                             .indexOf(clickedButton));
 
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                    exit(0);
                 }
             }
 
@@ -570,7 +578,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 skipButton.setDisable(true);
                 controller.endTurn(joinGameResult.getGameHashCode(),joinGameResult.getPlayerHashCode());
             } catch (RemoteException e) {
-                e.printStackTrace();
+                out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                exit(0);
             }
         };
         toolCardClickEvent = event -> {
@@ -589,7 +598,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                     alert.showAndWait();
                 }
             } catch (RemoteException e) {
-                e.printStackTrace();
+                out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                exit(0);
             }
         };
 
@@ -632,7 +642,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                     gameEnded = true;
                     stage.hide();
                     alert.showAndWait();
-                    System.exit(0);
+                    exit(0);
                 } else {
                     alert.setContentText(disconnectingPlayer.getUsername() + " has disconnected from the game!");
                     alert.show();
@@ -688,21 +698,13 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                                 row, col);
                     } catch (RemoteException e) {
                         result = new PlaceDiceResult("Network Error",false,null,null);
-                        e.printStackTrace();
+                        out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                        exit(0);
                     }
                     if (result.status) {
                         playerWindowPanel.setPanel(result.panel);
                         draftPool = result.draftPool;
                         drawDraftPool();
-                    }
-                    else {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Error");
-                        alert.setHeaderText(null);
-                        alert.setContentText(result.message);
-                        alert.initModality(Modality.APPLICATION_MODAL);
-                        alert.initOwner(stage);
-                        alert.showAndWait();
                     }
                 });
             }
@@ -731,7 +733,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             controller.setPanelCellIndex(joinGameResult.getPlayerHashCode(),
                     row * StaticValues.PATTERN_COL + col);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+            exit(0);
         }
     }
 
@@ -741,7 +744,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             controller.setSecondPanelCellIndex(joinGameResult.getPlayerHashCode(),
                     row * StaticValues.PATTERN_COL + col);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+            exit(0);
         }
     }
 
@@ -769,7 +773,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             controller.setPanelDiceIndex(joinGameResult.getPlayerHashCode(), row *
                     StaticValues.PATTERN_COL + col);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+            exit(0);
         }
     }
 
@@ -779,7 +784,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
             controller.setSecondPanelDiceIndex(joinGameResult.getPlayerHashCode(), row *
                     StaticValues.PATTERN_COL + col);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+            exit(0);
         }
     }
 
@@ -852,7 +858,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 PlayerTokenSerializer.deleteToken();
                 new EndGameView(playersScore, publicObjectiveCards, stage);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                exit(0);
             }
         });
     }
@@ -946,7 +953,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 try {
                     controller.setActionSign(joinGameResult.getPlayerHashCode(), sign);
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                    exit(0);
                 }
             }
             else {
@@ -1044,7 +1052,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 try {
                     controller.setDiceValue(joinGameResult.getPlayerHashCode(), result.get());
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                    exit(0);
                 }
             }
             else {
@@ -1076,14 +1085,14 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                     controller.setTwoDiceAction(joinGameResult.getPlayerHashCode(), false);
                 }
             } catch (RemoteException e) {
-                e.printStackTrace();
+                out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                exit(0);
             }
         });
     }
 
     @Override
     public void roundTrackDiceIndexRequired() {
-        //TODO here we are supposed to be in a round from 2 to 10
         Platform.runLater(() -> {
             toolCardFlags.reset();
             for (DiceButton diceButton : draftPoolDiceButtons) diceButton.setDisable(true);
@@ -1120,7 +1129,8 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                 toolCardFlags.isRoundTrackDiceRequired = false;
                 controller.setRoundTrackDiceIndex(joinGameResult.getPlayerHashCode(), diceIndex, roundIndex);
             } catch (RemoteException e) {
-                e.printStackTrace();
+                out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                exit(0);
             }
         }
     }
