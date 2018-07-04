@@ -1,3 +1,8 @@
+.opponetsLabel{
+    -fx-text-fill: #373A3C;
+    -fx-text-alignment: center;
+}
+
 .dialog-pane {
     -fx-background-color: #373A3C;
 }

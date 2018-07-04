@@ -11,27 +11,30 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
+import static java.lang.System.*;
+
+
 public class SocketClientController extends UnicastRemoteObject implements RemoteController, ResponseHandler, Serializable {
 
     private transient Socket socket;
     private transient ObjectOutputStream out;
     private transient ObjectInputStream in;
     private transient LobbyObserver lobbyObserver;
-    private transient ArrayList<GameObserver> gameObservers;
-    private transient volatile boolean waitingForResponse;
-    private transient JoinGameResult joinGameResult;
+    private ArrayList<GameObserver> gameObservers;
+    private volatile boolean waitingForResponse;
+    private JoinGameResult joinGameResult;
     private transient ListeningThread notificationThread;
     private final transient Object responseLock;
-    private transient LeaveGameResult leaveGameResult;
-    private transient boolean disconnectionResult;
-    private transient PlaceDiceResult placeDiceResult;
+    private LeaveGameResult leaveGameResult;
+    private boolean disconnectionResult;
+    private PlaceDiceResult placeDiceResult;
     private transient ToolCardThreadController toolCardThread;
-    private transient volatile IsToolCardUsableResult isToolCardUsableResult;
-    private transient volatile UseToolCardResult useToolCardResult;
-    private transient volatile ArrayList<Integer> positions;
-    private transient volatile PlaceDiceResult specialDicePlacementResult;
-    private transient volatile ReconnectionResult reconnectionResult;
-    private transient volatile boolean isChangingConnection;
+    private volatile IsToolCardUsableResult isToolCardUsableResult;
+    private volatile UseToolCardResult useToolCardResult;
+    private volatile ArrayList<Integer> positions;
+    private volatile PlaceDiceResult specialDicePlacementResult;
+    private volatile ReconnectionResult reconnectionResult;
+    private volatile boolean isChangingConnection;
 
     public SocketClientController() throws IOException {
         socket = new Socket(StaticValues.SERVER_ADDRESS, StaticValues.SOCKET_PORT);
@@ -43,7 +46,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
         notificationThread.setName("notificationThread");
         notificationThread.start();
         responseLock = new Object();
-        ToolCardParameters toolCardParameters = new ToolCardParameters();
     }
 
 
@@ -157,7 +159,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
 
     public void handle(TimerNotification response){
             try {
-                lobbyObserver.onTimerChanges(response.timerStart, response.timerStatus);
+                lobbyObserver.onTimerChanges(response.timerStart, response.timerStatus, response.duration);
             } catch (RemoteException e){
                 e.printStackTrace();
             }
@@ -348,7 +350,6 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
 
     @Override
     public void handle(PlayerReconnectionNotification response) {
-        System.out.println("sono nella response = " + response.reconnectingPlayer.getUsername());
         for(GameObserver gameObserver : gameObservers){
             try {
                 gameObserver.onPlayerReconnection(response.reconnectingPlayer);
@@ -454,19 +455,18 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
                 }catch (SocketException e){
                     if(!isChangingConnection) {
                         if (isInterrupted()) {
-                            //TODO add stuff to close connection due to server crash
-                            System.out.println("SERVER CRASH --> Closing notification thread");
+                            System.out.println("NETWORK ERROR --> closing socket");
                             closeConnection();
-                            System.exit(0);
+                            exit(0);
                         } else {
-                            System.out.println("Closing client socket due to server crash");
+                            System.out.println("NETWORK ERROR ---> closing socket");
                             this.interrupt();
                         }
                     }else {
                         this.interrupt();
                     }
                 }catch (EOFException e){
-                    System.out.println("Closing client socket due to server crash");
+                    System.out.println("NETWORK ERROR ---> closing socket");
                     this.interrupt();
                 }catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
@@ -474,7 +474,7 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
             }
             if(!isChangingConnection) {
                 closeConnection();
-                System.exit(0);
+                exit(0);
             }
         }
     }

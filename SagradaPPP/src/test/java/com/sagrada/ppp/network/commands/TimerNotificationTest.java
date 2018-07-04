@@ -120,7 +120,7 @@ public class TimerNotificationTest {
         };
 
 
-        notification = new TimerNotification(100, TimerStatus.FINISH);
+        notification = new TimerNotification(100, TimerStatus.FINISH, 848126);
         notification.handle(handler);
     }
 }

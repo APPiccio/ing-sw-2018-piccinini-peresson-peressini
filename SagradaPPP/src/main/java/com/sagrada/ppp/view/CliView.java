@@ -12,7 +12,7 @@ import com.sagrada.ppp.utils.StaticValues;
 
 import static com.sagrada.ppp.utils.StaticValues.*;
 import static java.lang.System.*;
-import static java.lang.System.out;
+
 
 import java.io.Serializable;
 
@@ -262,10 +262,10 @@ public class CliView extends UnicastRemoteObject
     }
 
     @Override
-    public void onTimerChanges(long timerStart, TimerStatus timerStatus){
-        long duration = ((StaticValues.LOBBY_TIMER + timerStart) - currentTimeMillis())/1000;
+    public void onTimerChanges(long timerStart, TimerStatus timerStatus, long duration){
+        long remainingTime = ((duration + timerStart) - currentTimeMillis())/1000;
         if(timerStatus.equals(TimerStatus.START)){
-            out.println("---> Timer started! The game will start in " + duration + " seconds");
+            out.println("---> Timer started! The game will start in " + remainingTime + " seconds");
         }
         else {
             if(timerStatus.equals(TimerStatus.INTERRUPT)){
@@ -902,7 +902,6 @@ public class CliView extends UnicastRemoteObject
         ConnectionHandler connectionHandler = new ConnectionHandler(connectionModeEnum);
         controller = connectionHandler.getController();
         try {
-            out.println("attaching per =" + hashCode);
             controller.attachGameObserver(gameHashCode, this, hashCode);
         } catch (RemoteException e) {
             e.printStackTrace();

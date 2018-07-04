@@ -5,16 +5,15 @@ import com.sagrada.ppp.cards.publicobjectivecards.*;
 import com.sagrada.ppp.cards.toolcards.*;
 import com.sagrada.ppp.network.server.Service;
 import com.sagrada.ppp.utils.StaticValues;
-import com.sun.jdi.IntegerType;
-
-import javax.swing.*;
 import java.io.Serializable;
-import java.lang.reflect.Array;
+
 import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.Timer;
 import java.util.concurrent.ThreadLocalRandom;
+
+import static java.lang.System.*;
 
 /**
  * Core class of the game
@@ -142,7 +141,7 @@ public class Game implements Serializable {
             chosenPanelIndex = -1;
             waitingForPanelChoice = true;
             panelChoiceTimerExpired = false;
-            System.out.println("Sending panels to " + playerHashCode);
+            out.println("Sending panels to " + playerHashCode);
             HashMap<String, WindowPanel> usernameToPanelHashMap = new HashMap<>();
             for(Player player : players){
                 if(player.getPanel() != null) {
@@ -151,17 +150,17 @@ public class Game implements Serializable {
             }
             //TODO change getPrivateColor with getPlayerByHashCode.getPrivateColor
             notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerByHashcode(playerHashCode).getPrivateColor());
-            PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(System.currentTimeMillis(), this);
+            PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(currentTimeMillis(), this);
             panelChoiceTimer.start();
             //TODO syncronize this!
             while(waitingForPanelChoice && !panelChoiceTimerExpired){
             }
-            System.out.println("Proceeding due to flag change.");
-            System.out.println("---> waitingForPanelChoice = " + waitingForPanelChoice);
-            System.out.println("---> panelChoiceTimerExpired = " + panelChoiceTimerExpired);
+            out.println("Proceeding due to flag change.");
+            out.println("---> waitingForPanelChoice = " + waitingForPanelChoice);
+            out.println("---> panelChoiceTimerExpired = " + panelChoiceTimerExpired);
             panelChoiceTimer.interrupt();
             if(chosenPanelIndex == -1) chosenPanelIndex = 0;
-            System.out.println("panel index assigned = " + chosenPanelIndex);
+            out.println("panel index assigned = " + chosenPanelIndex);
             getPlayerByHashcode(playerHashCode).setPanel(panels.get(playerHashCode).get(chosenPanelIndex));
             getPlayerByHashcode(playerHashCode).setFavorTokens(getPlayerByHashcode(playerHashCode).getPanel().getFavorTokens());
         }
@@ -169,7 +168,7 @@ public class Game implements Serializable {
         extractPublicObjCards();
         extractToolCards();
         draftPool.addAll(diceBag.extractDices(players.size() *2+1));
-        System.out.println("Game is starting... notify users of that");
+        out.println("Game is starting... notify users of that");
         notifyGameStart();
         gameHandler();
 
@@ -188,7 +187,7 @@ public class Game implements Serializable {
         for(int i = 1; i <= 10; i++){
             players.forEach(x -> x.setSkipSecondTurn(false));
             for(int j = 1; j <= players.size()*2; j++){
-                System.out.println("BEGIN TURN = " + j + ", ROUND = " + i);
+                out.println("BEGIN TURN = " + j + ", ROUND = " + i);
                 endTurn = false;
                 dicePlaced = false;
                 usedToolCard = false;
@@ -204,11 +203,11 @@ public class Game implements Serializable {
                 //after call "toNextTurn" justPlayedPlayer contains the previous player
                 if (justPlayedPlayer.hasToSkipSecondTurn() || justPlayedPlayer.getPlayerStatus().equals(PlayerStatus.INACTIVE)) {
                     if(justPlayedPlayer.hasToSkipSecondTurn()) {
-                        System.out.println(players.get(getCurrentPlayerIndex()).getUsername() + " has to skip second turn " +
+                        out.println(players.get(getCurrentPlayerIndex()).getUsername() + " has to skip second turn " +
                                 "this round due to toolCard8 behaviour");
                     }
                     else {
-                        System.out.println("Player should be inactive, actual player status = " + justPlayedPlayer.getPlayerStatus());
+                        out.println("Player should be inactive, actual player status = " + justPlayedPlayer.getPlayerStatus());
                     }
                     toNextTurn();
                     if(j != players.size()*2) notifyEndTurn(justPlayedPlayer , players.get(getCurrentPlayerIndex()));
@@ -230,12 +229,12 @@ public class Game implements Serializable {
                         setPlayerAFK(justPlayedPlayer);
                     }
 
-                    System.out.println("END TURN = " + j + ", ROUND = " + i);
-                    System.out.println("turn ended by user = " + endTurn);
-                    System.out.println("dice placed = " + dicePlaced);
-                    System.out.println("used toolCard = " + usedToolCard);
-                    System.out.println("is special turn = " + isSpecialTurn);
-                    System.out.println("turn timeout " + turnTimeout);
+                    out.println("END TURN = " + j + ", ROUND = " + i);
+                    out.println("turn ended by user = " + endTurn);
+                    out.println("dice placed = " + dicePlaced);
+                    out.println("used toolCard = " + usedToolCard);
+                    out.println("is special turn = " + isSpecialTurn);
+                    out.println("turn timeout " + turnTimeout);
                     toNextTurn();
 
                     if (j != players.size() * 2) notifyEndTurn(justPlayedPlayer, players.get(getCurrentPlayerIndex()));
@@ -267,11 +266,13 @@ public class Game implements Serializable {
     }
 
     public void disableAFK(int playerHashCode){
-        getPlayerByHashcode(playerHashCode).setPlayerStatus(PlayerStatus.ACTIVE);
-        //TODO implements notification
+        Player player =  getPlayerByHashcode(playerHashCode);
+        player.setPlayerStatus(PlayerStatus.ACTIVE);
+        notifyReconnection(player);
     }
 
     private void setPlayerAFK(Player playerAFK){
+        if (playerAFK.getPlayerStatus().equals(PlayerStatus.INACTIVE)) return;
         playerAFK.setPlayerStatus(PlayerStatus.INACTIVE);
         if (getActivePlayersNumber() < 2){
             Player activePlayer = players.stream().filter(x -> x.getPlayerStatus().equals(PlayerStatus.ACTIVE)).findFirst().orElse(null);
@@ -305,7 +306,7 @@ public class Game implements Serializable {
     private void toNextRound() {
         if (roundTrack.getCurrentRound() == 10){
             gameStatus = GameStatus.SCORE;
-            System.out.println("WARNING --> 10 turns played");
+            out.println("WARNING --> 10 turns played");
         }
         else{
             roundTrack.setDicesOnRound(roundTrack.getCurrentRound(), getDraftPool());
@@ -338,7 +339,7 @@ public class Game implements Serializable {
         attachLobbyObserver(lobbyObserver, h.getHashCode());
         if(players.size() == 2){
             //start timer
-            lobbyTimerStartTime = System.currentTimeMillis();
+            lobbyTimerStartTime = currentTimeMillis();
             lobbyTimer = new LobbyTimer(lobbyTimerStartTime, this);
             lobbyTimer.start();
             notifyTimerChanges(TimerStatus.START);
@@ -451,20 +452,20 @@ public class Game implements Serializable {
 
     public void attachGameObserver(GameObserver observer, int playerHashCode){
         if(observer == null) return;
-        System.out.println("received hashcode = " + playerHashCode);
-        System.out.println("obs hashcode = " + observer.hashCode());
+        out.println("received hashcode = " + playerHashCode);
+        out.println("obs hashcode = " + observer.hashCode());
         if(!gameObservers.keySet().contains(playerHashCode)) gameObservers.put(playerHashCode, new ArrayList<>());
         gameObservers.get(playerHashCode).add(observer);
         for(Integer hash : gameObservers.keySet()){
             for(GameObserver gameObserver : gameObservers.get(hash)){
-                System.out.println(hash + " - " + gameObserver.hashCode());
+                out.println(hash + " - " + gameObserver.hashCode());
             }
         }
 
     }
     public void detachAllGameObservers(int playerHashCode) {
-        System.out.println("hashcode = " + playerHashCode);
-        gameObservers.keySet().forEach(System.out::println);
+        out.println("hashcode = " + playerHashCode);
+        gameObservers.keySet().forEach(out::println);
         gameObservers.replace(playerHashCode, new ArrayList<>());
     }
 
@@ -494,8 +495,8 @@ public class Game implements Serializable {
     void notifyTimerChanges(TimerStatus timerStatus) {
         for (LobbyObserver observer : lobbyObservers.values()) {
             try {
-                System.out.println("I'm notifying a new LobbyTimerStatus = " + timerStatus);
-                observer.onTimerChanges(lobbyTimerStartTime, timerStatus);
+                out.println("I'm notifying a new LobbyTimerStatus = " + timerStatus);
+                observer.onTimerChanges(lobbyTimerStartTime, timerStatus, StaticValues.LOBBY_TIMER);
             }catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -507,7 +508,7 @@ public class Game implements Serializable {
             try {
                 observer.onPlayerJoined(username , players,numOfPlayers);
             } catch (ConnectException e){
-                System.out.println("Connection Exception");
+                out.println("Connection Exception");
                 e.printStackTrace();
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -653,7 +654,7 @@ public class Game implements Serializable {
             return true;
         }else {
             Player player = getPlayerByHashcode(playerHashCode);
-            System.out.println("detaching : " + playerHashCode);
+            out.println("detaching : " + playerHashCode);
             detachLobbyObserver(playerHashCode);
             detachAllGameObservers(playerHashCode);
             player.setPlayerStatus(PlayerStatus.INACTIVE);
@@ -711,7 +712,7 @@ public class Game implements Serializable {
         if(!draftPool.isEmpty()) {
              result = currentPlayer.getPanel().addDice(index, draftPool.get(diceIndex));
         }else result = false;
-        System.out.println("place dice result = " + result);
+        out.println("place dice result = " + result);
         if(result) {
             dicePlaced = true;
             draftPool.remove(diceIndex);
@@ -774,48 +775,48 @@ public class Game implements Serializable {
         try {
             player = getPlayerByHashcode(playerHashCode);
         }catch (IllegalArgumentException e){
-            System.out.println("Invalid player is trying to use a toolcard");
+            out.println("Invalid player is trying to use a toolcard");
         }
         if (toolCard != null && player != null) {
             if (player.getHashCode() != players.get(getCurrentPlayerIndex()).getHashCode()){
                 return false;
             }
             if ((toolCard.getId() == 2 || toolCard.getId() == 3) && player.getPanel().getEmptyCells() > 19){
-                System.out.println("You haven't placed enough dices to use this toolcard!\nOperation denied.");
+                out.println("You haven't placed enough dices to use this toolcard!\nOperation denied.");
                 return false;
             }
             else if (toolCard.getId() == 4 && player.getPanel().getEmptyCells() > 18){
-                System.out.println("You haven't placed enough dices to use this toolCard!\nOperation denied.");
+                out.println("You haven't placed enough dices to use this toolCard!\nOperation denied.");
                 return false;
             }
             else if (toolCard.getId() == 5 && roundTrack.getCurrentRound() == 1) {
-                System.out.println("Trying to use tool card number 5 during first round.\nOperation denied.");
+                out.println("Trying to use tool card number 5 during first round.\nOperation denied.");
                 return false;
             }
             else if (toolCard.getId() == 6 && dicePlaced) {
-                System.out.println("Trying to use tool card number 6 usable only on drafting.\nOperation denied.");
+                out.println("Trying to use tool card number 6 usable only on drafting.\nOperation denied.");
                 return false;
             }
             else if (toolCard.getId() == 7 && (turn <= players.size() || dicePlaced)) {
-                System.out.println("Trying to use tool card number 7 during the first turn of the round OR " +
+                out.println("Trying to use tool card number 7 during the first turn of the round OR " +
                         "after placing a dice.\nOperation denied.");
                 return false;
             }
             else if (toolCard.getId() == 8 && (turn > players.size() || !dicePlaced)) {
-                System.out.println("Trying to use tool card number 8 during second turn of the round OR " +
+                out.println("Trying to use tool card number 8 during second turn of the round OR " +
                         "before placing a dice.\nOperation denied.");
                 return false;
             }
             else if (toolCard.getId() == 9 && dicePlaced) {
-                System.out.println("Trying to use tool card number 9 usable only on drafting.\nOperation denied.");
+                out.println("Trying to use tool card number 9 usable only on drafting.\nOperation denied.");
                 return false;
             }
             else if (toolCard.getId() == 11 && dicePlaced){
-                System.out.println("Trying to use tool card number 11 usable only on drafting.\nOperation denied.");
+                out.println("Trying to use tool card number 11 usable only on drafting.\nOperation denied.");
                 return false;
             }
             else if (toolCard.getId() == 12 && roundTrack.getCurrentRound() == 1){
-                System.out.println("Can't use this toolcard during the first round!\nOperation denied.");
+                out.println("Can't use this toolcard during the first round!\nOperation denied.");
                 return false;
             }
            return player.getFavorTokens() >= toolCard.getCost();
@@ -846,7 +847,7 @@ public class Game implements Serializable {
         ToolCard toolCard = toolCards.stream().filter( x -> x.getId() == toolCardParameters.toolCardID).findFirst().orElse(null);
         if(toolCard != null) {
             Player player = getPlayerByHashcode(playerHashCode);
-            System.out.println(player.getUsername() + " is using toolCard ID = " + toolCard.getId());
+            out.println(player.getUsername() + " is using toolCard ID = " + toolCard.getId());
             usedToolCard = true;
             ToolCardParameterContainer container = getToolCardParameters(toolCardParameters, playerHashCode);
             if (!toolCard.paramsOk(container)) {
@@ -941,14 +942,14 @@ public class Game implements Serializable {
     }
 
     public ReconnectionResult reconnection(int playerHashCode, GameObserver gameObserver) {
-        System.out.println(playerHashCode + " is trying to reconnect");
+        out.println(playerHashCode + " is trying to reconnect");
 
         if (gameStatus.equals(GameStatus.PANEL_CHOICE)) return new ReconnectionResult(false,
                 "You can't reconnect during game initialization. Try again later!", null);
         if (!gameStatus.equals(GameStatus.ACTIVE)) return new ReconnectionResult(false,
                 "The game you're trying to reconnect has already ended.", null);
         Player player = getPlayerByHashcode(playerHashCode);
-        System.out.println("active " + player.getPlayerStatus());
+        out.println("active " + player.getPlayerStatus());
         if (player == null || !player.getPlayerStatus().equals(PlayerStatus.INACTIVE))
             return new ReconnectionResult(false, "Permission denied.", null);
         //TODO notify other users
@@ -966,7 +967,7 @@ public class Game implements Serializable {
             try {
                 lobbyObservers.get(playerHashCode).rmiPing();
             } catch (ConnectException e) {
-                System.out.println("--> detected player disconnection, username = " + getPlayerByHashcode(playerHashCode).getUsername());
+                out.println("--> detected player disconnection, username = " + getPlayerByHashcode(playerHashCode).getUsername());
                 leaveLobby(getPlayerByHashcode(playerHashCode).getUsername());
                 if(players.size() < 2){
                     result = false;
@@ -985,7 +986,7 @@ public class Game implements Serializable {
                 try {
                     gameObserver.rmiPing();
                 } catch (RemoteException e) {
-                    System.out.println("DISCONNECTING DUE TO PING DETECT");
+                    out.println("DISCONNECTING DUE TO PING DETECT");
                     toBeRemoved.add(hash);
                 }
             }
@@ -1005,11 +1006,11 @@ public class Game implements Serializable {
         @Override
         public void run() {
             if(isValid){
-                System.out.println("TURN TIMEOUT");
+                out.println("TURN TIMEOUT");
                 turnTimeout = true;
             }
             else{
-                System.out.println("TIMEOUT ALREADY ENDED TASK --> DO NOTHING");
+                out.println("TIMEOUT ALREADY ENDED TASK --> DO NOTHING");
             }
         }
     }

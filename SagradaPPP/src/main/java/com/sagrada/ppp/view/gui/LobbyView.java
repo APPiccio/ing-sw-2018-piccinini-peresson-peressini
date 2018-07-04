@@ -209,8 +209,8 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
     }
 
     @Override
-    public void onTimerChanges(long timerStart, TimerStatus timerStatus) {
-        long remainingTime = ((StaticValues.LOBBY_TIMER + timerStart) - System.currentTimeMillis()) / 1000;
+    public void onTimerChanges(long timerStart, TimerStatus timerStatus, long duration) {
+        long remainingTime = ((duration + timerStart) - System.currentTimeMillis()) / 1000;
         if (timerStatus.equals(TimerStatus.START)) {
             timerStarted(remainingTime);
         } else if (timerStatus.equals(TimerStatus.FINISH)) {

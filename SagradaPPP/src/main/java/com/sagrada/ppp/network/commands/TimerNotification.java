@@ -12,10 +12,12 @@ public class TimerNotification implements Response, Serializable {
 
     public long timerStart;
     public TimerStatus timerStatus;
+    public long duration;
 
-    public TimerNotification(long timerStart, TimerStatus timerStatus){
+    public TimerNotification(long timerStart, TimerStatus timerStatus, long duration){
         this.timerStart = timerStart;
         this.timerStatus = timerStatus;
+        this.duration = duration;
     }
 
 

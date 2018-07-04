@@ -260,9 +260,9 @@ public class SocketThread extends Thread implements LobbyObserver, RequestHandle
     }
 
     @Override
-    public synchronized void onTimerChanges(long timerStart, TimerStatus timerStatus){
+    public synchronized void onTimerChanges(long timerStart, TimerStatus timerStatus, long duration){
         try {
-            out.writeObject(new TimerNotification(timerStart, timerStatus));
+            out.writeObject(new TimerNotification(timerStart, timerStatus, duration));
             out.reset();
         } catch (IOException e) {
             e.printStackTrace();

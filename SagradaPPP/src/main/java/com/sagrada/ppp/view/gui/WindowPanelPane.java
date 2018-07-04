@@ -98,7 +98,6 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
     @Override
     public void handle(MouseEvent event) {
         CellPane cell = ((CellPane) event.getSource());
-        System.out.println("col: "+cell.col + " row: " +cell.row);
         if(eventBus !=  null) {
             if(panel.getCell(cell.row,cell.col).hasDiceOn()){
                 eventBus.onDiceClicked(cell.row,cell.col);

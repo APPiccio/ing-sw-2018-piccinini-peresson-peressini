@@ -115,7 +115,7 @@ public class GameTest {
             }
 
             @Override
-            public void onTimerChanges(long timerStart, TimerStatus timerStatus) throws RemoteException {
+            public void onTimerChanges(long timerStart, TimerStatus timerStatus, long duration) throws RemoteException {
 
             }
 
@@ -358,7 +358,7 @@ public class GameTest {
             }
 
             @Override
-            public void onTimerChanges(long timerStart, TimerStatus timerStatus) throws RemoteException {
+            public void onTimerChanges(long timerStart, TimerStatus timerStatus, long duration) throws RemoteException {
 
             }
 

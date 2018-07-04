@@ -62,7 +62,7 @@ public class ServiceTest {
             }
 
             @Override
-            public void onTimerChanges(long timerStart, TimerStatus timerStatus) throws RemoteException {
+            public void onTimerChanges(long timerStart, TimerStatus timerStatus, long duration) throws RemoteException {
 
             }
 
