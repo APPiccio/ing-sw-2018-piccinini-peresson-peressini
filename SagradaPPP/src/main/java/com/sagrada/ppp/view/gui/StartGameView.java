@@ -26,6 +26,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 
+import static java.lang.System.*;
+
 public class StartGameView implements EventHandler<MouseEvent> {
 
     private Button about;
@@ -46,8 +48,8 @@ public class StartGameView implements EventHandler<MouseEvent> {
             e.printStackTrace();
         }
         if (url == null) {
-            System.out.println("Resource not found. Aborting.");
-            System.exit(-1);
+            out.println("Resource not found. Aborting.");
+            exit(-1);
         }
 
         String css = url.toExternalForm();
@@ -83,7 +85,7 @@ public class StartGameView implements EventHandler<MouseEvent> {
         }
         stage.setOnCloseRequest(t -> {
             Platform.exit();
-            System.exit(0);
+            exit(0);
         });
 
 

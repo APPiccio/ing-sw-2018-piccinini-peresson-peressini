@@ -25,7 +25,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
     private final static boolean DRAW_VECTOR_CELLS = true;
 
 
-    public WindowPanelPane(WindowPanel panel, double height, double width) {
+    WindowPanelPane(WindowPanel panel, double height, double width) {
         this.panel = panel;
 
         name = new Label();
@@ -58,7 +58,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
 
     }
 
-    void draw(){
+    private void draw(){
         if(panel == null) return;
         double cellHeight = height/4;
         double cellWidth = width/4;
@@ -88,7 +88,7 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
         this.panel = panel;
         draw();
     }
-    public void setObserver(GuiEventBus guiEventBus){
+    void setObserver(GuiEventBus guiEventBus){
         this.eventBus = guiEventBus;
     }
 

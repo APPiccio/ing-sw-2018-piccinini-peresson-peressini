@@ -1,7 +1,6 @@
 package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.model.Dice;
-import com.sagrada.ppp.model.WindowPanel;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
@@ -20,7 +19,7 @@ public class SelectDicePane extends GridPane implements EventHandler<MouseEvent>
     private Alert alertParent;
 
 
-    public SelectDicePane(ArrayList<Dice> dices, double diceWidth, double diceHeight, GuiEventBus eventBus, int roundIndex, Alert alertParent) {
+    SelectDicePane(ArrayList<Dice> dices, double diceWidth, double diceHeight, GuiEventBus eventBus, int roundIndex, Alert alertParent) {
         gridPane = new GridPane();
         gridPane.setVgap(diceHeight/10);
         gridPane.setHgap(diceWidth/10);
