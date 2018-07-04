@@ -196,7 +196,6 @@ public class CliView extends UnicastRemoteObject
 
     }
 
-    //TODO add show list of active players when someone join the lobby
     private void inLobby() throws RemoteException {
         out.println("Congratulations , you are now in lobby!");
         out.println("--> Game ID = " + gameHashCode);

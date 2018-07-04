@@ -30,7 +30,7 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
 
     private VBox vBoxPlayers;
     private VBox vBoxEventsTab;
-    private JoinGameResult joinGameResult;
+    private volatile JoinGameResult joinGameResult;
     private WindowPanelsSelectionView windowPanelsSelectionView;
     private transient RemoteController controller;
     private Stage stage;
@@ -146,9 +146,7 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-        Platform.runLater(() -> {
-            windowPanelsSelectionView.init(controller, stage, joinGameResult);
-        });
+        Platform.runLater(() -> windowPanelsSelectionView.init(controller, stage, joinGameResult));
     }
 
     private void timerInterrupted() {
@@ -216,7 +214,10 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         if (timerStatus.equals(TimerStatus.START)) {
             timerStarted(remainingTime);
         } else if (timerStatus.equals(TimerStatus.FINISH)) {
-            timerEnded();
+            new Thread(() -> {
+                while(joinGameResult == null);
+                timerEnded();
+            }).start();
         } else if (timerStatus.equals(TimerStatus.INTERRUPT)) {
             timerInterrupted();
         }
