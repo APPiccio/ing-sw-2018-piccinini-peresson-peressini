@@ -10,6 +10,8 @@ import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
+import static java.lang.System.*;
+
 public class Client {
 
     private static RemoteController controller;
@@ -18,13 +20,13 @@ public class Client {
     public static void main(String[] args) throws RemoteException {
 
         StaticValues.readConstants();
-        System.out.println("--> Connecting...");
+        out.println("--> Connecting...");
         controller = null;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Choose connection mode: type rmi or socket");
+        Scanner scanner = new Scanner(in);
+        out.println("Choose connection mode: type rmi or socket");
         String connectionChoice = scanner.nextLine();
         while (!connectionChoice.equals("rmi") && !connectionChoice.equals("socket")) {
-            System.out.println("Invalid option! Type 'rmi' or 'socket'");
+            out.println("Invalid option! Type 'rmi' or 'socket'");
             connectionChoice = scanner.nextLine();
         }
 
@@ -41,14 +43,14 @@ public class Client {
 
         //failed to connect
         if (controller == null) {
-            System.out.println("Unable to connect... Please try again later");
-            System.exit(0);
+            out.println("Unable to connect... Please try again later");
+            exit(0);
         }
 
-        System.out.println("Choose gui or cli!");
+        out.println("Choose gui or cli!");
         String viewMode = scanner.nextLine();
         while (!viewMode.equals("gui") && !viewMode.equals("cli")) {
-            System.out.println("Invalid option! Type 'gui' or 'cli'");
+            out.println("Invalid option! Type 'gui' or 'cli'");
             viewMode = scanner.nextLine();
         }
         if (viewMode.equals("cli")) {
@@ -56,12 +58,12 @@ public class Client {
             try {
                 view.init();
             } catch (ConnectException e) {
-                System.out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
-                System.exit(0);
+                out.println("ERROR --> SERVER CRASH DETECTED, CLOSING APPLICATION...");
+                exit(0);
             }
         }
         else {
-            System.out.println("Starting gui...");
+            out.println("Starting gui...");
             new Thread(() -> Application.launch(GuiView.class)).start();
         }
     }
