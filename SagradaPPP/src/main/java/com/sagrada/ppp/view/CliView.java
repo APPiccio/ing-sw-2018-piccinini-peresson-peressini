@@ -16,6 +16,8 @@ import static java.lang.System.*;
 
 import java.io.Serializable;
 
+import java.rmi.ConnectException;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
@@ -188,7 +190,9 @@ public class CliView extends UnicastRemoteObject
         out.println("\t" + StaticValues.COMMAND_SHOW + "\t" + StaticValues.STRING_COMMAND_SHOW);
         out.println("\t" + StaticValues.COMMAND_DISABLE_AFK + "\t" + StaticValues.STRING_COMMAND_DISABLE_AFK);
         out.println("\t" + StaticValues.COMMAND_CONNECTION + "\t" + StaticValues.STRING_COMMAND_CONNECTION);
+        out.println("\t" + StaticValues.COMMAND_SERVER_STATUS + "\t" + StaticValues.STRING_COMMAND_CONNECTION);
         out.println("\t" + StaticValues.COMMAND_HELP + "\t" + StaticValues.STRING_COMMAND_HELP);
+        out.println("\t" + StaticValues.COMMAND_QUIT + "\t" + StaticValues.STRING_COMMAND_QUIT);
 
     }
 
@@ -303,6 +307,7 @@ public class CliView extends UnicastRemoteObject
                     "until is back online!");
         }
     }
+
 
     private void inGame(String cmd) throws RemoteException {
         String command;
@@ -596,6 +601,13 @@ public class CliView extends UnicastRemoteObject
                     else{
                         out.println("Unknown command!");
                     }
+                    break;
+                case StaticValues.COMMAND_SERVER_STATUS:
+                    controller.polling();
+                    out.println("--> SERVER STATUS : ACTIVE");
+                    break;
+                case StaticValues.COMMAND_HELP:
+                    showInGameCommandList();
                     break;
                 default:
                     out.println("Command not found : " + command);

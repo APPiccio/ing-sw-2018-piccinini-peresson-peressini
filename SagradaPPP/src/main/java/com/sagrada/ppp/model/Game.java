@@ -148,12 +148,12 @@ public class Game implements Serializable {
                     usernameToPanelHashMap.put(player.getUsername(), player.getPanel());
                 }
             }
-            //TODO change getPrivateColor with getPlayerByHashCode.getPrivateColor
             notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerByHashcode(playerHashCode).getPrivateColor());
             PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(currentTimeMillis(), this);
             panelChoiceTimer.start();
             //TODO syncronize this!
             while(waitingForPanelChoice && !panelChoiceTimerExpired){
+                //waiting
             }
             out.println("Proceeding due to flag change.");
             out.println("---> waitingForPanelChoice = " + waitingForPanelChoice);

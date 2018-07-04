@@ -103,6 +103,7 @@ public class StaticValues {
     public static final String STRING_COMMAND_USE_TOOLCARD = "<tool card index> use a tool card";
     public static final String STRING_COMMAND_SHOW = "shows public objective cards, draft pool and tool cards";
     public static final String STRING_COMMAND_CONNECTION = "<rmi/socket> change connection mode";
+    public static final String STRING_COMMAND_SERVER_STATUS = "show server status";
 
     // Cli View command
     public static final String COMMAND_QUIT = ":q";
@@ -115,6 +116,7 @@ public class StaticValues {
     public static final String COMMAND_SHOW = ":show";
     public static final String COMMAND_CONNECTION = ":cmode";
     public static final String COMMAND_DISABLE_AFK = ":bazinga";
+    public static final String COMMAND_SERVER_STATUS = ":status";
 
 
     //AssetUrl

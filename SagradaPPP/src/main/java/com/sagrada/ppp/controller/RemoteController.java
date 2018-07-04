@@ -56,4 +56,5 @@ public interface RemoteController extends Remote {
 
     void disableAFK(int gameHashCode, int playerHashCode) throws RemoteException;
 
+    void polling() throws RemoteException;
 }

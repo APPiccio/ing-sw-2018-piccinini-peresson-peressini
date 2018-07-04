@@ -135,6 +135,11 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
         toolCardThreads.get(playerHashCode).toolCardParameters.twoDiceAction = choice;
     }
 
+    @Override
+    public void polling() throws RemoteException {
+        //do nothing
+    }
+
     class ToolCardThreadController extends Thread {
 
         int gameHashCode;

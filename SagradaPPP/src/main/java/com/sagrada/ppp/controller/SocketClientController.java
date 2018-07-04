@@ -80,6 +80,11 @@ public class SocketClientController extends UnicastRemoteObject implements Remot
     }
 
     @Override
+    public void polling() throws RemoteException {
+        //do nothing
+    }
+
+    @Override
     public void attachGameObserver(int gameHashCode ,GameObserver gameObserver, int playerHashCode) throws RemoteException {
         gameObservers.add(gameObserver);
     }
