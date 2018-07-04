@@ -706,6 +706,16 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
                         draftPool = result.draftPool;
                         drawDraftPool();
                     }
+                    else {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText(null);
+                        alert.setContentText(result.message);
+                        alert.initModality(Modality.APPLICATION_MODAL);
+                        alert.initOwner(stage);
+                        alert.showAndWait();
+                    }
+
                 });
             }
             else {
