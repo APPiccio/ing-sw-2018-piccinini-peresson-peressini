@@ -4,5 +4,5 @@
   "RMI_PORT" : 1099,
   "RMI_REGISTRY_NAME" :  "SagradaRegistry",
   "SOCKET_PORT" :  1996,
-  "SERVER_ADDRESS" :  "192.168.1.55"
+  "SERVER_ADDRESS" :  "localhost"
 }

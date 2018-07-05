@@ -42,6 +42,8 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
     private volatile boolean receivedMyPanels;
     private volatile boolean userHasChosen;
     private static final String SELECT = "Select";
+    private volatile boolean isInitialized;
+    private volatile NotificationBuffer notificationBuffer;
 
     WindowPanelsSelectionView() throws RemoteException {
         this.hBox2 = new HBox();
@@ -52,12 +54,14 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
         panelAvailable = null;
         joinGameResult = null;
         privateColor = null;
+        isInitialized = false;
+        notificationBuffer = new NotificationBuffer();
     }
 
 
     @Override
     public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
-        //TODO IMPLEMENTS THIS
+        //do nothing
     }
 
     void init(RemoteController controller, Stage stage, JoinGameResult joinGameResult) {
@@ -122,6 +126,10 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
         this.stage.setScene(scene);
         this.stage.setTitle("Panel selection");
         this.stage.show();
+        if(notificationBuffer.full) updateView(notificationBuffer.playerHashCode, notificationBuffer.panels,
+                notificationBuffer.panelsAlreadyChosen, notificationBuffer.color);
+        notificationBuffer = new NotificationBuffer();
+        isInitialized = true;
     }
 
     private void createSelection() {
@@ -194,12 +202,22 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
     @Override
     public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels,
                               HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
+        if(!isInitialized){
+            notificationBuffer = new NotificationBuffer(playerHashCode, panels, panelsAlreadyChosen, color);
+        }
+        else {
+            updateView(playerHashCode, panels, panelsAlreadyChosen, color);
+        }
+    }
+
+    private void updateView(int playerHashCode, ArrayList<WindowPanel> panels,
+                            HashMap<String, WindowPanel> panelsAlreadyChosen, Color color){
         Platform.runLater(() -> {
                     panelAvailable = panels;
                     if (panelsAlreadyChosen.size() != 0) {
                         chosenPanels(panelsAlreadyChosen);
                     }
-                    if(!userHasChosen && receivedMyPanels){
+                    if (!userHasChosen && receivedMyPanels) {
                         //disable buttons due to exceeded timer
                         //auto panel assignment to panel 0
                         userHasChosen = true;
@@ -214,6 +232,7 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
                 }
         );
     }
+
 
     @Override
     public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
@@ -284,4 +303,27 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
     public void rmiPing() throws RemoteException {
         //do nothing here
     }
+
+    private class NotificationBuffer{
+
+        int playerHashCode;
+        ArrayList<WindowPanel> panels;
+        HashMap<String, WindowPanel> panelsAlreadyChosen;
+        Color color;
+        boolean full;
+
+        public NotificationBuffer(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String,
+                WindowPanel> panelsAlreadyChosen, Color color) {
+            this.playerHashCode = playerHashCode;
+            this.panels = panels;
+            this.panelsAlreadyChosen = panelsAlreadyChosen;
+            this.color = color;
+            full = true;
+        }
+
+        public NotificationBuffer(){
+            this.full = false;
+        }
+    }
+
 }

@@ -1,9 +1,7 @@
 package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.controller.RemoteController;
-import com.sagrada.ppp.model.JoinGameResult;
-import com.sagrada.ppp.model.LobbyObserver;
-import com.sagrada.ppp.model.TimerStatus;
+import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.utils.PlayerTokenSerializer;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.application.Platform;
@@ -23,10 +21,11 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static java.lang.System.*;
 
-public class LobbyView extends UnicastRemoteObject implements LobbyObserver, EventHandler<MouseEvent> {
+public class LobbyView extends UnicastRemoteObject implements LobbyObserver, GameObserver, EventHandler<MouseEvent> {
 
     private VBox vBoxPlayers;
     private VBox vBoxEventsTab;
@@ -74,6 +73,7 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
 
 
         joinGameResult = this.controller.joinGame(username, this);
+        controller.attachGameObserver(joinGameResult.getGameHashCode(), windowPanelsSelectionView, joinGameResult.getPlayerHashCode());
         PlayerTokenSerializer.serialize(joinGameResult);
         vBoxPlayersTab.getChildren().addAll(playerID(), vBoxPlayers);
         setActivePlayers(joinGameResult.getPlayersUsername(), joinGameResult.getPlayersUsername().size());
@@ -141,11 +141,11 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
     }
 
     private void timerEnded() {
-        try {
+/*        try {
             controller.attachGameObserver(joinGameResult.getGameHashCode(), windowPanelsSelectionView, joinGameResult.getPlayerHashCode());
         } catch (RemoteException e) {
             e.printStackTrace();
-        }
+        }*/
         Platform.runLater(() -> windowPanelsSelectionView.init(controller, stage, joinGameResult));
     }
 
@@ -218,6 +218,7 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
                 while(joinGameResult == null);
                 timerEnded();
             }).start();
+            //timerEnded();
         } else if (timerStatus.equals(TimerStatus.INTERRUPT)) {
             timerInterrupted();
         }
@@ -246,6 +247,51 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
 
     @Override
     public void rmiPing() throws RemoteException {
+
+    }
+
+    @Override
+    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color playerPrivateColor) throws RemoteException {
+
+    }
+
+    @Override
+    public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
+
+    }
+
+    @Override
+    public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
+
+    }
+
+    @Override
+    public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
+
+    }
+
+    @Override
+    public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
+
+    }
+
+    @Override
+    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
+
+    }
+
+    @Override
+    public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
+
+    }
+
+    @Override
+    public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
+
+    }
+
+    @Override
+    public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
 
     }
 }

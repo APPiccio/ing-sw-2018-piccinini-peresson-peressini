@@ -59,6 +59,7 @@ public class Game implements Serializable {
     private transient MyTimerTask currentTimerTask;
     private volatile boolean gameEnded;
     private transient Service service;
+    private Object obsLock;
 
 
     public Game(String username, Service service) {
@@ -83,6 +84,7 @@ public class Game implements Serializable {
         endTurn = false;
         turnTimeout = false;
         gameEnded = false;
+        obsLock = new Object();
     }
 
 
@@ -148,7 +150,8 @@ public class Game implements Serializable {
                     usernameToPanelHashMap.put(player.getUsername(), player.getPanel());
                 }
             }
-            notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap, getPlayerByHashcode(playerHashCode).getPrivateColor());
+            notifyPanelChoice(playerHashCode, panels.get(playerHashCode),usernameToPanelHashMap,
+                    getPlayerByHashcode(playerHashCode).getPrivateColor());
             PanelChoiceTimer panelChoiceTimer = new PanelChoiceTimer(currentTimeMillis(), this);
             panelChoiceTimer.start();
             //TODO syncronize this!
@@ -454,14 +457,11 @@ public class Game implements Serializable {
         if(observer == null) return;
         out.println("received hashcode = " + playerHashCode);
         out.println("obs hashcode = " + observer.hashCode());
-        if(!gameObservers.keySet().contains(playerHashCode)) gameObservers.put(playerHashCode, new ArrayList<>());
-        gameObservers.get(playerHashCode).add(observer);
-        for(Integer hash : gameObservers.keySet()){
-            for(GameObserver gameObserver : gameObservers.get(hash)){
-                out.println(hash + " - " + gameObserver.hashCode());
-            }
+        synchronized (obsLock) {
+            if (!gameObservers.keySet().contains(playerHashCode)) gameObservers.put(playerHashCode, new ArrayList<>());
+            gameObservers.get(playerHashCode).add(observer);
+            obsLock.notifyAll();
         }
-
     }
     public void detachAllGameObservers(int playerHashCode) {
         out.println("hashcode = " + playerHashCode);
@@ -481,14 +481,17 @@ public class Game implements Serializable {
 
     private synchronized void notifyPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color color) {
         pingAllGameObservers();
-        for (ArrayList<GameObserver> observers : gameObservers.values()) {
-            for (GameObserver observer : observers) {
-                try {
-                    observer.onPanelChoice(playerHashCode, panels, panelsAlreadyChosen, color);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
+        synchronized (obsLock) {
+            for (ArrayList<GameObserver> observers : gameObservers.values()) {
+                for (GameObserver observer : observers) {
+                    try {
+                        observer.onPanelChoice(playerHashCode, panels, panelsAlreadyChosen, color);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+            obsLock.notifyAll();
         }
     }
 
@@ -981,17 +984,20 @@ public class Game implements Serializable {
 
     void pingAllGameObservers(){
         ArrayList<Integer> toBeRemoved = new ArrayList<>();
-        for(int hash : gameObservers.keySet()){
-            for(GameObserver gameObserver : gameObservers.get(hash)){
-                try {
-                    gameObserver.rmiPing();
-                } catch (RemoteException e) {
-                    out.println("DISCONNECTING DUE TO PING DETECT");
-                    toBeRemoved.add(hash);
+        synchronized (obsLock) {
+            for (int hash : gameObservers.keySet()) {
+                for (GameObserver gameObserver : gameObservers.get(hash)) {
+                    try {
+                        gameObserver.rmiPing();
+                    } catch (RemoteException e) {
+                        out.println("DISCONNECTING DUE TO PING DETECT");
+                        toBeRemoved.add(hash);
+                    }
                 }
             }
+            toBeRemoved.forEach(this::disconnect);
+            obsLock.notifyAll();
         }
-        toBeRemoved.forEach(this::disconnect);
     }
 
 
