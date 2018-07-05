@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 import static java.lang.System.*;
 
-public class LobbyView extends UnicastRemoteObject implements LobbyObserver, GameObserver, EventHandler<MouseEvent> {
+public class LobbyView extends UnicastRemoteObject implements LobbyObserver, EventHandler<MouseEvent> {
 
     private VBox vBoxPlayers;
     private VBox vBoxEventsTab;
@@ -247,51 +247,6 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Gam
 
     @Override
     public void rmiPing() throws RemoteException {
-
-    }
-
-    @Override
-    public void onPanelChoice(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String, WindowPanel> panelsAlreadyChosen, Color playerPrivateColor) throws RemoteException {
-
-    }
-
-    @Override
-    public void onGameStart(GameStartMessage gameStartMessage) throws RemoteException {
-
-    }
-
-    @Override
-    public void onDicePlaced(DicePlacedMessage dicePlacedMessage) throws RemoteException {
-
-    }
-
-    @Override
-    public void onToolCardUsed(ToolCardNotificationMessage toolCardUsedMessage) throws RemoteException {
-
-    }
-
-    @Override
-    public void onEndTurn(EndTurnMessage endTurnMessage) throws RemoteException {
-
-    }
-
-    @Override
-    public void onEndGame(ArrayList<PlayerScore> playersScore) throws RemoteException {
-
-    }
-
-    @Override
-    public void onPlayerReconnection(Player reconnectingPlayer) throws RemoteException {
-
-    }
-
-    @Override
-    public void onPlayerDisconnection(Player disconnectingPlayer, boolean isLastPlayer) throws RemoteException {
-
-    }
-
-    @Override
-    public void onPlayerAFK(Player playerAFK, boolean isLastPlayer, Player lastPlayer) throws RemoteException {
 
     }
 }
