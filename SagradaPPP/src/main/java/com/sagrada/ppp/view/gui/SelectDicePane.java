@@ -18,8 +18,8 @@ public class SelectDicePane extends GridPane implements EventHandler<MouseEvent>
     private GridPane gridPane;
     private Alert alertParent;
 
-
-    SelectDicePane(ArrayList<Dice> dices, double diceWidth, double diceHeight, GuiEventBus eventBus, int roundIndex, Alert alertParent) {
+    SelectDicePane(ArrayList<Dice> dices, double diceWidth, double diceHeight,
+                   GuiEventBus eventBus, int roundIndex, Alert alertParent) {
         gridPane = new GridPane();
         gridPane.setVgap(diceHeight/10);
         gridPane.setHgap(diceWidth/10);
@@ -43,8 +43,7 @@ public class SelectDicePane extends GridPane implements EventHandler<MouseEvent>
         }
         Button closeButton = new Button("Close");
         closeButton.setOnMouseClicked(e ->
-            alertParent.hide()
-        );
+            alertParent.hide());
 
     }
 
@@ -60,4 +59,5 @@ public class SelectDicePane extends GridPane implements EventHandler<MouseEvent>
         alertParent.getButtonTypes().remove(ButtonType.CANCEL);
         eventBus.onRoundTrackDiceClicked(diceIndex, roundIndex);
     }
+
 }

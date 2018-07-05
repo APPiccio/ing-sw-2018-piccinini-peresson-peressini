@@ -16,14 +16,10 @@ public interface ToolCardHandler extends Remote {
     void panelCellIndexRequired() throws RemoteException;
     void actionSignRequired() throws RemoteException;
     void notifyUsageCompleted(UseToolCardResult useToolCardResult) throws RemoteException;
-
     void secondPanelDiceIndexRequired() throws RemoteException;
-
     void secondPanelCellIndexRequired() throws  RemoteException;
-
     void diceValueRequired(Color color) throws RemoteException;
-
     void twoDiceActionRequired() throws RemoteException;
-
     void reRolledDiceActionRequired(Dice dice) throws RemoteException;
+
 }

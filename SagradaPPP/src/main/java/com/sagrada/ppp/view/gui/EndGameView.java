@@ -2,7 +2,6 @@ package com.sagrada.ppp.view.gui;
 
 import com.sagrada.ppp.model.PlayerScore;
 import com.sagrada.ppp.cards.publicobjectivecards.PublicObjectiveCard;
-import com.sagrada.ppp.controller.RemoteController;
 import com.sagrada.ppp.utils.StaticValues;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,8 +34,8 @@ class EndGameView extends UnicastRemoteObject {
     private HBox publicObjectiveCardsHBox;
     private TableView<PlayerScore> tableView;
 
-    EndGameView(ArrayList<PlayerScore> playersScore, ArrayList<PublicObjectiveCard> publicObjectiveCards, Stage stage) throws RemoteException {
-        Stage stage1 = stage;
+    EndGameView(ArrayList<PlayerScore> playersScore,
+                ArrayList<PublicObjectiveCard> publicObjectiveCards, Stage stage) throws RemoteException {
         BorderPane borderPane = new BorderPane();
         borderPane.setPadding(new Insets(10, 10, 10, 10));
 
@@ -69,10 +68,10 @@ class EndGameView extends UnicastRemoteObject {
         drawResultTable(playersScore, publicObjectiveCards);
         borderPane.setCenter(topVBox);
 
-        stage1.setScene(new Scene(borderPane, 1920, 1080));
-        stage1.setTitle("Results");
-        stage1.centerOnScreen();
-        stage1.show();
+        stage.setScene(new Scene(borderPane, 1920, 1080));
+        stage.setTitle("Results");
+        stage.centerOnScreen();
+        stage.show();
     }
 
     private void drawWindowPanels(ArrayList<PlayerScore> playersScore) {
@@ -172,6 +171,16 @@ class EndGameView extends UnicastRemoteObject {
 
     private ObservableList<PlayerScore> getList(ArrayList<PlayerScore> playersScore) {
         return FXCollections.observableArrayList(playersScore);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 
 }
