@@ -14,16 +14,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-
 import static com.sagrada.ppp.utils.StaticValues.*;
 
 public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent> {
     private WindowPanel panel;
-    private Label name,tokens;
+    private Label name;
+    private Label tokens;
     private GuiEventBus eventBus;
-    private double width,height;
-    private final static boolean DRAW_VECTOR_CELLS = true;
-
+    private double width;
+    private double height;
+    private static final boolean DRAW_VECTOR_CELLS = true;
 
     WindowPanelPane(WindowPanel panel, double height, double width) {
         this.panel = panel;
@@ -125,11 +125,12 @@ public class WindowPanelPane extends GridPane implements EventHandler<MouseEvent
 
     private class CellPane extends BorderPane{
 
-
-        private int row,col;
-        private double cellWidth,cellHeight;
+        private int row;
+        private int col;
+        private double cellWidth;
+        private double cellHeight;
         private Cell cell;
-        private final int cornerRadius = 2;
+        private static final int cornerRadius = 2;
 
         private CellPane(int row, int col,double cellWidth,double cellHeight,Cell cell) {
             this.row = row;

@@ -24,7 +24,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import static java.lang.System.*;
 
@@ -43,7 +42,7 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
     private volatile boolean userHasChosen;
     private static final String SELECT = "Select";
     private volatile boolean isInitialized;
-    private volatile NotificationBuffer notificationBuffer;
+    private transient volatile NotificationBuffer notificationBuffer;
 
     WindowPanelsSelectionView() throws RemoteException {
         this.hBox2 = new HBox();
@@ -177,8 +176,7 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
 
     private void chosenPanels(HashMap<String, WindowPanel> panels) {
         vBoxEvents.getChildren().clear();
-        for (Iterator<String> iterator = panels.keySet().iterator(); iterator.hasNext(); ) {
-            String u = iterator.next();
+        for (String u : panels.keySet()) {
             vBoxEvents.getChildren().add(new Label(u + " has chosen \"" + panels.get(u).getPanelName() + "\"!"));
             vBoxEvents.getChildren().add(new WindowPanelPane(new WindowPanel(panels.get(u)), 200, 200));
         }
@@ -272,7 +270,6 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
         int gameHash = joinGameResult.getGameHashCode();
         int playerHash = joinGameResult.getPlayerHashCode();
         userHasChosen = true;
-        //TODO: change this with more elegant code. use -> index of
         try {
            controller.choosePanel(gameHash,playerHash,buttons.indexOf(clickedBtn));
         }
@@ -312,7 +309,7 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
         Color color;
         boolean full;
 
-        public NotificationBuffer(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String,
+        NotificationBuffer(int playerHashCode, ArrayList<WindowPanel> panels, HashMap<String,
                 WindowPanel> panelsAlreadyChosen, Color color) {
             this.playerHashCode = playerHashCode;
             this.panels = panels;
@@ -321,9 +318,19 @@ public class WindowPanelsSelectionView extends UnicastRemoteObject implements Ga
             full = true;
         }
 
-        public NotificationBuffer(){
+        NotificationBuffer(){
             this.full = false;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
 }

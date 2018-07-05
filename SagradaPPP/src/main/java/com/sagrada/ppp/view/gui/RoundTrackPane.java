@@ -16,14 +16,15 @@ public class RoundTrackPane extends VBox {
 
     private RoundTrack roundTrack;
     private GridPane mainPane;
-    private double width,height;
+    private double width;
+    private double height;
     private GuiEventBus eventBus;
 
-    public void setObserver(GuiEventBus eventBus){
+    void setObserver(GuiEventBus eventBus){
         this.eventBus = eventBus;
     }
 
-    public RoundTrackPane(){
+    RoundTrackPane(){
         height = 70;
         width = 70;
         mainPane = new GridPane();
@@ -35,18 +36,16 @@ public class RoundTrackPane extends VBox {
         this.getChildren().add(title);
         this.getChildren().add(mainPane);
         this.setEffect(new DropShadow(10,Color.BLACK));
-        this.setBackground(new Background(new BackgroundFill(Color.web("3f454f"),new CornerRadii(5),new Insets(0))));
+        this.setBackground(new Background(new BackgroundFill(Color.web("3f454f"),
+                new CornerRadii(5),new Insets(0))));
         this.setPadding(new Insets(10));
 
         draw();
     }
-    public RoundTrackPane(RoundTrack roundTrack,double width,double height) {
-        this();
-        this.roundTrack = roundTrack;
-        this.width = width;
-        this.height = height;
-    }
-    //sets all the layout parameters, call only after init or using the "complete" constructor
+
+    /**
+     * Sets all the layout parameters, call only after init or using the "complete" constructor
+     */
     private void draw(){
         mainPane.getChildren().clear();
         mainPane.setHgap(5);
@@ -62,7 +61,9 @@ public class RoundTrackPane extends VBox {
             roundIndicator.setBackground(
                     new Background(
                             new BackgroundImage(
-                                    new Image(StaticValues.FILE_URI_PREFIX+"resources/graphics/roundTrack_"+i+".png",width,height,true,true),
+                                    new Image(StaticValues.FILE_URI_PREFIX+
+                                            "resources/graphics/roundTrack_"+i+".png",width,height,
+                                            true,true),
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundRepeat.NO_REPEAT,
                                     BackgroundPosition.CENTER,
@@ -75,30 +76,33 @@ public class RoundTrackPane extends VBox {
                 roundIndicator.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     DialogPane dialogPane = new DialogPane();
-                    dialogPane.setContent(new SelectDicePane(roundTrack.getDicesOnRound(((RoundButton) event.getSource()).round),70,70, eventBus, uselessIndex, alert));
+                    dialogPane.setContent(
+                            new SelectDicePane(roundTrack.getDicesOnRound(((RoundButton) event.getSource()).round),
+                                    70,70, eventBus, uselessIndex, alert));
                     alert.setDialogPane(dialogPane);
                     alert.getDialogPane().getButtonTypes().add(ButtonType.OK);
                     alert.show();
                 });
                 Tooltip roundToolTip = new Tooltip();
-                roundToolTip.setGraphic(new SelectDicePane(roundTrack.getDicesOnRound(i),width/1.5,height/1.5, eventBus, i, null));
+                roundToolTip.setGraphic(new SelectDicePane(roundTrack.getDicesOnRound(i),width/1.5,
+                        height/1.5, eventBus, i, null));
                 roundIndicator.setTooltip(roundToolTip);
             }
             mainPane.add(roundIndicator,(i-1)/5,(i-1)%5);
-
-
-
         }
 
     }
+
     public void setRoundTrack(RoundTrack roundTrack) {
         this.roundTrack = roundTrack;
         draw();
     }
+
     private class RoundButton extends Button{
         private int round;
-        public RoundButton(int round) {
+        RoundButton(int round) {
             this.round = round;
         }
     }
+
 }

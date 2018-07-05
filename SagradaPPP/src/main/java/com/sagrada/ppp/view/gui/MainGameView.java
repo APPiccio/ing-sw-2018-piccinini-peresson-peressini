@@ -801,7 +801,7 @@ public class MainGameView extends UnicastRemoteObject implements GameObserver, G
 
     @Override
     public void onGameStart(GameStartMessage gameStartMessage)  {
-
+        //to nothing
     }
 
     @Override

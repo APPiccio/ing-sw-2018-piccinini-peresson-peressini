@@ -21,7 +21,6 @@ import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static java.lang.System.*;
 
@@ -71,9 +70,9 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
             exit(0);
         });
 
-
         joinGameResult = this.controller.joinGame(username, this);
-        controller.attachGameObserver(joinGameResult.getGameHashCode(), windowPanelsSelectionView, joinGameResult.getPlayerHashCode());
+        controller.attachGameObserver(joinGameResult.getGameHashCode(), windowPanelsSelectionView,
+                joinGameResult.getPlayerHashCode());
         PlayerTokenSerializer.serialize(joinGameResult);
         vBoxPlayersTab.getChildren().addAll(playerID(), vBoxPlayers);
         setActivePlayers(joinGameResult.getPlayersUsername(), joinGameResult.getPlayersUsername().size());
@@ -112,12 +111,20 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         stage.show();
     }
 
+    /**
+     * This method creates a label containing the information of the player
+     * @return label with user information
+     */
     private Label playerID() {
         return new Label("Welcome " + joinGameResult.getUsername() + "!\n" +
                 "You are participating at the game #" + joinGameResult.getGameHashCode() +
                 "\nwith userID " + joinGameResult.getPlayerHashCode());
     }
 
+    /**
+     * This method creates an alert when timer started or when a new player join the Lobby
+     * @param remainingTime time left to before game start
+     */
     private void timerStarted(long remainingTime) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -140,15 +147,17 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         });
     }
 
+    /**
+     * Invoking the new scene after timer end
+     */
     private void timerEnded() {
-/*        try {
-            controller.attachGameObserver(joinGameResult.getGameHashCode(), windowPanelsSelectionView, joinGameResult.getPlayerHashCode());
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }*/
         Platform.runLater(() -> windowPanelsSelectionView.init(controller, stage, joinGameResult));
     }
 
+    /**
+     * This method create an alert when the timer is interrupted due to a player disconnection
+     * and when there is only one player left in the Lobby
+     */
     private void timerInterrupted() {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -164,10 +173,18 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         });
     }
 
+    /**
+     * This methods clear the active players list on the lobby main view
+     */
     private void clearPlayers() {
         vBoxPlayers.getChildren().clear();
     }
 
+    /**
+     * This method updates the active players list on the Lobby main view
+     * @param players active players
+     * @param numOfPlayers number of active players
+     */
     private void setActivePlayers(ArrayList<String> players, int numOfPlayers) {
         if (players.size() > 1) {
             vBoxPlayers.getChildren().add(new Label("There are " + numOfPlayers + " active players!"));
@@ -180,10 +197,18 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         }
     }
 
+    /**
+     * This method updates the event tab when a new player join the game
+     * @param newPlayer new active player
+     */
     private void newPlayerEvent(String newPlayer) {
         vBoxEventsTab.getChildren().add(new Label(newPlayer + " has joined the game!"));
     }
 
+    /**
+     * This method updates the event tab when a player left the game
+     * @param oldPlayer disconnected player
+     */
     private void oldPlayerEvent(String oldPlayer) {
         vBoxEventsTab.getChildren().add(new Label(oldPlayer + " has left the game!"));
     }
@@ -218,7 +243,6 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
                 while(joinGameResult == null);
                 timerEnded();
             }).start();
-            //timerEnded();
         } else if (timerStatus.equals(TimerStatus.INTERRUPT)) {
             timerInterrupted();
         }
@@ -244,9 +268,19 @@ public class LobbyView extends UnicastRemoteObject implements LobbyObserver, Eve
         }
     }
 
-
     @Override
     public void rmiPing() throws RemoteException {
-
+        //do nothing
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
 }
