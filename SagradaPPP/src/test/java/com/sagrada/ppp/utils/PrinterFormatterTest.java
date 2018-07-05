@@ -18,5 +18,6 @@ public class PrinterFormatterTest {
     public void testPrint() {
         WindowPanel windowPanel = TestPanels.panel_2_2();
         System.out.println(PrinterFormatter.printWindowPanelContent(windowPanel));
+        assertEquals( "This WindowPanel is Null!\n" ,PrinterFormatter.printWindowPanelContent(null));
     }
 }

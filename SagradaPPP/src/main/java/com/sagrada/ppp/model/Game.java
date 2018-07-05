@@ -101,6 +101,7 @@ public class Game implements Serializable {
         this.toolCards = toolCards;
         this.turn = 2;
         this.roundTrack = new RoundTrack();
+        this.obsLock = new Object();
     }
 
 
@@ -306,7 +307,7 @@ public class Game implements Serializable {
      * notify each client the updated game status
      * Calls the player reordering (for more information about player reordering see reorderPlayers() method)
      */
-    private void toNextRound() {
+    void toNextRound() {
         if (roundTrack.getCurrentRound() == 10){
             gameStatus = GameStatus.SCORE;
             out.println("WARNING --> 10 turns played");
@@ -648,6 +649,10 @@ public class Game implements Serializable {
     public void pairPanelToPlayer(int panelIndex) {
         chosenPanelIndex = panelIndex;
         waitingForPanelChoice = false;
+    }
+
+    GameStatus getGameStatus(){
+        return gameStatus;
     }
 
     public boolean disconnect(int playerHashCode) {

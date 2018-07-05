@@ -769,5 +769,8 @@ public class GameTest {
         Game game = new Game(null, null);
         assertTrue(game.getPlayers().isEmpty());
         game.reorderPlayers();
+        game.setRound(10);
+        game.toNextRound();
+        assertEquals(GameStatus.SCORE, game.getGameStatus());
     }
 }

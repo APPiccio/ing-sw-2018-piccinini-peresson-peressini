@@ -1,6 +1,5 @@
 package com.sagrada.ppp.network.server;
 
-import com.sagrada.ppp.controller.Controller;
 import com.sagrada.ppp.model.*;
 import com.sagrada.ppp.utils.StaticValues;
 import org.junit.After;
@@ -9,7 +8,6 @@ import org.junit.Test;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.HashMap;
 

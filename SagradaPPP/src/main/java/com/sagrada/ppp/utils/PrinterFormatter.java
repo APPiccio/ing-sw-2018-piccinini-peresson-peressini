@@ -11,7 +11,7 @@ import static com.sagrada.ppp.utils.StaticValues.*;
 
 public class PrinterFormatter {
     private PrinterFormatter(){
-        super();
+        //do nothing here
     }
 
     private static final char TOP_RIGHT = (int) '┐';
