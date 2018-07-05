@@ -1,0 +1,32 @@
+{
+  "cells": [
+    {"color": null , "value" : 1 },
+    {"color": "purple" , "value" : null },
+    {"color": "yellow" , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 4 },
+
+    {"color": "purple" , "value" : null },
+    {"color": "yellow" , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 6 },
+
+    {"color": "yellow" , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 5 },
+    {"color": null , "value" : 3 },
+
+    {"color": null , "value" : null },
+    {"color": null , "value" : 5 },
+    {"color": null , "value" : 4 },
+    {"color": null , "value" : 2 },
+    {"color": null , "value" : 1 }
+
+
+  ],
+  "cardID": 11,
+  "favorTokens": 6,
+  "name": "Suns's Glory"
+}

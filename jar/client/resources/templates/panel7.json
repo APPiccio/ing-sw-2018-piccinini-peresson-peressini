@@ -1,0 +1,32 @@
+{
+  "cells": [
+    {"color": "yellow" , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 6 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": null , "value" : null },
+    {"color": null , "value" : 1 },
+    {"color": null , "value" : 5 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 2 },
+
+    {"color": null , "value" : 3 },
+    {"color": "yellow" , "value" : null },
+    {"color": "red" , "value" : null },
+    {"color": "purple" , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 4 },
+    {"color": null , "value" : 3 },
+    {"color": "red" , "value" : null }
+
+
+  ],
+  "cardID": 4,
+  "favorTokens": 4,
+  "name": "Via Lux"
+}

@@ -1,0 +1,32 @@
+{
+  "cells": [
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+    {"color": "red" , "value" : null },
+    {"color": null , "value" : 5 },
+    {"color": null , "value" : null },
+
+    {"color": "purple" , "value" : null },
+    {"color": null , "value" : 4 },
+    {"color": null , "value" : null },
+    {"color": "green" , "value" : null },
+    {"color": null , "value" : 3 },
+
+    {"color": null , "value" : 6 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+    {"color": "blue" , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": null , "value" : null },
+    {"color": "yellow" , "value" : null },
+    {"color": null , "value" : 2 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null }
+
+
+  ],
+  "cardID": 12,
+  "favorTokens": 3,
+  "name": "Luz Celestial"
+}

@@ -1,0 +1,32 @@
+{
+  "cells": [
+    {"color": null , "value" : 6 },
+    {"color": "blue" , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 1 },
+
+    {"color": null , "value" : null },
+    {"color": null , "value" : 5 },
+    {"color": "blue" , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": null , "value" : 4 },
+    {"color": "red" , "value" : null },
+    {"color": null , "value" : 2 },
+    {"color": "blue" , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": "green" , "value" : null },
+    {"color": null , "value" : 6 },
+    {"color": "yellow" , "value" : null },
+    {"color": null , "value" : 3 },
+    {"color": "purple" , "value" : null }
+
+
+  ],
+  "cardID": 7,
+  "favorTokens": 6,
+  "name": "Water of Life"
+}

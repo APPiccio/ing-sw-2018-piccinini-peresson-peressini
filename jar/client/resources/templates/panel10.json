@@ -1,0 +1,32 @@
+{
+  "cells": [
+    {"color": null , "value" : 6 },
+    {"color": "purple" , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 5 },
+
+    {"color": null , "value" : 5 },
+    {"color": null , "value" : null },
+    {"color": "purple" , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": "red" , "value" : null },
+    {"color": null , "value" : 6 },
+    {"color": null , "value" : null },
+    {"color": "purple" , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": "yellow" , "value" : null },
+    {"color": "red" , "value" : null },
+    {"color": null , "value" : 5 },
+    {"color": null , "value" : 4 },
+    {"color": null , "value" : 3 }
+
+
+  ],
+  "cardID": 5,
+  "favorTokens": 5,
+  "name": "Shadow Thief"
+}

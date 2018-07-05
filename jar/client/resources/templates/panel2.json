@@ -1,0 +1,32 @@
+{
+  "cells": [
+    {"color": "purple" , "value" : null },
+    {"color": null , "value" : 6 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+    {"color": null , "value" : 3 },
+
+    {"color": null , "value" : 5 },
+    {"color": "purple" , "value" : null },
+    {"color": null , "value" : 3 },
+    {"color": null , "value" : null },
+    {"color": null , "value" : null },
+
+    {"color": null , "value" : null },
+    {"color": null , "value" : 2 },
+    {"color": "purple" , "value" : null },
+    {"color": null , "value" : 1 },
+    {"color": null , "value" : null },
+
+    {"color": null , "value" : null },
+    {"color": null , "value" : 1 },
+    {"color": null , "value" : 5 },
+    {"color": "purple" , "value" : null },
+    {"color": null , "value" : 4 }
+
+
+  ],
+  "cardID": 1,
+  "favorTokens": 5,
+  "name": "Firmitas"
+}
