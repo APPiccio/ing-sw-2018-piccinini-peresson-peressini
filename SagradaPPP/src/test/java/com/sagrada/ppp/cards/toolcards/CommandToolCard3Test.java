@@ -86,6 +86,8 @@ public class CommandToolCard3Test {
         container.toolCardParameters.panelDiceIndex = 13;
         container.player = player;
         assertFalse(toolCard3.paramsOk(container));
+
+
     }
 
 }

@@ -17,6 +17,11 @@ public class Client {
     private static RemoteController controller;
     private static ConnectionModeEnum connectionModeEnum;
 
+    /**
+     * @param args
+     * Client application entry point
+     * @throws RemoteException
+     */
     public static void main(String[] args) throws RemoteException {
 
         StaticValues.readConstants();

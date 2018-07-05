@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 import static java.lang.System.out;
 
+/**
+ * Class representation of the player board
+ */
 public class WindowPanel implements Serializable {
 
     private String panelName;
@@ -18,6 +21,9 @@ public class WindowPanel implements Serializable {
     private ArrayList<Cell> cells;
 
 
+    /**
+     * Method used in test
+     */
     static void unloadPanels(){
         loadedPanels = new ArrayList<>();
     }

@@ -218,9 +218,13 @@ public class Game implements Serializable {
                     currentTimerTask.isValid = false;
                     continue;
                 }
-                while (!endTurn && !(dicePlaced && usedToolCard && !isSpecialTurn) && !turnTimeout && !gameEnded){
+/*                while (!endTurn && !(dicePlaced && usedToolCard && !isSpecialTurn) && !turnTimeout && !gameEnded){
                     //wait for user action
+                }*/
+                while(!endTurn && !turnTimeout && !gameEnded){
+
                 }
+
                 //Sync end turn with eventual responses e.g. UseToolCardResponse
                 synchronized (this) {
                     //handling timer
@@ -269,12 +273,19 @@ public class Game implements Serializable {
         return h;
     }
 
+    /**
+     * @param playerHashCode ID of the "i'm back online" player
+     */
     public void disableAFK(int playerHashCode){
         Player player =  getPlayerByHashcode(playerHashCode);
         player.setPlayerStatus(PlayerStatus.ACTIVE);
         notifyReconnection(player);
     }
 
+    /**
+     * Suspend a player that has spent a turn without doing actions
+     * @param playerAFK Player that will be suspended
+     */
     private void setPlayerAFK(Player playerAFK){
         if (playerAFK.getPlayerStatus().equals(PlayerStatus.INACTIVE)) return;
         playerAFK.setPlayerStatus(PlayerStatus.INACTIVE);
@@ -572,6 +583,9 @@ public class Game implements Serializable {
         }
     }
 
+    /**
+     * @return return 4 panels per player according to game rules
+     */
     private HashMap<Integer, ArrayList<WindowPanel>> extractPanels() {
         HashMap<Integer, ArrayList<WindowPanel>> temp = new HashMap<>();
         ArrayList<Integer> notUsedPanel = new ArrayList<>();
@@ -593,6 +607,9 @@ public class Game implements Serializable {
         return temp;
     }
 
+    /**
+     * Private objectivec color assignment
+     */
     private void assignPrivateObjectiveColors(){
         ArrayList<Integer> notUsedColor = new ArrayList<>();
         for(int i = 0; i < Color.values().length; i++){
@@ -604,6 +621,9 @@ public class Game implements Serializable {
         }
     }
 
+    /**
+     * extract 3 random toolcard to be assigned to current game
+     */
     private void extractToolCards(){
         Random r = new Random();
         ArrayList<ToolCard> allToolCards = new ArrayList<>();
@@ -626,6 +646,9 @@ public class Game implements Serializable {
         }
     }
 
+    /**
+     * extract 3 random POC to be assigned to current game
+     */
     private void extractPublicObjCards(){
         Random r = new Random();
         ArrayList<PublicObjectiveCard> allPubObjCards = new ArrayList<>();
@@ -646,6 +669,9 @@ public class Game implements Serializable {
         }
     }
 
+    /**
+     * @param panelIndex panel choiced by user between the purposed list
+     */
     public void pairPanelToPlayer(int panelIndex) {
         chosenPanelIndex = panelIndex;
         waitingForPanelChoice = false;
@@ -655,6 +681,10 @@ public class Game implements Serializable {
         return gameStatus;
     }
 
+    /**
+     * @param playerHashCode ID of leaving player
+     * @return true if everything has gone well, false in other cases
+     */
     public boolean disconnect(int playerHashCode) {
         if(gameStatus.equals(GameStatus.INIT)){
             Player player = getPlayerByHashcode(playerHashCode);
@@ -685,6 +715,9 @@ public class Game implements Serializable {
         setTurn(turn + 1);
     }
 
+    /**
+     * change the order of the PLayers array to match the current game turn order
+     */
     void reorderPlayers() {
         if(!players.isEmpty()) {
             ArrayList<Player> h = new ArrayList<>();
@@ -757,6 +790,10 @@ public class Game implements Serializable {
         }
     }
 
+    /**
+     * @param player that you want to calculate the score
+     * @return score container divided by section
+     */
     private PlayerScore getPlayerScore(Player player) {
         PlayerScore playerScore = new PlayerScore();
         playerScore.setUsername(player.getUsername());
@@ -881,6 +918,13 @@ public class Game implements Serializable {
 
     }
 
+    /**
+     * Special dice placement used in ToolCard behaviour
+     * @param playerHashCode
+     * @param cellIndex
+     * @param dice
+     * @return
+     */
     public PlaceDiceResult specialDicePlacement(int playerHashCode, int cellIndex, Dice dice){
         boolean result;
         if (players.get(getCurrentPlayerIndex()).hashCode() != playerHashCode) return new PlaceDiceResult("Something went wrong!", false, null, null);
@@ -898,6 +942,11 @@ public class Game implements Serializable {
         return new PlaceDiceResult("Special dice placement" , true, panel, draftPool);
     }
 
+    /**
+     * @param playerHashCode
+     * @param dice
+     * @return available positions for the dice in player's panel
+     */
     public ArrayList<Integer> getLegalPositions(int playerHashCode, Dice dice){
         Player player = getPlayerByHashcode(playerHashCode);
         if(player.getPanel() != null)
@@ -905,6 +954,10 @@ public class Game implements Serializable {
         return new ArrayList<>();
     }
 
+    /**
+     * ToolCard behaviour
+     * @param dice
+     */
     public void putDiceInDraftPool(Dice dice){
         draftPool.add(dice);
     }
@@ -1005,7 +1058,9 @@ public class Game implements Serializable {
         }
     }
 
-
+    /**
+     * TimerTask used to handle turn duration
+     */
     private class MyTimerTask extends TimerTask {
 
         volatile boolean isValid;

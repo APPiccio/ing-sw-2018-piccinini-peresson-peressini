@@ -38,7 +38,6 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
      * @param x     cell column index
      * @param y     cell row index
      * @param panel windowPanel of the current player
-     * @return
      */
     private boolean isDiceLegal(int x, int y, WindowPanel panel) {
         Cell cell = panel.getCell(y, x);
@@ -74,10 +73,7 @@ public class PublicObjectiveCard9 extends PublicObjectiveCard {
             }
 
             tmpCell = panel.getCell(yBSX, xBSX);
-            if (tmpCell != null && tmpCell.hasDiceOn() && tmpCell.getDiceOn().getColor() == dice.getColor()) {
-                return true;
-            }
-            return false;
+            return tmpCell != null && tmpCell.hasDiceOn() && tmpCell.getDiceOn().getColor() == dice.getColor();
         }
         else return false;
     }

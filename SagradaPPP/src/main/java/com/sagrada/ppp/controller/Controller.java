@@ -9,6 +9,10 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * RMI connection controller, for methods details
+ * @see RemoteController
+ */
 public class Controller extends UnicastRemoteObject implements RemoteController {
 
     private transient Service service;
@@ -282,7 +286,6 @@ public class Controller extends UnicastRemoteObject implements RemoteController 
                         toolCardParameters.panelCellIndex = null;
                         view.panelCellIndexRequired();
                         while (toolCardParameters.panelCellIndex == null);
-                        System.out.println("-------> panel cell index " + toolCardParameters.panelCellIndex);
                     } while (!legalPositions.contains(toolCardParameters.panelCellIndex));
                     //useToolCardResult.result = service.specialDicePlacement(gameHashCode, playerHashCode,
                     //        toolCardParameters.panelCellIndex, dice);

@@ -7,6 +7,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import static java.lang.System.*;
 
+/**
+ * Server thread handler,
+ * always listening for new socket client
+ */
 public class ServerThread extends Thread {
 
     ServerSocket serverSocket;

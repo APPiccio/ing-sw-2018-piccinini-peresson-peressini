@@ -6,6 +6,9 @@ public class ConnectionHandler {
 
     private ConnectionMode connectionMode;
 
+    /**
+     * @param type connection type
+     */
     public ConnectionHandler(ConnectionModeEnum type) {
         if (type.equals(ConnectionModeEnum.RMI)) {
             connectionMode = new RmiConnection();

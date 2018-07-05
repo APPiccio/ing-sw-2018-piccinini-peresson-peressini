@@ -25,6 +25,10 @@ public abstract class ToolCard implements Serializable {
 
     public abstract UseToolCardResult use(ToolCardParameterContainer container);
 
+    /**
+     * @param container contains all parameters needed to check toolcard usability
+     * @return true if it's all good, no in other cases
+     */
     public abstract boolean paramsOk(ToolCardParameterContainer container);
 
     public void setUsed() {

@@ -9,6 +9,10 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Thread that handle the connection with a client on socket connection mode.
+ * One per user, this represents the server side end of the connection
+ */
 public class SocketThread extends Thread implements LobbyObserver, RequestHandler, GameObserver {
     private Socket socket;
     private Service service;

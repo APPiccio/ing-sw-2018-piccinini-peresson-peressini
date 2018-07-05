@@ -5,6 +5,9 @@ import com.sagrada.ppp.utils.StaticValues;
 
 import java.rmi.Naming;
 
+/**
+ * Class used to connect to the RMI controller
+ */
 public class RmiConnection implements ConnectionMode {
 
     @Override

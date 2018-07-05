@@ -13,7 +13,10 @@ import java.util.ArrayList;
 
 import static java.lang.System.*;
 
-
+/**
+ * Socket connection client controller, for methods details
+ * @see RemoteController
+ */
 public class SocketClientController extends UnicastRemoteObject implements RemoteController, ResponseHandler, Serializable {
 
     private transient Socket socket;

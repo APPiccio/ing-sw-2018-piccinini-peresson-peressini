@@ -5,6 +5,9 @@ import com.sagrada.ppp.controller.SocketClientController;
 
 import java.io.IOException;
 
+/**
+ * Creation of the client's socket end that will establish the connection to server
+ */
 public class SocketConnection implements ConnectionMode {
 
     @Override

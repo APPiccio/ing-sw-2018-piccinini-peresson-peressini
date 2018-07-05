@@ -22,6 +22,9 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
+/**
+ * Cli user interface
+ */
 public class CliView extends UnicastRemoteObject
         implements LobbyObserver, Serializable, GameObserver, ToolCardHandler {
     private transient Scanner scanner;
@@ -146,6 +149,10 @@ public class CliView extends UnicastRemoteObject
         }
     }
 
+    /**
+     * Collecting user data and requiring to join a game
+     * @throws RemoteException
+     */
     private void start() throws RemoteException {
         out.println("Welcome to SAGRADA");
         out.println("Please enter your username! This can't be empty or with spaces.");
@@ -196,6 +203,10 @@ public class CliView extends UnicastRemoteObject
 
     }
 
+    /**
+     * CLI lobby handler, take user inputs and handle these.
+     * @throws RemoteException
+     */
     private void inLobby() throws RemoteException {
         out.println("Congratulations , you are now in lobby!");
         out.println("--> Game ID = " + gameHashCode);
@@ -222,11 +233,9 @@ public class CliView extends UnicastRemoteObject
             command = scanner.nextLine();
         }
         if(command.equals("0") || command.equals("1") || command.equals("2") || command.equals("3") && !isGameStarted) {
-            //TODO handle response to server and panel choice
             int panelIndex = Integer.parseInt(command);
             controller.choosePanel(gameHashCode, hashCode, panelIndex);
             inGame(null);
-
         }
         else{
             if(isGameStarted){
@@ -308,6 +317,11 @@ public class CliView extends UnicastRemoteObject
     }
 
 
+    /**
+     * CLI game interface handler
+     * @param cmd
+     * @throws RemoteException
+     */
     private void inGame(String cmd) throws RemoteException {
         String command;
         command = cmd == null ? scanner.nextLine() : cmd;
@@ -623,6 +637,10 @@ public class CliView extends UnicastRemoteObject
         exit(0);
     }
 
+    /**
+     * Here only to avoid code duplication
+     * @return
+     */
     private String common_input_row() {
         String command;
         do {
@@ -637,6 +655,12 @@ public class CliView extends UnicastRemoteObject
         return command;
     }
 
+    /**
+     * Check if input is valid
+     * @param params
+     * @param startingIndex
+     * @return
+     */
     private boolean invalidParams(String[] params, int startingIndex){
         ArrayList<String> availableStrings = new ArrayList<>();
         availableStrings.add("0");
