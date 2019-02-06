@@ -1,8 +1,8 @@
 # Progetto Finale - Ingegneria del Software
 
-##### Federico Piccinini 
-##### Tommaso Peresson 
-##### Francesco Peressini 
+##### Federico Piccinini ([APPiccio](https://github.com/APPiccio))
+##### Tommaso Peresson ([tompere96](https://github.com/tompere96))
+##### Francesco Peressini ([francescoperessini](https://github.com/francescoperessini)) 
 
 ------------------------------------------------------
 ## 1. Test Coverage ##
