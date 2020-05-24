@@ -3,6 +3,12 @@
 ##### Federico Piccinini ([APPiccio](https://github.com/APPiccio))
 ##### Tommaso Peresson ([tompere96](https://github.com/tompere96))
 ##### Francesco Peressini ([francescoperessini](https://github.com/francescoperessini)) 
+------------------------------------------------------
+## Come far partire il gioco ##
+### Server
+Posizionarsi nella cartella `jar/server` da terminale e utilizzare il comando `java -jar server.jar`
+### Client
+Per ogni client: posizionarsi nella cartella `jar/client` da terminale e utilizzare il comando `java -jar client.jar`
 
 ------------------------------------------------------
 ## 1. Test Coverage ##
