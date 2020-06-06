@@ -1,7 +1,7 @@
 # Progetto Finale - Ingegneria del Software
 
 ##### Federico Piccinini ([APPiccio](https://github.com/APPiccio))
-##### Tommaso Peresson ([tompere96](https://github.com/tompere96))
+##### Tommaso Peresson ([t0mpere](https://github.com/t0mpere))
 ##### Francesco Peressini ([francescoperessini](https://github.com/francescoperessini)) 
 ------------------------------------------------------
 ## Come far partire il gioco ##
